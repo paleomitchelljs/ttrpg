@@ -109,6 +109,7 @@ export function CharacterCreator({ initial, onSaved, onCancel }: Props) {
       classId: id,
       gold: rollGold(id),
       gear: (STARTING_GEAR[id]?.items ?? []).map((name) => ({ name })),
+      equipment: { ...(STARTING_GEAR[id]?.equipment ?? {}) },
       spells: [],
     };
     updates.hp = (() => {

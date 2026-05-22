@@ -104,6 +104,7 @@ export function rollQuickCharacter(): Omit<Character, 'id' | 'createdAt' | 'upda
       spells = ['Turn Undead', ...spells].slice(0, cls.startingSpellCount);
     }
   }
+  const equipment = { ...(starting?.equipment ?? {}) };
   return {
     name,
     ancestryId: ancestry.id,
@@ -118,6 +119,7 @@ export function rollQuickCharacter(): Omit<Character, 'id' | 'createdAt' | 'upda
     ac: computeAC(stats),
     gold,
     gear,
+    equipment,
     spells,
     notes: '',
   };

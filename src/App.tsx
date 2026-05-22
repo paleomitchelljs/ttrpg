@@ -6,11 +6,11 @@ import { DungeonTab } from './pages/DungeonTab';
 
 type TabId = 'characters' | 'enemies' | 'dungeons' | 'dice';
 
-const TABS: { id: TabId; label: string }[] = [
-  { id: 'characters', label: 'Characters' },
-  { id: 'enemies', label: 'Enemies' },
-  { id: 'dungeons', label: 'Dungeons' },
-  { id: 'dice', label: 'Dice' },
+const TABS: { id: TabId; label: string; icon: string }[] = [
+  { id: 'characters', label: 'Heroes', icon: '🧙' },
+  { id: 'enemies', label: 'Monsters', icon: '👹' },
+  { id: 'dungeons', label: 'Dungeons', icon: '🗺️' },
+  { id: 'dice', label: 'Dice', icon: '🎲' },
 ];
 
 export function App() {
@@ -27,7 +27,8 @@ export function App() {
               className={`tab ${tab === t.id ? 'active' : ''}`}
               onClick={() => setTab(t.id)}
             >
-              {t.label}
+              <span className="tab-icon">{t.icon}</span>
+              <span className="tab-label">{t.label}</span>
             </button>
           ))}
         </nav>

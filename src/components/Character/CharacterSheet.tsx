@@ -1,10 +1,26 @@
+import { useMemo, useState } from 'react';
 import { formatMod, statMod } from '../../lib/dice';
 import { getAncestry } from '../../lib/shadowdark/ancestries';
 import { getClass } from '../../lib/shadowdark/classes';
+import {
+  ARMOR,
+  WEAPONS,
+  armorACBase,
+  findArmor,
+  findWeapon,
+  isRanged,
+  isShield,
+  isTwoHanded,
+  weaponDamageDie,
+} from '../../lib/shadowdark/gear';
 import { getSpell } from '../../lib/shadowdark/spells';
-import { STAT_IDS } from '../../lib/shadowdark/types';
-import type { Character } from '../../lib/shadowdark/types';
-import { useArtUrl } from '../../lib/hooks';
+import { STAT_IDS, STAT_NAMES } from '../../lib/shadowdark/types';
+import type { Character, Equipment, StatId } from '../../lib/shadowdark/types';
+import { useArtUrl, emitCharactersChanged } from '../../lib/hooks';
+import { saveCharacter } from '../../lib/storage';
+import { rollAndLog, useLatestRoll } from '../../lib/rollLog';
+
+type SheetTab = 'stats' | 'gear' | 'spells' | 'about';
 
 interface Props {
   character: Character;
@@ -17,128 +33,315 @@ export function CharacterSheet({ character, onEdit, onClose, onDelete }: Props) 
   const ancestry = getAncestry(character.ancestryId);
   const cls = getClass(character.classId);
   const portraitUrl = useArtUrl(character.portraitArtId);
+  const [tab, setTab] = useState<SheetTab>('stats');
+  const latestRoll = useLatestRoll();
+
+  const equipment: Equipment = character.equipment ?? {};
+  const mainHand = findWeapon(equipment.mainHand);
+  const offHand = findWeapon(equipment.offHand);
+  const armor = findArmor(equipment.armor);
+  const helmet = findArmor(equipment.helmet);
+
+  const strMod = statMod(character.stats.STR);
+  const dexMod = statMod(character.stats.DEX);
+  const ranged = isRanged(mainHand);
+  const attackMod = ranged ? dexMod : strMod;
+  const twoHanded = isTwoHanded(mainHand) || !offHand;
+  const damageDie = weaponDamageDie(mainHand, twoHanded);
+  const damageMod = ranged ? dexMod : strMod;
+
+  const computedAC = useMemo(() => {
+    const { base, addsDex } = armorACBase(armor);
+    let ac = base + (addsDex ? dexMod : 0);
+    if (isShield(offHand?.name)) ac += 2;
+    if (helmet) ac += 1;
+    return ac;
+  }, [armor, offHand, helmet, dexMod]);
+
+  async function patch(p: Partial<Character>) {
+    const next: Character = { ...character, ...p, ac: computedAC, updatedAt: Date.now() };
+    await saveCharacter(next);
+    emitCharactersChanged();
+  }
+
+  function adjustHP(delta: number) {
+    const current = Math.max(0, Math.min(character.hp.max, character.hp.current + delta));
+    patch({ hp: { ...character.hp, current } });
+  }
+
+  function setEquipSlot(slot: keyof Equipment, name: string | undefined) {
+    const next: Equipment = { ...equipment, [slot]: name || undefined };
+    patch({ equipment: next });
+  }
+
+  function rollAttack() {
+    const mod = attackMod;
+    const expr = `1d20${mod >= 0 ? '+' : ''}${mod}`;
+    const label = `${character.name}: Attack${mainHand ? ` (${mainHand.name})` : ''}`;
+    const attack = rollAndLog(expr, 'normal', label);
+    // Always roll damage too so kid sees the number to subtract.
+    const dmgExpr = `1${damageDie}${damageMod >= 0 ? '+' : ''}${damageMod}`;
+    rollAndLog(dmgExpr, 'normal', `${character.name}: Damage`);
+    return attack;
+  }
+
+  function rollStat(stat: StatId) {
+    const mod = statMod(character.stats[stat]);
+    const expr = `1d20${mod >= 0 ? '+' : ''}${mod}`;
+    rollAndLog(expr, 'normal', `${character.name}: ${STAT_NAMES[stat]} check`);
+  }
+
+  // One-handed melee weapons that can sit in an off-hand.
+  const offHandWeapons = WEAPONS.filter((w) => !isTwoHanded(w) && !isRanged(w));
+  const bodyArmor = ARMOR.filter((a) => !isShield(a.name) && a.name !== 'Helmet');
 
   return (
-    <div className="col" style={{ gap: '1.25rem' }}>
+    <div className="col" style={{ gap: '1rem' }}>
       <div className="row">
         <button className="ghost" onClick={onClose}>← Back</button>
-        <h1 style={{ margin: 0 }} className="grow">
-          {character.name}
-        </h1>
-        <button onClick={onEdit}>Edit</button>
-        <button className="danger" onClick={onDelete}>Delete</button>
+        <span className="grow" />
+        <button className="ghost" onClick={onEdit}>Edit</button>
+        <button className="ghost danger" onClick={onDelete}>Delete</button>
       </div>
 
-      <div className="card sheet">
+      <div className="sheet-hero">
         {portraitUrl ? (
-          <img src={portraitUrl} alt={character.name} className="portrait" />
+          <img src={portraitUrl} alt={character.name} className="hero-portrait" />
         ) : (
-          <div className="portrait">No portrait</div>
+          <div className="hero-portrait placeholder-portrait">
+            <span>{character.name.slice(0, 1).toUpperCase()}</span>
+          </div>
         )}
-        <div className="col">
-          <div className="row" style={{ flexWrap: 'wrap', gap: '1.5rem' }}>
-            <SheetField label="Ancestry" value={ancestry?.name ?? character.ancestryId} />
-            <SheetField label="Class" value={cls?.name ?? character.classId} />
-            <SheetField label="Level" value={character.level} />
-            <SheetField label="Alignment" value={character.alignment} />
-            <SheetField label="Background" value={character.background} />
-            {character.deity && <SheetField label="Deity" value={character.deity} />}
+        <div className="hero-meta">
+          <div className="hero-name">{character.name}</div>
+          <div className="hero-sub">
+            Level {character.level} · {ancestry?.name ?? ''} {cls?.name ?? ''}
           </div>
-          <div className="row" style={{ flexWrap: 'wrap', gap: '1.5rem' }}>
-            <SheetField label="HP" value={`${character.hp.current} / ${character.hp.max}`} />
-            <SheetField label="AC" value={character.ac} />
-            <SheetField label="Gold" value={`${character.gold}gp`} />
-            <SheetField label="XP" value={character.xp} />
-          </div>
+          <div className="hero-sub muted">{character.alignment} · {character.background}</div>
         </div>
       </div>
 
-      <div className="card">
-        <h2 className="section-title">Ability Scores</h2>
-        <div className="stat-grid">
-          {STAT_IDS.map((id) => (
-            <div key={id} className="stat-block">
-              <div className="name">{id}</div>
-              <div className="score">{character.stats[id]}</div>
-              <div className="mod">{formatMod(statMod(character.stats[id]))}</div>
-            </div>
-          ))}
+      <RollBanner roll={latestRoll} />
+
+      <div className="hud-grid">
+        <div className="hud-tile hud-hp">
+          <div className="hud-icon">❤️</div>
+          <div className="hud-label">HP</div>
+          <div className="hud-value">
+            {character.hp.current}<span className="hud-sub">/{character.hp.max}</span>
+          </div>
+          <div className="hud-controls">
+            <button className="hp-button" onClick={() => adjustHP(-1)} aria-label="lose hp">−</button>
+            <button className="hp-button" onClick={() => adjustHP(+1)} aria-label="heal hp">＋</button>
+          </div>
+        </div>
+
+        <div className="hud-tile hud-ac">
+          <div className="hud-icon">🛡️</div>
+          <div className="hud-label">AC</div>
+          <div className="hud-value">{computedAC}</div>
+          <div className="hud-controls muted hud-foot">
+            {armor?.name ?? 'No armor'}{isShield(offHand?.name) ? ' · shield' : ''}{helmet ? ' · helm' : ''}
+          </div>
+        </div>
+
+        <button className="hud-tile hud-attack" onClick={rollAttack}>
+          <div className="hud-icon">⚔️</div>
+          <div className="hud-label">Attack</div>
+          <div className="hud-value">{formatMod(attackMod)}</div>
+          <div className="hud-controls muted hud-foot">
+            {mainHand ? `${mainHand.name} · ${damageDie}${damageMod !== 0 ? formatMod(damageMod) : ''}` : 'Unarmed · d4'}
+          </div>
+          <div className="hud-tap">Tap to roll</div>
+        </button>
+      </div>
+
+      <div className="card equip-card">
+        <div className="equip-row">
+          <EquipSlot
+            label="Main hand"
+            icon="⚔️"
+            value={equipment.mainHand}
+            options={WEAPONS.map((w) => ({ value: w.name, label: `${w.name} (${weaponDamageDie(w, isTwoHanded(w))})` }))}
+            onChange={(v) => setEquipSlot('mainHand', v)}
+          />
+          <EquipSlot
+            label="Off hand"
+            icon="🛡️"
+            value={equipment.offHand}
+            options={[
+              { value: 'Shield', label: 'Shield (+2 AC)' },
+              ...offHandWeapons.map((w) => ({ value: w.name, label: w.name })),
+            ]}
+            onChange={(v) => setEquipSlot('offHand', v)}
+            disabled={isTwoHanded(mainHand)}
+            disabledHint="Two-handed weapon equipped"
+          />
+          <EquipSlot
+            label="Armor"
+            icon="👕"
+            value={equipment.armor}
+            options={bodyArmor.map((a) => ({ value: a.name, label: a.name }))}
+            onChange={(v) => setEquipSlot('armor', v)}
+          />
+          <EquipSlot
+            label="Helmet"
+            icon="⛑️"
+            value={equipment.helmet}
+            options={[{ value: 'Helmet', label: 'Helmet (+1 AC)' }]}
+            onChange={(v) => setEquipSlot('helmet', v)}
+          />
         </div>
       </div>
 
-      {ancestry && (
-        <div className="card">
-          <h2 className="section-title">{ancestry.name}</h2>
-          <p className="muted" style={{ margin: '0 0 0.5rem 0' }}>{ancestry.description}</p>
-          <p style={{ margin: 0 }}><strong>Trait.</strong> {ancestry.trait}</p>
-          <p className="faint" style={{ margin: '0.3rem 0 0 0', fontSize: '0.85rem' }}>
-            Languages: {ancestry.languages.join(', ')}
-          </p>
+      <div className="sheet-tabs">
+        <button className={`sheet-tab ${tab === 'stats' ? 'active' : ''}`} onClick={() => setTab('stats')}>Stats</button>
+        <button className={`sheet-tab ${tab === 'gear' ? 'active' : ''}`} onClick={() => setTab('gear')}>Gear</button>
+        <button
+          className={`sheet-tab ${tab === 'spells' ? 'active' : ''}`}
+          onClick={() => setTab('spells')}
+          disabled={character.spells.length === 0}
+        >
+          Spells
+        </button>
+        <button className={`sheet-tab ${tab === 'about' ? 'active' : ''}`} onClick={() => setTab('about')}>About</button>
+      </div>
+
+      {tab === 'stats' && (
+        <div className="stat-tile-grid">
+          {STAT_IDS.map((id) => {
+            const mod = statMod(character.stats[id]);
+            return (
+              <button key={id} className="stat-tile" onClick={() => rollStat(id)}>
+                <div className="stat-tile-name">{id}</div>
+                <div className="stat-tile-score">{character.stats[id]}</div>
+                <div className="stat-tile-mod">{formatMod(mod)}</div>
+                <div className="stat-tile-tap">tap to roll</div>
+              </button>
+            );
+          })}
         </div>
       )}
 
-      {cls && (
+      {tab === 'gear' && (
         <div className="card">
-          <h2 className="section-title">{cls.name}</h2>
-          <p className="muted" style={{ margin: '0 0 0.5rem 0' }}>{cls.description}</p>
-          <p className="faint" style={{ margin: '0 0 0.5rem 0', fontSize: '0.85rem' }}>
-            Hit Die: d{cls.hitDie} · Weapons: {cls.weapons} · Armor: {cls.armor}
-          </p>
-          {cls.features.map((f) => (
-            <p key={f.name} style={{ margin: '0.3rem 0' }}>
-              <strong>{f.name}.</strong> {f.text}
-            </p>
-          ))}
+          <div className="row" style={{ marginBottom: '0.75rem' }}>
+            <span className="big-label grow">Carrying</span>
+            <span className="muted">{character.gold}gp</span>
+          </div>
+          {character.gear.length === 0 ? (
+            <div className="placeholder">No items.</div>
+          ) : (
+            <ul className="gear-list">
+              {character.gear.map((item, i) => (
+                <li key={`${item.name}-${i}`}>
+                  <span className="item-name">{item.name}</span>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
       )}
 
-      {character.spells.length > 0 && (
-        <div className="card">
-          <h2 className="section-title">Spells</h2>
+      {tab === 'spells' && character.spells.length > 0 && (
+        <div className="card col">
           {character.spells.map((name) => {
             const s = getSpell(name);
-            if (!s) return <p key={name} style={{ margin: '0.3rem 0' }}>{name}</p>;
+            if (!s) return <div key={name}><strong>{name}</strong></div>;
             return (
-              <div key={name} style={{ marginBottom: '0.6rem' }}>
-                <strong>{s.name}.</strong>{' '}
-                <span className="faint">{s.range} · {s.duration}</span>{' '}
-                {s.text}
+              <div key={name} className="spell-row">
+                <div className="spell-name">{s.name}</div>
+                <div className="spell-meta muted">{s.range} · {s.duration}</div>
+                <div className="spell-text">{s.text}</div>
               </div>
             );
           })}
         </div>
       )}
 
-      {character.gear.length > 0 && (
-        <div className="card">
-          <h2 className="section-title">Gear</h2>
-          <ul className="gear-list">
-            {character.gear.map((item, i) => (
-              <li key={`${item.name}-${i}`}>
-                <span className="item-name">{item.name}</span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      )}
-
-      {character.notes && (
-        <div className="card">
-          <h2 className="section-title">Notes</h2>
-          <p style={{ whiteSpace: 'pre-wrap', margin: 0 }}>{character.notes}</p>
+      {tab === 'about' && (
+        <div className="col" style={{ gap: '0.75rem' }}>
+          {ancestry && (
+            <div className="card">
+              <div className="big-label">{ancestry.name}</div>
+              <p className="muted" style={{ margin: '0.25rem 0' }}>{ancestry.description}</p>
+              <p style={{ margin: '0.25rem 0' }}><strong>Trait.</strong> {ancestry.trait}</p>
+              <p className="faint" style={{ margin: '0.25rem 0', fontSize: '0.85rem' }}>
+                Languages: {ancestry.languages.join(', ')}
+              </p>
+            </div>
+          )}
+          {cls && (
+            <div className="card">
+              <div className="big-label">{cls.name}</div>
+              <p className="muted" style={{ margin: '0.25rem 0' }}>{cls.description}</p>
+              <p className="faint" style={{ margin: '0.25rem 0', fontSize: '0.85rem' }}>
+                Hit Die: d{cls.hitDie} · Weapons: {cls.weapons} · Armor: {cls.armor}
+              </p>
+              {cls.features.map((f) => (
+                <p key={f.name} style={{ margin: '0.25rem 0' }}>
+                  <strong>{f.name}.</strong> {f.text}
+                </p>
+              ))}
+            </div>
+          )}
+          {character.deity && (
+            <div className="card">
+              <div className="big-label">Deity</div>
+              <p style={{ margin: '0.25rem 0' }}>{character.deity}</p>
+            </div>
+          )}
+          {character.notes && (
+            <div className="card">
+              <div className="big-label">Notes</div>
+              <p style={{ whiteSpace: 'pre-wrap', margin: '0.25rem 0' }}>{character.notes}</p>
+            </div>
+          )}
         </div>
       )}
     </div>
   );
 }
 
-function SheetField({ label, value }: { label: string; value: React.ReactNode }) {
+interface EquipSlotProps {
+  label: string;
+  icon: string;
+  value?: string;
+  options: { value: string; label: string }[];
+  onChange: (value: string | undefined) => void;
+  disabled?: boolean;
+  disabledHint?: string;
+}
+
+function EquipSlot({ label, icon, value, options, onChange, disabled, disabledHint }: EquipSlotProps) {
   return (
-    <div>
-      <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.1em', color: 'var(--ink-dim)' }}>
+    <label className={`equip-slot ${disabled ? 'disabled' : ''}`}>
+      <div className="equip-slot-label">
+        <span className="equip-icon">{icon}</span>
         {label}
       </div>
-      <div style={{ fontFamily: 'var(--font-display)', fontSize: '1.1rem' }}>{value}</div>
+      <select
+        value={value ?? ''}
+        onChange={(e) => onChange(e.target.value || undefined)}
+        disabled={disabled}
+      >
+        <option value="">{disabled ? (disabledHint ?? '—') : '— none —'}</option>
+        {options.map((o) => (
+          <option key={o.value} value={o.value}>{o.label}</option>
+        ))}
+      </select>
+    </label>
+  );
+}
+
+function RollBanner({ roll }: { roll: ReturnType<typeof useLatestRoll> }) {
+  if (!roll) return null;
+  const cls = roll.isCrit ? 'crit' : roll.isFumble ? 'fumble' : '';
+  return (
+    <div key={roll.id} className={`roll-banner ${cls}`}>
+      <div className="roll-banner-label">{roll.label ?? roll.expression}</div>
+      <div className="roll-banner-total">{roll.total}</div>
+      <div className="roll-banner-detail">{roll.breakdown}</div>
     </div>
   );
 }

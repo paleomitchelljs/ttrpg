@@ -66,6 +66,17 @@ export interface GearItem {
   notes?: string;
 }
 
+export interface Equipment {
+  /** Weapon name (must match a WEAPONS entry). */
+  mainHand?: string;
+  /** Off-hand weapon or shield name. */
+  offHand?: string;
+  /** Armor name (chest piece). */
+  armor?: string;
+  /** Helmet name. */
+  helmet?: string;
+}
+
 export interface Character {
   id: string;
   createdAt: number;
@@ -83,6 +94,7 @@ export interface Character {
   ac: number;
   gold: number;
   gear: { name: string; quantity?: number; slots?: number }[];
+  equipment?: Equipment;
   spells: string[];
   portraitArtId?: string;
   notes?: string;

@@ -49,27 +49,98 @@ export const ADVENTURING_GEAR: GearItem[] = [
 
 export const ALL_GEAR = [...WEAPONS, ...ARMOR, ...ADVENTURING_GEAR];
 
+function norm(s: string): string {
+  return s.toLowerCase().replace(/[^a-z0-9]/g, '');
+}
+
+export function findWeapon(name: string | undefined): GearItem | undefined {
+  if (!name) return undefined;
+  const n = norm(name);
+  return WEAPONS.find((w) => norm(w.name) === n);
+}
+
+export function findArmor(name: string | undefined): GearItem | undefined {
+  if (!name) return undefined;
+  const n = norm(name);
+  return ARMOR.find((a) => norm(a.name) === n);
+}
+
+export const SHIELD_NAME = 'Shield';
+export const HELMET_NAME = 'Helmet';
+
+export function isShield(name: string | undefined): boolean {
+  return !!name && norm(name) === norm(SHIELD_NAME);
+}
+
+export function isHelmet(name: string | undefined): boolean {
+  return !!name && norm(name) === norm(HELMET_NAME);
+}
+
+export function isTwoHanded(weapon: GearItem | undefined): boolean {
+  return !!weapon?.tags?.some((t) => t === 'Two-handed');
+}
+
+export function isRanged(weapon: GearItem | undefined): boolean {
+  return !!weapon?.tags?.some((t) => t === 'Ranged');
+}
+
+/**
+ * Pick the damage die for a weapon. Weapons list two dice as "d8 / d6"
+ * (one-handed / two-handed) for versatile weapons; otherwise the same die twice.
+ * Returns "d8" style string, or "d4" if unparseable.
+ */
+export function weaponDamageDie(weapon: GearItem | undefined, twoHanded: boolean): string {
+  if (!weapon) return 'd4';
+  const dmgTag = weapon.tags?.find((t) => /^d\d+\s*\/\s*d\d+$/i.test(t));
+  if (!dmgTag) return 'd4';
+  const parts = dmgTag.split('/').map((p) => p.trim().toLowerCase());
+  return parts[twoHanded ? 1 : 0] ?? parts[0] ?? 'd4';
+}
+
+/**
+ * Armor AC formula. Returns { base, addsDex } where total AC =
+ * base + (addsDex ? DEX mod : 0) + shield(+2) + helmet(+1).
+ */
+export function armorACBase(armor: GearItem | undefined): { base: number; addsDex: boolean } {
+  if (!armor) return { base: 10, addsDex: true };
+  const tag = armor.tags?.[0] ?? '';
+  const match = tag.match(/AC\s*(\d+)/i);
+  const base = match ? parseInt(match[1], 10) : 10;
+  const addsDex = /\+\s*DEX/i.test(tag);
+  return { base, addsDex };
+}
+
 // Starting gear by class (Shadowdark Quickstart defaults).
 export interface StartingGear {
   gold: string;
   items: string[];
+  equipment: {
+    mainHand?: string;
+    offHand?: string;
+    armor?: string;
+    helmet?: string;
+  };
 }
 
 export const STARTING_GEAR: Record<string, StartingGear> = {
   fighter: {
     gold: '2d6×5gp + 60gp',
     items: ['Backpack', 'Flint and steel', 'Torch (×2)', 'Rations (3)', 'Iron spikes (10)', 'Rope, 60ft'],
+    equipment: { mainHand: 'Longsword', offHand: 'Shield', armor: 'Chainmail' },
   },
   priest: {
     gold: '2d6×5gp',
     items: ['Backpack', 'Flint and steel', 'Torch (×2)', 'Rations (3)', 'Holy symbol'],
+    equipment: { mainHand: 'Mace', offHand: 'Shield', armor: 'Chainmail' },
   },
   thief: {
     gold: '2d6×5gp',
     items: ['Backpack', 'Flint and steel', 'Torch (×2)', 'Rations (3)', 'Thieves\' tools'],
+    equipment: { mainHand: 'Shortsword', armor: 'Leather armor' },
   },
   wizard: {
     gold: '2d6×5gp',
     items: ['Backpack', 'Flint and steel', 'Torch (×2)', 'Rations (3)', 'Spellbook'],
+    equipment: { mainHand: 'Staff' },
   },
 };
