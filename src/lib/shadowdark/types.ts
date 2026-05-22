@@ -77,6 +77,29 @@ export interface Equipment {
   helmet?: string;
 }
 
+export interface EncounterMonster {
+  /** Unique instance id within the encounter. */
+  id: string;
+  /** ID into MONSTERS (monsters.yaml). */
+  monsterId: string;
+  /** Display label, e.g. "Goblin A" — defaults to monster name. */
+  label: string;
+  hp: { current: number; max: number };
+  /** Optional notes the GM can scribble per-instance. */
+  notes?: string;
+  /** Optional zone label (front, back, far, hidden…). */
+  zone?: string;
+}
+
+export interface Encounter {
+  id: string;
+  createdAt: number;
+  updatedAt: number;
+  name: string;
+  monsters: EncounterMonster[];
+  notes?: string;
+}
+
 export interface Character {
   id: string;
   createdAt: number;

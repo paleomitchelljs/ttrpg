@@ -1,10 +1,15 @@
 import { openDB, type DBSchema, type IDBPDatabase } from 'idb';
-import type { Character } from './shadowdark/types';
+import type { Character, Encounter } from './shadowdark/types';
 
 interface PortalDB extends DBSchema {
   characters: {
     key: string;
     value: Character;
+    indexes: { 'by-updated': number };
+  };
+  encounters: {
+    key: string;
+    value: Encounter;
     indexes: { 'by-updated': number };
   };
   art: {
@@ -14,7 +19,7 @@ interface PortalDB extends DBSchema {
 }
 
 const DB_NAME = 'shadowdark-portal';
-const DB_VERSION = 1;
+const DB_VERSION = 2;
 
 let dbPromise: Promise<IDBPDatabase<PortalDB>> | null = null;
 
@@ -28,6 +33,10 @@ function getDB(): Promise<IDBPDatabase<PortalDB>> {
         }
         if (!db.objectStoreNames.contains('art')) {
           db.createObjectStore('art', { keyPath: 'id' });
+        }
+        if (!db.objectStoreNames.contains('encounters')) {
+          const store = db.createObjectStore('encounters', { keyPath: 'id' });
+          store.createIndex('by-updated', 'updatedAt');
         }
       },
     });
@@ -74,10 +83,32 @@ export async function deleteArt(id: string): Promise<void> {
   await db.delete('art', id);
 }
 
+export async function listEncounters(): Promise<Encounter[]> {
+  const db = await getDB();
+  const all = await db.getAll('encounters');
+  return all.sort((a, b) => b.updatedAt - a.updatedAt);
+}
+
+export async function getEncounter(id: string): Promise<Encounter | undefined> {
+  const db = await getDB();
+  return db.get('encounters', id);
+}
+
+export async function saveEncounter(encounter: Encounter): Promise<void> {
+  const db = await getDB();
+  await db.put('encounters', { ...encounter, updatedAt: Date.now() });
+}
+
+export async function deleteEncounter(id: string): Promise<void> {
+  const db = await getDB();
+  await db.delete('encounters', id);
+}
+
 /** Convert all stored data into a JSON-serializable backup. */
 export async function exportAll(): Promise<string> {
   const db = await getDB();
   const characters = await db.getAll('characters');
+  const encounters = await db.getAll('encounters');
   const artRecords = await db.getAll('art');
   const art = await Promise.all(
     artRecords.map(async (r) => ({
@@ -87,15 +118,18 @@ export async function exportAll(): Promise<string> {
       data: await blobToBase64(r.blob),
     }))
   );
-  return JSON.stringify({ version: 1, characters, art }, null, 2);
+  return JSON.stringify({ version: 2, characters, encounters, art }, null, 2);
 }
 
 export async function importAll(json: string): Promise<void> {
   const data = JSON.parse(json);
   const db = await getDB();
-  const tx = db.transaction(['characters', 'art'], 'readwrite');
+  const tx = db.transaction(['characters', 'encounters', 'art'], 'readwrite');
   if (Array.isArray(data.characters)) {
     for (const c of data.characters) await tx.objectStore('characters').put(c);
+  }
+  if (Array.isArray(data.encounters)) {
+    for (const e of data.encounters) await tx.objectStore('encounters').put(e);
   }
   if (Array.isArray(data.art)) {
     for (const a of data.art) {

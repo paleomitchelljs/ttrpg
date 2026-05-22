@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { getArt, listCharacters } from './storage';
-import type { Character } from './shadowdark/types';
+import { getArt, listCharacters, listEncounters } from './storage';
+import type { Character, Encounter } from './shadowdark/types';
 
 /** Subscribe to the character list. Auto-refreshes via the shared event bus. */
 export function useCharacters(): {
@@ -30,6 +30,34 @@ export function useCharacters(): {
 /** Notify all listeners that the character list changed. */
 export function emitCharactersChanged() {
   window.dispatchEvent(new Event('portal:characters-changed'));
+}
+
+export function useEncounters(): {
+  encounters: Encounter[];
+  loading: boolean;
+  refresh: () => Promise<void>;
+} {
+  const [encounters, setEncounters] = useState<Encounter[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  async function refresh() {
+    const list = await listEncounters();
+    setEncounters(list);
+    setLoading(false);
+  }
+
+  useEffect(() => {
+    refresh();
+    const handler = () => refresh();
+    window.addEventListener('portal:encounters-changed', handler);
+    return () => window.removeEventListener('portal:encounters-changed', handler);
+  }, []);
+
+  return { encounters, loading, refresh };
+}
+
+export function emitEncountersChanged() {
+  window.dispatchEvent(new Event('portal:encounters-changed'));
 }
 
 /** Resolve an art ID to a blob URL for use in <img src>. */

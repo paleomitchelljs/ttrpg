@@ -389,6 +389,183 @@ label {
   .big-roll-total { font-size: 4rem; }
 }
 
+/* === Enemy tab / encounter tracker === */
+
+.encounter-pills, .filter-pill-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+}
+.encounter-pill, .filter-pill {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  color: var(--ink-dim);
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-family: var(--font-display);
+}
+.encounter-pill:hover, .filter-pill:hover { color: var(--ink); border-color: var(--border-strong); }
+.encounter-pill.active, .filter-pill.active {
+  background: var(--accent);
+  color: var(--bg-0);
+  border-color: var(--accent);
+}
+
+.monster-library {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 0.6rem;
+}
+.monster-lib-card {
+  text-align: left;
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.6rem;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  color: var(--ink);
+  font-family: inherit;
+  transition: transform 0.08s, border-color 0.12s, background 0.12s;
+}
+.monster-lib-card:hover { border-color: var(--accent); background: var(--bg-3); }
+.monster-lib-card:active { transform: scale(0.98); }
+.monster-lib-name {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: var(--accent);
+}
+.monster-lib-stats {
+  display: flex;
+  gap: 0.6rem;
+  font-size: 0.9rem;
+}
+.monster-lib-tags {
+  display: flex;
+  gap: 0.25rem;
+  flex-wrap: wrap;
+}
+.mini-tag {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 0.05rem 0.4rem;
+  font-size: 0.7rem;
+  color: var(--ink-faint);
+}
+
+.encounter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 0.7rem;
+}
+.monster-card {
+  background: var(--bg-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  box-shadow: var(--shadow);
+}
+.monster-card.dead {
+  opacity: 0.55;
+  border-style: dashed;
+}
+.monster-card.dead .monster-card-name { text-decoration: line-through; }
+.monster-card-name {
+  font-family: var(--font-display);
+  font-size: 1.15rem;
+  color: var(--ink);
+}
+.monster-card-x {
+  font-size: 0.9rem;
+  padding: 0.2rem 0.5rem;
+  color: var(--ink-faint);
+}
+.monster-card-hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  background: var(--bg-1);
+  border-radius: 6px;
+  padding: 0.5rem 0.7rem;
+}
+.monster-hp {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.monster-hp-value {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  display: flex;
+  align-items: baseline;
+  gap: 0.3rem;
+  color: var(--ink);
+}
+.monster-hp-buttons {
+  display: flex;
+  gap: 0.3rem;
+}
+.monster-hp .hp-button {
+  width: 2rem;
+  height: 2rem;
+  font-size: 1.2rem;
+}
+.monster-ac {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--ink);
+}
+.monster-card-attacks {
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+}
+.attack-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 0.45rem 0.7rem;
+  font-family: inherit;
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+}
+.attack-button:hover:not(:disabled) { border-color: var(--accent); background: var(--bg-3); }
+.attack-name { font-family: var(--font-display); }
+.attack-mod {
+  font-family: var(--font-mono);
+  font-size: 0.85rem;
+  color: var(--accent);
+}
+.monster-card-notes {
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+@media (max-width: 720px) {
+  .monster-library { grid-template-columns: repeat(2, 1fr); }
+  .encounter-grid { grid-template-columns: 1fr; }
+}
+
+.scene-card { animation: banner-pop 0.2s ease-out; }
+.treasure-value {
+  font-family: var(--font-mono);
+  color: var(--accent);
+  font-size: 1.05rem;
+}
+
 .step-nav {
   display: flex;
   gap: 0.5rem;

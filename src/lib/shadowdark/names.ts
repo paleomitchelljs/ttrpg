@@ -24,4 +24,12 @@ export const NAMES: Record<string, string[]> = {
     'Zali', 'Bram', 'Clara', 'Nattias', 'Rina', 'Denton',
     'Mirena', 'Aran', 'Morgan', 'Giralt', 'Tamra',
   ],
+  'yuan-ti': [
+    'Sszar', 'Vessil', 'Nashi', 'Tessek', 'Issra', 'Vohss',
+    'Sythra', 'Kovahs', 'Zhassan', 'Veneris', 'Slyth', 'Hessri',
+  ],
+  iksar: [
+    'Krak', 'Tssarn', 'Ixtha', 'Volsk', 'Rhozz', 'Sazza',
+    'Drekk', 'Tannik', 'Vurk', 'Skarn', 'Grell', 'Zyx',
+  ],
 };

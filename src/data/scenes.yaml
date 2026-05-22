@@ -1,0 +1,67 @@
+# Scene blurbs for the Dungeon tab "Roll a room" button.
+#
+# Each scene:
+#   id, name         — required
+#   tags             — underground, building, ruins, holy, natural, wet, etc.
+#   description      — short evocative blurb the GM can read aloud or riff on
+
+scenes:
+  - id: dripping-cavern
+    name: Dripping Cavern
+    tags: [underground, natural, wet]
+    description: "Stalactites drip into glittering pools. A cold draft hints at a deeper passage."
+
+  - id: ruined-shrine
+    name: Ruined Shrine
+    tags: [building, holy, ruins]
+    description: "A toppled altar. Faded murals show a god long forgotten by the world above."
+
+  - id: collapsed-bridge
+    name: Collapsed Bridge
+    tags: [underground, hazard]
+    description: "A stone span half-shattered over a black chasm. Whatever's at the bottom isn't quiet."
+
+  - id: mushroom-grove
+    name: Glowing Mushroom Grove
+    tags: [underground, natural, magical]
+    description: "Towering fungi cast a pale blue light. The spores tickle the nose."
+
+  - id: bone-pile
+    name: Pile of Old Bones
+    tags: [undead, grim]
+    description: "A mound of cracked bones, most of them human. Something has been gnawing on them."
+
+  - id: rusted-portcullis
+    name: Rusted Portcullis
+    tags: [building, ruins, obstacle]
+    description: "A heavy iron grate, half-fallen. A faded warning is carved above."
+
+  - id: forgotten-library
+    name: Forgotten Library
+    tags: [building, knowledge, magical]
+    description: "Shelves of crumbling tomes. One book on a lectern is still open, as if just abandoned."
+
+  - id: still-pool
+    name: Still Black Pool
+    tags: [underground, wet, magical]
+    description: "A pool too still to be natural. Something pale moves under the surface — or seems to."
+
+  - id: bandit-camp
+    name: Abandoned Camp
+    tags: [outdoor, humanoid]
+    description: "A campfire still warm. Coffee on the embers. Three packs left behind."
+
+  - id: web-tunnel
+    name: Web-Choked Tunnel
+    tags: [underground, beast, hazard]
+    description: "Sticky webs fill the passage shoulder-high. Something is wrapped in the corner."
+
+  - id: ancient-statue
+    name: Watching Statue
+    tags: [building, magical]
+    description: "A weathered statue with cracked features. Its head appears to turn — but never quite."
+
+  - id: lava-vent
+    name: Steaming Vent
+    tags: [underground, hazard]
+    description: "A glowing crack splits the floor, hissing heat. Crossing it will not be pleasant."

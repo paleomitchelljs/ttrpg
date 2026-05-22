@@ -1,0 +1,122 @@
+# Treasure table for random rolls.
+#
+# Each entry:
+#   id, name        — required
+#   tier            — 1 (junk/coin), 2 (decent), 3 (valuable/magical)
+#   tags            — coin, gem, art, potion, scroll, magic, mundane
+#   value           — display string ("3d6 sp", "100gp", "priceless")
+#   notes           — optional flavor
+
+treasure:
+  # ───────── Tier 1 — pocket change ─────────
+  - id: copper-pile
+    name: Pile of copper coins
+    tier: 1
+    tags: [coins]
+    value: 5d6 cp
+
+  - id: silver-pouch
+    name: Pouch of silver coins
+    tier: 1
+    tags: [coins]
+    value: 2d6 sp
+
+  - id: gold-purse-small
+    name: Leather purse with gold
+    tier: 1
+    tags: [coins]
+    value: 1d6 gp
+
+  - id: bone-die
+    name: A pair of carved bone dice
+    tier: 1
+    tags: [mundane]
+    value: 1gp
+    notes: "Maybe lucky. Maybe loaded."
+
+  - id: silver-ring
+    name: Plain silver ring
+    tier: 1
+    tags: [art]
+    value: 5gp
+
+  - id: vellum-scroll-blank
+    name: Blank vellum scroll
+    tier: 1
+    tags: [mundane]
+    value: 2gp
+
+  # ───────── Tier 2 — adventurer rewards ─────────
+  - id: gem-small
+    name: A small gemstone
+    tier: 2
+    tags: [gem]
+    value: 10gp
+
+  - id: gold-purse-medium
+    name: Heavy purse of gold
+    tier: 2
+    tags: [coins]
+    value: 3d10 gp
+
+  - id: silver-goblet
+    name: Tarnished silver goblet
+    tier: 2
+    tags: [art]
+    value: 25gp
+
+  - id: holy-water
+    name: Flask of holy water
+    tier: 2
+    tags: [holy, mundane]
+    value: 25gp
+
+  - id: potion-healing
+    name: Potion of healing
+    tier: 2
+    tags: [potion, magic]
+    notes: "Drink to restore 1d6 HP."
+
+  - id: spell-scroll
+    name: Scroll of a tier-1 spell
+    tier: 2
+    tags: [scroll, magic]
+    notes: "Roll a random tier-1 spell."
+
+  - id: ancient-map
+    name: Crumbling treasure map
+    tier: 2
+    tags: [art, hook]
+    notes: "Leads somewhere... probably."
+
+  # ───────── Tier 3 — valuable / magical ─────────
+  - id: gem-large
+    name: A large gemstone
+    tier: 3
+    tags: [gem]
+    value: 100gp
+
+  - id: gold-crown
+    name: Tarnished gold crown
+    tier: 3
+    tags: [art]
+    value: 250gp
+    notes: "Set with three small jewels."
+
+  - id: magic-sword
+    name: Sword glowing with a faint blue light
+    tier: 3
+    tags: [magic, weapon]
+    notes: "+1 to attack. Sheds light at near distance."
+
+  - id: ring-protection
+    name: A simple iron ring
+    tier: 3
+    tags: [magic]
+    notes: "Wearer gains +1 AC. Recognizable as magical."
+
+  - id: wand-spark
+    name: Carved wand of bone
+    tier: 3
+    tags: [magic]
+    notes: "Cast a magic missile-like spell (1d4 dmg, near) up to 3 times per day."

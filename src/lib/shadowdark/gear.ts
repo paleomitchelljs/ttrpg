@@ -1,96 +1,90 @@
+// Thin compatibility layer on top of items.ts (which reads from items.yaml).
+// Existing callers use these named exports — keep them stable.
+
 import type { GearItem } from './types';
+import {
+  ITEMS,
+  hasTag,
+  itemsByCategory,
+  type Item,
+} from './items';
 
-export const WEAPONS: GearItem[] = [
-  { name: 'Dagger', cost: '1gp', slots: 1, tags: ['Melee', 'Thrown', 'd4 / d4'] },
-  { name: 'Staff', cost: '5sp', slots: 1, tags: ['Melee', 'Two-handed', 'd4 / d4'] },
-  { name: 'Club', cost: '5cp', slots: 1, tags: ['Melee', 'd4 / d4'] },
-  { name: 'Shortbow', cost: '6gp', slots: 1, tags: ['Ranged', 'Two-handed', 'd4 / d4'] },
-  { name: 'Shortsword', cost: '7gp', slots: 1, tags: ['Melee', 'd6 / d6'] },
-  { name: 'Mace', cost: '5gp', slots: 1, tags: ['Melee', 'd6 / d6'] },
-  { name: 'Crossbow', cost: '8gp', slots: 1, tags: ['Ranged', 'Two-handed', 'Loading', 'd6 / d6'] },
-  { name: 'Spear', cost: '5sp', slots: 1, tags: ['Melee', 'Thrown', 'd6 / d6'] },
-  { name: 'Warhammer', cost: '10gp', slots: 1, tags: ['Melee', 'd6 / d6'] },
-  { name: 'Longsword', cost: '9gp', slots: 1, tags: ['Melee', 'd8 / d6'] },
-  { name: 'Battleaxe', cost: '10gp', slots: 1, tags: ['Melee', 'd8 / d6'] },
-  { name: 'Bastard sword', cost: '10gp', slots: 2, tags: ['Melee', 'd8 / d10'] },
-  { name: 'Greataxe', cost: '12gp', slots: 2, tags: ['Melee', 'Two-handed', 'd10 / d10'] },
-  { name: 'Greatsword', cost: '12gp', slots: 2, tags: ['Melee', 'Two-handed', 'd12 / d12'] },
-  { name: 'Longbow', cost: '12gp', slots: 2, tags: ['Ranged', 'Two-handed', 'd8 / d8'] },
-];
-
-export const ARMOR: GearItem[] = [
-  { name: 'Leather armor', cost: '10gp', slots: 1, tags: ['AC 11 + DEX'] },
-  { name: 'Chainmail', cost: '60gp', slots: 2, tags: ['AC 13 + DEX, disadv. on stealth/swim'] },
-  { name: 'Plate mail', cost: '130gp', slots: 3, tags: ['AC 15, no DEX, disadv. stealth/swim'] },
-  { name: 'Shield', cost: '10gp', slots: 1, tags: ['+2 AC, one-handed only'] },
-  { name: 'Helmet', cost: '10gp', slots: 1, tags: ['+1 AC'] },
-];
-
-export const ADVENTURING_GEAR: GearItem[] = [
-  { name: 'Backpack', cost: '2gp', slots: 0, notes: 'Holds the items you carry.' },
-  { name: 'Caltrops, one bag', cost: '1gp', slots: 1 },
-  { name: 'Crowbar', cost: '5sp', slots: 1 },
-  { name: 'Flask or bottle', cost: '3sp', slots: 1 },
-  { name: 'Flint and steel', cost: '5sp', slots: 1 },
-  { name: 'Gem (10gp value, 100gp value)', cost: 'varies', slots: 1 },
-  { name: 'Grappling hook', cost: '1gp', slots: 1 },
-  { name: 'Iron spikes (10)', cost: '1gp', slots: 1 },
-  { name: 'Lantern', cost: '5gp', slots: 1, notes: 'Sheds light, requires oil.' },
-  { name: 'Mirror', cost: '10gp', slots: 1 },
-  { name: 'Oil, flask', cost: '5sp', slots: 1 },
-  { name: 'Pole, 10-foot', cost: '5sp', slots: 1 },
-  { name: 'Rations (3)', cost: '5sp', slots: 1 },
-  { name: 'Rope, 60ft', cost: '1gp', slots: 1 },
-  { name: 'Torch', cost: '5cp', slots: 1, notes: 'Sheds light for one hour.' },
-  { name: 'Holy symbol', cost: '1gp', slots: 1 },
-  { name: 'Holy water, flask', cost: '25gp', slots: 1 },
-  { name: 'Spellbook', cost: '50gp', slots: 1, notes: 'Required for wizards.' },
-];
-
-export const ALL_GEAR = [...WEAPONS, ...ARMOR, ...ADVENTURING_GEAR];
-
-function norm(s: string): string {
-  return s.toLowerCase().replace(/[^a-z0-9]/g, '');
-}
-
-export function findWeapon(name: string | undefined): GearItem | undefined {
-  if (!name) return undefined;
-  const n = norm(name);
-  return WEAPONS.find((w) => norm(w.name) === n);
-}
-
-export function findArmor(name: string | undefined): GearItem | undefined {
-  if (!name) return undefined;
-  const n = norm(name);
-  return ARMOR.find((a) => norm(a.name) === n);
-}
+export {
+  findItem,
+  findWeapon,
+  findArmor,
+  findShield,
+  findHelmet,
+  itemsByCategory,
+  itemsByTag,
+  hasTag,
+  type Item,
+  type ItemCategory,
+} from './items';
 
 export const SHIELD_NAME = 'Shield';
 export const HELMET_NAME = 'Helmet';
 
+/** Adapt an `Item` to the older `GearItem` shape for the few places that still use it. */
+function toGearItem(it: Item): GearItem {
+  const tags = [...it.tags];
+  if (it.category === 'weapon' && it.damageOne) {
+    const dmg = `${it.damageOne} / ${it.damageTwo ?? it.damageOne}`;
+    tags.unshift(dmg);
+  }
+  return {
+    name: it.name,
+    cost: it.cost,
+    slots: it.slots,
+    tags,
+    notes: it.notes,
+  };
+}
+
+export const WEAPONS: GearItem[] = itemsByCategory('weapon').map(toGearItem);
+export const ARMOR: GearItem[] = [
+  ...itemsByCategory('armor'),
+  ...itemsByCategory('shield'),
+  ...itemsByCategory('helmet'),
+].map(toGearItem);
+export const ADVENTURING_GEAR: GearItem[] = [
+  ...itemsByCategory('gear'),
+  ...itemsByCategory('consumable'),
+].map(toGearItem);
+export const ALL_GEAR: GearItem[] = ITEMS.map(toGearItem);
+
 export function isShield(name: string | undefined): boolean {
-  return !!name && norm(name) === norm(SHIELD_NAME);
+  if (!name) return false;
+  return name.toLowerCase() === SHIELD_NAME.toLowerCase();
 }
 
 export function isHelmet(name: string | undefined): boolean {
-  return !!name && norm(name) === norm(HELMET_NAME);
+  if (!name) return false;
+  return name.toLowerCase() === HELMET_NAME.toLowerCase();
 }
 
-export function isTwoHanded(weapon: GearItem | undefined): boolean {
-  return !!weapon?.tags?.some((t) => t === 'Two-handed');
+export function isTwoHanded(weapon: GearItem | Item | undefined): boolean {
+  if (!weapon) return false;
+  if ('category' in weapon) return hasTag(weapon, 'two-handed');
+  return !!weapon.tags?.includes('Two-handed') || !!weapon.tags?.includes('two-handed');
 }
 
-export function isRanged(weapon: GearItem | undefined): boolean {
-  return !!weapon?.tags?.some((t) => t === 'Ranged');
+export function isRanged(weapon: GearItem | Item | undefined): boolean {
+  if (!weapon) return false;
+  if ('category' in weapon) return hasTag(weapon, 'ranged');
+  return !!weapon.tags?.includes('Ranged') || !!weapon.tags?.includes('ranged');
 }
 
 /**
- * Pick the damage die for a weapon. Weapons list two dice as "d8 / d6"
- * (one-handed / two-handed) for versatile weapons; otherwise the same die twice.
- * Returns "d8" style string, or "d4" if unparseable.
+ * Damage die for a weapon. Versatile weapons return their two-handed die when
+ * `twoHanded` is true; otherwise the one-handed die. Returns "d4" if unparseable.
  */
-export function weaponDamageDie(weapon: GearItem | undefined, twoHanded: boolean): string {
+export function weaponDamageDie(weapon: GearItem | Item | undefined, twoHanded: boolean): string {
   if (!weapon) return 'd4';
+  if ('category' in weapon) {
+    return twoHanded ? (weapon.damageTwo ?? weapon.damageOne ?? 'd4') : (weapon.damageOne ?? 'd4');
+  }
+  // GearItem path — damage stored as "d8 / d6" in tags[0]
   const dmgTag = weapon.tags?.find((t) => /^d\d+\s*\/\s*d\d+$/i.test(t));
   if (!dmgTag) return 'd4';
   const parts = dmgTag.split('/').map((p) => p.trim().toLowerCase());
@@ -99,10 +93,14 @@ export function weaponDamageDie(weapon: GearItem | undefined, twoHanded: boolean
 
 /**
  * Armor AC formula. Returns { base, addsDex } where total AC =
- * base + (addsDex ? DEX mod : 0) + shield(+2) + helmet(+1).
+ * base + (addsDex ? DEX mod : 0). Shield (+2) and helmet (+1) add on top of this.
  */
-export function armorACBase(armor: GearItem | undefined): { base: number; addsDex: boolean } {
+export function armorACBase(armor: GearItem | Item | undefined): { base: number; addsDex: boolean } {
   if (!armor) return { base: 10, addsDex: true };
+  if ('category' in armor) {
+    return { base: armor.acBase ?? 10, addsDex: armor.acDex ?? true };
+  }
+  // GearItem path — legacy callers
   const tag = armor.tags?.[0] ?? '';
   const match = tag.match(/AC\s*(\d+)/i);
   const base = match ? parseInt(match[1], 10) : 10;
@@ -110,7 +108,8 @@ export function armorACBase(armor: GearItem | undefined): { base: number; addsDe
   return { base, addsDex };
 }
 
-// Starting gear by class (Shadowdark Quickstart defaults).
+// ───────── Starting gear by class ─────────
+
 export interface StartingGear {
   gold: string;
   items: string[];

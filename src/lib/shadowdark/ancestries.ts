@@ -43,6 +43,20 @@ export const ANCESTRIES: Ancestry[] = [
     trait: 'Ambitious: You gain one additional talent roll at 1st level.',
     languages: ['Common', 'Common (any one extra)'],
   },
+  {
+    id: 'yuan-ti',
+    name: 'Yuan-Ti',
+    description: 'Serpent-folk of forgotten temples, cold-blooded and clever.',
+    trait: 'Snake Sight: You see in the dark and never need to carry a torch.',
+    languages: ['Common', 'Draconic'],
+  },
+  {
+    id: 'iksar',
+    name: 'Iksar',
+    description: 'Scaled lizardfolk of the swamps, slow to tire and slower to die.',
+    trait: 'Hardy Scales: You roll death timer checks with advantage and only need to eat every other day.',
+    languages: ['Common', 'Draconic'],
+  },
 ];
 
 export function getAncestry(id: string): Ancestry | undefined {

@@ -1,0 +1,343 @@
+# Shadowdark items database.
+#
+# Edit this file to add or change items. Build the app (npm run build) and the
+# new items will show up everywhere — equipment dropdowns, character gear, etc.
+#
+# Each item:
+#   id           required — kebab-case, unique. Used internally; the display name
+#                can change without breaking saved characters.
+#   name         required — what the player sees.
+#   category     required — one of: weapon | armor | shield | helmet | gear | consumable
+#   cost         optional — display string like "5gp", "5sp", "5cp".
+#   slots        optional — gear slots taken when carried (default 1).
+#   tags         optional — free-form list. Used for filtering and rules.
+#                Suggested tags:
+#                  weapons: melee, ranged, thrown, two-handed, finesse, versatile
+#                  armor:   disadv-stealth, disadv-swim
+#                  items:   light, holy, magic, undead-bane, drink, food
+#   notes        optional — short description.
+#
+# Weapon-only fields:
+#   damage_one   damage die when wielded one-handed, e.g. "d8".
+#   damage_two   damage die when wielded two-handed (versatile). Same as
+#                damage_one for non-versatile weapons.
+#
+# Armor-only fields:
+#   ac_base      base AC value, e.g. 11 for leather, 13 for chainmail, 15 plate.
+#   ac_dex       true if DEX modifier still applies on top of base.
+#
+# Shield/helmet-only field:
+#   ac_bonus     flat bonus added to AC when equipped.
+
+items:
+  # ───────── Weapons ─────────
+  - id: dagger
+    name: Dagger
+    category: weapon
+    cost: 1gp
+    slots: 1
+    damage_one: d4
+    damage_two: d4
+    tags: [melee, thrown, finesse]
+
+  - id: staff
+    name: Staff
+    category: weapon
+    cost: 5sp
+    slots: 1
+    damage_one: d4
+    damage_two: d4
+    tags: [melee, two-handed]
+
+  - id: club
+    name: Club
+    category: weapon
+    cost: 5cp
+    slots: 1
+    damage_one: d4
+    damage_two: d4
+    tags: [melee]
+
+  - id: shortbow
+    name: Shortbow
+    category: weapon
+    cost: 6gp
+    slots: 1
+    damage_one: d4
+    damage_two: d4
+    tags: [ranged, two-handed]
+
+  - id: shortsword
+    name: Shortsword
+    category: weapon
+    cost: 7gp
+    slots: 1
+    damage_one: d6
+    damage_two: d6
+    tags: [melee, finesse]
+
+  - id: mace
+    name: Mace
+    category: weapon
+    cost: 5gp
+    slots: 1
+    damage_one: d6
+    damage_two: d6
+    tags: [melee]
+
+  - id: crossbow
+    name: Crossbow
+    category: weapon
+    cost: 8gp
+    slots: 1
+    damage_one: d6
+    damage_two: d6
+    tags: [ranged, two-handed, loading]
+
+  - id: spear
+    name: Spear
+    category: weapon
+    cost: 5sp
+    slots: 1
+    damage_one: d6
+    damage_two: d6
+    tags: [melee, thrown]
+
+  - id: warhammer
+    name: Warhammer
+    category: weapon
+    cost: 10gp
+    slots: 1
+    damage_one: d6
+    damage_two: d6
+    tags: [melee]
+
+  - id: longsword
+    name: Longsword
+    category: weapon
+    cost: 9gp
+    slots: 1
+    damage_one: d8
+    damage_two: d6
+    tags: [melee, versatile]
+
+  - id: battleaxe
+    name: Battleaxe
+    category: weapon
+    cost: 10gp
+    slots: 1
+    damage_one: d8
+    damage_two: d6
+    tags: [melee, versatile]
+
+  - id: bastard-sword
+    name: Bastard sword
+    category: weapon
+    cost: 10gp
+    slots: 2
+    damage_one: d8
+    damage_two: d10
+    tags: [melee, versatile]
+
+  - id: greataxe
+    name: Greataxe
+    category: weapon
+    cost: 12gp
+    slots: 2
+    damage_one: d10
+    damage_two: d10
+    tags: [melee, two-handed]
+
+  - id: greatsword
+    name: Greatsword
+    category: weapon
+    cost: 12gp
+    slots: 2
+    damage_one: d12
+    damage_two: d12
+    tags: [melee, two-handed]
+
+  - id: longbow
+    name: Longbow
+    category: weapon
+    cost: 12gp
+    slots: 2
+    damage_one: d8
+    damage_two: d8
+    tags: [ranged, two-handed]
+
+  # ───────── Armor ─────────
+  - id: leather-armor
+    name: Leather armor
+    category: armor
+    cost: 10gp
+    slots: 1
+    ac_base: 11
+    ac_dex: true
+    tags: []
+
+  - id: chainmail
+    name: Chainmail
+    category: armor
+    cost: 60gp
+    slots: 2
+    ac_base: 13
+    ac_dex: true
+    tags: [disadv-stealth, disadv-swim]
+
+  - id: plate-mail
+    name: Plate mail
+    category: armor
+    cost: 130gp
+    slots: 3
+    ac_base: 15
+    ac_dex: false
+    tags: [disadv-stealth, disadv-swim]
+
+  # ───────── Shields ─────────
+  - id: shield
+    name: Shield
+    category: shield
+    cost: 10gp
+    slots: 1
+    ac_bonus: 2
+    tags: []
+    notes: "+2 AC. Can't be used with two-handed weapons."
+
+  # ───────── Helmets ─────────
+  - id: helmet
+    name: Helmet
+    category: helmet
+    cost: 10gp
+    slots: 1
+    ac_bonus: 1
+    tags: []
+
+  # ───────── Adventuring gear ─────────
+  - id: backpack
+    name: Backpack
+    category: gear
+    cost: 2gp
+    slots: 0
+    notes: "Holds the items you carry."
+
+  - id: caltrops
+    name: Caltrops, one bag
+    category: gear
+    cost: 1gp
+    slots: 1
+    tags: []
+
+  - id: crowbar
+    name: Crowbar
+    category: gear
+    cost: 5sp
+    slots: 1
+
+  - id: flask
+    name: Flask or bottle
+    category: gear
+    cost: 3sp
+    slots: 1
+
+  - id: flint-and-steel
+    name: Flint and steel
+    category: gear
+    cost: 5sp
+    slots: 1
+
+  - id: gem
+    name: Gem
+    category: gear
+    cost: varies
+    slots: 1
+    notes: "10gp or 100gp value."
+
+  - id: grappling-hook
+    name: Grappling hook
+    category: gear
+    cost: 1gp
+    slots: 1
+
+  - id: iron-spikes
+    name: Iron spikes (10)
+    category: gear
+    cost: 1gp
+    slots: 1
+
+  - id: lantern
+    name: Lantern
+    category: gear
+    cost: 5gp
+    slots: 1
+    tags: [light]
+    notes: "Sheds light, requires oil."
+
+  - id: mirror
+    name: Mirror
+    category: gear
+    cost: 10gp
+    slots: 1
+
+  - id: oil
+    name: Oil, flask
+    category: consumable
+    cost: 5sp
+    slots: 1
+    tags: [thrown]
+
+  - id: pole
+    name: Pole, 10-foot
+    category: gear
+    cost: 5sp
+    slots: 1
+
+  - id: rations
+    name: Rations (3)
+    category: consumable
+    cost: 5sp
+    slots: 1
+    tags: [food]
+
+  - id: rope
+    name: Rope, 60ft
+    category: gear
+    cost: 1gp
+    slots: 1
+
+  - id: torch
+    name: Torch
+    category: consumable
+    cost: 5cp
+    slots: 1
+    tags: [light]
+    notes: "Sheds light for one hour."
+
+  - id: holy-symbol
+    name: Holy symbol
+    category: gear
+    cost: 1gp
+    slots: 1
+    tags: [holy]
+
+  - id: holy-water
+    name: Holy water, flask
+    category: consumable
+    cost: 25gp
+    slots: 1
+    tags: [thrown, holy, undead-bane]
+    notes: "On a hit, deals damage to undead and demons."
+
+  - id: spellbook
+    name: Spellbook
+    category: gear
+    cost: 50gp
+    slots: 1
+    notes: "Required for wizards."
+
+  - id: thieves-tools
+    name: Thieves' tools
+    category: gear
+    cost: 5gp
+    slots: 1
+    tags: []

@@ -3,14 +3,14 @@ import { formatMod, statMod } from '../../lib/dice';
 import { getAncestry } from '../../lib/shadowdark/ancestries';
 import { getClass } from '../../lib/shadowdark/classes';
 import {
-  ARMOR,
-  WEAPONS,
   armorACBase,
   findArmor,
+  findHelmet,
   findWeapon,
   isRanged,
   isShield,
   isTwoHanded,
+  itemsByCategory,
   weaponDamageDie,
 } from '../../lib/shadowdark/gear';
 import { getSpell } from '../../lib/shadowdark/spells';
@@ -40,7 +40,7 @@ export function CharacterSheet({ character, onEdit, onClose, onDelete }: Props) 
   const mainHand = findWeapon(equipment.mainHand);
   const offHand = findWeapon(equipment.offHand);
   const armor = findArmor(equipment.armor);
-  const helmet = findArmor(equipment.helmet);
+  const helmet = findHelmet(equipment.helmet);
 
   const strMod = statMod(character.stats.STR);
   const dexMod = statMod(character.stats.DEX);
@@ -92,8 +92,9 @@ export function CharacterSheet({ character, onEdit, onClose, onDelete }: Props) 
   }
 
   // One-handed melee weapons that can sit in an off-hand.
-  const offHandWeapons = WEAPONS.filter((w) => !isTwoHanded(w) && !isRanged(w));
-  const bodyArmor = ARMOR.filter((a) => !isShield(a.name) && a.name !== 'Helmet');
+  const weapons = itemsByCategory('weapon');
+  const offHandWeapons = weapons.filter((w) => !isTwoHanded(w) && !isRanged(w));
+  const bodyArmor = itemsByCategory('armor');
 
   return (
     <div className="col" style={{ gap: '1rem' }}>
@@ -162,7 +163,7 @@ export function CharacterSheet({ character, onEdit, onClose, onDelete }: Props) 
             label="Main hand"
             icon="⚔️"
             value={equipment.mainHand}
-            options={WEAPONS.map((w) => ({ value: w.name, label: `${w.name} (${weaponDamageDie(w, isTwoHanded(w))})` }))}
+            options={weapons.map((w) => ({ value: w.name, label: `${w.name} (${weaponDamageDie(w, isTwoHanded(w))})` }))}
             onChange={(v) => setEquipSlot('mainHand', v)}
           />
           <EquipSlot
