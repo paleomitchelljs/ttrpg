@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { MONSTERS, getMonster, monstersByTier } from '../lib/shadowdark/monsters';
 import type { Monster, MonsterAttack } from '../lib/shadowdark/monsters';
+import { filterByActivePool, getActivePool } from '../lib/shadowdark/activePool';
 import { roll } from '../lib/dice';
 import type { Encounter, EncounterMonster } from '../lib/shadowdark/types';
 import { deleteEncounter, saveEncounter } from '../lib/storage';
@@ -29,6 +30,7 @@ export function EnemyTab() {
   const [activeId, setActiveId] = useState<string | null>(null);
   const [tagFilter, setTagFilter] = useState<string>('');
   const latestRoll = useLatestRoll();
+  const activePool = getActivePool();
 
   // Keep active encounter from going stale when storage changes.
   const active = activeId ? encounters.find((e) => e.id === activeId) ?? null : null;
@@ -74,7 +76,11 @@ export function EnemyTab() {
   }
 
   async function rollEncounter(tier: 1 | 2 | 3) {
-    const pool = monstersByTier(tier);
+    // Random rolls honor the active pool (like scenes/treasure/traps); fall back
+    // to the full tier list if the pool would leave nothing to roll.
+    const tierList = monstersByTier(tier);
+    const scoped = filterByActivePool(tierList);
+    const pool = scoped.length > 0 ? scoped : tierList;
     if (pool.length === 0) return;
     // Pick 1d4 monsters; if any are tagged "boss", cap that group to a single instance.
     const groupCount = roll('1d4').total;
@@ -142,6 +148,12 @@ export function EnemyTab() {
         <button className="ghost" onClick={() => rollEncounter(3)}>🎲 Boss</button>
         <button className="primary" onClick={createEncounter}>+ New encounter</button>
       </div>
+
+      {activePool.enabled_tags.length > 0 && (
+        <div className="muted" style={{ marginTop: '-0.6rem', fontSize: '0.85rem' }}>
+          Random rolls scoped to <strong>{activePool.name}</strong>. Library below still shows all monsters.
+        </div>
+      )}
 
       {encounters.length > 1 && (
         <div className="encounter-pills">

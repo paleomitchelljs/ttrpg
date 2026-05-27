@@ -21,6 +21,10 @@ export interface Monster {
   notes?: string;
   /** Icon path relative to /public/, e.g. "icons/game-icons/lorc/dragon-head.svg". */
   icon?: string;
+  /** Source-tracking fields — preserved so the active pool can filter by origin. */
+  system?: string;
+  source_book?: string;
+  source_page?: number;
 }
 
 interface RawAttack {
@@ -41,6 +45,9 @@ interface RawMonster {
   attacks?: RawAttack[];
   notes?: string;
   icon?: string;
+  system?: string;
+  source_book?: string;
+  source_page?: number;
 }
 
 interface MonstersFile {
@@ -59,6 +66,9 @@ function normalize(raw: RawMonster): Monster {
     attacks: (raw.attacks ?? []).map((a) => ({ ...a, damage: String(a.damage) })),
     notes: raw.notes,
     icon: raw.icon,
+    system: raw.system,
+    source_book: raw.source_book,
+    source_page: raw.source_page,
   };
 }
 
