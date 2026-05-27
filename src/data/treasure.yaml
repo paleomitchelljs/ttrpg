@@ -6,6 +6,11 @@
 #   tags            — coin, gem, art, potion, scroll, magic, mundane
 #   value           — display string ("3d6 sp", "100gp", "priceless")
 #   notes           — optional flavor
+#
+# Source-tracking fields (optional, for filtering by origin):
+#   system       slug of source RPG system (shadowdark-core, eq-rpg, etc.)
+#   source_book  slug of specific book (everfrost-peaks, etc.)
+#   source_page  integer page number in source PDF
 
 treasure:
   # ───────── Tier 1 — pocket change ─────────
@@ -14,18 +19,24 @@ treasure:
     tier: 1
     tags: [coins]
     value: 5d6 cp
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: silver-pouch
     name: Pouch of silver coins
     tier: 1
     tags: [coins]
     value: 2d6 sp
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: gold-purse-small
     name: Leather purse with gold
     tier: 1
     tags: [coins]
     value: 1d6 gp
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: bone-die
     name: A pair of carved bone dice
@@ -33,12 +44,16 @@ treasure:
     tags: [mundane]
     value: 1gp
     notes: "Maybe lucky. Maybe loaded."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: silver-ring
     name: Plain silver ring
     tier: 1
     tags: [art]
     value: 5gp
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: vellum-scroll-blank
     name: Blank vellum scroll
@@ -47,41 +62,55 @@ treasure:
     value: 2gp
 
   # ───────── Tier 2 — adventurer rewards ─────────
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
   - id: gem-small
     name: A small gemstone
     tier: 2
     tags: [gem]
     value: 10gp
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: gold-purse-medium
     name: Heavy purse of gold
     tier: 2
     tags: [coins]
     value: 3d10 gp
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: silver-goblet
     name: Tarnished silver goblet
     tier: 2
     tags: [art]
     value: 25gp
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: holy-water
     name: Flask of holy water
     tier: 2
     tags: [holy, mundane]
     value: 25gp
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: potion-healing
     name: Potion of healing
     tier: 2
     tags: [potion, magic]
     notes: "Drink to restore 1d6 HP."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: spell-scroll
     name: Scroll of a tier-1 spell
     tier: 2
     tags: [scroll, magic]
     notes: "Roll a random tier-1 spell."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: ancient-map
     name: Crumbling treasure map
@@ -90,11 +119,15 @@ treasure:
     notes: "Leads somewhere... probably."
 
   # ───────── Tier 3 — valuable / magical ─────────
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
   - id: gem-large
     name: A large gemstone
     tier: 3
     tags: [gem]
     value: 100gp
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: gold-crown
     name: Tarnished gold crown
@@ -102,21 +135,493 @@ treasure:
     tags: [art]
     value: 250gp
     notes: "Set with three small jewels."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: magic-sword
     name: Sword glowing with a faint blue light
     tier: 3
     tags: [magic, weapon]
     notes: "+1 to attack. Sheds light at near distance."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: ring-protection
     name: A simple iron ring
     tier: 3
     tags: [magic]
     notes: "Wearer gains +1 AC. Recognizable as magical."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: wand-spark
     name: Carved wand of bone
     tier: 3
     tags: [magic]
     notes: "Cast a magic missile-like spell (1d4 dmg, near) up to 3 times per day."
+
+  # ═══════════════════════════════════════════
+  # Sunless Citadel (sc-*)
+  # ═══════════════════════════════════════════
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: sc-shatterspike
+    name: Shatterspike (Sir Braford's longsword)
+    tier: 2
+    tags: [magic, weapon, longsword]
+    value: "300gp"
+    notes: "+1 longsword. On a hit against a foe's weapon, it deals extra damage and can shatter blades."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-wand-of-entangle
+    name: Belak's Wand of Entangle
+    tier: 2
+    tags: [magic, wand]
+    value: "150gp"
+    notes: "13 charges remain. Cast entangle on command to bind intruders in writhing roots."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-hucrele-signet-rings
+    name: Hucrele Signet Rings (pair)
+    tier: 1
+    tags: [quest, mundane]
+    value: "250gp (reward in Oakhurst)"
+    notes: "Matched gold signet rings bearing the Hucrele family crest. The matriarch pays for their return."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-summer-apple
+    name: Sun-Ripe Apple of the Gulthias Tree
+    tier: 2
+    tags: [magic, consumable, plant]
+    value: "50gp"
+    notes: "Perfect ruby-red apple. Eaten, it heals as a healing potion and cures one ailment. Plant a seed and a twig blight grows in a year."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-winter-apple
+    name: Pale Apple of the Gulthias Tree
+    tier: 3
+    tags: [cursed, consumable, plant]
+    notes: "Corpse-white apple. A single bite acts as a death curse: DC 15 CON save or die; on a success the eater loses 1d4 CON for a day."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-night-caller
+    name: Azan-gund, the Night Caller
+    tier: 3
+    tags: [magic, cursed]
+    value: "1000gp"
+    notes: "Whistle shaped like a curled dragon. Blown over a grave at night, raises one zombie to serve the bearer. Once per week. Long use corrupts the wielder."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-dragonpriest-regalia
+    name: Dragonpriest's Regalia
+    tier: 1
+    tags: [mundane, jewelry]
+    value: "40gp"
+    notes: "Rotted finery: ring with a small stone, an amulet, two silver-stamped bracelets."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-greenflame-torch
+    name: Greenflame Everburning Torch
+    tier: 1
+    tags: [magic, light]
+    value: "90gp"
+    notes: "Burns with a steady greenish flame — gives torch light, cannot set anything afire, never goes out."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-goblin-chiefs-chest
+    name: Goblin Chief's Iron Chest
+    tier: 2
+    tags: [treasure, container, trap]
+    value: "231gp + gems"
+    notes: "231gp, two 30gp onyx gems, two doses of antitoxin, a scroll of knock, a potion of cat's grace. Lock is rigged with a poison needle."
+
+  # ═══════════════════════════════════════════
+  # Whispering Cairn (wc-*)
+  # ═══════════════════════════════════════════
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: wc-indigo-lantern
+    name: Indigo Lantern of the Cairn
+    tier: 1
+    tags: [art, key, ritual]
+    value: "50gp"
+    notes: "Metal lantern with indigo glass panes. One of seven keys to the Gallery of Lanterns puzzle."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-elven-leaf-armband
+    name: Elven Leaf Armband
+    tier: 1
+    tags: [art]
+    value: "100gp (to elves)"
+    notes: "Intricately carved with a repeating leaf motif. Worthless to most fences but treasured by elven communities."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-red-pedestal
+    name: Red Metal Pedestal of Zosiel
+    tier: 2
+    tags: [art, magic]
+    value: "300gp"
+    notes: "Two-hundred-pound jet-black metal pedestal of a substance unknown elsewhere. Once held the dormant earth-elemental egg."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-vaati-spire-statuette
+    name: Vaati Spire Statuette
+    tier: 2
+    tags: [art]
+    value: "200gp"
+    notes: "Intact marble miniature of a Wind Duke palace, spire, or stadium."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-circlet-of-zosiel
+    name: Circlet of Zosiel
+    tier: 4
+    tags: [magic, relic, artifact]
+    notes: "Slim silver diadem inscribed with the personal glyph of the slain Wind Duke. Functions as a circlet of wisdom. Two curved black horn-tips accompany it."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-talisman-of-the-sphere
+    name: Talisman of the Sphere (Inactive)
+    tier: 4
+    tags: [magic, relic, artifact]
+    notes: "Adamantine loop on a handle, sealed in Zosiel's sarcophagus. Activates as a talisman of the sphere when its true name is spoken."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-portal-shards
+    name: Shards of the Portal Mirror
+    tier: 1
+    tags: [art, arcane]
+    value: "20gp"
+    notes: "Slivers of cold, shiny black glass from the shattered transport apparatus. Curiosities to most."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-seeker-ring
+    name: Seeker's Gold Ring
+    tier: 1
+    tags: [insignia]
+    value: "200gp"
+    notes: "Bearing the eight-pointed star of the Seekers, an order of unscrupulous archaeologists."
+
+  # ═══════════════════════════════════════════
+  # Giantslayer #6 (gs-*)
+  # ═══════════════════════════════════════════
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: gs-cloud-diadem
+    name: The Cloud Diadem
+    tier: 4
+    tags: [magic, crown, artifact, unique]
+    notes: "Silver circlet set with a pale gem. Telepathically steers Ironcloud Keep. The wearer also hears the alchemic bomb's status — shatter the gem and the bomb detonates."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-orb-of-red-dragonkind
+    name: Orb of Red Dragonkind
+    tier: 4
+    tags: [magic, artifact, dragon]
+    notes: "Fist-sized ruby orb. Dominate one red dragon at a time (1/day, DC 14 WIS). Bearer is immune to fire while holding it."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-black-comet-heart
+    name: The Black Comet Heart
+    tier: 4
+    tags: [magic, relic, artifact, planar]
+    notes: "Chunk of black diamond fallen from the sky. 1/day calls down extraplanar meteorites: 6d6 in a far-radius blast, DC 15 DEX for half."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-roc-rider-badge
+    name: Roc Rider Badge
+    tier: 3
+    tags: [magic, pin, neck]
+    value: "17000gp"
+    notes: "Giant-sized silver brooch. Wearer (and flying mount) can pass freely through Ironcloud Keep's energy field within near-radius."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-stormlords-helm
+    name: Stormlord's Helm
+    tier: 3
+    tags: [magic, helm, lightning]
+    notes: "Giant-sized iron helm crowned with bronze antlers. Wearer is immune to lightning damage and can discharge a stored lightning bolt 1/day (3d6, far, DC 14 DEX half)."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-scope-of-stormsight
+    name: Scope of Stormsight
+    tier: 3
+    tags: [magic, lens, siege]
+    value: "18000gp"
+    notes: "Brass tube with blue crystal lenses for a siege engine. Crew sees through darkness, fog, smoke. 1/round pinpoint an invisible creature in line of sight."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-cloud-giant-bag
+    name: Cloud Giant's Treasure Bag
+    tier: 2
+    tags: [art, treasure-roll]
+    notes: "Roll d8: 1) black pearls (500gp), 2) silver cameo (250gp), 3) two javelins of lightning, 4) saffron bag (200gp), 5) framed valley watercolor, 6) platinum tuning fork (450gp), 7) book of cloud-giant poetry, 8) crystal decanter of absinthe."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-volstus-gem-hoard
+    name: Volstus's Gem Hoard
+    tier: 4
+    tags: [art, gems, treasure]
+    value: "40250gp"
+    notes: "Giant-sized chest: 1,580 platinum, 13,290 gold, 20,900 silver, plus cut amethysts, aquamarines, black pearls, blue spinels, and smoky quartzes. Weighs hundreds of pounds."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-cloud-tomes
+    name: Hoard of Cloud Giant Tomes
+    tier: 3
+    tags: [art, books, knowledge]
+    notes: "Hundreds of huge volumes in Giant. Near-complete history of Golarion and the Great Beyond. A scholarly faction will pay handsomely — if you can haul them out."
+
+  # ═══════════════════════════════════════════
+  # EverQuest classics (eq-*)
+  # Icons pulled from wiki.project1999.com under /public/icons/eq/.
+  # ═══════════════════════════════════════════
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: eq-flowing-black-silk-sash
+    name: Flowing Black Silk Sash
+    tier: 3
+    tags: [magic, belt, monk, haste]
+    icon: icons/eq/flowing-black-silk-sash.png
+    notes: "Black silk woven so finely it ripples in still air. +1 AC. The wearer moves with unnatural quickness: on a natural 20 on a melee attack, immediately make one bonus melee attack against the same target. Coveted by monks who go without armor."
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-cloak-of-flames
+    name: Cloak of Flames
+    tier: 4
+    tags: [magic, cloak, fire, haste]
+    icon: icons/eq/cloak-of-flames.png
+    notes: "A cloak woven from living flame that never burns the wearer. +1 to STR checks and saves. Wearer takes half damage from fire. On a natural 19 or 20 on a melee attack, the cloak flares and the wearer makes one bonus melee attack wreathed in flame — on a hit, that bonus attack deals an extra 1d4 fire damage."
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-red-dragon-tooth
+    name: Red Dragon Tooth
+    tier: 3
+    tags: [magic, dragon, summon, component]
+    value: "500gp"
+    icon: icons/eq/red-dragon-tooth.png
+    notes: "A foot-long ivory tooth, still warm to the touch. 1/day, plant the tooth in the ground and speak the dragon's true name to summon a spectre that obeys the wielder for 10 minutes (HP 6, AC 13, fly close, incorporeal touch +3 1d4 cold). Also serves as the critical reagent in the lost rites that forge the Wurmslayer."
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-wurmslayer
+    name: Wurmslayer
+    tier: 4
+    tags: [magic, weapon, sword, dragon-bane]
+    icon: icons/eq/wurmslayer.png
+    notes: "A two-handed sword forged around a red dragon's tooth. Slow but devastating — its strikes are at disadvantage against nimble foes, but it deals an extra 1d8 against dragons, drakes, wyverns, and any creature with the 'dragon' tag. +1 to attack and damage."
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-fungus-covered-scale-tunic
+    name: Fungus-Covered Scale Tunic
+    tier: 4
+    tags: [magic, armor, regeneration]
+    icon: icons/eq/fungus-covered-scale-tunic.png
+    notes: "Scale armor riddled with pulsing luminescent mold. AC as chainmail. Passive regeneration: at the start of each of the wearer's turns, regain 1 HP (in or out of combat). Stinks faintly of cellar damp — disadvantage on stealth in still air."
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-staff-of-dreaded-gaze
+    name: Staff of the Dreaded Gaze
+    tier: 3
+    tags: [magic, staff, fear]
+    icon: icons/eq/staff-of-dreaded-gaze.png
+    notes: "A blackthorn staff topped with a single unblinking eye. Functions as a normal staff in melee. 1/day the wielder may level the eye at one creature within near range and cast Fear: DC 14 WIS save or flee at full speed for 1d4 rounds. The eye watches everything."
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-sarnak-battle-shield
+    name: Sarnak Battle Shield
+    tier: 3
+    tags: [magic, shield, resistance]
+    icon: icons/eq/sarnak-battle-shield.png
+    notes: "A heavy iron shield embossed with the snarling visage of a sarnak warrior. Acts as a shield (+2 AC). Wielder has advantage on saves against breath weapons and elemental damage (fire, cold, lightning, acid)."
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-stein-of-moggok
+    name: Stein of Moggok
+    tier: 3
+    tags: [magic, drink, spellcasting]
+    icon: icons/eq/stein-of-moggok.png
+    notes: "An oversized pewter stein engraved with ogre runes. 1/day, draining the stein lets a caster recover one tier-1 or tier-2 spell they lost from a failed casting check earlier today. The ale tastes foul but the magic surges back. Refills at dawn."
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-guise-of-the-deceiver
+    name: Guise of the Deceiver
+    tier: 4
+    tags: [magic, mask, helm, illusion]
+    icon: icons/eq/guise-of-the-deceiver.png
+    notes: "A featureless porcelain mask that warms when worn. Wearer appears as a dark elf to all onlookers. Convinces casual observers; close inspection requires DC 14 WIS save to see through. Removing the mask drops the illusion instantly."
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-circlet-of-shadow
+    name: Circlet of Shadow
+    tier: 3
+    tags: [magic, helm, light, stealth]
+    icon: icons/eq/circlet-of-shadow.png
+    notes: "A slim silver circlet that catches starlight even underground. +1 to AC. +1 to CHA checks and saves. Sheds faint silver light at close range without revealing the wearer's position — does not count as a torch for Shadowdark's light-source rules."
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-greenmist
+    name: Greenmist
+    tier: 4
+    tags: [magic, weapon, sword, lifesteal, drain]
+    icon: icons/eq/greenmist.png
+    notes: "A serpentine sword that drips sickly green vapor; the air around it tastes of iron and rot. +1 to attack and damage. On a natural 20, the mist lashes out — the wielder regains 1d6 HP drained from the target, the target's AC drops by 1 until they rest, and the wielder gains +1 AC for the rest of the fight (does not stack with itself)."
+
+  # ───────── EverQuest — Everfrost Peaks: The Trove ─────────
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-everfrost-frost-coin-hoard
+    name: "Frost-coin hoard"
+    tier: 2
+    tags: [coins, eq-rpg, everfrost]
+    value: "3d6 gp"
+    notes: "A leather pouch frozen shut, silver and gold within."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 171
+
+  - id: eq-everfrost-crystallized-mead-jug
+    name: "Crystallized mead jug"
+    tier: 1
+    tags: [drink, eq-rpg, everfrost]
+    value: "1gp"
+    notes: "Halasian mead, frozen solid. Thaws to fine drink. (Or a poor club.)"
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 171
+
+  - id: eq-everfrost-snow-pearl-necklace
+    name: "Snow-pearl necklace"
+    tier: 2
+    tags: [art, eq-rpg, everfrost]
+    value: "75gp"
+    notes: "Pearls from glacier-fed waters. Glows pale blue."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 172
+
+  - id: eq-everfrost-mammoth-ivory-comb
+    name: "Mammoth-ivory comb"
+    tier: 2
+    tags: [art, eq-rpg, everfrost]
+    value: "25gp"
+    notes: "Carved with Northman knotwork. Worth more in Halas."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 172
+
+  - id: eq-everfrost-ice-giant-s-tooth-carved-rune
+    name: "Ice giant's tooth (carved rune)"
+    tier: 2
+    tags: [art, eq-rpg, everfrost]
+    value: "40gp"
+    notes: "Carved with a single rune. Pendant or ammo for a sling."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 173
+
+  - id: eq-everfrost-wolf-pelt-cloak
+    name: "Wolf-pelt cloak"
+    tier: 1
+    tags: [mundane, eq-rpg, everfrost]
+    value: "8gp"
+    notes: "Warm and well-tanned. Cuts down cold exposure."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 173
+
+  - id: eq-everfrost-glacial-shard
+    name: "Glacial shard"
+    tier: 3
+    tags: [gem, eq-rpg, everfrost]
+    value: "100gp"
+    notes: "A shard of permafrost that never melts. Cold to the touch."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 174
+
+  - id: eq-everfrost-vox-s-coin-golden
+    name: "Vox's coin (golden)"
+    tier: 3
+    tags: [art, eq-rpg, everfrost]
+    value: "200gp"
+    notes: "Stamped with the white dragon's mark. Cursed? Lucky? Stories differ."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 174
+
+  - id: eq-everfrost-cylinder-of-miragul-scroll-case
+    name: "Cylinder of Miragul (scroll case)"
+    tier: 3
+    tags: [scroll, eq-rpg, everfrost]
+    value: "150gp"
+    notes: "Frostbound cylinder. Holds a forgotten necromantic formula."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 175
+
+  - id: eq-everfrost-frozen-torch-everburning-blue-flame
+    name: "Frozen torch (everburning, blue flame)"
+    tier: 2
+    tags: [magic, eq-rpg, everfrost]
+    value: "60gp"
+    notes: "Burns without fuel. Pale blue light. Sheds no heat."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 175
+
+  - id: eq-everfrost-northman-war-horn
+    name: "Northman war horn"
+    tier: 2
+    tags: [mundane, eq-rpg, everfrost]
+    value: "10gp"
+    notes: "Mammoth horn rimmed in iron. Call carries for miles."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 176
+
+  - id: eq-everfrost-spirit-water-flask
+    name: "Spirit-water flask"
+    tier: 2
+    tags: [drink, eq-rpg, everfrost]
+    value: "15gp"
+    notes: "Halasian spirit. Drink for advantage on your next save vs. cold."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 176

@@ -1,0 +1,479 @@
+# Traps for the Dungeon tab "Roll a trap" button.
+#
+# Each trap:
+#   id, name      — required
+#   detect_dc     — DC for a character to notice it before triggering
+#   disarm_dc     — DC for a character to disable it once spotted
+#   trigger       — what activates it ("Stepping on the pressure plate.")
+#   effect        — what happens ("DC 12 DEX save or 1d6 damage.")
+#   tags          — floor, door, lock, gas, magical, dart, pit, etc.
+#   notes         — optional flavor or special rules
+#
+# Source-tracking fields (optional, for filtering by origin):
+#   system       slug of source RPG system (shadowdark-core, eq-rpg, etc.)
+#   source_book  slug of specific book (soluseks-eye, befallen, etc.)
+#   source_page  integer page number in source PDF
+
+traps:
+  - id: simple-pit
+    name: Simple Pit
+    detect_dc: 12
+    disarm_dc: 12
+    trigger: "Stepping on the false floor."
+    effect: "DC 12 DEX save or fall 10 feet (1d6 damage)."
+    tags: [floor, pit]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: poison-needle
+    name: Poison Needle Lock
+    detect_dc: 15
+    disarm_dc: 14
+    trigger: "Trying to pick or force the lock."
+    effect: "DC 13 CON save or take 1 damage and become poisoned for an hour."
+    tags: [lock, poison]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: arrow-trap
+    name: Hidden Arrow Trap
+    detect_dc: 14
+    disarm_dc: 13
+    trigger: "Crossing the marked tile."
+    effect: "DC 13 DEX save or take 1d6 damage from a darting arrow."
+    tags: [floor, dart]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: falling-block
+    name: Falling Block
+    detect_dc: 14
+    disarm_dc: 14
+    trigger: "Pulling the wrong lever."
+    effect: "DC 13 DEX save or be crushed (2d6 damage)."
+    tags: [ceiling, crushing]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gas-cloud
+    name: Sleep Gas Vent
+    detect_dc: 15
+    disarm_dc: 14
+    trigger: "Opening the chest."
+    effect: "DC 13 CON save or fall asleep for 1d4 minutes."
+    tags: [gas, chest]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: glyph-of-warding
+    name: Glyph of Warding
+    detect_dc: 16
+    disarm_dc: 15
+    trigger: "Crossing the marked threshold without the password."
+    effect: "DC 14 DEX save or take 2d6 force damage."
+    tags: [magical, door]
+
+  # ═══════════════════════════════════════════
+  # Sunless Citadel (sc-*)
+  # ═══════════════════════════════════════════
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: sc-courtyard-trapdoor-pit
+    name: Courtyard Trapdoor Pit
+    detect_dc: 13
+    disarm_dc: 14
+    trigger: "Stepping on the trapdoor that fronts the door from the Crumbled Courtyard."
+    effect: "DC 13 DEX save or fall ten feet into a spiked pit (1d6 damage). A live dire rat trapped inside attacks anyone who falls in. Resets in 3d6 rounds."
+    tags: [floor, pit]
+    notes: "A safe one-foot catwalk along the side bypasses the trapdoor."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-secret-pocket-needle
+    name: Secret Pocket Needle
+    detect_dc: 15
+    disarm_dc: 14
+    trigger: "Opening the secret door to the Secret Pocket without disarming first."
+    effect: "DC 12 DEX save or take 1 damage from a tiny needle. Poison has evaporated."
+    tags: [door, needle]
+    notes: "Leftover dragon-cult trap. More embarrassing than dangerous, but it warns occupants."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-pressure-plate-arrow
+    name: Pressure-Plate Arrow Trap
+    detect_dc: 14
+    disarm_dc: 14
+    trigger: "Placing weight on a pressure plate in the corridor before area 9."
+    effect: "DC 13 DEX save or take 1d6 piercing damage from an arrow fired from a concealed slot. Each plate triggers another arrow."
+    tags: [floor, dart]
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-kobold-bounder-arrow
+    name: Kobold Bounder Arrow Trap
+    detect_dc: 14
+    disarm_dc: 13
+    trigger: "Opening one of the kobold bounder room doors for the first time."
+    effect: "DC 12 DEX save or take 1d6 piercing damage from a crossbow bolt fired at the doorway."
+    tags: [door, dart]
+    notes: "Kobold residents know how to bypass the trigger and reset the bolt after their patrols."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-quasit-ambush-pit
+    name: Open Pit of the Bound Quasit
+    detect_dc: 13
+    disarm_dc: null
+    trigger: "Crossing the ten-foot spiked pit in the dragonpriest's antechamber."
+    effect: "DC 14 DEX save or fall ten feet onto spikes (1d6 falling + 1d4 piercing). The bound quasit Jot may attack from invisibility and shove the victim in."
+    tags: [floor, pit, creature]
+    notes: "The pit is visible and wide; the real danger is the quasit lurking on the far side."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-goblin-chief-needle
+    name: Goblin Chief's Poison Needle Lock
+    detect_dc: 14
+    disarm_dc: 14
+    trigger: "Picking or forcing the lock on Durnn's iron chest."
+    effect: "DC 13 CON save or take 1d4 CON damage from diluted wyvern poison; second save 1 minute later or take another 1d4 CON."
+    tags: [container, poison]
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-binding-song-globe
+    name: Globe of the Binding Song
+    detect_dc: 13
+    disarm_dc: 15
+    trigger: "Approaching within five feet of the glowing blue globe in the Gallery of Forlorn Notes."
+    effect: "DC 13 WIS save or be compelled to attack anyone in the way to escape the chamber for 5 minutes."
+    tags: [magical, room]
+    notes: "Globe shatters with a forceful smash (hardness 4, 10 HP). Cloth muffles its range."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-grove-vine-shaft
+    name: Vine-Lined Plunge to the Grove
+    detect_dc: null
+    disarm_dc: null
+    trigger: "Climbing or falling down the vine-lined shaft in the Hall of the Goblin Chief."
+    effect: "DC 14 DEX save or take 4d6 falling damage from an 80-foot drop."
+    tags: [environmental, fall]
+    notes: "Not a trap so much as a hazard — the goblins use the vines as a courier route."
+
+  # ═══════════════════════════════════════════
+  # Whispering Cairn (wc-*)
+  # ═══════════════════════════════════════════
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: wc-sarcophagus-fire
+    name: Burning Sarcophagus
+    detect_dc: 14
+    disarm_dc: 13
+    trigger: "Lifting the marble lid of the false-tomb sarcophagus."
+    effect: "Gout of fire bursts from inside the empty coffin: 1d6 fire damage, DC 13 DEX save for half. Resets automatically."
+    tags: [magic, fire]
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-iron-sphere-hail
+    name: Hail of Iron Spheres
+    detect_dc: 14
+    disarm_dc: 14
+    trigger: "Stepping onto the central span of the petrified-wood beam in Alastor's Haunt."
+    effect: "Iron spheres fire from concealed wall holes — ranged attack +3, 1d4 bludgeoning, all targets on the beam. DC 13 DEX save or fall to the unstable sphere floor (1d3 damage)."
+    tags: [mechanical, dart]
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-face-in-darkness
+    name: The Face in Darkness
+    detect_dc: 15
+    disarm_dc: 15
+    trigger: "Pressure plate sixty feet into the Passage of the Face."
+    effect: "Stone face animates. Each round: DC 13 WIS save or paralyzed. Hurricane wind blasts paralyzed targets back down the corridor (1d6 per round of buffeting)."
+    tags: [magic, gaze, wind]
+    notes: "Disarmed by lighting the matching rainbow torches at the Gallery of Lanterns."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-noxious-gas-slab
+    name: Noxious Gas Slab
+    detect_dc: 15
+    disarm_dc: 15
+    trigger: "Lifting the heavy stone slab off its pressure plate in the Architect's Foyer."
+    effect: "Green gas vents from the bas-reliefs. DC 13 CON save or be poisoned (1d4 STR damage)."
+    tags: [floor, gas, poison]
+    notes: "The slab requires 4 PCs cooperating to lift; clever parties brace it before triggering."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-falling-column
+    name: Falling Column
+    detect_dc: 14
+    disarm_dc: 13
+    trigger: "Removing any of the ancient sculptor's tools from the workshop pegs."
+    effect: "Stone column drops from the ceiling. DC 13 DEX save or take 3d6 bludgeoning; failure by 5+ reduces target to 0 HP."
+    tags: [floor, mechanical, crushing]
+    notes: "A long-dead tomb robber's chainmail-clad skeleton still lies where it fell."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-collapsing-elevator
+    name: False Arcane Elevator
+    detect_dc: 14
+    disarm_dc: 14
+    trigger: "Standing on the green-tunnel elevator platform on its third activation."
+    effect: "Elevator drops 60 feet into Acid Beetle Swarms below. DC 12 DEX save to scramble back to safe ground."
+    tags: [mechanical, fall, swarm]
+    notes: "Two rounds after collapse, swarms boil up the shaft toward survivors."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-crushing-elevator
+    name: Crushing Elevator Cylinder
+    detect_dc: 15
+    disarm_dc: 14
+    trigger: "Standing inside the indigo-tunnel arcane elevator when the arrow re-aligns."
+    effect: "Cylinder doors slam; the cylinder grinds downward and crushes occupants: 3d6 damage, DC 13 DEX save for half. Cannot miss in the cramped space."
+    tags: [mechanical, crushing]
+    notes: "Indigo lantern is missing for a reason — the original explorer never came back."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-howling-wind-tubes
+    name: Whispering Wind Tubes
+    detect_dc: 14
+    disarm_dc: 12
+    trigger: "Passive — fills the entry hall constantly while wind blows over the cairn's summit."
+    effect: "Sibilant Auran whispers unnerve listeners. DC 12 WIS save when first heard or disadvantage on the next morale check."
+    tags: [magic, sound]
+
+  # ═══════════════════════════════════════════
+  # Giantslayer #6 (gs-*)
+  # ═══════════════════════════════════════════
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: gs-chain-lightning-cupboard
+    name: Chain Lightning Cupboard
+    detect_dc: 15
+    disarm_dc: 15
+    trigger: "Opening the lord's east cupboard without the Giant command word."
+    effect: "Chain lightning: primary target 5d6 lightning (DC 14 DEX half), arcs to up to 15 secondary targets within near (3d6 each)."
+    tags: [magical, container, lightning]
+    notes: "Volstus knows the bypass word."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-dimensional-web-gap
+    name: Dimensional Web
+    detect_dc: 15
+    disarm_dc: 15
+    trigger: "Stepping into the breached gap in the gallery wall or tower attic roof."
+    effect: "Invisible web entangles (DC 14 STR negates). Failed save also teleports the victim to a chosen location elsewhere in the castle."
+    tags: [magical, web, teleport]
+    notes: "Created by the Leng spiders. The spiders know the passphrase."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-energy-field-shock
+    name: Castle Energy Field
+    detect_dc: 16
+    disarm_dc: null
+    trigger: "Coming within near-range of the castle exterior without a roc rider badge."
+    effect: "DC 14 WIS save or be repelled. Hurricane winds buffet (DC 13 STR or pushed back). 25% chance per round of a lightning strike (3d6, DC 13 DEX half)."
+    tags: [magical, ward, environment, lightning]
+    notes: "Cannot be picked. Bypassed by a roc rider badge or dispel. Disintegrate destroys a 10-ft section."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-engine-bomb
+    name: Engine Level Alchemic Bomb
+    detect_dc: 16
+    disarm_dc: 17
+    trigger: "Volstus reduced to 0 HP; OR cloud diadem's gem shattered; OR 24 hours after dead-man's switch loses contact."
+    effect: "Pressure-bottled firestorm detonates: 8d6 fire + 4d6 force in a far-radius around the engine room, DC 15 DEX save halves. The castle begins falling from the sky over the next hour."
+    tags: [magical, alchemical, doomsday]
+    notes: "Guarded by a shadow giant inquisitor and phase spiders."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-melting-anchor-chain
+    name: Melting Anchor Chain
+    detect_dc: 14
+    disarm_dc: 14
+    trigger: "Climbing past the midpoint of an anchor chain, OR remaining on the chain when ash giants activate the release winch."
+    effect: "Anchor melts and the chain falls free. Climbers: DC 14 DEX save or fall up to far distance (3d6 per tier); on success, cling to the rising chain as the castle accelerates upward."
+    tags: [environmental, mechanical, sabotage]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-prismatic-window
+    name: Prismatic Wall Window
+    detect_dc: 16
+    disarm_dc: null
+    trigger: "Passing through one of the castle's huge stained-glass windows without speaking the Giant command word."
+    effect: "Pulse of cold light: 3d6 cold damage (DC 14 CON save halves), and a flash of arcane unbinding dispels one active spell on the trespasser."
+    tags: [magical, ward, door]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-tower-collapse
+    name: Crumbling Tower Collapse
+    detect_dc: 15
+    disarm_dc: 15
+    trigger: "Casting a far-area spell (fireball, earthquake, lightning bolt) inside the cracked main tower, or violent impact."
+    effect: "Masonry collapses across the room: 6d6 bludgeoning in a near-radius, DC 14 DEX save halves; creatures who fail are buried (DC 14 STR to escape)."
+    tags: [environmental, falling, structural]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-crystal-fumaroles
+    name: Carnivorous Crystal Fumaroles
+    detect_dc: 14
+    disarm_dc: null
+    trigger: "Living creatures move within near of the fumaroles in the inner crater."
+    effect: "Razor-sharp crystals erupt from the vents: 3d6 slashing damage in the swarm's path (DC 13 DEX save halves). Failure reduces armor by 1 AC until repaired."
+    tags: [environmental, hazard, mineral]
+    notes: "Triggered by Ulkraf's steam whistle alarm."
+
+  # ───────── EverQuest — Dungeon traps from d20 adventures ─────────
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: eq-temple-of-solusek-ro-wards-of-ro-fire-test
+    name: "Wards of Ro (fire-test)"
+    detect_dc: 16
+    disarm_dc: 18
+    trigger: "Speaking with intent to harm a temple resident."
+    effect: "DC 14 CHA save or be incinerated by a burst of holy fire (3d6 fire damage)."
+    tags: [magical, holy, fire, eq-rpg]
+    notes: "Magical wards encircling the entry hall."
+    system: eq-rpg
+    source_book: temple-of-solusek-ro
+    source_page: 4
+
+  - id: eq-temple-of-solusek-ro-lava-floor-trap
+    name: "Lava Floor Trap"
+    detect_dc: 14
+    disarm_dc: 13
+    trigger: "Stepping on the wrong slab in the lava-river chamber."
+    effect: "DC 13 DEX save or fall into a chest-deep lava channel (2d6 fire damage, ongoing 1 fire until extinguished)."
+    tags: [floor, fire, magical, eq-rpg]
+    system: eq-rpg
+    source_book: temple-of-solusek-ro
+    source_page: 9
+
+  - id: eq-temple-of-solusek-ro-falling-torch-sconce
+    name: "Falling Torch Sconce"
+    detect_dc: 13
+    disarm_dc: 12
+    trigger: "Brushing against a wall sconce."
+    effect: "DC 12 DEX save or burning oil splashes (1d4 fire damage, gear catches if not removed)."
+    tags: [wall, fire, eq-rpg]
+    system: eq-rpg
+    source_book: temple-of-solusek-ro
+    source_page: 5
+
+  - id: eq-soluseks-eye-hidden-pit-krombral-tunnels
+    name: "Hidden Pit (Krombral Tunnels)"
+    detect_dc: 15
+    disarm_dc: 14
+    trigger: "Stepping on the false grate."
+    effect: "DC 13 DEX save or fall 20ft into a magma-warm pit (2d6 damage, half fire)."
+    tags: [floor, pit, fire, eq-rpg]
+    system: eq-rpg
+    source_book: soluseks-eye
+    source_page: 30
+
+  - id: eq-soluseks-eye-trapped-treasure-chest-sol-a
+    name: "Trapped Treasure Chest (Sol A)"
+    detect_dc: 14
+    disarm_dc: 14
+    trigger: "Opening the chest without speaking the password."
+    effect: "DC 13 DEX save or 1d8 fire damage as flame bursts out."
+    tags: [chest, fire, eq-rpg]
+    system: eq-rpg
+    source_book: soluseks-eye
+    source_page: 50
+
+  - id: eq-befallen-befallen-corpse-trigger
+    name: "Befallen Corpse-Trigger"
+    detect_dc: 14
+    disarm_dc: 13
+    trigger: "Disturbing the wrong corpse in the catacombs."
+    effect: "DC 12 CON save or a wave of grave-rot drains 1d4 STR until cleansed."
+    tags: [floor, necromantic, eq-rpg]
+    system: eq-rpg
+    source_book: befallen
+    source_page: 20
+
+  - id: eq-befallen-falling-portcullis
+    name: "Falling Portcullis"
+    detect_dc: 13
+    disarm_dc: 14
+    trigger: "Crossing the marked threshold."
+    effect: "DC 13 DEX save or 1d8 damage and trapped on the other side until lifted."
+    tags: [floor, crushing, eq-rpg]
+    system: eq-rpg
+    source_book: befallen
+    source_page: 32
+
+  - id: eq-everfrost-peaks-sleep-glyph-permafrost
+    name: "Sleep Glyph (Permafrost)"
+    detect_dc: 16
+    disarm_dc: 15
+    trigger: "Reading aloud or touching the glowing rune."
+    effect: "DC 14 WIS save or fall into magical sleep for 1d4 hours."
+    tags: [magical, wall, eq-rpg]
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 70
+
+  - id: eq-everfrost-peaks-falling-icicle-trap
+    name: "Falling Icicle Trap"
+    detect_dc: 13
+    disarm_dc: 12
+    trigger: "Loud noises beneath the icicle ceiling."
+    effect: "DC 12 DEX save or 1d6 piercing + cold damage."
+    tags: [ceiling, cold, natural, eq-rpg]
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 71
+
+  - id: eq-forests-of-faydark-pixie-dust-cloud
+    name: "Pixie Dust Cloud"
+    detect_dc: 14
+    disarm_dc: 14
+    trigger: "Stepping into the marked clearing."
+    effect: "DC 13 WIS save or laugh uncontrollably for 1d4 rounds (can't take actions)."
+    tags: [floor, magical, fey, eq-rpg]
+    system: eq-rpg
+    source_book: forests-of-faydark
+    source_page: 16
+
+  - id: eq-forests-of-faydark-forest-pit-and-snare
+    name: "Forest Pit-and-Snare"
+    detect_dc: 13
+    disarm_dc: 12
+    trigger: "Walking the deer-trail."
+    effect: "DC 12 DEX save or hoisted 10ft into the canopy, hanging upside-down."
+    tags: [floor, natural, eq-rpg]
+    system: eq-rpg
+    source_book: forests-of-faydark
+    source_page: 80
+
+  - id: eq-forests-of-faydark-mistmoore-s-whispering-door
+    name: "Mistmoore's Whispering Door"
+    detect_dc: 17
+    disarm_dc: 16
+    trigger: "Trying to open the door without an invitation."
+    effect: "DC 14 CHA save or hear voices that drive you to attack the nearest ally for 1d4 rounds."
+    tags: [door, magical, psychic, eq-rpg]
+    system: eq-rpg
+    source_book: forests-of-faydark
+    source_page: 36

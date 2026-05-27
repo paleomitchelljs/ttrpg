@@ -1,0 +1,675 @@
+# EverQuest Roleplaying Game (Sword & Sorcery Studio, 2002–2005)
+# d20 OGL-compatible TTRPG adaptation of Sony's EverQuest MMORPG.
+#
+# RULES YAML SCHEMA
+# =================
+# Top-level fields describe the ruleset.
+# `sections` is a list of categorized rule content (deities, races, classes,
+# spells, skills, feats, etc.). Each section has its own array of entries.
+#
+# Section conventions:
+#   id            kebab-case unique within this file
+#   name          display name
+#   source_book   slug of book where the section lives (e.g. players-handbook)
+#   source_page   integer page (1-indexed) in that PDF
+#   description   1-2 sentence summary
+#   entries       array of section-specific entries (schema varies by section)
+#
+# Entry conventions (within a section):
+#   id            kebab-case unique within section
+#   name          display name
+#   plus section-specific fields as documented below per section
+
+id: eq-rpg
+name: EverQuest Roleplaying Game
+publisher: Sword & Sorcery Studio (White Wolf)
+license: OGL/d20 (3.0/3.5 compatible)
+year: 2002
+edition: First Edition
+dice_system: d20
+ability_scores: [STR, DEX, CON, INT, WIS, CHA]
+saving_throws: [Fortitude, Reflex, Will]
+setting: Norrath (Antonica, Faydwer, Odus, Kunark, Velious, Luclin)
+summary: |
+  d20 OGL adaptation of Sony's EverQuest MMORPG. Players adventure across Norrath
+  in a world with named gods, alignment-based factions, dungeon-crawl raids on
+  iconic zones (Befallen, Lower Guk, Crushbone, Permafrost), and a long timeline
+  spanning Classic, Kunark, Velious, Luclin, Planes of Power, and beyond.
+  The core book is the Player's Handbook (also called Core Handbook); regional
+  sourcebooks expand specific continents and dungeons.
+
+books:
+  - id: players-handbook
+    name: Player's Handbook (Core Handbook)
+    year: 2002
+    pages: 406
+    summary: "Foundational rulebook. Races, classes, spells, equipment, bestiary, zone maps."
+  - id: al-kabors-arcana
+    name: Al'Kabor's Arcana
+    year: 2003
+    pages: 258
+    summary: "Massive spell and magic-item supplement."
+  - id: monsters-of-luclin
+    name: Monsters of Luclin
+    year: 2004
+    pages: 130
+    summary: "Bestiary of Luclin (the moon): Akheva, Shissar, alien creatures."
+  - id: heroes-of-norrath
+    name: Heroes of Norrath
+    year: 2004
+    pages: 130
+    summary: "Levels 31–35 player content; 14 iconic NPC character sidebars."
+  - id: everfrost-peaks
+    name: "Realms of Norrath: Everfrost Peaks"
+    year: 2003
+    pages: 194
+    summary: "Northlands sourcebook — Halas, Permafrost Keep, Blackburrow, Miragul's Menagerie."
+  - id: forests-of-faydark
+    name: "Realms of Norrath: Forests of Faydark"
+    year: 2004
+    pages: 146
+    summary: "Faydwer sourcebook — elven cities, Crushbone, Mistmoore, Lake Elizerain."
+  - id: soluseks-eye
+    name: "Solusek's Eye (Sol A) Adventure"
+    year: 2004
+    pages: 114
+    summary: "Full d20 dungeon adventure for Solusek's Eye."
+  - id: befallen
+    name: "Befallen Adventure"
+    year: 2003
+    pages: 64
+    summary: "Full 3-level dungeon adventure for Befallen."
+  - id: temple-of-solusek-ro
+    name: "The Temple of Solusek Ro"
+    year: 2003
+    pages: 58
+    summary: "Lavastorm Mountains temple adventure."
+  - id: item-guide-revised
+    name: "EQ Item Guide (Revised)"
+    year: null
+    pages: 86
+    summary: "Fan compendium of removed/nerfed Classic-era items."
+
+sections:
+  # ────────── Deities of Norrath ──────────
+  # Entry schema:
+  #   id, name, title (epithet), alignment (NG/CG/LG/NN/CE/etc.),
+  #   sphere (god's domain), worshipers (typical), holy_symbol,
+  #   summary (paragraph), source_page
+  - id: deities
+    name: Deities of Norrath
+    source_book: players-handbook
+    source_page: 140
+    description: "Sixteen options (15 named deities + Agnostic). Choosing a deity determines factions, racial faiths, and class restrictions. Each god rules a Plane in the outer cosmology."
+    entries:
+      - id: agnostic
+        name: Agnostic
+        alignment: any
+        sphere: none
+        plane: none
+        summary: "No deity. Some choose to believe in none; some have not yet picked. Available to most races/classes — but a few faiths (e.g. paladins) require a god."
+
+      - id: bertoxxulous
+        name: Bertoxxulous
+        title: "The Plaguebringer"
+        alignment: neutral evil
+        sphere: disease, decay, plague
+        plane: Plane of Disease
+        weapon: scythe
+        summary: "Bertoxxulous is the god of disease and death, his alignment is neutral evil. Most fearful of the Plaguebringer's followers are those who avoid all manner of cleanliness. Bertoxxulous is revered by necromancers and a few others, but their worshipers are enough for him. His followers may wield any weapon, but his favored is the scythe."
+
+      - id: brell-serilis
+        name: Brell Serilis
+        title: "The Duke of Below"
+        alignment: neutral
+        sphere: the Underfoot, dwarves, gnomes, makers
+        plane: Plane of Underfoot
+        weapon: spear (pick)
+        summary: "Brell is allied with Bristlebane and opposed by Veeshan. The Duke of Below takes many forms but is most commonly depicted as a happy dwarf. His favored weapon is the pick. He rules the Plane of Underfoot."
+
+      - id: bristlebane
+        name: Bristlebane
+        title: "The King of Thieves"
+        alignment: neutral
+        sphere: fun, jest, mischief, luck
+        plane: Plane of Mischief
+        weapon: dagger
+        summary: "The god of fun and mischief, Bristlebane loves jokes, pranks, and having fun. His alignment is discordant (neutral). He is also known by his full name: Fizzlethorpe Bristlebane — and as the King of Thieves. Bards, rogues, thieves and entertainers revere him, though any sneak benefits from his blessing. His favored weapon is the dagger."
+
+      - id: cazic-thule
+        name: Cazic-Thule
+        title: "The Faceless"
+        alignment: chaotic evil
+        sphere: fear, horror, hate
+        plane: Plane of Fear
+        weapon: humanoid mace (a cudgel shaped like a small humanoid)
+        summary: "Cazic-Thule is a god of fear, and his alignment is neutral evil. He is also known as The Faceless. His followers love fear in their lives, but their peace is rarely calm. He designed his Plane of Fear to be intentionally unsettling. His favored weapon is a humanoid-shaped mace."
+
+      - id: erollisi-marr
+        name: Erollisi Marr
+        title: "The Queen of Love"
+        alignment: lawful good
+        sphere: love, compassion, devotion
+        plane: Plane of Love
+        weapon: longbow
+        summary: "Erollisi is the goddess of love, lawful good. She is the twin sister of Mithaniel Marr and is known as the Queen of Love. Her followers possess good souls and champion the things they love passionately. They are not afraid to fight. In fact, the highest calling of Erollisi's worshipers is to die defending something or someone they love. All her followers must be good."
+
+      - id: innoruuk
+        name: Innoruuk
+        title: "The Prince of Hate"
+        alignment: neutral evil
+        sphere: hate, destruction, revenge
+        plane: Plane of Hate
+        weapon: banded battle axe
+        summary: "Innoruuk is the father of the dark elves, the champion of hatred itself. He is also called the Prince of Hate. Innoruuk's followers have a strong devotion to new heights of power: kindness, mercy and love are the watchwords of weaker fools, who have failed to understand the truth that there is true power in cruelty. Innoruuk's allies include Rallos Zek and Cazic-Thule, while Quellious, Mithaniel Marr and Erollisi Marr are his sworn enemies. He rules the Plane of Hate."
+
+      - id: karana
+        name: Karana
+        title: "Rainkeeper"
+        alignment: neutral
+        sphere: storms, rain, farming, the open road
+        plane: Plane of Storms
+        weapon: halberd
+        summary: "Karana is the descendant god of rain and storms. He rules over those who spend their time outside, and depends on the breath of rain in their lives. He bestows the power of farming, harvests, clouds and rain. He grants his powers to farmers, paladins, druids and rangers. All who worship Karana are almost exclusively clean of armor and travel light. They are kind to travelers and often offer aid to any who need shelter on the night."
+
+      - id: mithaniel-marr
+        name: Mithaniel Marr
+        title: "The Truth Bringer"
+        alignment: lawful good
+        sphere: valor, honor, truth
+        plane: Plane of Valor
+        weapon: longsword
+        summary: "Mithaniel Marr is the god of valor and orderly good. He is twin brother to Erollisi Marr. Followers of Mithaniel are devout, providing guidance to others in need of help and standing for honor at all costs. Followers of Mithaniel are noble in conduct and fierce in battle, frequently leading their fellows in worship beside Erollisi. Both gods stand against Innoruuk and the chief tormentors of all good — Bertoxxulous as his hated enemies. He also has a friendly rivalry with Solusek Ro. His favored weapon is the longsword."
+
+      - id: prexus
+        name: Prexus
+        title: "The Oceanlord"
+        alignment: neutral
+        sphere: sea, coral, the Lake of Power
+        plane: Plane of Oceans
+        weapon: trident
+        summary: "Prexus is god of the sea, a deity of neutral alignment. He is also called the Oceanlord. His followers include sailors and fishermen, those who live in the world that they love. He worships few but is sworn to protect the oceans of Norrath and reach respect for the awesome power of the sea. Followers of Prexus may not be evil. His favored weapon is the trident. He rules the Plane of Oceans."
+
+      - id: quellious
+        name: Quellious
+        title: "The Tranquil"
+        alignment: lawful good
+        sphere: peace, tranquility, calmness, harmony
+        plane: Plane of Tranquility
+        weapon: morningstar
+        summary: "Goddess of peace, Quellious is orderly good. She is known as the Tranquil. Her followers seek peace, but their peace is sometimes calm, not necessarily peaceful. Knowledge is power to Quellious worshipers, and they seek to grant peace to enlightenment and share it with their adversaries. They know that only through enlightenment can true peace be achieved. Her followers are often weakened, searching for knowledge wherever they can find it. The Goddess will not accept discord or evil followers. Appearing as a serene child, Quellious wears simple robes and disdains finery. She is allied with Rodcet Nife and Erollisi Marr. She rules the Plane of Tranquility."
+
+      - id: rallos-zek
+        name: Rallos Zek
+        title: "The Warlord"
+        alignment: neutral evil
+        sphere: war, strength, victory, conquest
+        plane: Plane of War
+        weapon: battle axe
+        summary: "God of strength and victory, Rallos Zek is neutral evil. He is also called the Warlord, a god of warriors. Rallos encourages his followers to fight hard and often, and the answer to all questions is strength enlightenment comes only in conflict, when a worshiper learns whether he or she is weak or strong. Zek's worshipers can never be good. A dark, grasping god, Rallos Zek is allied with Innoruuk and Cazic-Thule. His enemies are Quellious and Bertoxxulous. The Warlord appears as a hulking humanoid in ornamental full plate, wielding an enormous bastard sword. His race is hidden by a helm, and it could well be that Rallos prefers to appear as a member of no one race. Rallos Zek's favored weapon is the bastard sword. He rules the Plane of War."
+
+      - id: rodcet-nife
+        name: Rodcet Nife
+        title: "The Prime Healer"
+        alignment: neutral good
+        sphere: healing, health, mercy
+        plane: Plane of Health
+        weapon: open hand (no weapon)
+        summary: "Rodcet Nife is the neutral good god of healing. He is also known as the Prime Healer. His followers are gentle, humble people who take the Nife Oath. The oath states that the safety of all those who they help is more important than any other rationale they have. Though gentle, Rodcet worshipers are not passive. They actively seek out and end to disease and death; competent paladins and rangers number among them. They believe that with strong faith there is no calling for the Prime Healer, the universe itself shall be mended and death banished. His followers can be only good. Rodcet appears as a gentle humanoid of any known race, wearing a short tunic. He has numerous allies, including Karana, Quellious, Erollisi Marr and Prexus. Only Bertoxxulous opposes him. Rodcet Nife has no favored weapon. He rules the Plane of Health."
+
+      - id: solusek-ro
+        name: Solusek Ro
+        title: "The Burning Prince"
+        alignment: chaotic neutral
+        sphere: fire, the sun, discord, destruction
+        plane: Plane of Sun
+        weapon: spear
+        summary: "God of fire, Solusek Ro is the discordant neutral. He is also called the Burning Prince. Chaotic and destructive, Solusek favors burning away obstacles and impurities. His followers are not necessarily pyromaniacs, but they do tend to follow in his destructive footsteps and are aggressive and fearless in a way of life. They cannot be of orderly alignment. From his Tower of Sol Ro, Solusek rules from the Plane of Sun. He wears a yellow imperial garment and a crown of flames that obscures his countenance, making his face indistinct against the orange firmness of a fortress around him. He wields a spear of fire. He has no allies and no enemies, but he does maintain a friendly rivalry with Mithaniel Marr. His favored weapon is the spear."
+
+      - id: the-tribunal
+        name: The Tribunal
+        title: "The Six Hammers"
+        alignment: lawful neutral
+        sphere: justice, balance, fairness
+        plane: Plane of Justice
+        weapon: warhammers
+        summary: "The Tribunal is six beings, rather than one, dedicated to justice. Their alignment is orderly neutral. The Tribunal is also known as the Council of Justice. Followers of the Tribunal are greatly dedicated to justice. Some practice this by becoming guards and magistrates, but many more exercise their faith by becoming roaming vigilantes. However, these worshipers are methodical and just in their actions, fearing retribution by their gods if they punish unjustly. Worshipers of the Tribunal are usually orderly and often good. Tribunal members face on the Plane of Justice. They wear heavy, hooded cloaks and masks and simple, black clothing. They carry two-handed warhammers. The Tribunal has no allies and no enemies. The Tribunal's favored weapon is the two-handed hammer."
+
+      - id: tunare
+        name: Tunare
+        title: "The Mother of All"
+        alignment: neutral good
+        sphere: growth, life, nature, elves, halflings
+        plane: Plane of Growth
+        weapon: longsword
+        summary: "Tunare is the goddess of growth and life. Her alignment is neutral good. Her title is the Mother of All. The creator of the high and wood elves, she still looks over and protects her children, and they return her affection by watching over creation, protecting it from any who would despoil nature. Her followers are almost exclusively elves of some sort and may be of any non-evil alignment. Closely allied with Karana, Erollisi Marr and Rodcet Nife, Tunare is opposed to Bertoxxulous. Ruling from the Plane of Growth, Tunare appears as a beautiful elder humanoid female emerging from rings of robes and a crown of vines and leaves. Her favored weapon is the staff."
+
+  # ────────── Player Races ──────────
+  # Entry schema:
+  #   id, name, ability_mods (e.g. "+2 STR, -2 DEX"), size (Small/Medium),
+  #   home_zone, common_deities, classes_allowed, traits (list of abilities),
+  #   summary, source_page
+  - id: races
+    name: Player Races
+    source_book: players-handbook
+    source_page: 31
+    description: "Fourteen playable races spanning Antonica, Faydwer, Odus, Kunark, and Luclin. Each is bound to specific home cities, common deities, and class restrictions. Racial adjustments table is on p.31."
+    entries:
+      - id: barbarian
+        name: Barbarian
+        size: Medium
+        ability_mods: "+2 STR, -2 INT"
+        home_city: Halas (Everfrost Peaks)
+        common_deities: [the-tribunal, mithaniel-marr, rallos-zek, karana]
+        classes_allowed: [warrior, rogue, shaman, beastlord]
+        traits:
+          - "Cold subtype — resistant to cold; vulnerable to fire."
+          - "Slam: natural attack 1d3 + STR mod."
+          - "Ultravision: see in darkness 100ft (b&w)."
+        summary: "Tall, hardy humans of the frozen northlands. Worship the Tribunal and Mithaniel Marr most often. Halas is their only home city. Known for honor, brutality in war, and resilience to cold. Cannot become wizards, magicians, enchanters, necromancers, monks, or paladins."
+        source_page: 32
+
+      - id: dark-elf
+        name: Dark Elf (Teir'Dal)
+        size: Medium
+        ability_mods: "+2 DEX, -2 STR"
+        home_city: Neriak (Nektulos Forest)
+        common_deities: [innoruuk]
+        classes_allowed: [warrior, rogue, cleric, shadow-knight, wizard, magician, enchanter, necromancer]
+        traits:
+          - "Ultravision: see in total darkness."
+          - "Hide and Move Silently +2 racial bonus."
+          - "Hate (Ex): +1 attack vs. high elves, wood elves, gnomes, dwarves, halflings."
+        summary: "Children of Innoruuk, the Prince of Hate. Pale-blue skin, white hair. Live in Neriak, the dark elf city beneath Nektulos. Bound to hate-faiths by blood; some break free as adventurers but never escape suspicion in good cities."
+        source_page: 33
+
+      - id: dwarf
+        name: Dwarf
+        size: Small
+        ability_mods: "+2 CON, -2 CHA"
+        home_city: Kaladim (Butcherblock Mountains)
+        common_deities: [brell-serilis]
+        classes_allowed: [warrior, rogue, cleric, paladin]
+        traits:
+          - "Stonecunning: +2 Search for stonework."
+          - "Infravision 60ft (heat-based dark sight)."
+          - "Movement speed unchanged by armor."
+          - "+1 attack vs. orcs and goblinoids."
+        summary: "Stout, bearded miners and warriors. Brell Serilis's chosen. Make their home in Kaladim, the underground city of Butcherblock. Famous smiths and brewers. Hate goblins more than anything."
+        source_page: 34
+
+      - id: erudite
+        name: Erudite
+        size: Medium
+        ability_mods: "+3 INT, -1 STR, -2 CHA"
+        home_city: Erudin / Paineel (Odus)
+        common_deities: [quellious, prexus, cazic-thule, bertoxxulous]
+        classes_allowed: [cleric, paladin, wizard, magician, enchanter, necromancer, shadow-knight]
+        traits:
+          - "Bonus skill points equal to INT mod each level."
+          - "Magical Heritage: +2 to all Knowledge (arcana) checks."
+        summary: "Cerebral, dark-skinned humans descended from a sect of humans who pursued pure intellect. Erudin is the city of the High Council, Paineel the city of the Heretics (necromancers, shadow knights). The most natural magic-users among the human-kin."
+        source_page: 35
+
+      - id: gnome
+        name: Gnome
+        size: Small
+        ability_mods: "+2 INT, -2 WIS"
+        home_city: Ak'Anon (Steamfont Mountains)
+        common_deities: [brell-serilis, bertoxxulous]
+        classes_allowed: [warrior, rogue, cleric, wizard, magician, enchanter, necromancer, paladin, shadow-knight]
+        traits:
+          - "Tinker: craft mechanical contraptions; +2 on related crafts."
+          - "Infravision 60ft."
+          - "Small size: +1 AC, +1 attack, +4 Hide."
+        summary: "Tiny, tinkering humanoids. Live in Ak'Anon, a city of clockwork and brass. Followers of Brell (the makers' god). The most varied class-eligible race after the half-elves and humans."
+        source_page: 36
+
+      - id: half-elf
+        name: Half-Elf
+        size: Medium
+        ability_mods: "no ability modifiers"
+        home_city: Qeynos (Plains of Karana) or Kelethin (Greater Faydark)
+        common_deities: [tunare, karana, erollisi-marr, mithaniel-marr, prexus, bristlebane, rodcet-nife]
+        classes_allowed: [warrior, rogue, cleric, druid, ranger, paladin, bard]
+        traits:
+          - "Low-light vision."
+          - "+2 Diplomacy and Gather Information (a foot in both worlds)."
+        summary: "Children of humans and elves, comfortable in neither parent's society. Widely accepted everywhere but at home nowhere. Highly versatile — many class options."
+        source_page: 37
+
+      - id: halfling
+        name: Halfling
+        size: Small
+        ability_mods: "+2 DEX, -2 STR"
+        home_city: Rivervale (Misty Thicket)
+        common_deities: [bristlebane, mithaniel-marr, karana, tunare]
+        classes_allowed: [warrior, rogue, cleric, druid, ranger, paladin]
+        traits:
+          - "Small size: +1 AC, +1 attack, +4 Hide."
+          - "+2 Move Silently, Climb, Jump."
+          - "Halfling sneak (Ex): take 10 on Hide/Move Silently while not in combat."
+        summary: "Cheerful small folk of Rivervale. Followers of Bristlebane, the King of Thieves — many halflings live up to that reputation. Famous bakers, scouts, and pickpockets."
+        source_page: 38
+
+      - id: high-elf
+        name: High Elf (Koada'Dal)
+        size: Medium
+        ability_mods: "+2 INT, -2 STR"
+        home_city: Felwithe (Greater Faydark)
+        common_deities: [tunare]
+        classes_allowed: [cleric, paladin, wizard, magician, enchanter]
+        traits:
+          - "Low-light vision."
+          - "Immune to magical sleep effects."
+          - "+2 racial bonus on Listen, Search, Spot."
+        summary: "Tall, pale-gold elves of Felwithe. Devout worshipers of Tunare. Aloof from the affairs of lesser races. Master arcane casters — every high elf has some magical aptitude."
+        source_page: 39
+
+      - id: human
+        name: Human
+        size: Medium
+        ability_mods: "no ability modifiers"
+        home_city: Qeynos (North/South), Freeport (West/East), Highpass Hold, or Halas
+        common_deities: [karana, rodcet-nife, mithaniel-marr, erollisi-marr, prexus, tunare, bristlebane, innoruuk, bertoxxulous, cazic-thule, solusek-ro, the-tribunal]
+        classes_allowed: [warrior, rogue, cleric, druid, ranger, paladin, monk, bard, wizard, magician, enchanter, necromancer, shadow-knight]
+        traits:
+          - "Bonus feat at 1st level."
+          - "Bonus skill points: 4 at 1st, 1 each subsequent level."
+          - "Most versatile race — all classes available."
+        summary: "The default, jack-of-all-trades race. Spread across all continents. Qeynos and Freeport are the two great human cities, with smaller settlements at Highpass and Halas (barbarians)."
+        source_page: 40
+
+      - id: iksar
+        name: Iksar
+        size: Medium
+        ability_mods: "+2 STR, +1 CON, -2 INT, -1 CHA"
+        home_city: Cabilis (East and West, in Kunark)
+        common_deities: [cazic-thule, innoruuk]
+        classes_allowed: [warrior, monk, shaman, necromancer, shadow-knight, beastlord]
+        traits:
+          - "Lizardman scales: +2 natural AC."
+          - "Bite: natural attack 1d6 + STR."
+          - "Regeneration: heal 1 HP per round at full rest, doubled if in water."
+          - "Hated by virtually all other races."
+        summary: "Reptilian, scaled humanoids from Kunark. Once enslaved by the Shissar; rebuilt their empire under Venril Sathir. Cazic-Thule's children. Universally distrusted by non-iksar races. Many adventure to find acceptance — or to take what they want."
+        source_page: 41
+
+      - id: ogre
+        name: Ogre
+        size: Large
+        ability_mods: "+10 STR, +2 CON, -3 DEX, -4 INT, -4 CHA"
+        home_city: Oggok (Feerrott Forest)
+        common_deities: [rallos-zek]
+        classes_allowed: [warrior, shaman, beastlord, shadow-knight]
+        traits:
+          - "Large size: -1 AC, -1 attack, -4 Hide, but +4 STR-based checks."
+          - "Frenzy (Ex): once per encounter, +2 attack and damage for 3 rounds."
+          - "Slam: natural attack 1d4 + STR mod."
+        summary: "Massive, dim-witted brutes. Rallos Zek's loyal soldiers. Live in Oggok, the great mud-pit city of the Feerrott. Slow but lethal in melee. Severe penalties to INT and CHA — but their strength is unmatched."
+        source_page: 42
+
+      - id: troll
+        name: Troll
+        size: Medium
+        ability_mods: "+3 STR, +1 CON, -2 DEX, -4 INT, -4 CHA"
+        home_city: Grobb (Innothule Swamp)
+        common_deities: [innoruuk, cazic-thule]
+        classes_allowned: [warrior, shaman, beastlord, shadow-knight]
+        traits:
+          - "Regeneration: 2 HP per round at any time (slowed by fire and acid)."
+          - "Slam: natural attack 1d4 + STR mod."
+          - "Slow Healing in Sunlight (Ex): regeneration is halved in direct sunlight."
+        summary: "Green-skinned, long-armed swamp dwellers. Notorious cannibals. Despite poor charisma and intelligence, their regeneration makes them frightening foes. Allied (loosely) with the ogres of Oggok."
+        source_page: 43
+
+      - id: vah-shir
+        name: Vah Shir
+        size: Medium
+        ability_mods: "+2 STR, +2 DEX, -2 INT"
+        home_city: Shar Vahl (Luclin)
+        common_deities: [karana, the-tribunal]
+        classes_allowed: [warrior, rogue, bard, shaman, beastlord]
+        traits:
+          - "Cat-folk: +2 Move Silently, +2 Listen."
+          - "Claws: natural attack 1d3 + STR mod."
+          - "Sleek Reflexes: +1 Reflex saves."
+        summary: "Cat-folk of the moon Luclin. Their entire city is on Luclin; they came to be there during the Combine's shattering. Proud warriors and skilled hunters. Often allied with barbarians despite the distance."
+        source_page: 44
+
+      - id: wood-elf
+        name: Wood Elf (Feir'Dal)
+        size: Medium
+        ability_mods: "+2 DEX, -2 STR"
+        home_city: Kelethin (Greater Faydark)
+        common_deities: [tunare, karana]
+        classes_allowed: [warrior, rogue, druid, ranger, bard]
+        traits:
+          - "Low-light vision."
+          - "+2 Hide in forest terrain."
+          - "+1 attack with longbow."
+          - "Forest stride: move freely through brush."
+        summary: "Smaller, woods-loving cousins of the high elves. Build their treetop city Kelethin in the canopy of the Greater Faydark. Rangers, druids, and scouts. Eternal foes of the Crushbone orcs."
+        source_page: 46
+
+  # ────────── Classes ──────────
+  # Entry schema:
+  #   id, name, hit_die (d4/d6/d8/d10/d12), primary_role (tank/healer/dps/caster/utility),
+  #   primary_abilities (list), key_skills, weapon_proficiencies,
+  #   armor_proficiencies, spellcasting (none/divine/arcane/mixed),
+  #   classes_allowed_races (list), summary, source_page
+  - id: classes
+    name: Character Classes
+    source_book: players-handbook
+    source_page: 49
+    description: "Fifteen player classes organized into three buckets: Dedicated Spellcasters (Bard, Cleric, Druid, Enchanter, Magician, Necromancer, Shaman, Wizard), Dedicated Fighters (Monk, Rogue, Warrior), and Hybrids (Beastlord, Paladin, Ranger, Shadow Knight)."
+    entries:
+      # ─── Dedicated Spellcasters ───
+      - id: bard
+        name: Bard
+        category: spellcaster
+        hit_die: d6
+        primary_abilities: [CHA, DEX]
+        spellcasting: bardic (songs, not slots — instant cast, modal effects)
+        weapons: simple + martial (light)
+        armor: light + medium (no metal restriction for spell-failure though)
+        summary: "The master of song, the bard inspires allies and shatters foes with melodies. EQ bards layer songs that buff, debuff, and damage simultaneously — a kinetic, twitchy class. Best for players who like juggling effects. Available to: Half-Elf, Halfling, Human, Vah Shir, Wood Elf."
+        source_page: 54
+
+      - id: cleric
+        name: Cleric
+        category: spellcaster
+        hit_die: d8
+        primary_abilities: [WIS]
+        spellcasting: divine (full)
+        weapons: simple + favored deity weapon
+        armor: any
+        summary: "Healer and divine warrior. Channels their deity's power for heals, buffs, and (when needed) smiting. The most desired class for any group: rare in solo play, essential for raids. Available to virtually all races."
+        source_page: 59
+
+      - id: druid
+        name: Druid
+        category: spellcaster
+        hit_die: d8
+        primary_abilities: [WIS]
+        spellcasting: nature divine
+        weapons: simple
+        armor: leather, hide, padded (no metal — interferes with nature magic)
+        summary: "Nature-priests who command storms, summons, and travel magic. EQ druids have the best out-of-combat utility — porting parties across continents. Available to Half-Elf, Halfling, Human, Wood Elf."
+        source_page: 62
+
+      - id: enchanter
+        name: Enchanter
+        category: spellcaster
+        hit_die: d4
+        primary_abilities: [INT]
+        spellcasting: arcane (full)
+        weapons: simple light only
+        armor: cloth
+        summary: "Mind-magic specialist. Charms enemies into pets, slows them to crawls, mesmerizes whole rooms. Plays at controlling tempo more than dealing damage. Available to Dark Elf, Erudite, Gnome, High Elf, Human."
+        source_page: 66
+
+      - id: magician
+        name: Magician
+        category: spellcaster
+        hit_die: d4
+        primary_abilities: [INT]
+        spellcasting: arcane (full, elemental focus)
+        weapons: simple light only
+        armor: cloth
+        summary: "Pet class — summons fire/water/earth/air elementals as combat companions and damage-deals from the back. Plays similarly to a 'hunter' archetype in MMO terms. Available to Dark Elf, Erudite, Gnome, Human."
+        source_page: 67  # likely
+
+      - id: necromancer
+        name: Necromancer
+        category: spellcaster
+        hit_die: d4
+        primary_abilities: [INT]
+        spellcasting: arcane (full, death-focus)
+        weapons: simple light only
+        armor: cloth
+        summary: "Master of death magic. Summons undead pets, drains life from foes to heal self, applies disease and decay. The strongest soloer in EQ. Available to Dark Elf, Erudite (Heretic), Gnome, Human, Iksar."
+        source_page: 69
+
+      - id: shaman
+        name: Shaman
+        category: spellcaster
+        hit_die: d8
+        primary_abilities: [WIS]
+        spellcasting: spirit divine
+        weapons: simple + clubs, scimitars, spears
+        armor: leather, hide
+        summary: "Spirit-healer of the primitive races. Powerful buffs ('haste', 'regen', 'cha-cha'), debilitating slows, situational heals. The buff-class par excellence. Available to Barbarian, Iksar, Ogre, Troll, Vah Shir."
+        source_page: 72
+
+      - id: wizard
+        name: Wizard
+        category: spellcaster
+        hit_die: d4
+        primary_abilities: [INT]
+        spellcasting: arcane (full, evocation focus)
+        weapons: simple light only
+        armor: cloth
+        summary: "Pure damage caster. Burst nuker — biggest single-target hits in the game, plus teleportation spells that move parties. Available to Dark Elf, Erudite, Gnome, High Elf, Human."
+        source_page: 75
+
+      # ─── Dedicated Fighters ───
+      - id: monk
+        name: Monk
+        category: fighter
+        hit_die: d8
+        primary_abilities: [STR, DEX, WIS]
+        spellcasting: none
+        weapons: monk weapons (staff, nunchaku, sai, shuriken, etc.) + unarmed
+        armor: none (loses class abilities in armor)
+        summary: "Unarmed and lightly-armed striker. Famous for 'feign death' — survive any encounter by playing dead. Fast, hard to hit, mediocre HP. Available to Human and Iksar only."
+        source_page: 82
+
+      - id: rogue
+        name: Rogue
+        category: fighter
+        hit_die: d6
+        primary_abilities: [DEX]
+        spellcasting: none
+        weapons: simple + light martial
+        armor: light + medium
+        summary: "Backstab-focused fighter; also handles traps, locks, and stealth. Massive crit damage from sneak attacks. Available to most races including Barbarian, Dark Elf, Erudite (with restrictions), Gnome, Half-Elf, Halfling, Human, Vah Shir, Wood Elf."
+        source_page: 86
+
+      - id: warrior
+        name: Warrior
+        category: fighter
+        hit_die: d10
+        primary_abilities: [STR, CON]
+        spellcasting: none
+        weapons: all
+        armor: all
+        summary: "Pure damage-soaker and weapon master. Highest HP, most attack bonuses, simplest to play. The tank. Available to all races."
+        source_page: 90
+
+      # ─── Hybrids ───
+      - id: beastlord
+        name: Beastlord
+        category: hybrid
+        hit_die: d8
+        primary_abilities: [STR, WIS]
+        spellcasting: spirit divine (partial)
+        weapons: simple + martial light
+        armor: leather, hide
+        summary: "Half-shaman, half-monk hybrid. Fights with an animal companion (warder). Buffs, heals lightly, hits in melee. Available to Barbarian, Iksar, Ogre, Troll, Vah Shir."
+        source_page: 90
+
+      - id: paladin
+        name: Paladin
+        category: hybrid
+        hit_die: d10
+        primary_abilities: [STR, WIS, CHA]
+        spellcasting: holy divine (partial)
+        weapons: martial
+        armor: any
+        summary: "Holy warrior — lay-on-hands heals, smite-undead, divine auras. Strong tank with self-healing. Must be lawful good and worship a good deity. Available to Dwarf, Erudite, Gnome, Half-Elf, Halfling, High Elf, Human."
+        source_page: 94
+
+      - id: ranger
+        name: Ranger
+        category: hybrid
+        hit_die: d10
+        primary_abilities: [STR, DEX, WIS]
+        spellcasting: nature divine (partial)
+        weapons: martial, especially bow
+        armor: light + medium
+        summary: "Bow-and-tracker. Strong damage at range, tracking + nature lore + light spellcasting. Available to Half-Elf, Halfling, Human, Wood Elf."
+        source_page: 97
+
+      - id: shadow-knight
+        name: Shadow Knight
+        category: hybrid
+        hit_die: d10
+        primary_abilities: [STR, INT]
+        spellcasting: dark divine (partial — necro-flavored)
+        weapons: martial
+        armor: any
+        summary: "Anti-paladin. Harm-touch (life drain), summon undead, fear. Must be evil. Available to Dark Elf, Erudite (Heretic), Gnome, Human, Iksar, Ogre, Troll."
+        source_page: 101
+
+  # ────────── Skills ──────────
+  - id: skills
+    name: Skills
+    source_book: players-handbook
+    source_page: null
+    description: "d20 skill system with EQ-flavored additions (Taunt, Trade Skill, Tracking, etc.)."
+    entries: []
+
+  # ────────── Combat Rules ──────────
+  - id: combat
+    name: Combat Reference
+    source_book: players-handbook
+    source_page: null
+    description: "Core combat rules: initiative, attacks of opportunity, full-round actions, EQ-specific concepts (aggro, taunt, harm touch, lay hands)."
+    entries: []
+
+  # ────────── Spells ──────────
+  # Spells are extensive — break into sub-sections per class or per level.
+  # Schema:
+  #   id, name, school, level (per class, e.g. "Wiz 3"), components (V/S/M),
+  #   range, area, duration, save, effect_summary, source_book, source_page
+  - id: spells-arcane
+    name: Arcane Spells (Wizard / Magician / Enchanter / Necromancer)
+    source_book: al-kabors-arcana
+    source_page: null
+    description: "Arcane spells from PH + Al'Kabor's Arcana. Class-specific lists."
+    entries: []
+
+  - id: spells-divine
+    name: Divine Spells (Cleric / Druid / Paladin / Ranger / Shaman / Shadow Knight)
+    source_book: players-handbook
+    source_page: null
+    description: "Divine spell lists."
+    entries: []
+
+  - id: spells-bardsongs
+    name: Bard Songs
+    source_book: players-handbook
+    source_page: null
+    description: "Bard-only songs — modal effects, multiple targets, no slot consumption."
+    entries: []

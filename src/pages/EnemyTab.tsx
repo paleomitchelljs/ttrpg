@@ -199,7 +199,12 @@ export function EnemyTab() {
 function MonsterLibraryCard({ monster, onAdd }: { monster: Monster; onAdd: () => void }) {
   return (
     <button className="monster-lib-card" onClick={onAdd}>
-      <div className="monster-lib-name">{monster.name}</div>
+      <div className="monster-lib-header">
+        {monster.icon && (
+          <img src={`${import.meta.env.BASE_URL}${monster.icon}`} alt="" className="monster-icon" />
+        )}
+        <div className="monster-lib-name grow">{monster.name}</div>
+      </div>
       <div className="monster-lib-stats">
         <span>❤️ {monster.hpMax}</span>
         <span>🛡️ {monster.ac}</span>
@@ -326,12 +331,22 @@ function MonsterInstanceCard({ instance, onPatch, onRemove }: MonsterInstancePro
   function rollAttack(atk: MonsterAttack) {
     const expr = `1d20${atk.bonus >= 0 ? '+' : ''}${atk.bonus}`;
     rollAndLog(expr, 'normal', `${instance.label}: ${atk.name}`);
-    rollAndLog(atk.damage, 'normal', `${instance.label}: ${atk.name} damage`);
+    const dmg = String(atk.damage).trim();
+    if (dmg && dmg !== '—' && dmg !== '0' && dmg !== 'special' && /\d+d\d+/i.test(dmg)) {
+      try {
+        rollAndLog(dmg, 'normal', `${instance.label}: ${atk.name} damage`);
+      } catch {
+        // ignore malformed damage expressions
+      }
+    }
   }
 
   return (
     <div className={`monster-card ${dead ? 'dead' : ''}`}>
       <div className="row">
+        {template.icon && (
+          <img src={`${import.meta.env.BASE_URL}${template.icon}`} alt="" className="monster-icon-lg" />
+        )}
         <div className="grow monster-card-name">{instance.label}</div>
         <button className="ghost monster-card-x" onClick={onRemove} aria-label="remove">✕</button>
       </div>

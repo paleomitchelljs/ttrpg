@@ -20,6 +20,11 @@
 #              damage  — dice expression like "1d6" or "1d8+2"
 #              note    — optional rider, e.g. "On hit: target drops 1 item."
 #   notes     optional — flavor or special rules.
+#
+# Source-tracking fields (optional, for filtering by origin):
+#   system       slug of source RPG system (shadowdark-core, eq-rpg, etc.)
+#   source_book  slug of specific book (monsters-of-luclin, everfrost-peaks, etc.)
+#   source_page  integer page number in source PDF
 
 monsters:
   # ───────── Tier 1 — easy fights ─────────
@@ -30,9 +35,12 @@ monsters:
     move: near
     level: 0
     tags: [tier-1, humanoid, sneaky, swarm]
+    icon: icons/game-icons/lorc/imp-laugh.svg
     attacks:
       - { name: Bite, bonus: 0, damage: 1d4 }
     notes: "Yappy, cowardly. Deals in numbers."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: giant-rat
     name: Giant Rat
@@ -41,9 +49,12 @@ monsters:
     move: near
     level: 0
     tags: [tier-1, beast, swarm]
+    icon: icons/game-icons/delapouite/rat.svg
     attacks:
       - { name: Bite, bonus: 1, damage: 1d4 }
     notes: "Lives in tight, dark places."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: bat
     name: Bat
@@ -52,9 +63,12 @@ monsters:
     move: double-near (fly)
     level: 0
     tags: [tier-1, beast, swarm]
+    icon: icons/game-icons/delapouite/bat.svg
     attacks:
       - { name: Bite, bonus: 0, damage: 1 }
     notes: "Hard to hit in the dark."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: giant-spider
     name: Giant Spider
@@ -63,9 +77,12 @@ monsters:
     move: near
     level: 1
     tags: [tier-1, beast]
+    icon: icons/game-icons/lorc/hanging-spider.svg
     attacks:
       - { name: Bite, bonus: 2, damage: 1d6, note: "On hit: DC 12 CON save or be poisoned." }
     notes: "Lurks on web-strewn ceilings."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: goblin
     name: Goblin
@@ -74,9 +91,12 @@ monsters:
     move: near
     level: 1
     tags: [tier-1, humanoid, sneaky]
+    icon: icons/game-icons/delapouite/goblin-head.svg
     attacks:
       - { name: Scimitar, bonus: 1, damage: 1d6 }
     notes: "Vicious in packs, cowardly alone."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: skeleton
     name: Skeleton
@@ -85,9 +105,12 @@ monsters:
     move: near
     level: 1
     tags: [tier-1, undead]
+    icon: icons/game-icons/lorc/skull-bolt.svg
     attacks:
       - { name: Rusty Sword, bonus: 1, damage: 1d6 }
     notes: "Crumbles when struck. Resistant to piercing."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: bandit
     name: Bandit
@@ -96,10 +119,13 @@ monsters:
     move: near
     level: 1
     tags: [tier-1, humanoid]
+    icon: icons/game-icons/lorc/skull-mask.svg
     attacks:
       - { name: Shortsword, bonus: 1, damage: 1d6 }
       - { name: Shortbow, bonus: 1, damage: 1d6 }
     notes: "Travels in twos and threes."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: zombie
     name: Zombie
@@ -108,11 +134,14 @@ monsters:
     move: near
     level: 1
     tags: [tier-1, undead, brute]
+    icon: icons/game-icons/delapouite/shambling-zombie.svg
     attacks:
       - { name: Slam, bonus: 2, damage: 1d6 }
     notes: "Slow but tough. Won't stay down."
 
   # ───────── Tier 2 — real threats ─────────
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
   - id: wolf
     name: Wolf
     hp_max: 8
@@ -120,9 +149,12 @@ monsters:
     move: double-near
     level: 2
     tags: [tier-2, beast]
+    icon: icons/game-icons/lorc/wolf-head.svg
     attacks:
       - { name: Bite, bonus: 2, damage: 1d6, note: "On hit: target falls prone." }
     notes: "Hunts in pairs or packs."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: orc
     name: Orc
@@ -131,9 +163,12 @@ monsters:
     move: near
     level: 2
     tags: [tier-2, humanoid, brute]
+    icon: icons/game-icons/delapouite/orc-head.svg
     attacks:
       - { name: Battleaxe, bonus: 3, damage: 1d8 }
     notes: "Charges first, thinks never."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: ghoul
     name: Ghoul
@@ -142,9 +177,12 @@ monsters:
     move: near
     level: 2
     tags: [tier-2, undead]
+    icon: icons/game-icons/lorc/horned-skull.svg
     attacks:
       - { name: Claws, bonus: 2, damage: 1d4, note: "On hit: DC 12 CON save or paralyzed for 1d4 rounds." }
     notes: "Reeks of grave-dirt."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: slime
     name: Green Slime
@@ -153,9 +191,12 @@ monsters:
     move: close
     level: 2
     tags: [tier-2, ooze]
+    icon: icons/game-icons/delapouite/slime.svg
     attacks:
       - { name: Engulf, bonus: 1, damage: 1d6, note: "On hit: corrodes armor by 1 point." }
     notes: "Drips from cave ceilings. Silent."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: mimic
     name: Mimic
@@ -164,11 +205,14 @@ monsters:
     move: close
     level: 3
     tags: [tier-2, monstrosity, sneaky]
+    icon: icons/game-icons/delapouite/mimic-chest.svg
     attacks:
       - { name: Bite, bonus: 3, damage: 1d8, note: "On hit: stuck fast (DC 12 STR to escape)." }
     notes: "Disguises as a chest, a door, a statue."
 
   # ───────── Tier 3 — bosses ─────────
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
   - id: goblin-boss
     name: Goblin Boss
     hp_max: 12
@@ -176,10 +220,13 @@ monsters:
     move: near
     level: 3
     tags: [tier-3, humanoid, boss]
+    icon: icons/game-icons/lorc/crowned-skull.svg
     attacks:
       - { name: Scimitar, bonus: 3, damage: 1d6 }
       - { name: Throw Dagger, bonus: 3, damage: 1d4 }
     notes: "Commands lesser goblins. Cowardly when alone."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: owlbear
     name: Owlbear
@@ -188,7 +235,1807 @@ monsters:
     move: near
     level: 4
     tags: [tier-3, beast, boss, brute]
+    icon: icons/game-icons/lorc/owl.svg
     attacks:
       - { name: Claws, bonus: 4, damage: 1d8 }
       - { name: Bite, bonus: 4, damage: 1d8 }
     notes: "Charges with a screech that shakes the trees."
+
+  # ═══════════════════════════════════════════
+  # Sunless Citadel (sc-*)
+  # ═══════════════════════════════════════════
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: sc-twig-blight
+    name: Twig Blight
+    hp_max: 4
+    ac: 13
+    move: near
+    level: 1
+    tags: [tier-1, plant]
+    icon: icons/game-icons/delapouite/slime.svg
+    attacks:
+      - { name: Claws, bonus: 1, damage: 1d4, note: "On hit: DC 12 CON save or +1 damage from poison sap." }
+    notes: "Treelike humanoid sprouted from Gulthias Tree fruit. Half damage from piercing. Immune to poison, sleep, mind effects."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-calcryx-white-dragon-wyrmling
+    name: Calcryx (White Dragon Wyrmling)
+    hp_max: 10
+    ac: 14
+    move: "near (fly far)"
+    level: 2
+    tags: [tier-1, dragon, boss]
+    icon: icons/game-icons/lorc/wyvern.svg
+    attacks:
+      - { name: Bite, bonus: 2, damage: 1d4 }
+      - { name: Claws, bonus: 1, damage: 1d3 }
+      - { name: Cold Breath, bonus: 0, damage: 1d6, note: "Cone, near. DC 13 DEX save for half. Recharge 5-6." }
+    notes: "Stolen 'pet' of the kobold tribe, hides in the goblin trophy room. Immune to cold; double damage from fire."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-belak-the-outcast
+    name: Belak the Outcast
+    hp_max: 12
+    ac: 12
+    move: near
+    level: 4
+    tags: [tier-2, humanoid, druid, boss]
+    icon: icons/game-icons/lorc/imp.svg
+    attacks:
+      - { name: Sickle, bonus: 3, damage: 1d6 }
+      - { name: Sling, bonus: 2, damage: 1d4 }
+    notes: "Twisted druid shepherd of the Gulthias Tree. Can cast entangle, charm, flaming sphere, heat metal, cure wounds. Commands twig blights."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-kulket-giant-tree-frog
+    name: Kulket (Giant Tree Frog)
+    hp_max: 5
+    ac: 14
+    move: "near (climb close)"
+    level: 1
+    tags: [tier-1, beast]
+    icon: icons/game-icons/lorc/frog.svg
+    attacks:
+      - { name: Bite, bonus: 2, damage: 1d4 }
+    notes: "Belak's animal companion. Ambushes from the pale branches of the Gulthias Tree."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-sharwyn-supplicant
+    name: Sharwyn (Gulthias Supplicant)
+    hp_max: 7
+    ac: 14
+    move: near
+    level: 2
+    tags: [tier-1, humanoid, wizard]
+    icon: icons/game-icons/lorc/skull-mask.svg
+    attacks:
+      - { name: Staff, bonus: 1, damage: 1d6 }
+      - { name: Shortbow, bonus: 2, damage: 1d6 }
+    notes: "Former wizard absorbed and corrupted by the Gulthias Tree. Can cast magic missile, daze, ray of frost. Dies when the tree dies."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-sir-braford-supplicant
+    name: Sir Braford (Gulthias Supplicant)
+    hp_max: 12
+    ac: 16
+    move: near
+    level: 2
+    tags: [tier-1, humanoid, fighter]
+    icon: icons/game-icons/lorc/skull-shield.svg
+    attacks:
+      - { name: Shatterspike, bonus: 3, damage: 1d8, note: "Magical longsword. Sunders weapons on a crit." }
+      - { name: Shortbow, bonus: 1, damage: 1d6 }
+    notes: "Former paladin of Pelor, now a hollow servant of the Gulthias Tree. Dies when the tree dies."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-jot-quasit
+    name: Jot the Quasit
+    hp_max: 6
+    ac: 14
+    move: "near (fly close)"
+    level: 3
+    tags: [tier-2, fiend]
+    icon: icons/game-icons/lorc/imp.svg
+    attacks:
+      - { name: Claw, bonus: 4, damage: 1d3, note: "On hit: DC 13 CON save or 1d4 DEX damage from poison." }
+      - { name: Bite, bonus: 2, damage: 1d4 }
+    notes: "Tiny demon bound to guard the dragonpriest's tomb. Invisible at will, cause fear 1/day. Damage reduction 5 (silver). Flees when bloodied."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-dragonpriest-troll
+    name: Dragonpriest Troll
+    hp_max: 14
+    ac: 14
+    move: near
+    level: 3
+    tags: [tier-2, giant]
+    icon: icons/game-icons/delapouite/giant.svg
+    attacks:
+      - { name: Claw, bonus: 3, damage: 1d6 }
+      - { name: Bite, bonus: 2, damage: 1d6 }
+    notes: "Cleric warped into a troll, entombed alive in temporal stasis. Regenerates 3 HP/round unless damaged by fire or acid. Mad and feral."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-balsag-the-hunter
+    name: Balsag the Hunter (Bugbear)
+    hp_max: 12
+    ac: 14
+    move: near
+    level: 2
+    tags: [tier-1, goblinoid]
+    icon: icons/game-icons/delapouite/goblin-head.svg
+    attacks:
+      - { name: Morningstar, bonus: 3, damage: 1d8 }
+      - { name: Javelin, bonus: 2, damage: 1d6 }
+    notes: "Bugbear chief who wears a stag-antler crown. Hunts the deep tunnels with his dire-rat hounds, Grip and Fang."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-dire-rat
+    name: Dire Rat
+    hp_max: 2
+    ac: 14
+    move: "near (climb)"
+    level: 0
+    tags: [tier-1, beast, swarm]
+    icon: icons/game-icons/delapouite/rat.svg
+    attacks:
+      - { name: Bite, bonus: 1, damage: 1d4, note: "On hit: DC 12 CON save or contract filth fever." }
+    notes: "Three-foot feral rat. Often hunts in packs."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-thoqqua
+    name: Thoqqua
+    hp_max: 6
+    ac: 16
+    move: "near (burrow)"
+    level: 2
+    tags: [tier-1, elemental]
+    icon: icons/game-icons/lorc/worm-mouth.svg
+    attacks:
+      - { name: Slam, bonus: 2, damage: 1d6, note: "On hit: +1d6 fire damage; attacker may catch fire (DC 13 DEX)." }
+    notes: "Worm-like fire-and-stone elemental that tunnels through rock seeking minerals."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-water-mephit
+    name: Water Mephit
+    hp_max: 5
+    ac: 14
+    move: "near (fly close)"
+    level: 2
+    tags: [tier-1, elemental]
+    icon: icons/game-icons/lorc/imp.svg
+    attacks:
+      - { name: Claws, bonus: 2, damage: 1d3 }
+      - { name: Acid Breath, bonus: 0, damage: 1d8, note: "Cone, close. DC 12 DEX save for half. Recharge 5-6." }
+    notes: "Regenerates 1 HP/round if exposed to water or rain."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-yusdrayl
+    name: Yusdrayl, Kobold Sorcerer-Queen
+    hp_max: 7
+    ac: 14
+    move: near
+    level: 2
+    tags: [tier-1, humanoid, kobold, leader]
+    icon: icons/game-icons/lorc/crowned-skull.svg
+    attacks:
+      - { name: Dagger, bonus: 1, damage: 1d4 }
+      - { name: Sling, bonus: 2, damage: 1d4 }
+    notes: "Cunning sorcerer ruling the upper fortress from a dragon throne. Knows daze, ray of frost, magic missile, mage armor, hypnotism."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-durnn-hobgoblin-chief
+    name: Durnn, Hobgoblin Chief
+    hp_max: 6
+    ac: 16
+    move: near
+    level: 2
+    tags: [tier-1, goblinoid, leader]
+    icon: icons/game-icons/delapouite/orc-head.svg
+    attacks:
+      - { name: Longsword, bonus: 3, damage: 1d8 }
+      - { name: Shortbow, bonus: 2, damage: 1d6 }
+    notes: "Brutal chief of the Durbuluk goblins. Wears the Hucrele signet ring. Fights to the death."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-shadow
+    name: Shadow
+    hp_max: 4
+    ac: 13
+    move: "near (fly)"
+    level: 3
+    tags: [tier-2, undead]
+    icon: icons/game-icons/lorc/ghost.svg
+    attacks:
+      - { name: Touch, bonus: 3, damage: 1d4, note: "Incorporeal: temporary STR damage (not HP). Only magic weapons/spells hurt it." }
+    notes: "Lurks in the shadow of Ashardalon's Shrine. Passes through walls."
+
+  # ═══════════════════════════════════════════
+  # Whispering Cairn (wc-*)
+  # ═══════════════════════════════════════════
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: wc-mad-slasher
+    name: Mad Slasher
+    hp_max: 9
+    ac: 13
+    move: near
+    level: 2
+    tags: [tier-2, aberration]
+    icon: icons/game-icons/lorc/sharped-teeth-skull.svg
+    attacks:
+      - { name: Claws, bonus: 2, damage: 1d6, note: "Two claw attacks per turn; whirlwind frenzy when surrounded." }
+    notes: "Six-legged horror with a central eye. Skitters out of beetle-infested shafts to slash isolated victims."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-acid-beetle-swarm
+    name: Acid Beetle Swarm
+    hp_max: 6
+    ac: 14
+    move: "near (climb)"
+    level: 1
+    tags: [tier-1, swarm, vermin]
+    icon: icons/game-icons/lorc/scarab-beetle.svg
+    attacks:
+      - { name: Acid Bite, bonus: 1, damage: 1d4, note: "Auto-hits creatures sharing its space; DC 12 CON save or nauseated 1 round." }
+    notes: "Immune to weapon damage. Pours from the Hive in a yellow acid wake."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-giant-bombardier-beetle
+    name: Giant Bombardier Beetle
+    hp_max: 7
+    ac: 14
+    move: near
+    level: 1
+    tags: [tier-1, vermin]
+    icon: icons/game-icons/lorc/scarab-beetle.svg
+    attacks:
+      - { name: Bite, bonus: 2, damage: 1d6 }
+      - { name: Acid Spray, bonus: 2, damage: 1d4, note: "Close cone. DC 12 DEX save for half." }
+    notes: "Larger 'cow' of the Hive colony."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-lurking-strangler
+    name: Lurking Strangler
+    hp_max: 4
+    ac: 16
+    move: "near (fly)"
+    level: 2
+    tags: [tier-2, aberration]
+    icon: icons/game-icons/lorc/tentacles-skull.svg
+    attacks:
+      - { name: Lash, bonus: 3, damage: 1d4, note: "On hit vs unaware target: wraps throat, suffocates over 3 rounds." }
+      - { name: Eye Ray, bonus: 3, damage: 1d4, note: "Choose effect: DC 13 WIS save or be frightened, OR DC 13 WIS or sleep for 1d4 rounds." }
+    notes: "A floating strand of muscle and two trailing eyes. All-around vision; cannot be flanked."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-grick
+    name: Grick
+    hp_max: 5
+    ac: 16
+    move: "near (climb)"
+    level: 2
+    tags: [tier-2, aberration]
+    icon: icons/game-icons/lorc/tentacles-skull.svg
+    attacks:
+      - { name: Tentacles, bonus: 3, damage: 1d4, note: "Up to 4 tentacle strikes per turn." }
+      - { name: Beak, bonus: 3, damage: 1d3 }
+    notes: "Wormlike predator that tunneled up through the iron-sphere floor. Surprises from below."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-wind-warrior
+    name: Wind Warrior
+    hp_max: 14
+    ac: 16
+    move: "near (fly)"
+    level: 3
+    tags: [tier-3, elemental, boss]
+    icon: icons/game-icons/delapouite/gargoyle.svg
+    attacks:
+      - { name: Twin Longswords, bonus: 4, damage: 1d8, note: "Two strikes per turn." }
+      - { name: Sonic Blast, bonus: 0, damage: 2d6, note: "Line, far. DC 13 DEX save for half. Once per fight." }
+    notes: "Hollow ceramic plate animated by an air spirit. Crumbles to dust when slain. Last guardian of Zosiel's true tomb."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-small-earth-elemental
+    name: Small Earth Elemental (Artophanx)
+    hp_max: 4
+    ac: 15
+    move: "close (burrow)"
+    level: 1
+    tags: [tier-1, elemental]
+    icon: icons/game-icons/delapouite/ice-golem.svg
+    attacks:
+      - { name: Slam, bonus: 2, damage: 1d6 }
+    notes: "Bound in a black egg in the workshop. Speaks Terran; may parley if convinced the PCs can free it."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-tomb-mote
+    name: Tomb Mote
+    hp_max: 5
+    ac: 15
+    move: "near (climb, swim)"
+    level: 2
+    tags: [tier-2, undead]
+    icon: icons/game-icons/lorc/broken-skull.svg
+    attacks:
+      - { name: Bite, bonus: 2, damage: 1d4, note: "On hit: DC 13 CON save or contract corpse bloat (1d6 STR loss in 1d3 days)." }
+    notes: "Tiny lattice of bone shards, tombstone fragments, and mismatched teeth. Supernaturally quick — may take an extra action per round. Cold iron or magic to hurt."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-alastor-land-ghost
+    name: Alastor Land, the Cursed Boy
+    hp_max: 6
+    ac: 14
+    move: "near (fly, incorporeal)"
+    level: 3
+    tags: [tier-3, undead, ghost]
+    icon: icons/game-icons/delapouite/floating-ghost.svg
+    attacks:
+      - { name: Malevolence, bonus: 0, damage: "—", note: "DC 14 WIS save or be possessed. Pleads before fighting." }
+      - { name: Telekinesis, bonus: 2, damage: 1d6, note: "Hurls iron spheres or debris from range." }
+    notes: "Translucent boy with a broken neck. Wracked with guilt; wants his bones buried. Horrific appearance forces DC 13 WIS save."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-ulavant-ghoul
+    name: Ulavant, Seeker Ghoul
+    hp_max: 6
+    ac: 14
+    move: near
+    level: 1
+    tags: [tier-1, undead]
+    icon: icons/game-icons/lorc/chewed-skull.svg
+    attacks:
+      - { name: Bite, bonus: 2, damage: 1d4, note: "On hit: DC 13 CON save or paralyzed for 1d4 rounds." }
+      - { name: Claws, bonus: 2, damage: 1d3, note: "Same paralysis save on hit." }
+    notes: "Drowned scholar haunting the submerged locker rooms. Still wears a gold Seeker ring."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-insane-water-elemental
+    name: Insane Small Water Elemental
+    hp_max: 4
+    ac: 14
+    move: "near (swim)"
+    level: 1
+    tags: [tier-1, elemental]
+    icon: icons/game-icons/delapouite/slime.svg
+    attacks:
+      - { name: Slam, bonus: 2, damage: 1d6, note: "+1 to hit if target stands in water; -2 vs dry targets." }
+    notes: "Centuries-mad shower spirit lurking in the flooded sub-level. Ambushes torchbearers first."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-wounded-owlbear
+    name: Wounded Mother Owlbear
+    hp_max: 10
+    ac: 13
+    move: near
+    level: 2
+    tags: [tier-2, beast]
+    icon: icons/game-icons/lorc/owl.svg
+    attacks:
+      - { name: Claws, bonus: 3, damage: 1d6 }
+      - { name: Beak, bonus: 3, damage: 1d4 }
+    notes: "Already injured. Enrages to defend a surviving cub."
+
+  # ═══════════════════════════════════════════
+  # Giantslayer #6 — Shadow of the Storm Tyrant (gs-*)
+  # ═══════════════════════════════════════════
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: gs-volstus-storm-tyrant
+    name: Volstus the Storm Tyrant
+    hp_max: 42
+    ac: 18
+    move: near
+    level: 8
+    tags: [tier-3, giant, storm-giant, boss, spellcaster, unique]
+    icon: icons/game-icons/lorc/cyclops.svg
+    attacks:
+      - { name: Stormlord's Greatsword, bonus: 6, damage: 2d10, note: "Crackles with thunder." }
+      - { name: Thrown Boulder, bonus: 4, damage: 2d8, note: "Range: far." }
+      - { name: Call Lightning, bonus: 6, damage: 3d6, note: "Range: far. DC 14 DEX save for half. 3/day." }
+    notes: "Wields the cloud diadem (steers Ironcloud Keep) and the Orb of Red Dragonkind. Booming voice grants advantage on intimidation. Final boss."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-akazerath-red-dragon
+    name: Akazerath, Old Red Dragon
+    hp_max: 40
+    ac: 17
+    move: "near (fly far)"
+    level: 7
+    tags: [tier-3, dragon, boss, magical]
+    icon: icons/game-icons/lorc/dragon-head.svg
+    attacks:
+      - { name: Bite, bonus: 6, damage: 2d10 }
+      - { name: Claw, bonus: 6, damage: 1d8, note: "Two attacks per turn." }
+      - { name: Fire Breath, bonus: 0, damage: 6d6, note: "Cone, far. DC 14 DEX save for half. Recharge in 1d4 rounds." }
+    notes: "Dominated by Volstus via the Orb. Immune to fire, vulnerable to cold. Frightful presence: DC 13 WIS or shaken."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-cloud-giant
+    name: Cloud Giant
+    hp_max: 28
+    ac: 15
+    move: near
+    level: 5
+    tags: [tier-3, giant, brute]
+    icon: icons/game-icons/delapouite/giant.svg
+    attacks:
+      - { name: Huge Morningstar, bonus: 5, damage: 2d8 }
+      - { name: Thrown Rock, bonus: 4, damage: 2d6, note: "Range: far." }
+    notes: "Can cast levitate, fog cloud, or obscuring mist 1/day each. Reclusive and proud."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-fire-giant
+    name: Fire Giant
+    hp_max: 30
+    ac: 16
+    move: near
+    level: 5
+    tags: [tier-3, giant, brute, fire]
+    icon: icons/game-icons/delapouite/giant.svg
+    attacks:
+      - { name: Greatsword, bonus: 5, damage: 2d8 }
+      - { name: Flaming Rock, bonus: 4, damage: 2d6, note: "Range: far. +1d6 fire damage." }
+    notes: "Immune to fire, vulnerable to cold. Often armored in soot-blackened iron."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-ash-giant
+    name: Ash Giant
+    hp_max: 22
+    ac: 14
+    move: near
+    level: 4
+    tags: [tier-2, giant, brute, diseased]
+    icon: icons/game-icons/delapouite/giant.svg
+    attacks:
+      - { name: Huge Shortspear, bonus: 4, damage: 2d6, note: "On hit: DC 12 CON save or contract ash leprosy (-1d4 STR for 1 day)." }
+      - { name: Heavy Catapult, bonus: 3, damage: 3d6, note: "Range: far. Siege weapon." }
+    notes: "Volcanic-dwelling giants covered in pale ash. Immune to disease. Carriers of the wasting plague."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-frost-giant
+    name: Frost Giant
+    hp_max: 30
+    ac: 15
+    move: near
+    level: 5
+    tags: [tier-3, giant, brute, cold]
+    icon: icons/game-icons/delapouite/ice-golem.svg
+    attacks:
+      - { name: Greataxe, bonus: 5, damage: 2d8 }
+      - { name: Ice Boulder, bonus: 3, damage: 2d6, note: "Range: far. +1d4 cold." }
+    notes: "Immune to cold, vulnerable to fire."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-jotund-troll
+    name: Jotund Troll
+    hp_max: 35
+    ac: 14
+    move: near
+    level: 5
+    tags: [tier-3, troll, giant, regenerator]
+    icon: icons/game-icons/lorc/hydra.svg
+    attacks:
+      - { name: Massive Fist, bonus: 5, damage: 2d6, note: "Two attacks per turn." }
+      - { name: Nine-Headed Bite, bonus: 4, damage: 1d10, note: "Extra attack each round while bloodied." }
+    notes: "Thirty-foot, nine-headed troll. Regenerates 5 HP/round unless damaged by fire or acid. Heads bicker — DC 13 INT to confuse one with a lie."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-abysogh-pale-titan
+    name: Abysogh, Pale Titan
+    hp_max: 45
+    ac: 16
+    move: near
+    level: 7
+    tags: [tier-3, giant, titan, blind, boss]
+    icon: icons/game-icons/lorc/cyclops.svg
+    attacks:
+      - { name: Slam, bonus: 6, damage: 4d6, note: "Two attacks per turn." }
+      - { name: Living Ammunition, bonus: 4, damage: 4d6, note: "Range: far. Hurls a grappled creature; both take damage." }
+      - { name: Cataclysmic Roar, bonus: 0, damage: 3d6, note: "Cone, near. DC 14 CON save or deafened and stunned 1 round. Recharge 1d4." }
+    notes: "Forty-foot blind titan. Immune to gaze and visual effects. Regenerates 5 HP/round unless damaged by lightning. Each move within near: DC 13 DEX save or fall prone."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-nixudaemon
+    name: Nixudaemon (Toil Daemon)
+    hp_max: 22
+    ac: 15
+    move: near
+    level: 5
+    tags: [tier-3, daemon, fiend, magical]
+    icon: icons/game-icons/lorc/daemon-skull.svg
+    attacks:
+      - { name: Barbed Whip, bonus: 5, damage: 1d8, note: "Two attacks. On hit: DC 13 STR save or grappled." }
+      - { name: Soul Drain, bonus: 4, damage: 1d6, note: "Each hit exhausts the target until dawn." }
+    notes: "Resists cold/electricity/fire. 1/day cast dominate person (DC 13 WIS). Telepathic 100 ft. Drives slaves past breaking."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-cloud-giant-sentry
+    name: Ironcloud Keep Sentry
+    hp_max: 26
+    ac: 16
+    move: near
+    level: 4
+    tags: [tier-2, giant, archer]
+    icon: icons/game-icons/delapouite/giant.svg
+    attacks:
+      - { name: Heavy Ballista, bonus: 4, damage: 2d8, note: "Range: far. +1d4 lightning from shock bolts." }
+      - { name: Slam, bonus: 4, damage: 1d8 }
+    notes: "Stationed on defense platforms. Equipped with scopes of stormsight that pierce magical darkness."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-galescream-roc
+    name: Galescream, War Roc
+    hp_max: 25
+    ac: 15
+    move: "near (fly far)"
+    level: 4
+    tags: [tier-2, beast, mount, flying]
+    icon: icons/game-icons/delapouite/eagle-head.svg
+    attacks:
+      - { name: Bite, bonus: 4, damage: 2d6 }
+      - { name: Talons, bonus: 4, damage: 1d8, note: "Two attacks. On hit: grappled (DC 13 STR to escape)." }
+    notes: "Massive eagle-like predator ridden by cloud giant Nalbur. Dive attack at full speed deals +1d8 damage."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-leng-spider
+    name: Leng Spider
+    hp_max: 24
+    ac: 15
+    move: "near (climb near)"
+    level: 4
+    tags: [tier-2, aberration, magical]
+    icon: icons/game-icons/lorc/angular-spider.svg
+    attacks:
+      - { name: Bite, bonus: 4, damage: 2d6, note: "On hit: DC 13 CON save or 1d4 INT damage." }
+      - { name: Dimensional Web, bonus: 4, damage: "—", note: "Range: near. Target restrained (DC 14 STR to break). Failed save also teleports victim to a chosen location." }
+    notes: "Otherworldly arachnid the size of a horse. Resists cold. Can spin dimensional webs that teleport intruders."
+
+  # ───────── EverQuest — Monsters of Luclin ─────────
+  # 25 creatures from the Luclin moon sourcebook. d20 stat blocks rescaled to
+  # Shadowdark; original lore preserved in notes. All powerful (boss/tier-3 in EQ d20).
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: eq-luclin-akheva
+    name: "Akheva"
+    hp_max: 65
+    ac: 16
+    move: near
+    level: 8
+    tags: [tier-3, humanoid, eq-rpg, luclin]
+    attacks:
+      - { name: Strike, bonus: 7, damage: 2d8 }
+    notes: "Tall, four-armed androgynous servitors of the goddess Luclin. Pale-skinned with curling black horns. Once ruled the moon; civil war shattered their nation."
+    system: eq-rpg
+    source_book: monsters-of-luclin
+    source_page: 4
+
+  - id: eq-luclin-atenha-ra
+    name: "Atenha'Ra"
+    hp_max: 80
+    ac: 17
+    move: near
+    level: 9
+    tags: [boss, fiend, eq-rpg, luclin]
+    attacks:
+      - { name: Strike, bonus: 8, damage: 2d10 }
+    notes: "The fallen high priestess of Luclin who summoned the storm called the Maiden's Scar. Now plots from the fortress of Vex Thal. Immune to acid, disease, poison, and sonic attacks."
+    system: eq-rpg
+    source_book: monsters-of-luclin
+    source_page: 14
+
+  - id: eq-luclin-va-xi-atenha-ra
+    name: "Va Xi Atenha'Ra"
+    hp_max: 80
+    ac: 17
+    move: near
+    level: 9
+    tags: [boss, fiend, eq-rpg, luclin]
+    attacks:
+      - { name: Strike, bonus: 8, damage: 2d10 }
+    notes: "A lesser clone of Atenha'Ra; her shadowy lieutenants. See in darkness; immune to mind-affecting effects and paralysis."
+    system: eq-rpg
+    source_book: monsters-of-luclin
+    source_page: 16
+
+  - id: eq-luclin-blood-of-ssraeshza
+    name: "Blood of Ssraeshza"
+    hp_max: 40
+    ac: 15
+    move: near
+    level: 6
+    tags: [tier-3, ooze, eq-rpg, luclin]
+    attacks:
+      - { name: Strike, bonus: 5, damage: 2d6 }
+    notes: "Living blood drawn from slain shissar nobles, fused with their emperor's essence. Sonic resistance; immune to acid and cold."
+    system: eq-rpg
+    source_book: monsters-of-luclin
+    source_page: 17
+
+  - id: eq-luclin-cht-thk
+    name: "Cht'thk"
+    hp_max: 30
+    ac: 14
+    move: near
+    level: 5
+    tags: [tier-2, monstrosity, eq-rpg, luclin]
+    attacks:
+      - { name: Strike, bonus: 4, damage: 1d8 }
+    notes: "Insectoid stalkers from Luclin's hive worlds. Hunt in coordinated swarms; chitin plates make them tough to wound."
+    system: eq-rpg
+    source_book: monsters-of-luclin
+    source_page: 18
+
+  - id: eq-luclin-elysian
+    name: "Elysian"
+    hp_max: 22
+    ac: 13
+    move: near
+    level: 4
+    tags: [tier-2, fey, eq-rpg, luclin]
+    attacks:
+      - { name: Strike, bonus: 3, damage: 1d8 }
+    notes: "Tall, slender, beautiful fae beings. Elders are accorded great respect. Use illusion and charm to confound trespassers in their thickets."
+    system: eq-rpg
+    source_book: monsters-of-luclin
+    source_page: 20
+
+  - id: eq-luclin-fungus-fiend
+    name: "Fungus Fiend"
+    hp_max: 22
+    ac: 13
+    move: near
+    level: 4
+    tags: [tier-2, plant, eq-rpg, luclin]
+    attacks:
+      - { name: Strike, bonus: 3, damage: 1d8 }
+    notes: "Ambulatory fungus colony. Releases choking spore clouds and ensnares prey with rooty tendrils."
+    system: eq-rpg
+    source_book: monsters-of-luclin
+    source_page: 22
+
+  - id: eq-luclin-galorian
+    name: "Galorian"
+    hp_max: 30
+    ac: 14
+    move: near
+    level: 5
+    tags: [tier-2, outsider, eq-rpg, luclin]
+    attacks:
+      - { name: Strike, bonus: 4, damage: 1d8 }
+    notes: "Wandering planar judges that bind themselves to causes. Carry banner-staves of crystalline light."
+    system: eq-rpg
+    source_book: monsters-of-luclin
+    source_page: 23
+
+  - id: eq-luclin-grimling
+    name: "Grimling"
+    hp_max: 5
+    ac: 11
+    move: near
+    level: 1
+    tags: [tier-1, humanoid, eq-rpg, luclin]
+    attacks:
+      - { name: Strike, bonus: 0, damage: 1d4 }
+    notes: "Small, vicious primates with sharp claws and a tribal hierarchy. Travel in raiding bands; cowardly alone, brutal in numbers."
+    system: eq-rpg
+    source_book: monsters-of-luclin
+    source_page: 27
+
+  - id: eq-luclin-horse-vah-shir
+    name: "Horse (Vah Shir)"
+    hp_max: 5
+    ac: 11
+    move: near
+    level: 1
+    tags: [tier-1, beast, eq-rpg, luclin]
+    attacks:
+      - { name: Strike, bonus: 0, damage: 1d4 }
+    notes: "Sturdy mount of the cat-folk Vah Shir. Trained for combat; will fight to protect a fallen rider."
+    system: eq-rpg
+    source_book: monsters-of-luclin
+    source_page: 30
+
+  - id: eq-luclin-kaas-thox
+    name: "Kaas Thox"
+    hp_max: 50
+    ac: 16
+    move: near
+    level: 7
+    tags: [tier-3, humanoid, eq-rpg, luclin]
+    attacks:
+      - { name: Strike, bonus: 6, damage: 2d6 }
+    notes: "Shissar high inquisitors. Wield reality-bending magic and cold-iron blades. Speak only in hisses and command-words."
+    system: eq-rpg
+    source_book: monsters-of-luclin
+    source_page: 31
+
+  - id: eq-luclin-netherbian
+    name: "Netherbian"
+    hp_max: 15
+    ac: 12
+    move: near
+    level: 3
+    tags: [tier-2, aberration, eq-rpg, luclin]
+    attacks:
+      - { name: Strike, bonus: 2, damage: 1d6 }
+    notes: "Spindly extraplanar parasites. Burrow into hosts and steer them; the host doesn't know until it's too late."
+    system: eq-rpg
+    source_book: monsters-of-luclin
+    source_page: 32
+
+  - id: eq-luclin-owlbear-luclin
+    name: "Owlbear (Luclin)"
+    hp_max: 22
+    ac: 13
+    move: near
+    level: 4
+    tags: [tier-2, beast, eq-rpg, luclin]
+    attacks:
+      - { name: Strike, bonus: 3, damage: 1d8 }
+    notes: "The Luclin variant — pale-feathered, larger than its Norrath cousin. Hunts in the shadowy lichen forests."
+    system: eq-rpg
+    source_book: monsters-of-luclin
+    source_page: 34
+
+  - id: eq-luclin-reishi
+    name: "Reishi"
+    hp_max: 15
+    ac: 12
+    move: near
+    level: 3
+    tags: [tier-2, plant, eq-rpg, luclin]
+    attacks:
+      - { name: Strike, bonus: 2, damage: 1d6 }
+    notes: "Mushroom-folk of varying size; mature reishi use their woody fists to deal powerful blows. Peaceful unless the colony is threatened."
+    system: eq-rpg
+    source_book: monsters-of-luclin
+    source_page: 35
+
+  - id: eq-luclin-giant-rhino-beetle
+    name: "Giant Rhino Beetle"
+    hp_max: 15
+    ac: 12
+    move: near
+    level: 3
+    tags: [tier-2, beast, eq-rpg, luclin]
+    attacks:
+      - { name: Strike, bonus: 2, damage: 1d6 }
+    notes: "Burrowing armored beetle the size of an ox. Hides beneath the sand; surprises prey by erupting from below."
+    system: eq-rpg
+    source_book: monsters-of-luclin
+    source_page: 37
+
+  - id: eq-luclin-rock-burrower
+    name: "Rock Burrower"
+    hp_max: 22
+    ac: 13
+    move: near
+    level: 4
+    tags: [tier-2, beast, eq-rpg, luclin]
+    attacks:
+      - { name: Strike, bonus: 3, damage: 1d8 }
+    notes: "Great worm that tunnels through Luclin's stone. Pack may include 1d4+1 stone carvers or 1d2 core burrowers."
+    system: eq-rpg
+    source_book: monsters-of-luclin
+    source_page: 39
+
+  - id: eq-luclin-rock-hopper
+    name: "Rock Hopper"
+    hp_max: 5
+    ac: 11
+    move: near
+    level: 1
+    tags: [tier-1, beast, eq-rpg, luclin]
+    attacks:
+      - { name: Strike, bonus: 0, damage: 1d4 }
+    notes: "Small jumping reptile-kin found in Luclin's broken terrain. Hops between boulders to ambush."
+    system: eq-rpg
+    source_book: monsters-of-luclin
+    source_page: 42
+
+  - id: eq-luclin-saurek
+    name: "Saurek"
+    hp_max: 10
+    ac: 12
+    move: near
+    level: 2
+    tags: [tier-1, humanoid, eq-rpg, luclin]
+    attacks:
+      - { name: Strike, bonus: 1, damage: 1d6 }
+    notes: "Found only within Shadeweaver's Thicket. Reptilian tribe wielding bone weapons."
+    system: eq-rpg
+    source_book: monsters-of-luclin
+    source_page: 43
+
+  - id: eq-luclin-giant-scorpion
+    name: "Giant Scorpion"
+    hp_max: 22
+    ac: 13
+    move: near
+    level: 4
+    tags: [tier-2, beast, eq-rpg, luclin]
+    attacks:
+      - { name: Strike, bonus: 3, damage: 1d8 }
+    notes: "Massive arachnid; venomous stinger and crushing claws."
+    system: eq-rpg
+    source_book: monsters-of-luclin
+    source_page: 44
+
+  - id: eq-luclin-giant-sea-turtle
+    name: "Giant Sea Turtle"
+    hp_max: 30
+    ac: 14
+    move: near
+    level: 5
+    tags: [tier-2, beast, eq-rpg, luclin]
+    attacks:
+      - { name: Strike, bonus: 4, damage: 1d8 }
+    notes: "Vast reef-shelled turtle. Slow on land, deadly in the water. Sometimes carries entire ecosystems on its back."
+    system: eq-rpg
+    source_book: monsters-of-luclin
+    source_page: 45
+
+  - id: eq-luclin-shik-nar
+    name: "Shik'nar"
+    hp_max: 15
+    ac: 12
+    move: near
+    level: 3
+    tags: [tier-2, monstrosity, eq-rpg, luclin]
+    attacks:
+      - { name: Strike, bonus: 2, damage: 1d6 }
+    notes: "Insectoid attackers with piercing weapons that have reach. Coordinate via pheromone signals."
+    system: eq-rpg
+    source_book: monsters-of-luclin
+    source_page: 46
+
+  - id: eq-luclin-shissar
+    name: "Shissar"
+    hp_max: 30
+    ac: 14
+    move: near
+    level: 5
+    tags: [tier-2, humanoid, eq-rpg, luclin]
+    attacks:
+      - { name: Strike, bonus: 4, damage: 1d8 }
+    notes: "Serpent-folk who once ruled Norrath before fleeing to Luclin from the Greenmist. Wield powerful arcane magic."
+    system: eq-rpg
+    source_book: monsters-of-luclin
+    source_page: 48
+
+  - id: eq-luclin-shissar-emperor-ssraeshza
+    name: "Shissar Emperor (Ssraeshza)"
+    hp_max: 100
+    ac: 18
+    move: near
+    level: 10
+    tags: [boss, humanoid, eq-rpg, luclin]
+    attacks:
+      - { name: Strike, bonus: 9, damage: 3d6 }
+    notes: "The shissar god-emperor who led his people's flight from Norrath. Channels reality-warping power from his throne in Ssraeshza Temple."
+    system: eq-rpg
+    source_book: monsters-of-luclin
+    source_page: 53
+
+  - id: eq-luclin-sonic-wolf
+    name: "Sonic Wolf"
+    hp_max: 15
+    ac: 12
+    move: near
+    level: 3
+    tags: [tier-2, beast, eq-rpg, luclin]
+    attacks:
+      - { name: Strike, bonus: 2, damage: 1d6 }
+    notes: "Wolf with crystalline pelt that resonates at painful frequencies. Howl can stun prey."
+    system: eq-rpg
+    source_book: monsters-of-luclin
+    source_page: 55
+
+  - id: eq-luclin-spire-spirit
+    name: "Spire Spirit"
+    hp_max: 22
+    ac: 13
+    move: near
+    level: 4
+    tags: [tier-2, elemental, eq-rpg, luclin]
+    attacks:
+      - { name: Strike, bonus: 3, damage: 1d8 }
+    notes: "Crystalline elemental bound to Luclin's stone spires. Animates the surrounding rock as a defensive form."
+    system: eq-rpg
+    source_book: monsters-of-luclin
+    source_page: 56
+
+  # ───────── EverQuest — Everfrost Peaks creatures ─────────
+
+  - id: eq-everfrost-peaks-ice-goblin
+    name: "Ice Goblin"
+    hp_max: 6
+    ac: 12
+    move: near
+    level: 1
+    tags: [tier-1, humanoid, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 1, damage: 1d6 }
+    notes: "Pickclaw goblin of the Frozen Shadow. Hardy, blue-tinged skin. Scavenges Blackburrow's outskirts and serves Lady Vox."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 84
+
+  - id: eq-everfrost-peaks-snow-wolf
+    name: "Snow Wolf"
+    hp_max: 8
+    ac: 13
+    move: near
+    level: 2
+    tags: [tier-1, beast, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 2, damage: 1d6 }
+    notes: "Lean tundra wolf with thick white pelt. Hunts in packs of 4-8 across the Frigid Plains."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 145
+
+  - id: eq-everfrost-peaks-polar-bear
+    name: "Polar Bear"
+    hp_max: 18
+    ac: 13
+    move: near
+    level: 3
+    tags: [tier-2, beast, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 3, damage: 1d8 }
+    notes: "Massive arctic bear. Solitary and aggressive when threatened or near cubs."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 146
+
+  - id: eq-everfrost-peaks-ice-giant
+    name: "Ice Giant"
+    hp_max: 35
+    ac: 16
+    move: near
+    level: 6
+    tags: [tier-3, giant, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 4, damage: 2d6 }
+    notes: "Thirty feet tall and built of bone-white muscle. Hurls boulders; tongues of frost crawl across its weapons."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 51
+
+  - id: eq-everfrost-peaks-frost-giant
+    name: "Frost Giant"
+    hp_max: 50
+    ac: 17
+    move: near
+    level: 7
+    tags: [tier-3, giant, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 5, damage: 2d8 }
+    notes: "Elder ice giant, mailed in glacier-forged plate. Speaks the old tongue. Often a chieftain."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 147
+
+  - id: eq-everfrost-peaks-wendigo
+    name: "Wendigo"
+    hp_max: 22
+    ac: 14
+    move: near
+    level: 4
+    tags: [tier-2, monstrosity, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 3, damage: 1d8 }
+    notes: "Gaunt, frost-burned thing that once was a man. Hunger never ends. Cold radiates from its skin."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 148
+
+  - id: eq-everfrost-peaks-cyclops-cyth
+    name: "Cyclops (Cyth)"
+    hp_max: 40
+    ac: 15
+    move: near
+    level: 6
+    tags: [tier-3, giant, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 4, damage: 2d8 }
+    notes: "One-eyed giant of the Frigid Plains. Tribal; carries a stone-bound club twice the size of a man."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 60
+
+  - id: eq-everfrost-peaks-snow-leopard
+    name: "Snow Leopard"
+    hp_max: 10
+    ac: 14
+    move: near
+    level: 3
+    tags: [tier-2, beast, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 3, damage: 1d6 }
+    notes: "Stealthy. Stalks high passes and pounces from above."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 149
+
+  - id: eq-everfrost-peaks-frozen-ghoul
+    name: "Frozen Ghoul"
+    hp_max: 12
+    ac: 13
+    move: near
+    level: 3
+    tags: [tier-2, undead, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 2, damage: 1d6 }
+    notes: "An ice-locked corpse, claws frostbitten. Touch chills to the bone. Found near old battlefields."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 150
+
+  - id: eq-everfrost-peaks-tundra-yeti
+    name: "Tundra Yeti"
+    hp_max: 28
+    ac: 14
+    move: near
+    level: 5
+    tags: [tier-2, monstrosity, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 4, damage: 1d10 }
+    notes: "Shaggy white-furred giant ape. Reclusive; throws snow and rocks before closing."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 151
+
+  - id: eq-everfrost-peaks-lady-vox
+    name: "Lady Vox"
+    hp_max: 120
+    ac: 20
+    move: near
+    level: 10
+    tags: [boss, dragon, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 8, damage: 3d6 }
+    notes: "The white dragon who rules Permafrost Keep. Cunning, vindictive, ancient. Breathes a blast of killing frost."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 78
+
+  - id: eq-everfrost-peaks-miragul-wraith
+    name: "Miragul Wraith"
+    hp_max: 30
+    ac: 15
+    move: near
+    level: 6
+    tags: [tier-3, undead, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 4, damage: 2d6 }
+    notes: "Echo of the lich Miragul. Drains warmth from those nearby. Bound to his frozen menagerie."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 103
+
+  - id: eq-everfrost-peaks-blackburrow-gnoll
+    name: "Blackburrow Gnoll"
+    hp_max: 6
+    ac: 12
+    move: near
+    level: 1
+    tags: [tier-1, humanoid, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 1, damage: 1d6 }
+    notes: "Hyena-headed marauder. Lives in the tunnels of Blackburrow. Raids north as far as Halas."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 84
+
+  - id: eq-everfrost-peaks-blackburrow-brute-elder
+    name: "Blackburrow Brute (Elder)"
+    hp_max: 14
+    ac: 13
+    move: near
+    level: 3
+    tags: [tier-2, humanoid, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 3, damage: 1d8 }
+    notes: "Veteran gnoll commander. Bigger, scarred, smarter."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 85
+
+  - id: eq-everfrost-peaks-snowfang-gnoll-chief
+    name: "Snowfang Gnoll Chief"
+    hp_max: 24
+    ac: 14
+    move: near
+    level: 5
+    tags: [tier-2, humanoid, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 4, damage: 1d10 }
+    notes: "Master of the lower tunnels of Blackburrow. Commands the pack."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 86
+
+  # ───────── EverQuest — Forests of Faydark creatures ─────────
+
+  - id: eq-forests-of-faydark-crushbone-orc
+    name: "Crushbone Orc"
+    hp_max: 8
+    ac: 13
+    move: near
+    level: 2
+    tags: [tier-1, humanoid, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 2, damage: 1d6 }
+    notes: "Soldier of Emperor Crushbone's army. Carved teeth, savage. Slaves the elves of Faydark."
+    system: eq-rpg
+    source_book: forests-of-faydark
+    source_page: 80
+
+  - id: eq-forests-of-faydark-crushbone-officer
+    name: "Crushbone Officer"
+    hp_max: 16
+    ac: 14
+    move: near
+    level: 3
+    tags: [tier-2, humanoid, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 3, damage: 1d8 }
+    notes: "Veteran orc commander. Wears stolen elven mail."
+    system: eq-rpg
+    source_book: forests-of-faydark
+    source_page: 82
+
+  - id: eq-forests-of-faydark-emperor-crushbone
+    name: "Emperor Crushbone"
+    hp_max: 60
+    ac: 17
+    move: near
+    level: 8
+    tags: [tier-3, humanoid, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 5, damage: 2d8 }
+    notes: "Warlord of the Crushbone Keep. Wields the great axe Bloodfang. Plots to claim all Faydwer."
+    system: eq-rpg
+    source_book: forests-of-faydark
+    source_page: 88
+
+  - id: eq-forests-of-faydark-faydark-pixie
+    name: "Faydark Pixie"
+    hp_max: 3
+    ac: 14
+    move: near
+    level: 1
+    tags: [tier-1, fey, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 1, damage: 1d3 }
+    notes: "Glowing winged mischief-maker. Hard to hit; turns invisible at will."
+    system: eq-rpg
+    source_book: forests-of-faydark
+    source_page: 128
+
+  - id: eq-forests-of-faydark-wood-faerie
+    name: "Wood Faerie"
+    hp_max: 4
+    ac: 13
+    move: near
+    level: 1
+    tags: [tier-1, fey, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 1, damage: 1d4 }
+    notes: "Tiny tunare-blessed sprite. Loves songs and shiny things."
+    system: eq-rpg
+    source_book: forests-of-faydark
+    source_page: 128
+
+  - id: eq-forests-of-faydark-faydark-treant
+    name: "Faydark Treant"
+    hp_max: 35
+    ac: 14
+    move: near
+    level: 6
+    tags: [tier-3, plant, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 4, damage: 2d6 }
+    notes: "Slow-moving sentinel oak. Awakens when the forest is threatened."
+    system: eq-rpg
+    source_book: forests-of-faydark
+    source_page: 129
+
+  - id: eq-forests-of-faydark-giant-wasp
+    name: "Giant Wasp"
+    hp_max: 9
+    ac: 13
+    move: near
+    level: 3
+    tags: [tier-2, beast, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 2, damage: 1d6 }
+    notes: "Hand-sized predator of the Faydark canopy. Stinger pumps paralytic venom."
+    system: eq-rpg
+    source_book: forests-of-faydark
+    source_page: 130
+
+  - id: eq-forests-of-faydark-forest-spider-faydark
+    name: "Forest Spider (Faydark)"
+    hp_max: 12
+    ac: 13
+    move: near
+    level: 3
+    tags: [tier-2, beast, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 3, damage: 1d6 }
+    notes: "Black-bristled spider the size of a hound. Webs entire glades."
+    system: eq-rpg
+    source_book: forests-of-faydark
+    source_page: 130
+
+  - id: eq-forests-of-faydark-arborean
+    name: "Arborean"
+    hp_max: 18
+    ac: 14
+    move: near
+    level: 4
+    tags: [tier-2, fey, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 3, damage: 1d8 }
+    notes: "Plant-folk wanderer. Mysterious druid-kin of the deep wood."
+    system: eq-rpg
+    source_book: forests-of-faydark
+    source_page: 131
+
+  - id: eq-forests-of-faydark-mayong-mistmoore
+    name: "Mayong Mistmoore"
+    hp_max: 90
+    ac: 19
+    move: near
+    level: 10
+    tags: [boss, undead, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 7, damage: 2d10 }
+    notes: "Dark elf vampire lord of Mistmoore Castle. Ageless schemer; commands wolves and undead."
+    system: eq-rpg
+    source_book: forests-of-faydark
+    source_page: 36
+
+  - id: eq-forests-of-faydark-aviak
+    name: "Aviak"
+    hp_max: 7
+    ac: 13
+    move: near
+    level: 2
+    tags: [tier-1, humanoid, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 2, damage: 1d6 }
+    notes: "Bird-humanoid of Lake Elizerain. Tribal warrior with a beaked spear."
+    system: eq-rpg
+    source_book: forests-of-faydark
+    source_page: 132
+
+  - id: eq-forests-of-faydark-sproggling-pixie-trickster
+    name: "Sproggling (Pixie Trickster)"
+    hp_max: 5
+    ac: 14
+    move: near
+    level: 1
+    tags: [tier-1, fey, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 1, damage: 1d4 }
+    notes: "A pixie that's been at the wine — chaos magic with no aim."
+    system: eq-rpg
+    source_book: forests-of-faydark
+    source_page: 133
+
+  - id: eq-forests-of-faydark-hill-shade
+    name: "Hill Shade"
+    hp_max: 14
+    ac: 14
+    move: near
+    level: 4
+    tags: [tier-2, undead, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 3, damage: 1d6 }
+    notes: "Ghostly remnant of a forgotten cult-member in the Hills of Shade."
+    system: eq-rpg
+    source_book: forests-of-faydark
+    source_page: 36
+
+  - id: eq-forests-of-faydark-equestrielle-the-corrupted
+    name: "Equestrielle the Corrupted"
+    hp_max: 28
+    ac: 15
+    move: near
+    level: 5
+    tags: [tier-2, fey, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 4, damage: 1d8 }
+    notes: "Once a noble centaur of the Faydark; now twisted by the Unseen cult. Adventure hook."
+    system: eq-rpg
+    source_book: forests-of-faydark
+    source_page: 24
+
+  # ───────── EverQuest — Solusek's Eye (Sol A) dungeon ─────────
+
+  - id: eq-soluseks-eye-flame-goblin
+    name: "Flame Goblin"
+    hp_max: 5
+    ac: 12
+    move: near
+    level: 1
+    tags: [tier-1, humanoid, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 1, damage: 1d6 }
+    notes: "Goblin of the Inferno. Charred skin and sparking teeth. Hurls glowing coals."
+    system: eq-rpg
+    source_book: soluseks-eye
+    source_page: 9
+
+  - id: eq-soluseks-eye-fire-imp
+    name: "Fire Imp"
+    hp_max: 4
+    ac: 13
+    move: near
+    level: 2
+    tags: [tier-1, fiend, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 2, damage: 1d4 }
+    notes: "Trickster of the fire-deeps. Tiny, winged, smells like sulfur."
+    system: eq-rpg
+    source_book: soluseks-eye
+    source_page: 10
+
+  - id: eq-soluseks-eye-kobold-of-sol-a
+    name: "Kobold of Sol A"
+    hp_max: 4
+    ac: 12
+    move: near
+    level: 1
+    tags: [tier-1, humanoid, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 1, damage: 1d4 }
+    notes: "Solusek's Eye kobold, fire-touched. Yips and skirmishes."
+    system: eq-rpg
+    source_book: soluseks-eye
+    source_page: 29
+
+  - id: eq-soluseks-eye-solusek-gnome
+    name: "Solusek Gnome"
+    hp_max: 8
+    ac: 13
+    move: near
+    level: 2
+    tags: [tier-1, humanoid, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 2, damage: 1d6 }
+    notes: "Outcast gnome of the lower workings. Tinker-trapsmith with an oddly cruel streak."
+    system: eq-rpg
+    source_book: soluseks-eye
+    source_page: 43
+
+  - id: eq-soluseks-eye-krombral-lava-beetle
+    name: "Krombral Lava Beetle"
+    hp_max: 10
+    ac: 14
+    move: near
+    level: 3
+    tags: [tier-2, beast, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 2, damage: 1d6 }
+    notes: "Beetle the size of a dog. Carapace glows red-hot; touch causes fire damage."
+    system: eq-rpg
+    source_book: soluseks-eye
+    source_page: 79
+
+  - id: eq-soluseks-eye-inferno-hound
+    name: "Inferno Hound"
+    hp_max: 14
+    ac: 14
+    move: near
+    level: 4
+    tags: [tier-2, beast, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 3, damage: 1d8 }
+    notes: "Ash-furred hound. Burning breath; eyes like coals."
+    system: eq-rpg
+    source_book: soluseks-eye
+    source_page: 62
+
+  - id: eq-soluseks-eye-fire-drake
+    name: "Fire Drake"
+    hp_max: 22
+    ac: 15
+    move: near
+    level: 5
+    tags: [tier-2, dragon, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 4, damage: 1d10 }
+    notes: "Lesser dragon of the Lavastorm Mountains. Wingspan of a horse; breath singes."
+    system: eq-rpg
+    source_book: soluseks-eye
+    source_page: 9
+
+  - id: eq-soluseks-eye-greater-fire-drake
+    name: "Greater Fire Drake"
+    hp_max: 45
+    ac: 17
+    move: near
+    level: 7
+    tags: [tier-3, dragon, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 5, damage: 2d8 }
+    notes: "Elder fire drake nesting at the Citadel of the Krombral."
+    system: eq-rpg
+    source_book: soluseks-eye
+    source_page: 79
+
+  - id: eq-soluseks-eye-lord-of-the-krombral
+    name: "Lord of the Krombral"
+    hp_max: 80
+    ac: 18
+    move: near
+    level: 9
+    tags: [boss, fiend, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 6, damage: 2d10 }
+    notes: "Boss of Solusek's Eye. Crowned in burning sigils."
+    system: eq-rpg
+    source_book: soluseks-eye
+    source_page: 79
+
+  - id: eq-soluseks-eye-duct-crawler
+    name: "Duct Crawler"
+    hp_max: 8
+    ac: 14
+    move: near
+    level: 2
+    tags: [tier-1, beast, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 2, damage: 1d6 }
+    notes: "Lava-pipe lizard. Skitters along volcanic ductwork."
+    system: eq-rpg
+    source_book: soluseks-eye
+    source_page: 59
+
+  # ───────── EverQuest — Temple of Solusek Ro ─────────
+
+  - id: eq-temple-of-solusek-ro-tazgar-the-efreet
+    name: "Tazgar the Efreet"
+    hp_max: 50
+    ac: 17
+    move: near
+    level: 7
+    tags: [tier-3, fiend, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 5, damage: 2d6 }
+    notes: "Bound efreet guardian of the temple's outer gate. Grants visions for the right price; obliterates the unworthy."
+    system: eq-rpg
+    source_book: temple-of-solusek-ro
+    source_page: 4
+
+  - id: eq-temple-of-solusek-ro-temple-keeper
+    name: "Temple Keeper"
+    hp_max: 10
+    ac: 14
+    move: near
+    level: 3
+    tags: [tier-2, humanoid, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 3, damage: 1d6 }
+    notes: "Robed priest of Solusek Ro. Tends the perpetual fires; not a great fighter but unforgiving."
+    system: eq-rpg
+    source_book: temple-of-solusek-ro
+    source_page: 5
+
+  - id: eq-temple-of-solusek-ro-temple-seeker
+    name: "Temple Seeker"
+    hp_max: 12
+    ac: 14
+    move: near
+    level: 3
+    tags: [tier-2, humanoid, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 3, damage: 1d6 }
+    notes: "Acolyte spell-caster. Hurls cantrips of flame."
+    system: eq-rpg
+    source_book: temple-of-solusek-ro
+    source_page: 5
+
+  - id: eq-temple-of-solusek-ro-high-priest-of-solusek-ro
+    name: "High Priest of Solusek Ro"
+    hp_max: 60
+    ac: 17
+    move: near
+    level: 8
+    tags: [tier-3, humanoid, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 5, damage: 2d8 }
+    notes: "Master of the Temple. Channels the fury of the Burning Prince. Commands obedience from all keepers."
+    system: eq-rpg
+    source_book: temple-of-solusek-ro
+    source_page: 25
+
+  - id: eq-temple-of-solusek-ro-lava-elemental
+    name: "Lava Elemental"
+    hp_max: 30
+    ac: 15
+    move: near
+    level: 5
+    tags: [tier-2, elemental, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 4, damage: 1d8 }
+    notes: "Living lava in roughly humanoid shape. Touch sets gear ablaze."
+    system: eq-rpg
+    source_book: temple-of-solusek-ro
+    source_page: 9
+
+  - id: eq-temple-of-solusek-ro-flame-sprite
+    name: "Flame Sprite"
+    hp_max: 4
+    ac: 14
+    move: near
+    level: 1
+    tags: [tier-1, fey, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 1, damage: 1d4 }
+    notes: "Tiny mote of joyful fire. Mostly harmless, but sets parchment alight."
+    system: eq-rpg
+    source_book: temple-of-solusek-ro
+    source_page: 9
+
+  - id: eq-temple-of-solusek-ro-solusek-s-cleric-devout
+    name: "Solusek's Cleric (Devout)"
+    hp_max: 18
+    ac: 15
+    move: near
+    level: 4
+    tags: [tier-2, humanoid, eq-rpg]
+    attacks:
+      - { name: Strike, bonus: 3, damage: 1d8 }
+    notes: "Veteran cleric of the Burning Prince. Heals enemies of the temple as eagerly as harming heretics."
+    system: eq-rpg
+    source_book: temple-of-solusek-ro
+    source_page: 18
+
+  # ───────── EverQuest — Iconic NPCs from Heroes of Norrath ─────────
+  # Named hero-characters from the EQ d20 supplement. Use as recurring NPCs
+  # the kids can run into. Level/HP scaled down for Shadowdark.
+
+  - id: eq-hero-akhbar
+    name: "Akhbar the Erudite Magician"
+    hp_max: 45
+    ac: 14
+    move: near
+    level: 9
+    tags: [boss, humanoid, hero, eq-rpg, named-character]
+    attacks:
+      - { name: Signature Attack, bonus: 6, damage: 1d8 }
+    notes: "An ageless erudite arcanist. Wields summoned elementals and reality-cracking spells."
+    system: eq-rpg
+    source_book: heroes-of-norrath
+    source_page: 7
+
+  - id: eq-hero-altora
+    name: "Altora the Half-Elf Bard"
+    hp_max: 35
+    ac: 14
+    move: near
+    level: 8
+    tags: [boss, humanoid, hero, eq-rpg, named-character]
+    attacks:
+      - { name: Signature Attack, bonus: 5, damage: 1d6 }
+    notes: "Wandering songstress whose ballads inspire allies and bewilder foes."
+    system: eq-rpg
+    source_book: heroes-of-norrath
+    source_page: 13
+
+  - id: eq-hero-moil
+    name: "Moil the Halfling Druid"
+    hp_max: 30
+    ac: 13
+    move: near
+    level: 7
+    tags: [boss, humanoid, hero, eq-rpg, named-character]
+    attacks:
+      - { name: Signature Attack, bonus: 5, damage: 1d6 }
+    notes: "Halfling hedge-druid. Talks with beasts and trees alike. Surprisingly hardy."
+    system: eq-rpg
+    source_book: heroes-of-norrath
+    source_page: 22
+
+  - id: eq-hero-alluveal
+    name: "Alluveal the Dark Elf Wizard"
+    hp_max: 42
+    ac: 13
+    move: near
+    level: 9
+    tags: [boss, humanoid, hero, eq-rpg, named-character]
+    attacks:
+      - { name: Signature Attack, bonus: 6, damage: 1d8 }
+    notes: "Dark elf evoker with a quiet bitterness. Once helped scribe the Books of Knowledge."
+    system: eq-rpg
+    source_book: heroes-of-norrath
+    source_page: 55
+
+  - id: eq-hero-basheera
+    name: "Basheera the Vah Shir Beastlord"
+    hp_max: 48
+    ac: 15
+    move: near
+    level: 8
+    tags: [boss, humanoid, hero, eq-rpg, named-character]
+    attacks:
+      - { name: Signature Attack, bonus: 6, damage: 1d8 }
+    notes: "Cat-folk warrior of Shar Vahl with a sonic-wolf companion. Strikes with claws and steel."
+    system: eq-rpg
+    source_book: heroes-of-norrath
+    source_page: 58
+
+  - id: eq-hero-halwain
+    name: "Halwain the Human Cleric"
+    hp_max: 50
+    ac: 16
+    move: near
+    level: 8
+    tags: [boss, humanoid, hero, eq-rpg, named-character]
+    attacks:
+      - { name: Signature Attack, bonus: 6, damage: 1d8 }
+    notes: "Stern cleric of the Marr twins. Channels healing as readily as righteous fire."
+    system: eq-rpg
+    source_book: heroes-of-norrath
+    source_page: 60
+
+  - id: eq-hero-arrialla
+    name: "Arrialla the High Elf Enchanter"
+    hp_max: 38
+    ac: 13
+    move: near
+    level: 9
+    tags: [boss, humanoid, hero, eq-rpg, named-character]
+    attacks:
+      - { name: Signature Attack, bonus: 5, damage: 1d6 }
+    notes: "High elf enchanter. Witnessed the Books of Knowledge stripped from Norrath."
+    system: eq-rpg
+    source_book: heroes-of-norrath
+    source_page: 62
+
+  - id: eq-hero-twede
+    name: "Twede the Gnome Necromancer"
+    hp_max: 35
+    ac: 12
+    move: near
+    level: 8
+    tags: [boss, humanoid, hero, eq-rpg, named-character]
+    attacks:
+      - { name: Signature Attack, bonus: 5, damage: 1d8 }
+    notes: "Gnome dabbler in forbidden arts. Travels with a skeletal minion or three."
+    system: eq-rpg
+    source_book: heroes-of-norrath
+    source_page: 64
+
+  - id: eq-hero-hurgadil
+    name: "Hurgadil the Dwarf Paladin"
+    hp_max: 60
+    ac: 17
+    move: near
+    level: 9
+    tags: [boss, humanoid, hero, eq-rpg, named-character]
+    attacks:
+      - { name: Signature Attack, bonus: 7, damage: 1d10 }
+    notes: "Stalwart dwarven paladin of Brell. Hammer and oath unshakable."
+    system: eq-rpg
+    source_book: heroes-of-norrath
+    source_page: 66
+
+  - id: eq-hero-quillaa
+    name: "Quillaa the Wood Elf Ranger"
+    hp_max: 45
+    ac: 14
+    move: near
+    level: 8
+    tags: [boss, humanoid, hero, eq-rpg, named-character]
+    attacks:
+      - { name: Signature Attack, bonus: 6, damage: 1d8 }
+    notes: "Wood elf scout of the Faydark. Bow and twin daggers; tracks anything that breathes."
+    system: eq-rpg
+    source_book: heroes-of-norrath
+    source_page: 96
+
+  - id: eq-hero-elmerg
+    name: "Elmerg the Troll Shadow Knight"
+    hp_max: 65
+    ac: 16
+    move: near
+    level: 9
+    tags: [boss, humanoid, hero, eq-rpg, named-character]
+    attacks:
+      - { name: Signature Attack, bonus: 7, damage: 1d10 }
+    notes: "Troll knight of Innoruuk. Drinks fear like wine; regenerates wounds."
+    system: eq-rpg
+    source_book: heroes-of-norrath
+    source_page: 103
+
+  - id: eq-hero-vagner
+    name: "Vagner the Barbarian Warrior"
+    hp_max: 70
+    ac: 16
+    move: near
+    level: 10
+    tags: [boss, humanoid, hero, eq-rpg, named-character]
+    attacks:
+      - { name: Signature Attack, bonus: 7, damage: 2d6 }
+    notes: "Northman warrior. Cleaves through enemies with a great axe; later awakens the Sleeper."
+    system: eq-rpg
+    source_book: heroes-of-norrath
+    source_page: 109
+
+  - id: eq-hero-karrass
+    name: "Karrass the Iksar Monk"
+    hp_max: 50
+    ac: 17
+    move: near
+    level: 9
+    tags: [boss, humanoid, hero, eq-rpg, named-character]
+    attacks:
+      - { name: Signature Attack, bonus: 7, damage: 1d10 }
+    notes: "Iksar martial artist. Strikes with talon-fast precision. Cold-blooded in every sense."
+    system: eq-rpg
+    source_book: heroes-of-norrath
+    source_page: 113
+
+  - id: eq-hero-dandaek
+    name: "Dandaek the Dwarf Rogue"
+    hp_max: 45
+    ac: 16
+    move: near
+    level: 8
+    tags: [boss, humanoid, hero, eq-rpg, named-character]
+    attacks:
+      - { name: Signature Attack, bonus: 6, damage: 1d8 }
+    notes: "Dwarven cutpurse-turned-treasure-hunter. Sneak, stab, vanish."
+    system: eq-rpg
+    source_book: heroes-of-norrath
+    source_page: 120

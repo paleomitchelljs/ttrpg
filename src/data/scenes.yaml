@@ -4,64 +4,563 @@
 #   id, name         — required
 #   tags             — underground, building, ruins, holy, natural, wet, etc.
 #   description      — short evocative blurb the GM can read aloud or riff on
+#
+# Source-tracking fields (optional, for filtering by origin):
+#   system       slug of source RPG system (shadowdark-core, eq-rpg, etc.)
+#   source_book  slug of specific book (everfrost-peaks, forests-of-faydark, etc.)
+#   source_page  integer page number in source PDF
 
 scenes:
   - id: dripping-cavern
     name: Dripping Cavern
     tags: [underground, natural, wet]
     description: "Stalactites drip into glittering pools. A cold draft hints at a deeper passage."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: ruined-shrine
     name: Ruined Shrine
     tags: [building, holy, ruins]
     description: "A toppled altar. Faded murals show a god long forgotten by the world above."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: collapsed-bridge
     name: Collapsed Bridge
     tags: [underground, hazard]
     description: "A stone span half-shattered over a black chasm. Whatever's at the bottom isn't quiet."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: mushroom-grove
     name: Glowing Mushroom Grove
     tags: [underground, natural, magical]
     description: "Towering fungi cast a pale blue light. The spores tickle the nose."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: bone-pile
     name: Pile of Old Bones
     tags: [undead, grim]
     description: "A mound of cracked bones, most of them human. Something has been gnawing on them."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: rusted-portcullis
     name: Rusted Portcullis
     tags: [building, ruins, obstacle]
     description: "A heavy iron grate, half-fallen. A faded warning is carved above."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: forgotten-library
     name: Forgotten Library
     tags: [building, knowledge, magical]
     description: "Shelves of crumbling tomes. One book on a lectern is still open, as if just abandoned."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: still-pool
     name: Still Black Pool
     tags: [underground, wet, magical]
     description: "A pool too still to be natural. Something pale moves under the surface — or seems to."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: bandit-camp
     name: Abandoned Camp
     tags: [outdoor, humanoid]
     description: "A campfire still warm. Coffee on the embers. Three packs left behind."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: web-tunnel
     name: Web-Choked Tunnel
     tags: [underground, beast, hazard]
     description: "Sticky webs fill the passage shoulder-high. Something is wrapped in the corner."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: ancient-statue
     name: Watching Statue
     tags: [building, magical]
     description: "A weathered statue with cracked features. Its head appears to turn — but never quite."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: lava-vent
     name: Steaming Vent
     tags: [underground, hazard]
     description: "A glowing crack splits the floor, hissing heat. Crossing it will not be pleasant."
+
+  # ═══════════════════════════════════════════
+  # Sunless Citadel (sc-*)
+  # ═══════════════════════════════════════════
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: sc-dark-ravine
+    name: The Dark Ravine
+    tags: [outdoor, ruins, entrance]
+    description: "A narrow cleft splits the rocky downs east of the Old Road. Broken pillars jut from the earth where the ravine widens; a knotted rope dangles into the darkness below. Dwarven graffiti on the pillars warns trespassers away."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-crumbled-courtyard
+    name: Crumbled Courtyard
+    tags: [outdoor, ruins, trap]
+    description: "Narrow stairs empty into a stone yard ringed by cracked crenellations. The buried citadel has sunk so deep that the battlement is level with the cavern floor. Treacherous flagstones to either side hide a trapdoor pit."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-tower-shell
+    name: Tower Shell
+    tags: [ruins, indoor, undead]
+    description: "Cracked granite cobbles a circular hall where four long-dead goblins sprawl in the dust. One stands pinned to the wall by the spear that killed him. Above, the hollow tower climbs thirty feet to broken sky. Old Draconic runes spell 'Ashardalon.'"
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-gallery-of-forlorn-notes
+    name: Gallery of Forlorn Notes
+    tags: [indoor, magical, trap]
+    description: "A dust-thick gallery long sealed by arcane lock. Four alcoves hold stone pedestals topped with crystalline globes; one glows soft blue and tinkles faint music. Within five feet the song swells into a brooding, mind-binding chord."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-dragons-riddle
+    name: The Dragon's Riddle
+    tags: [indoor, puzzle, secret]
+    description: "Dust lies thick as gray snow. At the room's rounded end stands a ten-foot sculpture of a coiled dragon carved from red-veined white marble. When a living creature approaches, the dragon's jaws move and it speaks a riddle in Common."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-tomb-of-the-failed-dragonpriest
+    name: Tomb of the Failed Dragonpriest
+    tags: [indoor, undead, tomb]
+    description: "Violet marble tiles, cracked and broken, cover the floor. A single greenish flame burns in a wall sconce. A nine-foot sarcophagus carved with dragon imagery sits sealed with six rusted iron latches."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-enchanted-water-cache
+    name: Enchanted Water Cache
+    tags: [indoor, magical]
+    description: "A small hewn chamber hides an upright keg of rusted iron, fed by similarly rusted pipes vanishing into the floor. Within is a magical water reserve, untapped for centuries — and bound to the geas of a water mephit."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-dragon-pen
+    name: The Dragon Pen (Flew the Coop)
+    tags: [indoor, kobold, lair]
+    description: "Crudely chalked dragon symbols cover the walls. A central pit is choked with bonfire ashes, bones, and bits of kobold armor. A metal cage at the south wall has been bent and burst open from the inside. A bedroll lies beside it, where Meepo the Keeper of Dragons sits whimpering."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-hall-of-dragons
+    name: Hall of Dragons
+    tags: [indoor, kobold, patrol]
+    description: "A long hall lined with two rows of marble columns, every shaft carved with entwining dragons worn smooth by centuries. Three kobold honor guards patrol it, watching the eastern door for goblin raiders."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-goblinville
+    name: Goblinville
+    tags: [indoor, goblin, lair]
+    description: "What was once a cathedral has become a fungus-lit warren of goblin filth. Scores of violet-glowing sconces light dozens of goblins arguing, eating, sleeping, and sharpening blades. A heaped wall holds wagon wheels and broken antiques the tribe has dragged in over sixty years."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-hall-of-the-goblin-chief
+    name: Hall of the Goblin Chief
+    tags: [indoor, goblin, lair, leader]
+    description: "A domed chamber forty feet across, pierced through the floor by a vine-lined shaft leading down to the Grove. Four torches flicker. A crude stone throne sits before the shaft, an iron chest at its foot. A sapling grows in a stone pot beside the throne — a gift from Belak the Outcast."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-compost-central
+    name: Compost Central
+    tags: [grove, plant, lair]
+    description: "Luminescent fungus drips violet light over a chilly cavern that reeks of loam and decay. Two cloaked figures shovel turned earth into a rusted bin. Twig blights and skeletal gardeners tend the heap that feeds the Twilight Grove."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-ashardalons-shrine
+    name: Ashardalon's Shrine
+    tags: [grove, undead, shrine]
+    description: "Dragon-carved granite walls slope up to a huge marble statue of a rearing dragon. Its eye sockets are empty, but a red glow lingers and casts an inky shadow behind its wings. A five-foot redstone tile is set in the floor before the carving. Something dark moves at the statue's feet."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-twilight-grove
+    name: The Twilight Grove
+    tags: [grove, plant, climax]
+    description: "A vast underground cavern lit by violet fungus and the wan glow of a single pale tree at its heart: the Gulthias Tree. Its roots clutch a black, splintered stake. Sharwyn and Sir Braford stand glassy-eyed among the branches; Belak waits with his giant frog crouched at his side."
+
+  # ═══════════════════════════════════════════
+  # Whispering Cairn (wc-*)
+  # ═══════════════════════════════════════════
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: wc-cowards-rest
+    name: Coward's Rest
+    tags: [underground, magical, entry]
+    description: "A long entry hall lit by faint natural light. Hollow tubes hidden inside ancient wall bands catch the wind from the cairn's summit and pipe sibilant whispers through the chamber. Walls bear deceptively simple geometric bands in purple and mustard, dust-coated and graffitied by children daring each other to sleep here."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-transport-alcove
+    name: Transport Alcove
+    tags: [underground, magical, portal]
+    description: "A small marble platform holds the shattered remains of an arcane apparatus shaped like a noble's dressing mirror. Only a third of the oval frame remains; the missing glass once formed one of seven portal-cairn gateways. The frame is cold to the touch."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-hall-of-honor
+    name: Hall of Honor
+    tags: [underground, hub, magical]
+    description: "A vast cruciform chamber whose chorus of whispers becomes intelligible to Auran-speakers ('hopeless... sacrilege... enemies'). The east wing has collapsed into a wolves' den; cobwebbed arches lead north to a flickering green light."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-gallery-of-seven-lanterns
+    name: Gallery of Seven Lanterns
+    tags: [underground, puzzle, magical]
+    description: "Seven short tunnels radiate from a domed chamber, each ending in a long chain holding a colored lantern. Two are missing. A milky bas-relief sarcophagus sits centered beneath the dome; a stone arrow on its platform clicks clockwise to align with each tunnel."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-false-tomb
+    name: False Tomb
+    tags: [underground, trap, ritual]
+    description: "A domed chamber whose ceiling glitters like starlit snow with embedded glass and metal chips. A white marble sarcophagus on a central dais holds a 7-foot featureless figure carved in flowing robes; the lid is trapped to gout flame. The coffin itself is empty."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-passage-of-the-face
+    name: Passage of the Face
+    tags: [underground, trap, magical]
+    description: "A long narrow corridor ending in an enormous screaming stone face dominating the terminus. The floor bears desperate dagger gouges from past victims. A pressure plate sixty feet down triggers the face: hypnotic eyes paralyze, and a hurricane wind blasts everything in the corridor."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-architects-foyer
+    name: Architect's Foyer
+    tags: [underground, art, magical]
+    description: "Walls covered with bas-relief images of nearly a dozen androgynous, hairless humanoids standing in poses of adoration toward a central sarcophagus relief. Many of their hands and faces have been hacked away by long-ago tomb robbers. A heavy stone slab rests on a pressure plate rigged with gas."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-passage-of-honor
+    name: Passage of Honor
+    tags: [underground, magical, art]
+    description: "Ten-foot-wide corridor lined with alcoves; each holds a seven-foot androgynous statue with cupped hands. Some hands still cradle miniature relief models of Wind Duke buildings. The far end of the passage turns unnaturally cold over a creeping patch of brown mold."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-living-pillar-gallery
+    name: Gallery of the Living Pillar
+    tags: [underground, magical, hazard]
+    description: "A dull gray stone pillar rises floor-to-ceiling at the room's center. Its west face cradles a fountain basin still churning orange nutritive sludge; its east face holds an alcove where sculptor's tools hang from pegs above a crushed skeleton in chainmail."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-workshop
+    name: The Workshop
+    tags: [underground, art, magical]
+    description: "A bright chamber permanently lit by daylight magic, filled with worktables, vises, and unfinished marble. A huge half-finished statue of a triumphant Wind Duke wielding a staff dominates the north wall. A red metal pedestal against the south wall holds a small black egg — the dormant form of a bound earth elemental."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-the-hive
+    name: The Hive
+    tags: [underground, hazard, vermin]
+    description: "A wide stone basin spills hardened orange paste over a shelf, tunneled through by thousands of blue-shelled beetles. A keening insect chorus fills the room; a huge organic nest of papier-mache fills the southwest corner."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-chamber-of-sighs
+    name: Chamber of Sighs
+    tags: [underground, magical, mythic]
+    description: "A cavernous chamber wrapped around a deep central pit, with four platforms (two broken) extending to a ring at its heart. Diffuse daylight filters down from forty feet above. Approaching within ten feet of any gallery wall causes the bas-reliefs to breathe out a sheet of steam through which living visions of Wind Duke history play out."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-true-tomb-of-zosiel
+    name: True Tomb of Zosiel
+    tags: [underground, boss, magical, treasure]
+    description: "A whooshing pillar of air dominates one half of this chamber. Three short stairs lead to a sealed white marble sarcophagus. A grand bas-relief on the wall depicts a bald androgynous Wind Duke confronting a horned demonic figure who clutches a globe of absolute blackness — the moment of Zosiel's death."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-alastors-haunt
+    name: Alastor's Haunt
+    tags: [underground, trap, undead]
+    description: "A long floorless chamber spanned by a three-foot-wide petrified wood beam. Ten feet below, countless rusted iron spheres the size of oranges form an uneven floor. Geometric patterns on the walls conceal the holes that fire the spheres as a trap. The boy-ghost Alastor watches from the Ethereal."
+
+  # ═══════════════════════════════════════════
+  # Giantslayer #6 (gs-*)
+  # ═══════════════════════════════════════════
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: gs-ironcloud-keep-exterior
+    name: Ironcloud Keep
+    tags: [building, magical, flying, fortress, boss]
+    description: "An immense bluish-gray castle floating atop a roughly spherical cloud, 500 ft tall and 600 ft across. The crystalline base is shaped like an inverted cone. Five colossal anchor chains tether it to a volcanic caldera below. The keep is wreathed in mist and shielded by a near-invisible energy field that lashes lightning at anything within close range."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-inner-crater-of-ashpeak
+    name: Inner Crater of Ashpeak
+    tags: [outdoor, volcanic, battle-arena]
+    description: "A circular crater 1,200 yards across at the top of a dormant volcano. Rocky cliffs and ridges 30 ft high ring the floor of loose pumice gravel; volcanic vents spew warm acrid vapor. The shadow of Ironcloud Keep blots out the sun above. Five immense iron chains rise from giant cannons on the ridge into the cloud castle far overhead."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-anchor-chain-climb
+    name: The Anchor Chains
+    tags: [outdoor, climb, deadly]
+    description: "Two of the five iron chains anchoring the cloud castle still hold — each link is the size of a wagon. The chains stretch 600 ft up through cloud cover. The first 200 ft of climb is dry; after that, mist makes the metal slick. Ash giants hurl rocks from below, cloud giant sentries hurl ballista bolts from above."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-engine-room
+    name: Engine Room of Ironcloud Keep
+    tags: [building, magical, dungeon, climax]
+    description: "A vast vaulted chamber dominated by the castle's magical engine — a swirling crystalline orb suspended in a cage of brass and gear-work. Cumbersome controls ring the room: levers, dials, and a giant-sized wheel. Hidden in one of the propulsion ducts is an alchemic bomb on a dead-man's switch tied to Volstus's life."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-lords-chamber
+    name: The Lord's Chamber
+    tags: [building, treasure, magical, throne-room]
+    description: "Volstus's private apartment. The huge round room is carpeted in plush rugs and hung with tapestries of cloud giant feasts. Life-sized polished silver bird statues line the walls; the domed ceiling depicts cloud giantesses riding rocs through mosaic clouds. A long table at the center is spread with maps of the continent marked for conquest."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-suspended-gallery
+    name: The Suspended Gallery
+    tags: [building, magical, boss-room, sky]
+    description: "A long arched gallery suspended above the castle's roof, naturally lit by circular stained-glass windows. A huge gap in the eastern wall has been blasted open from outside, leaving torn stonework. Through the gap, only sky and clouds stretch in every direction. This is where Volstus makes his final stand."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-dragons-den
+    name: Akazerath's Den
+    tags: [building, dragon-lair, magical]
+    description: "Once the chamber of a cloud giant noble, this tower-top room has been ravaged by a meteor-strike. The ceiling is partly torn open, exposing the room to the sky. A great mound of rubble in the center serves as Akazerath's nest. The frescoes on the walls are obscured with soot."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-stained-observatory
+    name: The Stained Observatory
+    tags: [building, magical, treasure]
+    description: "A round tower-top chamber crowned with a stained-glass dome that filters light into dazzling colors. Arrow slits cut between the colored panes. A massive silver telescope on a wheeled trolley runs on tracks along the curved wall. Speaking the right Giant command word turns any of the eight glass wedges transparent."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-upper-pool-room
+    name: The Upper Pool Room
+    tags: [building, water, magical, ambush]
+    description: "A round tower room with a stone fountain at its center, surrounded by three painted cupboards, six huge wicker laundry baskets, and giant-sized chairs. The baskets are enchanted to teleport their contents to any other basket in the castle. A serpent witch hides in one, waiting to ambush."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-defense-platform
+    name: Cloud Giant Defense Platform
+    tags: [outdoor, fortified, magical]
+    description: "A spacious open platform jutting from the castle's rocky base, overlooking vertiginous heights of cloud. A 30-ft archway leads inward into the engine level. Mounted on the platform: a masterwork heavy ballista equipped with a scope of stormsight. Three sentries crew the platform; two winged beasts perch with them."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-cloud-giant-study
+    name: The Cloud Giant's Study
+    tags: [building, magical, library, guardian]
+    description: "A round paneled chamber whose ceiling has been painted with a magical night sky — countless stars shine through dark clouds. A huge sphere of azure stone hovers above a fountain in the center, slowly pouring water into the basin below. A curved bookshelf runs along the ceiling holding hundreds of huge tomes in Giant. A mithral golem sits in lotus position atop the water sphere, masquerading as a statue."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: gs-webbed-tower-attic
+    name: The Webbed Tower Attic
+    tags: [building, lair, web, magical]
+    description: "A vast dark space beneath the conical roof of the main tower, 200 ft high. A huge gash torn in the eastern roof opens to the sky. Weirdly woven webs of titanic spiders stretch between the beams, glistening with otherworldly humors. Two Leng spiders hide in the highest beams, having entered through a gate."
+
+  # ───────── EverQuest — Scenes from regional sourcebooks ─────────
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: eq-everfrost-peaks-frigid-plains-wind
+    name: "Frigid Plains Wind"
+    tags: [natural, wilderness, cold, eq-rpg]
+    description: "Flat snow stretches to the horizon. The wind cuts; the cold burns the lungs. Something dark moves at the edge of sight."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 37
+
+  - id: eq-everfrost-peaks-halas-longhouse
+    name: "Halas Longhouse"
+    tags: [building, settlement, eq-rpg]
+    description: "Smoke-stained timbers and bear pelts on the walls. A fire-pit at center. Bench-seats for thirty. Skalds tell of Killian Blood-Axe."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 28
+
+  - id: eq-everfrost-peaks-glacier-crevasse
+    name: "Glacier Crevasse"
+    tags: [natural, hazard, eq-rpg]
+    description: "The ice has split open. A long blue throat plunges into darkness. Wind whistles up from below — something else may be down there."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 40
+
+  - id: eq-everfrost-peaks-ice-goblin-camp
+    name: "Ice-Goblin Camp"
+    tags: [building, ruins, eq-rpg]
+    description: "Frozen tents huddled in the lee of a rock. A bone-fire smolders. Goblin scouts left tracks heading further into the snow."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 45
+
+  - id: eq-everfrost-peaks-mead-hall-fire
+    name: "Mead-Hall Fire"
+    tags: [building, settlement, warm, eq-rpg]
+    description: "Logs as thick as men crackle in the great hearth. Patrons sing along to a song nobody remembers learning."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 28
+
+  - id: eq-everfrost-peaks-permafrost-antechamber
+    name: "Permafrost Antechamber"
+    tags: [underground, cold, ruins, eq-rpg]
+    description: "Ice-blue arches. Frost rimes the walls in patterns that almost look like writing. Far away, a great voice rumbles."
+    system: eq-rpg
+    source_book: everfrost-peaks
+    source_page: 55
+
+  - id: eq-forests-of-faydark-suntouched-glade
+    name: "Suntouched Glade"
+    tags: [natural, magical, warm, eq-rpg]
+    description: "A pool of sunlight breaks through the canopy onto golden grass. The air smells of warm bark and lavender. Birdsong stops when you enter."
+    system: eq-rpg
+    source_book: forests-of-faydark
+    source_page: 4
+
+  - id: eq-forests-of-faydark-tree-city-platform-kelethin
+    name: "Tree-City Platform (Kelethin)"
+    tags: [building, settlement, eq-rpg]
+    description: "A wooden platform a hundred feet above the forest floor. Lanterns sway. A wood-elf bowyer hails you from across the rope bridge."
+    system: eq-rpg
+    source_book: forests-of-faydark
+    source_page: 70
+
+  - id: eq-forests-of-faydark-crushbone-keep-wall
+    name: "Crushbone Keep Wall"
+    tags: [building, ruins, battle, eq-rpg]
+    description: "A crude orc fortress patched together from felled trees and looted stone. Smoke rises from inside. The chant of marching orcs grows closer."
+    system: eq-rpg
+    source_book: forests-of-faydark
+    source_page: 80
+
+  - id: eq-forests-of-faydark-mistmoore-graveyard
+    name: "Mistmoore Graveyard"
+    tags: [building, ruins, undead, eq-rpg]
+    description: "Slumped headstones tilt amid black grass. A statue of a weeping angel watches from a vine-covered crypt. The vines are moving."
+    system: eq-rpg
+    source_book: forests-of-faydark
+    source_page: 36
+
+  - id: eq-forests-of-faydark-lake-elizerain-mist
+    name: "Lake Elizerain Mist"
+    tags: [natural, wet, magical, eq-rpg]
+    description: "Mist rises from the still lake. Reeds rustle without wind. Something pale passes just under the surface."
+    system: eq-rpg
+    source_book: forests-of-faydark
+    source_page: 48
+
+  - id: eq-forests-of-faydark-hidden-faerie-mound
+    name: "Hidden Faerie Mound"
+    tags: [natural, magical, fey, eq-rpg]
+    description: "A perfect circle of mushrooms. Music seeps out of nowhere. Don't fall asleep here."
+    system: eq-rpg
+    source_book: forests-of-faydark
+    source_page: 18
+
+  - id: eq-temple-of-solusek-ro-temple-worship-chamber
+    name: "Temple Worship Chamber"
+    tags: [building, holy, warm, eq-rpg]
+    description: "A river of lava cuts through the floor. Robed acolytes face a great mosaic of the Burning Prince. The chanting never seems to pause."
+    system: eq-rpg
+    source_book: temple-of-solusek-ro
+    source_page: 8
+
+  - id: eq-temple-of-solusek-ro-temple-library
+    name: "Temple Library"
+    tags: [building, holy, eq-rpg]
+    description: "Walls of leather-bound tomes, all heat-cured. A great fireplace roars on the back wall. Reading here is comfortable; sleeping is not."
+    system: eq-rpg
+    source_book: temple-of-solusek-ro
+    source_page: 11
+
+  - id: eq-temple-of-solusek-ro-temple-guest-quarters
+    name: "Temple Guest Quarters"
+    tags: [building, holy, eq-rpg]
+    description: "Stone-walled cells with a single cot, a tiny shrine, a sconce that never goes out. The mattress is uncomfortably warm."
+    system: eq-rpg
+    source_book: temple-of-solusek-ro
+    source_page: 12
+
+  - id: eq-temple-of-solusek-ro-lavastorm-trail
+    name: "Lavastorm Trail"
+    tags: [natural, wilderness, hazard, eq-rpg]
+    description: "A narrow trail along a cliff above a lava-filled valley. Fire imps watch from the rocks. The heat is unbearable."
+    system: eq-rpg
+    source_book: temple-of-solusek-ro
+    source_page: 4
+
+  - id: eq-soluseks-eye-solusek-s-eye-pit-sol-a-entrance
+    name: "Solusek's Eye Pit (Sol A entrance)"
+    tags: [underground, fire, hazard, eq-rpg]
+    description: "A vast pit yawns at the trail's end. Far below, lava rolls. Iron ladders descend into the heat."
+    system: eq-rpg
+    source_book: soluseks-eye
+    source_page: 4
+
+  - id: eq-soluseks-eye-goblin-refuse-pit
+    name: "Goblin Refuse Pit"
+    tags: [underground, ruins, grim, eq-rpg]
+    description: "Goblin leavings: gnawed bones, broken weapons, a few coins. A scorched skull is wedged in the middle."
+    system: eq-rpg
+    source_book: soluseks-eye
+    source_page: 9
+
+  - id: eq-soluseks-eye-krombral-citadel-gate
+    name: "Krombral Citadel Gate"
+    tags: [building, ruins, fire, eq-rpg]
+    description: "An iron portcullis half-fused by lava-heat. The sigil of the Krombral is carved above. Something behind it is angry."
+    system: eq-rpg
+    source_book: soluseks-eye
+    source_page: 79
+
+  - id: eq-befallen-befallen-catacomb
+    name: "Befallen Catacomb"
+    tags: [underground, ruins, undead, eq-rpg]
+    description: "Crypt niches stacked four high. Bones in some, dust in others, fresher things in a few. Distant chains drag stone."
+    system: eq-rpg
+    source_book: befallen
+    source_page: 12
+
+  - id: eq-befallen-befallen-sealed-door
+    name: "Befallen Sealed Door"
+    tags: [building, ruins, obstacle, eq-rpg]
+    description: "An iron door rusted shut by centuries. Bolts protrude on the FAR side. Something laid this one down."
+    system: eq-rpg
+    source_book: befallen
+    source_page: 20
+
+  - id: eq-befallen-the-true-tomb-befallen-lvl-3
+    name: "The True Tomb (Befallen Lvl 3)"
+    tags: [underground, undead, holy, eq-rpg]
+    description: "A circular chamber of black stone. Symbols of the Plane of Hate ring the walls. Cold radiates from a sarcophagus at center."
+    system: eq-rpg
+    source_book: befallen
+    source_page: 40

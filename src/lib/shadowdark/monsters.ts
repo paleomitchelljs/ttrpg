@@ -19,12 +19,14 @@ export interface Monster {
   tags: string[];
   attacks: MonsterAttack[];
   notes?: string;
+  /** Icon path relative to /public/, e.g. "icons/game-icons/lorc/dragon-head.svg". */
+  icon?: string;
 }
 
 interface RawAttack {
   name: string;
   bonus: number;
-  damage: string;
+  damage: string | number;
   note?: string;
 }
 
@@ -38,6 +40,7 @@ interface RawMonster {
   tags?: string[];
   attacks?: RawAttack[];
   notes?: string;
+  icon?: string;
 }
 
 interface MonstersFile {
@@ -53,8 +56,9 @@ function normalize(raw: RawMonster): Monster {
     move: raw.move,
     level: raw.level ?? 1,
     tags: raw.tags ?? [],
-    attacks: raw.attacks ?? [],
+    attacks: (raw.attacks ?? []).map((a) => ({ ...a, damage: String(a.damage) })),
     notes: raw.notes,
+    icon: raw.icon,
   };
 }
 

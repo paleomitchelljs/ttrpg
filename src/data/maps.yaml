@@ -1,0 +1,775 @@
+# Map database — reference images extracted from source adventure PDFs.
+#
+# Images live under public/maps/ so they're served as static files. The
+# `image` field is the path relative to public/ (i.e. what you'd put in
+# an <img src="..."> when the app is served).
+#
+# Each map:
+#   id           required — kebab-case, unique
+#   name         required — display name
+#   source       required — short label for the source adventure/book
+#   source_page  optional — page number in the source PDF (1-indexed)
+#   category     required — one of: region | settlement | dungeon | building | overview
+#   image        required — path under public/, e.g. maps/sunless-citadel/grove-level.png
+#   tags         optional — free-form (color, b&w, grid, parchment, fold-out, etc.)
+#   description  optional — short note about what the map shows
+
+maps:
+  # ───────── The Sunless Citadel ─────────
+  - id: sc-overland
+    name: Overland Map
+    source: The Sunless Citadel
+    source_page: 2
+    category: region
+    image: maps/sunless-citadel/overland.png
+    tags: [b&w, parchment]
+    description: "The region around Oakhurst — the Old Road, the New Road, Ashen Plain, and the Citadel itself."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-oakhurst
+    name: Oakhurst
+    source: The Sunless Citadel
+    source_page: 2
+    category: settlement
+    image: maps/sunless-citadel/oakhurst.png
+    tags: [b&w, parchment]
+    description: "The village of Oakhurst — Mayor's house, Merchant, Inn of Boars, jail, smithy, and Old Road."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-cutaway
+    name: Sunless Citadel — Cutaway
+    source: The Sunless Citadel
+    source_page: 2
+    category: overview
+    image: maps/sunless-citadel/cutaway.png
+    tags: [b&w, parchment]
+    description: "Side-view cutaway showing how the Fortress Level sits above the Grove Level."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-fortress-level
+    name: Sunless Citadel — Fortress Level
+    source: The Sunless Citadel
+    source_page: 2
+    category: dungeon
+    image: maps/sunless-citadel/fortress-level.png
+    tags: [b&w, grid]
+    description: "Upper dungeon level of the Sunless Citadel, rooms 1–41. Key shows half-walls, stairs, normal/stone/secret doors, and traps."
+    system: wotc-3e
+    source_book: sunless-citadel
+
+  - id: sc-grove-level
+    name: Sunless Citadel — Grove Level
+    source: The Sunless Citadel
+    source_page: 35
+    category: dungeon
+    image: maps/sunless-citadel/grove-level.png
+    tags: [b&w, grid]
+    description: "Lower dungeon level — the Twilight Grove. Rooms 42–56, with stairs to the Underdark on the west edge."
+
+  # ───────── The Whispering Cairn (Dungeon #124) ─────────
+    system: wotc-3e
+    source_book: sunless-citadel
+  - id: wc-lair-of-the-architect
+    name: Lair of the Architect
+    source: The Whispering Cairn (Dungeon Magazine #124)
+    source_page: 27
+    category: dungeon
+    image: maps/whispering-cairn/lair-of-the-architect.png
+    tags: [parchment, grid]
+    description: "Upper chambers of the Whispering Cairn — the architect's quarters and surrounding rooms. Page also contains room descriptions."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-true-tomb
+    name: The True Tomb
+    source: The Whispering Cairn (Dungeon Magazine #124)
+    source_page: 33
+    category: dungeon
+    image: maps/whispering-cairn/the-true-tomb.png
+    tags: [parchment, grid]
+    description: "The hidden lower tomb (rooms 23–25 and 24A–E) with a side-view inset. One square = 5 feet."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-land-farmstead
+    name: Land Farmstead
+    source: The Whispering Cairn (Dungeon Magazine #124)
+    source_page: 37
+    category: building
+    image: maps/whispering-cairn/land-farmstead.png
+    tags: [parchment, grid, encounter]
+    description: "Tactical map of the Land family farmstead — a Feral Dog gang encounter. Reference points show direction to Diamond Lake and the family graveyard."
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+
+  - id: wc-feral-dog
+    name: The Feral Dog
+    source: The Whispering Cairn (Dungeon Magazine #124)
+    source_page: 38
+    category: building
+    image: maps/whispering-cairn/the-feral-dog.png
+    tags: [parchment, grid, interior]
+    description: "Interior of the Feral Dog tavern in Diamond Lake — the gang's hangout. Bar, common room, back rooms."
+  # ───────── EverQuest — Classic ─────────
+    system: dungeon-magazine
+    source_book: dungeon-124-whispering-cairn
+  - id: eq-befallen-levels-1-2
+    name: Befallen — Levels 1 & 2
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Befallen12.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Befallen"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-befallen-level-3
+    name: Befallen — Level 3
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Befallen3.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Befallen"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-blackburrow-level-1
+    name: Blackburrow — Level 1
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Zone_blackburrow1.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Blackburrow"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-blackburrow-level-2
+    name: Blackburrow — Level 2
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Zone_blackburrow2.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Blackburrow"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-blackburrow-level-3
+    name: Blackburrow — Level 3
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Zone_blackburrow3.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Blackburrow"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-cazic-thule-main-level
+    name: Cazic Thule — Main Level
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Ct.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Cazic_Thule"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-cazic-thule-lower-levels
+    name: Cazic Thule — Lower Levels
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Ctlower.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Cazic_Thule"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-cazic-thule-courtyard-detail
+    name: Cazic Thule — Courtyard Detail
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Ctcydetail.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Cazic_Thule"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-cazic-thule-maze
+    name: Cazic Thule — Maze
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Ctmaze.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Cazic_Thule"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-crushbone
+    name: Crushbone
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Crushbone.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Crushbone"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-estate-of-unrest-grounds
+    name: Estate of Unrest — Grounds
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Unrest.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/The_Estate_of_Unrest"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-estate-of-unrest-manor
+    name: Estate of Unrest — Manor
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Unrestmanor.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/The_Estate_of_Unrest"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-high-keep-basement
+    name: High Keep — Basement
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Highkeepbasement.png
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/High_Keep"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-high-keep-first-floor
+    name: High Keep — First Floor
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Highkeepfirstlevel.png
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/High_Keep"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-high-keep-second-floor
+    name: High Keep — Second Floor
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Highkeepseocondlevel.png
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/High_Keep"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-high-keep-third-floor
+    name: High Keep — Third Floor
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Highkeepthirdlevel.png
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/High_Keep"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-high-keep-fourth-floor
+    name: High Keep — Fourth Floor
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Highkeepfourthlevel.png
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/High_Keep"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-kedge-keep-overhead
+    name: Kedge Keep — Overhead
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Kedgekeep.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Kedge_Keep"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-kedge-keep-3d-isometric
+    name: Kedge Keep — 3D Isometric
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Kedge_keep.gif
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Kedge_Keep"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-lower-guk-map-1
+    name: Lower Guk — Map 1
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Lower_guk_map1.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Lower_Guk"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-lower-guk-map-2
+    name: Lower Guk — Map 2
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Lower_guk_map2.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Lower_Guk"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-lower-guk-map-3
+    name: Lower Guk — Map 3
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Lower_guk_map3.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Lower_Guk"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-lower-guk-map-4
+    name: Lower Guk — Map 4
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Lower_guk_map4.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Lower_Guk"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-mistmoore-castle-castle
+    name: Mistmoore Castle — Castle
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Mistmoore.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Mistmoore_Castle"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-nagafen-s-lair-sol-b-main
+    name: Nagafen's Lair (Sol B) — Main
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Nagafenslair.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Nagafen%27s_Lair"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-nagafen-s-lair-sol-b-alternate
+    name: Nagafen's Lair (Sol B) — Alternate
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Map_nagafens_lair_2.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Nagafen%27s_Lair"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-najena
+    name: Najena
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Najenamap.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Najena"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-permafrost-keep
+    name: Permafrost Keep
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Zone_permafrost.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Permafrost"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-runnyeye-citadel-level-1
+    name: Runnyeye Citadel — Level 1
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Runnyeye1.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Runnyeye_Citadel"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-runnyeye-citadel-level-2
+    name: Runnyeye Citadel — Level 2
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Runnyeye2.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Runnyeye_Citadel"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-runnyeye-citadel-level-3
+    name: Runnyeye Citadel — Level 3
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Runnyeye3.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Runnyeye_Citadel"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-runnyeye-citadel-level-4
+    name: Runnyeye Citadel — Level 4
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Runnyeye4.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Runnyeye_Citadel"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-solusek-s-eye-sol-a
+    name: Solusek's Eye (Sol A)
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Solusekseye.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Solusek%27s_Eye"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-splitpaw-lair
+    name: Splitpaw Lair
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Splitpaw_Map.png
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Splitpaw_Lair"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-the-hole
+    name: The Hole
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Map_thehole.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/The_Hole"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-the-warrens
+    name: The Warrens
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Warrens.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/The_Warrens"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-upper-guk-main
+    name: Upper Guk — Main
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Upperguk.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Upper_Guk"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-upper-guk-entrance-alt
+    name: Upper Guk — Entrance Alt
+    source: "EverQuest — Classic (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Upperguk3.jpg
+    tags: [everquest, classic]
+    description: "Source: https://wiki.project1999.com/Upper_Guk"
+
+  # ───────── EverQuest — Kunark ─────────
+    system: eq-rpg
+    source_book: item-guide-revised
+  - id: eq-chardok-upper-level
+    name: Chardok — Upper Level
+    source: "EverQuest — Kunark (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Chardok_top.png
+    tags: [everquest, kunark]
+    description: "Source: https://wiki.project1999.com/Chardok"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-chardok-lower-sections
+    name: Chardok — Lower Sections
+    source: "EverQuest — Kunark (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Chardok_b_draelon.gif
+    tags: [everquest, kunark]
+    description: "Source: https://wiki.project1999.com/Chardok"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-city-of-mist-torsis
+    name: City of Mist (Torsis)
+    source: "EverQuest — Kunark (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Map_citymist.jpg
+    tags: [everquest, kunark]
+    description: "Source: https://wiki.project1999.com/City_of_Mist"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-dalnir-level-1
+    name: Dalnir — Level 1
+    source: "EverQuest — Kunark (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Map_dalnir1.jpg
+    tags: [everquest, kunark]
+    description: "Source: https://wiki.project1999.com/Dalnir"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-dalnir-level-2
+    name: Dalnir — Level 2
+    source: "EverQuest — Kunark (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Map_dalnir2.jpg
+    tags: [everquest, kunark]
+    description: "Source: https://wiki.project1999.com/Dalnir"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-dalnir-level-3
+    name: Dalnir — Level 3
+    source: "EverQuest — Kunark (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Map_dalnir3.jpg
+    tags: [everquest, kunark]
+    description: "Source: https://wiki.project1999.com/Dalnir"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-howling-stones-charasis-main-level
+    name: Howling Stones (Charasis) — Main Level
+    source: "EverQuest — Kunark (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Map_charasis1.jpg
+    tags: [everquest, kunark]
+    description: "Source: https://wiki.project1999.com/Howling_Stones"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-howling-stones-charasis-lower-level
+    name: Howling Stones (Charasis) — Lower Level
+    source: "EverQuest — Kunark (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Map_charasis2.jpg
+    tags: [everquest, kunark]
+    description: "Source: https://wiki.project1999.com/Howling_Stones"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-kaesora-main-level
+    name: Kaesora — Main Level
+    source: "EverQuest — Kunark (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Map_kaesora1.jpg
+    tags: [everquest, kunark]
+    description: "Source: https://wiki.project1999.com/Kaesora"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-kaesora-five-towers
+    name: Kaesora — Five Towers
+    source: "EverQuest — Kunark (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Map_kaesora23.jpg
+    tags: [everquest, kunark]
+    description: "Source: https://wiki.project1999.com/Kaesora"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-mines-of-nurga-main-entrance
+    name: Mines of Nurga — Main Entrance
+    source: "EverQuest — Kunark (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Map_nurga1.jpg
+    tags: [everquest, kunark]
+    description: "Source: https://wiki.project1999.com/Mines_of_Nurga"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-mines-of-nurga-western-half
+    name: Mines of Nurga — Western Half
+    source: "EverQuest — Kunark (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Map_nurga2.jpg
+    tags: [everquest, kunark]
+    description: "Source: https://wiki.project1999.com/Mines_of_Nurga"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-temple-of-droga-main
+    name: Temple of Droga — Main
+    source: "EverQuest — Kunark (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Map_droga.jpg
+    tags: [everquest, kunark]
+    description: "Source: https://wiki.project1999.com/Temple_of_Droga"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-temple-of-droga-inner-sanctum
+    name: Temple of Droga — Inner Sanctum
+    source: "EverQuest — Kunark (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Map_templedrogainner.jpg
+    tags: [everquest, kunark]
+    description: "Source: https://wiki.project1999.com/Temple_of_Droga"
+
+  # ───────── EverQuest — Velious ─────────
+    system: eq-rpg
+    source_book: item-guide-revised
+  - id: eq-crystal-caverns-main-area
+    name: Crystal Caverns — Main Area
+    source: "EverQuest — Velious (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Map_crystal_caverns1.jpg
+    tags: [everquest, velious]
+    description: "Source: https://wiki.project1999.com/Crystal_Caverns"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-crystal-caverns-the-well
+    name: Crystal Caverns — The Well
+    source: "EverQuest — Velious (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Map_crystal_caverns2.jpg
+    tags: [everquest, velious]
+    description: "Source: https://wiki.project1999.com/Crystal_Caverns"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-crystal-caverns-froststone
+    name: Crystal Caverns — Froststone
+    source: "EverQuest — Velious (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Map_crystal_caverns3.jpg
+    tags: [everquest, velious]
+    description: "Source: https://wiki.project1999.com/Crystal_Caverns"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-icewell-keep
+    name: Icewell Keep
+    source: "EverQuest — Velious (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Map_icewell_keep.jpg
+    tags: [everquest, velious]
+    description: "Source: https://wiki.project1999.com/Icewell_Keep"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-kael-drakkel
+    name: Kael Drakkel
+    source: "EverQuest — Velious (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Map_kael_drakkal.jpg
+    tags: [everquest, velious]
+    description: "Source: https://wiki.project1999.com/Kael_Drakkel"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-siren-s-grotto
+    name: Siren's Grotto
+    source: "EverQuest — Velious (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Map_sirens_grotto.jpg
+    tags: [everquest, velious]
+    description: "Source: https://wiki.project1999.com/Siren%27s_Grotto"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-temple-of-veeshan
+    name: Temple of Veeshan
+    source: "EverQuest — Velious (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Map_tov.png
+    tags: [everquest, velious]
+    description: "Source: https://wiki.project1999.com/Temple_of_Veeshan"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-thurgadin-city
+    name: Thurgadin — City
+    source: "EverQuest — Velious (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Map_thurgadin.jpg
+    tags: [everquest, velious]
+    description: "Source: https://wiki.project1999.com/Thurgadin"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-thurgadin-mines
+    name: Thurgadin — Mines
+    source: "EverQuest — Velious (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Map_thurgadin_mines.jpg
+    tags: [everquest, velious]
+    description: "Source: https://wiki.project1999.com/Thurgadin"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-velketor-s-labyrinth
+    name: Velketor's Labyrinth
+    source: "EverQuest — Velious (Project 1999 wiki)"
+    category: dungeon
+    image: maps/everquest/Map_velketors_labyrinth.jpg
+    tags: [everquest, velious]
+    description: "Source: https://wiki.project1999.com/Velketor%27s_Labyrinth"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+
+  # ───────── EverQuest — d20 RPG adventure-book maps ─────────
+  # Higher-quality reproductions from the Sword & Sorcery d20 RPG sourcebooks.
+  - id: eq-d20-befallen-levels-1-2
+    name: "Befallen — Levels 1 & 2 (d20)"
+    source: "EverQuest d20 RPG (Befallen adventure book)"
+    category: dungeon
+    image: maps/eq-d20/befallen-levels-1-2.png
+    tags: [color, grid, eq-rpg]
+    description: "Combined Levels 1 and 2 map from the Sword & Sorcery Befallen adventure. Color tile layout, room numbers, rock-blockage legend."
+    system: eq-rpg
+    source_book: befallen
+    source_page: 15
+
+  - id: eq-d20-befallen-level-3
+    name: "Befallen — Level 3 (d20)"
+    source: "EverQuest d20 RPG (Befallen adventure book)"
+    category: dungeon
+    image: maps/eq-d20/befallen-level-3.png
+    tags: [color, grid, eq-rpg]
+    description: "Level 3 map — The Lords of Death and Marnek Jaull's Lair. Higher resolution than the P1999 wiki version."
+    system: eq-rpg
+    source_book: befallen
+    source_page: 42
+
+  - id: eq-d20-soluseks-eye-overview
+    name: "Solusek's Eye — Cavern Network (d20)"
+    source: "EverQuest d20 RPG (Solusek's Eye adventure book)"
+    category: dungeon
+    image: maps/eq-d20/soluseks-eye-overview.png
+    tags: [b&w, grid, eq-rpg]
+    description: "Hand-drawn overview map of the Solusek's Eye cavern network. From the Sword & Sorcery Sol A adventure."
+    system: eq-rpg
+    source_book: soluseks-eye
+    source_page: 65

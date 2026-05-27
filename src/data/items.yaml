@@ -17,6 +17,15 @@
 #                  items:   light, holy, magic, undead-bane, drink, food
 #   notes        optional — short description.
 #
+# Source-tracking fields (optional, for filtering/grouping by origin):
+#   system       slug of source RPG system. Examples:
+#                  shadowdark-core, morrowind, eq-rpg, p1999-wiki, wotc-3e
+#   source_book  slug of specific book within the system. Examples:
+#                  item-guide-revised, players-handbook, al-kabors-arcana,
+#                  everfrost-peaks, forests-of-faydark, monsters-of-luclin,
+#                  soluseks-eye, temple-of-solusek-ro, befallen
+#   source_page  integer page number in the source PDF (1-indexed) for traceability.
+#
 # Weapon-only fields:
 #   damage_one   damage die when wielded one-handed, e.g. "d8".
 #   damage_two   damage die when wielded two-handed (versatile). Same as
@@ -39,6 +48,8 @@ items:
     damage_one: d4
     damage_two: d4
     tags: [melee, thrown, finesse]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: staff
     name: Staff
@@ -48,6 +59,8 @@ items:
     damage_one: d4
     damage_two: d4
     tags: [melee, two-handed]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: club
     name: Club
@@ -57,6 +70,8 @@ items:
     damage_one: d4
     damage_two: d4
     tags: [melee]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: shortbow
     name: Shortbow
@@ -66,6 +81,8 @@ items:
     damage_one: d4
     damage_two: d4
     tags: [ranged, two-handed]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: shortsword
     name: Shortsword
@@ -75,6 +92,8 @@ items:
     damage_one: d6
     damage_two: d6
     tags: [melee, finesse]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: mace
     name: Mace
@@ -84,6 +103,8 @@ items:
     damage_one: d6
     damage_two: d6
     tags: [melee]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: crossbow
     name: Crossbow
@@ -93,6 +114,8 @@ items:
     damage_one: d6
     damage_two: d6
     tags: [ranged, two-handed, loading]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: spear
     name: Spear
@@ -102,6 +125,8 @@ items:
     damage_one: d6
     damage_two: d6
     tags: [melee, thrown]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: warhammer
     name: Warhammer
@@ -111,6 +136,8 @@ items:
     damage_one: d6
     damage_two: d6
     tags: [melee]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: longsword
     name: Longsword
@@ -120,6 +147,8 @@ items:
     damage_one: d8
     damage_two: d6
     tags: [melee, versatile]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: battleaxe
     name: Battleaxe
@@ -129,6 +158,8 @@ items:
     damage_one: d8
     damage_two: d6
     tags: [melee, versatile]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: bastard-sword
     name: Bastard sword
@@ -138,6 +169,8 @@ items:
     damage_one: d8
     damage_two: d10
     tags: [melee, versatile]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: greataxe
     name: Greataxe
@@ -147,6 +180,8 @@ items:
     damage_one: d10
     damage_two: d10
     tags: [melee, two-handed]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: greatsword
     name: Greatsword
@@ -156,6 +191,8 @@ items:
     damage_one: d12
     damage_two: d12
     tags: [melee, two-handed]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: longbow
     name: Longbow
@@ -167,6 +204,8 @@ items:
     tags: [ranged, two-handed]
 
   # ───────── Armor ─────────
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
   - id: leather-armor
     name: Leather armor
     category: armor
@@ -175,6 +214,8 @@ items:
     ac_base: 11
     ac_dex: true
     tags: []
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: chainmail
     name: Chainmail
@@ -184,6 +225,8 @@ items:
     ac_base: 13
     ac_dex: true
     tags: [disadv-stealth, disadv-swim]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: plate-mail
     name: Plate mail
@@ -195,6 +238,8 @@ items:
     tags: [disadv-stealth, disadv-swim]
 
   # ───────── Shields ─────────
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
   - id: shield
     name: Shield
     category: shield
@@ -205,6 +250,8 @@ items:
     notes: "+2 AC. Can't be used with two-handed weapons."
 
   # ───────── Helmets ─────────
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
   - id: helmet
     name: Helmet
     category: helmet
@@ -214,12 +261,16 @@ items:
     tags: []
 
   # ───────── Adventuring gear ─────────
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
   - id: backpack
     name: Backpack
     category: gear
     cost: 2gp
     slots: 0
     notes: "Holds the items you carry."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: caltrops
     name: Caltrops, one bag
@@ -227,24 +278,32 @@ items:
     cost: 1gp
     slots: 1
     tags: []
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: crowbar
     name: Crowbar
     category: gear
     cost: 5sp
     slots: 1
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: flask
     name: Flask or bottle
     category: gear
     cost: 3sp
     slots: 1
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: flint-and-steel
     name: Flint and steel
     category: gear
     cost: 5sp
     slots: 1
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: gem
     name: Gem
@@ -252,18 +311,24 @@ items:
     cost: varies
     slots: 1
     notes: "10gp or 100gp value."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: grappling-hook
     name: Grappling hook
     category: gear
     cost: 1gp
     slots: 1
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: iron-spikes
     name: Iron spikes (10)
     category: gear
     cost: 1gp
     slots: 1
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: lantern
     name: Lantern
@@ -272,12 +337,16 @@ items:
     slots: 1
     tags: [light]
     notes: "Sheds light, requires oil."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: mirror
     name: Mirror
     category: gear
     cost: 10gp
     slots: 1
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: oil
     name: Oil, flask
@@ -285,12 +354,16 @@ items:
     cost: 5sp
     slots: 1
     tags: [thrown]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: pole
     name: Pole, 10-foot
     category: gear
     cost: 5sp
     slots: 1
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: rations
     name: Rations (3)
@@ -298,12 +371,16 @@ items:
     cost: 5sp
     slots: 1
     tags: [food]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: rope
     name: Rope, 60ft
     category: gear
     cost: 1gp
     slots: 1
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: torch
     name: Torch
@@ -312,6 +389,8 @@ items:
     slots: 1
     tags: [light]
     notes: "Sheds light for one hour."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: holy-symbol
     name: Holy symbol
@@ -319,6 +398,8 @@ items:
     cost: 1gp
     slots: 1
     tags: [holy]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: holy-water
     name: Holy water, flask
@@ -327,6 +408,8 @@ items:
     slots: 1
     tags: [thrown, holy, undead-bane]
     notes: "On a hit, deals damage to undead and demons."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: spellbook
     name: Spellbook
@@ -334,6 +417,8 @@ items:
     cost: 50gp
     slots: 1
     notes: "Required for wizards."
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
 
   - id: thieves-tools
     name: Thieves' tools
@@ -341,3 +426,1766 @@ items:
     cost: 5gp
     slots: 1
     tags: []
+
+  # ───────── Magic — Morrowind classics ─────────
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+  - id: moon-and-star
+    name: Moon-and-Star
+    category: gear
+    slots: 0
+    tags: [magic]
+    notes: "Ring of Nerevar. Only the true Nerevarine may wear it; any other who tries is struck down on the spot."
+    system: morrowind
+    source_book: morrowind-vanilla
+
+  - id: ice-blade-of-the-monarch
+    name: Ice Blade of the Monarch
+    category: weapon
+    slots: 1
+    damage_one: d8
+    damage_two: d6
+    tags: [melee, versatile, magic]
+    notes: "Frost-bound longsword. +1d4 cold damage on a hit. Once per day, freeze a foe in place until they take damage."
+    system: morrowind
+    source_book: morrowind-vanilla
+
+  - id: ebony-mail
+    name: Ebony Mail
+    category: armor
+    slots: 2
+    ac_base: 14
+    ac_dex: true
+    tags: [magic, disadv-swim]
+    notes: "Boethiah's cuirass. Ignore the first fire or shock hit each scene; attackers in melee take 1 fire damage when they strike you."
+    system: morrowind
+    source_book: morrowind-vanilla
+
+  - id: boots-of-blinding-speed
+    name: Boots of Blinding Speed
+    category: gear
+    slots: 1
+    tags: [magic]
+    notes: "Move at double speed (advantage on chases and escapes), but blinded while worn — disadvantage on attacks and sight-based checks."
+    system: morrowind
+    source_book: morrowind-vanilla
+
+  - id: dragonbone-cuirass
+    name: Dragonbone Cuirass
+    category: armor
+    slots: 3
+    ac_base: 15
+    ac_dex: false
+    tags: [magic, disadv-stealth, disadv-swim]
+    notes: "Reflects 1 damage back at any creature that hits you in melee."
+    system: morrowind
+    source_book: morrowind-vanilla
+
+  - id: umbra
+    name: Umbra
+    category: weapon
+    slots: 2
+    damage_one: d12
+    damage_two: d12
+    tags: [melee, two-handed, magic]
+    notes: "Soul-hungry claymore. When you slay a creature, you may trap its soul (worth 50gp to the right buyer). The blade whispers — its bearer is reluctant to set it down."
+    system: morrowind
+    source_book: morrowind-vanilla
+
+  - id: goldbrand
+    name: Goldbrand
+    category: weapon
+    slots: 1
+    damage_one: d8
+    damage_two: d6
+    tags: [melee, versatile, magic]
+    notes: "Akatosh's golden katana. +1d4 fire damage on a hit."
+    system: morrowind
+    source_book: morrowind-vanilla
+
+  - id: daedric-dai-katana
+    name: Daedric Dai-katana
+    category: weapon
+    slots: 2
+    damage_one: d12
+    damage_two: d12
+    tags: [melee, two-handed, magic]
+    notes: "Forged from raw ebony in Oblivion. +1 to attack and damage rolls."
+    system: morrowind
+    source_book: morrowind-vanilla
+
+  - id: daedric-dagger
+    name: Daedric dagger
+    category: weapon
+    slots: 1
+    damage_one: d6
+    damage_two: d6
+    tags: [melee, thrown, finesse, magic]
+    notes: "Wickedly sharp ebony dagger from Oblivion. +1 to attack and damage rolls."
+    system: morrowind
+    source_book: morrowind-vanilla
+
+  - id: wabbajack
+    name: Wabbajack
+    category: weapon
+    slots: 1
+    damage_one: d4
+    damage_two: d4
+    tags: [melee, two-handed, magic]
+    notes: "Sheogorath's staff. Once per day, point at a creature — roll on the random-creature table; that creature becomes that thing until sunrise."
+
+  # ─────────── EverQuest Item Guide (Revised) — Classic-era loot ───────────
+  # ~150 lore-rich items from Troy Costisick's fan compendium of removed/nerfed
+  # Classic EQ items. Stats are simplified to Shadowdark form; EQ flavor in notes.
+    system: morrowind
+    source_book: morrowind-vanilla
+
+  - id: eq-a-glowing-black-stone
+    name: "A Glowing Black Stone"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, lore-item, quest-item]
+    notes: "There have been and still are rampant rumors that the Glowing Black Stone was equippable in the Ammo slot. This was never true. [Zone: Qeynos Hills ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-a-gunthak-harpoon
+    name: "A Gunthak Harpoon"
+    category: weapon
+    slots: 1
+    damage_one: d12
+    damage_two: d12
+    tags: [magic, eq-rpg, era-kunark, melee]
+    notes: "It’s hard to guess what Verant intended with this item. Needless to say, it is a very solid weapon for classic era though not without tangible drawbacks to it. [Zone: Firiona Vie ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-a-jagged-shard-of-bone
+    name: "A Jagged Shard of Bone"
+    category: weapon
+    slots: 1
+    damage_one: d6
+    damage_two: d6
+    tags: [magic, eq-rpg, era-classic, lore-item, no-drop, melee]
+    notes: "An example of a “hard nerf” by Verant. Not only was the item re- moved from loot tables, the ones that had been looted were retroactively changed. [Zone: Lesser Faydark ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-a-servant-s-blade
+    name: "A Servant’s Blade"
+    category: weapon
+    slots: 1
+    damage_one: d8
+    damage_two: d8
+    tags: [magic, eq-rpg, era-classic, lore-item, no-drop, melee]
+    notes: "Befallen has little to offer in the way of loot and has earned quite a reputation as being a corpse eater for the sub-25 level crowd. The Servant’s Blade (along with Gynok of course) was one of the few reasons to go there. [Zone: Befallen ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-adarra-s-bow-of-the-unseen
+    name: "Adarra’s bow of the Unseen"
+    category: weapon
+    slots: 1
+    damage_one: d12
+    damage_two: d12
+    tags: [magic, eq-rpg, era-velious, lore-item, no-drop, melee]
+    notes: "Never played a rogue, but I knew many who were upset about this. There were a lot of rogue players who held a grudge against ranger players for a long time after this item was removed. [Zone: Eastern Wastes ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-ashenbone-hammer
+    name: "Ashenbone Hammer"
+    category: weapon
+    slots: 1
+    damage_one: d12
+    damage_two: d12
+    tags: [magic, eq-rpg, era-classic, lore-item, no-drop, melee]
+    notes: "Some of Innoruuk’s items were moved to mini-bosses early in Hate’s development, however, some items were just removed from his loot table totally. This is one of them. [Zone: Plane of Hate ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-axe-of-the-slayers
+    name: "Axe of the Slayers"
+    category: weapon
+    slots: 1
+    damage_one: d12
+    damage_two: d12
+    tags: [magic, eq-rpg, era-classic, lore-item, melee, two-handed]
+    notes: "No big loss, IMO, but it is somewhat bewildering considering that the proc isn’t nearly as powerful as many others and was limited to just Warriors. [Zone: Mountains of Rathe ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-ball-of-golem-clay
+    name: "Ball of Golem Clay"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, lore-item, no-drop]
+    notes: "This is not to be confused with the potion by the same name. [Zone: The Accursed Temple of Cazic Thule ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-band-of-the-arisen-cultist
+    name: "Band of the Arisen Cultist"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-kunark, no-drop]
+    notes: "These were pretty common on servers where this mob was farmed for his gear. In fact, he may still be in your database. [Zone: Trakkanon’s Teeth ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-barbed-scale-whip
+    name: "Barbed Scale Whip"
+    category: weapon
+    slots: 1
+    damage_one: d6
+    damage_two: d6
+    tags: [magic, eq-rpg, era-kunark, lore-item, melee]
+    notes: "There were many low dmg/low dly weapons in the Kunark expan- sion that were eventually banished by Verant. Other than, “the item was just too good” we never got much of an explanation from the devs. [Zone: Frontier Mountains ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-basilisk-bracer
+    name: "Basilisk Bracer"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, lore-item]
+    notes: "This mob presented a unique challenge since it spawned in lava. The puller needed have high Fire resist and casters could only land magic and ice based DD spells on it. [Zone: Lavastorm Mountains ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-bassoon-haste-gauntlets
+    name: "Bassoon Haste Gauntlets"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, lore-item, no-drop]
+    notes: "For some reason, it always seemed that Plane of Fear raids were always more popular than Plane of Hate raids. This item enticed monks to get out of bed and add some much needed DPS to PoH raids. [Zone: Plane of Hate ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-beckon
+    name: "Beckon"
+    category: weapon
+    slots: 1
+    damage_one: d12
+    damage_two: d12
+    tags: [magic, eq-rpg, era-classic, lore-item, melee, two-handed]
+    notes: "This item, which resembled a huge scythe, may have been re- moved since Iksars couldn’t use it and thus had no real reason to go to Plane of Hate- which was a real point of contention at times in the early days of Kunark. However, no true reason was ever gi... [Zone: Plane of Hate ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-bits-of-golem-metal
+    name: "Bits of Golem Metal"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, no-drop]
+    notes: "I was completely unable to find what this item was used for. My best guess is that it was for a quest that was never completed/discovered. [Zone: The Accursed Temple of Cazic Thule ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-black-iron-girdle
+    name: "Black Iron Girdle"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "See entry on Blackened Iron Armor [Zone: Runnyeye Citadel ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-black-iron-medalion
+    name: "Black Iron Medalion"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "See next entry [Zone: Runnyeye Citadel ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-blackened-iron-bastard-sword
+    name: "Blackened Iron Bastard Sword"
+    category: weapon
+    slots: 1
+    damage_one: d12
+    damage_two: d12
+    tags: [magic, eq-rpg, era-classic, lore-item, melee, two-handed]
+    notes: "See above comment. [Zone: Runnyeye Citadel ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-blackened-iron-coif
+    name: "Blackened Iron Coif"
+    category: helmet
+    slots: 1
+    ac_bonus: 1
+    tags: [magic, eq-rpg, era-classic, lore-item]
+    notes: "See above comment. [Zone: Runnyeye Citadel ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-blackened-iron-eye-totem
+    name: "Blackened Iron Eye Totem"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "See above comment. [Zone: Runnyeye Citadel ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-blackened-wand
+    name: "Blackened Wand"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "No idea why it was removed from Amiaz’s loot table. [Zone: Runnyeye Citadel, Befallen ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-blade-of-the-black-dragon-eye
+    name: "Blade of the Black Dragon Eye"
+    category: weapon
+    slots: 1
+    damage_one: d10
+    damage_two: d10
+    tags: [magic, eq-rpg, era-kunark, lore-item, melee]
+    notes: "None, other than to say it really sucked when this thing was re- moved. [Zone: Old Sebilis ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-bladestorm-katana-of-steel-sleet
+    name: "Bladestorm, Katana of Steel Sleet"
+    category: weapon
+    slots: 1
+    damage_one: d12
+    damage_two: d12
+    tags: [magic, eq-rpg, era-classic, lore-item, no-drop, melee, two-handed]
+    notes: "This was a favorite of warriors at the time. Guildmasters used it as a lure to get their tanks to show up to a Plane of Fear raid. [Zone: Plane of Fear ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-blighted-mare-hide
+    name: "Blighted Mare Hide"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, no-drop]
+    notes: "The name of the game is EverQuest. The quest being the most en- tertaining part of the game. [Zone: Lesser Faydark ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-blighted-mare-hoof
+    name: "Blighted Mare Hoof"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, no-drop]
+    notes: "Items like this may provide components for you to use to add cus- tom content and quests to EQC if you were ever so inclined. [Zone: Lesser Faydark ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-bone-handled-dagger
+    name: "Bone Handled Dagger"
+    category: weapon
+    slots: 1
+    damage_one: d6
+    damage_two: d6
+    tags: [magic, eq-rpg, era-classic, melee]
+    notes: "According to one source, there was a sub-storyline with this mob that she was actually betraying her father in Felwithe. The key from the mob in Unrest was not for anything in Najena, but to some secret passage in the royal Thexian palace. [Zone: Najena ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-box-of-abu-kar
+    name: "Box of Abu-Kar"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, lore-item]
+    notes: "These items later became popular rewards for GM events, so many exist on servers of all ages. [Zone: All ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-breezeboot-s-frigid-gnasher
+    name: "Breezeboot's Frigid Gnasher"
+    category: weapon
+    slots: 1
+    damage_one: d12
+    damage_two: d12
+    tags: [magic, eq-rpg, era-velious, lore-item, no-drop, melee]
+    notes: "The item’s inventory icon looks like a toolbox. It’s graphic is said to resemble a leaf blower or the BFG from DOOM. [Zone: Western Wastes ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-brokenskull-club
+    name: "Brokenskull Club"
+    category: weapon
+    slots: 1
+    damage_one: d12
+    damage_two: d12
+    tags: [magic, eq-rpg, era-kunark, lore-item, melee, two-handed]
+    notes: "I guess you could throw this item at someone? That’s about all it’s good for, IMO. [Zone: Karnor’s Castle ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-circlet-of-shadow
+    name: "Circlet of Shadow"
+    category: helmet
+    slots: 1
+    ac_bonus: 1
+    tags: [magic, eq-rpg, era-kunark, lore-item]
+    notes: "This item is so famous I hesitated to even include it, but in the in- terests of thoroughness I must. [Zone: Temple of Droga ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-cloak-of-shadows
+    name: "Cloak of Shadows"
+    category: armor
+    slots: 1
+    ac_base: 14
+    ac_dex: true
+    tags: [magic, eq-rpg, era-classic, lore-item]
+    notes: "I don’t remember this, but apparently the information is out there. I never owned a Cloak of Shadows until Velious era. [Zone: Nagafen’s Lair ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-cloak-of-imperception
+    name: "Cloak of Imperception"
+    category: armor
+    slots: 1
+    ac_base: 13
+    ac_dex: true
+    tags: [magic, eq-rpg, era-kunark, lore-item]
+    notes: "Practically all items that cast some form of invisibility were even- tually nerfed. It makes me wonder how so many made it out of beta. [Zone: Chardok ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-cros-treewind-s-staff
+    name: "Cros Treewind's Staff"
+    category: weapon
+    slots: 1
+    damage_one: d10
+    damage_two: d10
+    tags: [magic, eq-rpg, era-classic, lore-item, melee, two-handed]
+    notes: "Cros shouldn’t have been removed in the first place IMO. He was part of the challenge the original EQ presented. [Zone: Qeynos Hills ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-crossbone-cape
+    name: "Crossbone Cape"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-kunark, lore-item]
+    notes: "I guess a 4 AC, 5 Hit Point cape is just too powerful for Kunark era characters. (/sarcasm off) I can’t see any reason why this item was removed. [Zone: Timorous Deep ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-deluxe-sewing-kit
+    name: "Deluxe Sewing Kit"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "It’s too bad they decided to do this. 10 slots kits offer devs many more options for creating new recipes. [Zone: Numerous ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-denon-s-disruptive-discord-song
+    name: "Denon's Disruptive Discord (song)"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "At one time swarm-kiting was thought to be an efficient means of soloing mobs for bards. However, spending an hour and a half killing 40 mobs by run- ning in circles never seemed efficient to me. [Zone: Various ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-donal-s-chestplate-of-mourning
+    name: "Donal's Chestplate of Mourning"
+    category: armor
+    slots: 1
+    ac_base: 15
+    ac_dex: true
+    tags: [magic, eq-rpg, era-kunark, lore-item]
+    notes: "This nerf caused a major uproar, but it was understandable. It’s right up there with the Manastone for raw power. [Zone: Old Sebilis ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-earring-of-grachnist
+    name: "Earring of Grachnist"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-kunark, lore-item]
+    notes: "It’s a pretty nice earring, but at such a rare drop rate, it is a little strange it was removed. The item that replaced it is superior IMHO. [Zone: Warsliks Wood ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-earthshaker
+    name: "Earthshaker"
+    category: weapon
+    slots: 1
+    damage_one: d12
+    damage_two: d12
+    tags: [magic, eq-rpg, era-kunark, lore-item, melee, two-handed]
+    notes: "This item was intensely fun before it was nerfed, but it was indeed overpowered in certain, limited situations. It was not, however, any good in raid situa- tions since it generated way too much agro and agroed to many mobs for the raid to deal with. [Zone: The Hole ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-earthshaker-s-mantle
+    name: "Earthshaker's Mantle"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, lore-item, no-drop]
+    notes: "This is a really difficult quest, and there weren’t many of these that made it on the older servers in the first place. Plane of Sky is rarely raided for loot, but as the previous item showed, AoE effects have always been on a watch list for the EQ devs. [Zone: Plane of Sky ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-ebon-backpack
+    name: "Ebon Backpack"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "Again, it’s a shame to remove a quest from the game, since that’s what the game is all about. I’d understand if this were a 10 slot 100% weight reduction bag, but it isn’t. [Zone: Lesser Faydark ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-ebon-scythe
+    name: "Ebon Scythe"
+    category: weapon
+    slots: 1
+    damage_one: d12
+    damage_two: d12
+    tags: [magic, eq-rpg, era-classic, lore-item, melee, two-handed]
+    notes: "This weapon may have the most negative stat modifiers of any weapon in Classic. It doesn’t seem as if it was game breaking in any way. [Zone: Befallen ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-egg-shaped-pumice
+    name: "Egg-Shaped Pumice"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "This item is not really a big deal. In fact, this might be the only item I suggest just putting back in as a non-legendary item. [Zone: Many ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-emerald-armor-breastplate
+    name: "Emerald Armor Breastplate"
+    category: armor
+    slots: 1
+    ac_base: 15
+    ac_dex: true
+    tags: [magic, eq-rpg, era-classic, lore-item]
+    notes: "This was an exceedingly rare drop, so my information may be somewhat off. This item was the best pally BP pre-Plane of Hate and consequently saw little time in the EC tunnel on the auction block. [Zone: The Accursed Temple of Cazic Thule ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-emerald-cloak-of-the-faydark
+    name: "Emerald Cloak of the Faydark"
+    category: armor
+    slots: 1
+    ac_base: 11
+    ac_dex: true
+    tags: [magic, eq-rpg, era-classic, lore-item, no-drop]
+    notes: "Quests are fun. This quest was especially fun and rewarding. [Zone: Lesser Faydark ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-enchanted-fine-steel-bastard-sword
+    name: "Enchanted Fine Steel Bastard Sword"
+    category: weapon
+    slots: 1
+    damage_one: d12
+    damage_two: d12
+    tags: [magic, eq-rpg, era-classic, melee, two-handed]
+    notes: "It’s just as well it was removed. It has pretty decent stats for that early in the game. [Zone: Befallen ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-enchanted-fine-steel-great-staff
+    name: "Enchanted Fine Steel Great Staff"
+    category: weapon
+    slots: 1
+    damage_one: d12
+    damage_two: d12
+    tags: [magic, eq-rpg, era-classic, melee, two-handed]
+    notes: "There were a whole host of “enchanted fine steel” items that once dropped in Befallen and were never returned. [Zone: Befallen ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-enchanted-fine-steel-long-sword
+    name: "Enchanted Fine Steel Long Sword"
+    category: weapon
+    slots: 1
+    damage_one: d6
+    damage_two: d6
+    tags: [magic, eq-rpg, era-classic, melee]
+    notes: "This item remained on his loot table until 2002. [Zone: Befallen ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-enchanted-fine-steel-morning-star
+    name: "Enchanted Fine Steel Morning Star"
+    category: weapon
+    slots: 1
+    damage_one: d6
+    damage_two: d6
+    tags: [magic, eq-rpg, era-classic, melee]
+    notes: "Oddly enough, this item was not used in the Battle of Bloody Kithicore and therefore wasn’t removed from the mob’s loot table. [Zone: Befallen ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-enchanted-fine-steel-rapier
+    name: "Enchanted Fine Steel Rapier"
+    category: weapon
+    slots: 1
+    damage_one: d6
+    damage_two: d6
+    tags: [magic, eq-rpg, era-classic, melee]
+    notes: "Another item taken out for a GM event, but IMO the Dmg/Dly on this thing was way too good for a level 20 dungeon anyway. If you decide to include this item, it will be a nice tie-in to the lore for the Battle of Bloody Kithicore. [Zone: Befallen ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-enlarged-fire-beetle-eye
+    name: "Enlarged Fire Beetle Eye"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "Some reports state that this spell summoned the enchanted bar or sil- ver without the silver bar regent. I’m inclined to believe that report since the eye comes with only one charge. [Zone: North Qeynos (the Queens), Nagafen’s Lair (lava beetle) ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-equestrielle-s-eye
+    name: "Equestrielle’s Eye"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, lore-item, no-drop]
+    notes: "The quest that involved this item was either broken, undiscovered, or unsolved. No known use for the eye exists. [Zone: Lesser Faydark ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-fanged-skull-stiletto
+    name: "Fanged Skull Stiletto"
+    category: weapon
+    slots: 1
+    damage_one: d10
+    damage_two: d10
+    tags: [magic, eq-rpg, era-kunark, melee]
+    notes: "The fact that this item stayed in the game for as long as it did is amazing to me. The Dmg/Dly is amazing. [Zone: Qeynos/Kithicore Forest ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-fishgill-necksash
+    name: "Fishgill Necksash"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-kunark, lore-item]
+    notes: "This item dropped from First Mate Morgan every time. Even though he was somewhat of a rare spawn, these items became very common on any server that was live at the time they appeared during the Kunark expansion. [Zone: Timorous Deep ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-flowing-red-silk-sash
+    name: "Flowing Red Silk Sash"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-kunark, lore-item]
+    notes: "This item is pretty weak. It almost seems like they should have switched the drop are of the FRSS and the Necksash. [Zone: Timorous Deep ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-fungus-covered-great-staff
+    name: "Fungus Covered Great Staff"
+    category: weapon
+    slots: 1
+    damage_one: d12
+    damage_two: d12
+    tags: [magic, eq-rpg, era-kunark, lore-item, melee, two-handed]
+    notes: "The reason for the targeting changes was that on PvP servers, play- ers would target other PCs with the staff and snare them. That proved too powerful for the Zek servers, and the items were changed on all servers as a result. [Zone: Old Sebilis ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-gem-encrusted-ring
+    name: "Gem Encrusted Ring"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-kunark, lore-item]
+    notes: "This item was removed shortly after Verant put focus effects on all sorts of random items. This item got Affliciton Efficiency III which increased the speed and duration of roots and dots on mobs. [Zone: Old Sebilis ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-gem-encrusted-circlet
+    name: "Gem Encrusted Circlet"
+    category: helmet
+    slots: 1
+    ac_bonus: 1
+    tags: [magic, eq-rpg, era-kunark, lore-item]
+    notes: "This item may still be in the game, but there has been no account of it in over six years. If it was removed, it was taken out right around the time of Lu- clin- perhaps just before or just after. [Zone: Frontier Mountains ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-glimmer-ring
+    name: "Glimmer Ring"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "Unlike many other items, the Glimmer Ring was deleted from players’ inventory slots. The next time players tried to move or click on the item after they logged in following the patch that removed it, the ring vanished. [Zone: Lesser Faydark ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-glowing-blade
+    name: "Glowing Blade"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, lore-item, no-drop]
+    notes: "This item may be something you can use to add custom content. [Zone: Neriak ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-green-platemail-gloves
+    name: "Green Platemail Gloves"
+    category: armor
+    slots: 1
+    ac_base: 14
+    ac_dex: true
+    tags: [magic, eq-rpg, era-classic, lore-item]
+    notes: "At first the name of this item confused me. Obviously monks and rogues can’t normally wear plate. [Zone: The Accursed Temple of Cazic Thule ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-goblin-eye-poker
+    name: "Goblin Eye Poker"
+    category: weapon
+    slots: 1
+    damage_one: d4
+    damage_two: d4
+    tags: [magic, eq-rpg, era-kunark, melee]
+    notes: "It seemed like it was just more of an annoyance to the Devs rather than an over powered item. It wasn’t magical and that is a serious drawback. [Zone: Lake of Ill Omen ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-goblin-two-handed-sword
+    name: "Goblin Two-Handed Sword"
+    category: weapon
+    slots: 1
+    damage_one: d8
+    damage_two: d8
+    tags: [magic, eq-rpg, era-kunark, lore-item, melee]
+    notes: "There was a point in time when Verant removed many, many items from the game. It was quite disheartening for players who were active during those days. [Zone: Various Kunark Zones ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-golem-metal-wand
+    name: "Golem Metal Wand"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "This is another item that is almost worthless in a PvE environment but is devastating on PvP. If the Zek servers didn’t exist, this item probably would have stayed in the game even when both those mobs disappeared in the Befallen and CT re- vamps. [Zone: Befallen/The Accursed Temple of Cazic Thule ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-guise-of-the-deceiver
+    name: "Guise of the Deceiver"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "One of the most sought after, prestigious, legendary nerfed items of all time. [Zone: Lower Guk ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-heartstone-amulet
+    name: "Heartstone Amulet"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "The top floor of Castle Mistmoore was one scary place back in the day. However, it was worth the risk to get items like this. [Zone: Castle Mistmoore ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-holgresh-elder-beads
+    name: "Holgresh Elder Beads"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-velious, lore-item]
+    notes: "This item would have been a fun little toy if Verant had just nerfed the life tap interaction instead. The Singing Steel Helmet never caused any problems. [Zone: Wakening Lands ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-iksar-hide-mask
+    name: "Iksar Hide Mask"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-kunark, lore-item]
+    notes: "The price on these initially crashed then rebounded since they were so hard to get. In the end, people weren’t too upset over it. [Zone: Trakkanon’s Teeth ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-illusionist-s-stone
+    name: "Illusionist’s Stone"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "To my knowledge, there were never any complaints about this item or the difficulty of the mob. [Zone: Lesser Faydark ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-imbued-granite-spauldors
+    name: "Imbued Granite Spauldors"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, lore-item]
+    notes: "As Luclin approached, Verant wanted all the classes to have plenty of access to resist gear. This item was changed, along with a few others like the Stone of Morrid to help balance resist gear. [Zone: The Hole ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-incarnadine-breastplate
+    name: "Incarnadine Breastplate"
+    category: armor
+    slots: 1
+    ac_base: 15
+    ac_dex: true
+    tags: [magic, eq-rpg, era-kunark, lore-item]
+    notes: "A small change that made a big impact. [Zone: Chardok ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-inte-s-sword-of-death
+    name: "Inte’s Sword of Death"
+    category: weapon
+    slots: 1
+    damage_one: d12
+    damage_two: d12
+    tags: [magic, eq-rpg, era-classic, lore-item, no-drop, melee, two-handed]
+    notes: "This is not something that needs to be in the game. It is merely a historical curiosity. [Zone: Plane of Sky ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-jade-chokidai-prod
+    name: "Jade Chokidai Prod"
+    category: weapon
+    slots: 1
+    damage_one: d8
+    damage_two: d8
+    tags: [magic, eq-rpg, era-kunark, lore-item, melee]
+    notes: "Many people think that this item used to be SHM ROG. That’s incorrect. [Zone: Lake of Ill Omen ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-jade-inlaid-crescent-axe
+    name: "Jade Inlaid Crescent Axe"
+    category: weapon
+    slots: 1
+    damage_one: d12
+    damage_two: d12
+    tags: [magic, eq-rpg, era-kunark, lore-item, melee, two-handed]
+    notes: "The Jade items from Kunark were some of the most iconic. Who doesn’t remember the Jade Mace or Jade Prod? [Zone: Chardok ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-journeyman-s-boots
+    name: "Journeyman’s Boots"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, no-drop]
+    notes: "This item was a big reason people went to Najena. Once it was removed from Drelzna’s loot table, the place became a ghost town. [Zone: Najena ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-kelin-s-seven-stringed-lute
+    name: "Kelin’s Seven Stringed Lute"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, lore-item]
+    notes: "There was a time in EQ history when the Maestro of Rancor didn’t drop a single musical instrument. Weird, huh? [Zone: Plane of Hate ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-lady-nidra-s-wings
+    name: "Lady Nidra’s Wings"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, lore-item, no-drop]
+    notes: "The lore goes that she escaped from Castle Mistmoore, however, no use for her wings were ever found. Either the quest was unfinished, undiscovered, or broken. [Zone: Lesser Faydark ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-legionnaire-torn-shoulderpads
+    name: "Legionnaire Torn Shoulderpads"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, no-drop]
+    notes: "This item was most likely part of a quest that was never finished, discovered, or that was broken. It may provide fodder for your own custom content. [Zone: Crushbone ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-locket-of-escape
+    name: "Locket of Escape"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-kunark, lore-item]
+    notes: "Oh come on. This item was very difficult to camp, was lore, and had only one charge. [Zone: Temple of Droga ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-lustrous-russet-boots
+    name: "Lustrous Russet Boots"
+    category: armor
+    slots: 1
+    ac_base: 15
+    ac_dex: true
+    tags: [magic, eq-rpg, era-classic, no-drop]
+    notes: "This was one of the items that made PoFear both an alluring and deadly place. There’d be those who’d try to camp these things and end up losing their corpses in there. [Zone: Plane of Fear ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-lustrous-russet-bracer
+    name: "Lustrous Russet Bracer"
+    category: armor
+    slots: 1
+    ac_base: 14
+    ac_dex: true
+    tags: [magic, eq-rpg, era-classic, no-drop]
+    notes: "See entry on Lustrous Russet Boots. [Zone: Plane of Fear ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-lustrous-russet-breastplate
+    name: "Lustrous Russet Breastplate"
+    category: armor
+    slots: 1
+    ac_base: 15
+    ac_dex: true
+    tags: [magic, eq-rpg, era-classic, no-drop]
+    notes: "There are only 2 reasons I can guess at as to why this was re- moved: 1) best BP in the game during Classic, 2) caused way too many arguments dur- ing a raid heh heh. Actually, the latter is probably more likely. [Zone: Plane of Fear ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-lustrous-russet-gauntlets
+    name: "Lustrous Russet Gauntlets"
+    category: armor
+    slots: 1
+    ac_base: 15
+    ac_dex: true
+    tags: [magic, eq-rpg, era-classic, no-drop]
+    notes: "See entry on Lustrous Russet Boots. [Zone: Plane of Fear ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-lustrous-russet-greaves
+    name: "Lustrous Russet Greaves"
+    category: armor
+    slots: 1
+    ac_base: 15
+    ac_dex: true
+    tags: [magic, eq-rpg, era-classic, no-drop]
+    notes: "See entry on Lustrous Russet Boots. [Zone: Plane of Fear ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-lustrous-russet-helm
+    name: "Lustrous Russet Helm"
+    category: helmet
+    slots: 1
+    ac_bonus: 1
+    tags: [magic, eq-rpg, era-classic, no-drop]
+    notes: "See entry on Lustrous Russet Boots. [Zone: Plane of Fear ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-lustrous-russet-vembraces
+    name: "Lustrous Russet Vembraces"
+    category: armor
+    slots: 1
+    ac_base: 15
+    ac_dex: true
+    tags: [magic, eq-rpg, era-classic, no-drop]
+    notes: "See entry on Lustrous Russet Boots. [Zone: Plane of Fear ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-manastone
+    name: "Manastone"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "When people think of nerfed or removed items, there is one singu- lar loot that instantly comes to mind. It is the essence of myth and legend not just in Everquest but in all of the MMORPG kingdoms."
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-mempo-of-likato
+    name: "Mempo of Likato"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, lore-item, no-drop]
+    notes: "I always associated the Maestro with bards, but as this item guide shows, he was also quite partial to monks as well. [Zone: Plane of Hate ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-mosscovered-branch
+    name: "Mosscovered Branch"
+    category: weapon
+    slots: 1
+    damage_one: d6
+    damage_two: d6
+    tags: [magic, eq-rpg, era-kunark, lore-item, melee, two-handed]
+    notes: "The beta testing for Kunark must not have been all that great. There were tons of weapons that were nerfed or removed a few months after its release. [Zone: Frontier Mountains ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-mosscovered-twig
+    name: "Mosscovered Twig"
+    category: weapon
+    slots: 1
+    damage_one: d4
+    damage_two: d4
+    tags: [magic, eq-rpg, era-kunark, lore-item, melee]
+    notes: "Once it was removed, it was almost never sold in EC or in the Ba- zaar. It was handed down from character to character. [Zone: Frontier Mountains ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-oaken-scimitar
+    name: "Oaken Scimitar"
+    category: weapon
+    slots: 1
+    damage_one: d6
+    damage_two: d6
+    tags: [magic, eq-rpg, era-classic, lore-item, melee]
+    notes: "Ok, so this was supposed to be the quest reward. Grizzelknot did- n’t drop the Oaken Scimitar every time. [Zone: South Karana ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-orc-wrath-bracer
+    name: "Orc Wrath Bracer"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, lore-item]
+    notes: "No explanation was ever given. It may have been part of a quest. [Zone: East Commonlands ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-ornate-runed-dagger
+    name: "Ornate Runed Dagger"
+    category: weapon
+    slots: 1
+    damage_one: d4
+    damage_two: d4
+    tags: [magic, eq-rpg, era-classic, lore-item, melee]
+    notes: "This item was called the “Bible Dagger” on my server since its dmg/dly was 3:16. [Zone: Crusbone ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-ornate-velium-pendant
+    name: "Ornate Velium Pendant"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-velious, lore-item]
+    notes: "These items were obviously to be used to aid in complete the ar- mor mould quests on Velious. When this item started doing that, it got nerfed. [Zone: Icewell Keep ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-pearly-sarnak-bangle
+    name: "Pearly Sarnak Bangle"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-kunark]
+    notes: "Of all the nerfed/removed items Kunark to last, this one remained the longest. The funny thing is, for its slot, it’s one of the best ever. [Zone: Chardok ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-polyphenomenal-axe
+    name: "Polyphenomenal Axe"
+    category: weapon
+    slots: 1
+    damage_one: d12
+    damage_two: d12
+    tags: [magic, eq-rpg, era-kunark, lore-item, melee, two-handed]
+    notes: "The DC camp in KC is one of the most classic camps in Kunark. It was a sad day when this was removed. [Zone: Karnor’s Castle ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-priest-of-innoruuk-s-heart
+    name: "Priest of Innoruuk’s Heart"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, lore-item, no-drop]
+    notes: "This item may be useful to you for creating some custom content for EQC. [Zone: Nektulos Forest ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-pristine-studded-boots
+    name: "Pristine Studded Boots"
+    category: armor
+    slots: 1
+    ac_base: 12
+    ac_dex: true
+    tags: [magic, eq-rpg, era-classic, lore-item, no-drop]
+    notes: "The pristine leather armor dropped by this mob provided a nice starting point for level 20-30 characters. However, the task of getting them was very difficult. [Zone: Befallen ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-pristine-studded-bracer
+    name: "Pristine Studded Bracer"
+    category: armor
+    slots: 1
+    ac_base: 12
+    ac_dex: true
+    tags: [magic, eq-rpg, era-classic, no-drop]
+    notes: "See entry on Pristine Studded Boots [Zone: Befallen ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-pristine-studded-gloves
+    name: "Pristine Studded Gloves"
+    category: armor
+    slots: 1
+    ac_base: 11
+    ac_dex: true
+    tags: [magic, eq-rpg, era-classic, lore-item, no-drop]
+    notes: "See entry on Pristine Studded Boots [Zone: Befallen ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-pristine-studded-leggings
+    name: "Pristine Studded Leggings"
+    category: armor
+    slots: 1
+    ac_base: 14
+    ac_dex: true
+    tags: [magic, eq-rpg, era-classic, lore-item, no-drop]
+    notes: "See entry on Pristine Studded Boots [Zone: Befallen ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-pristine-studded-sleeves
+    name: "Pristine Studded Sleeves"
+    category: armor
+    slots: 1
+    ac_base: 12
+    ac_dex: true
+    tags: [magic, eq-rpg, era-classic, lore-item, no-drop]
+    notes: "See entry on Pristine Studded Boots [Zone: Befallen ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-pristine-studded-tunic
+    name: "Pristine Studded Tunic"
+    category: armor
+    slots: 1
+    ac_base: 14
+    ac_dex: true
+    tags: [magic, eq-rpg, era-classic, lore-item, no-drop]
+    notes: "See entry on Pristine Studded Boots [Zone: Befallen ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-pulsing-goo
+    name: "Pulsing Goo"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-velious, lore-item, no-drop]
+    notes: "This item was often given to monks or shadow knights. They could Fein Death if a raid was about to wipe, then later resurrect a cleric to being back the rest of the party. [Zone: Dragon Necropolis ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-red-dragon-tooth
+    name: "Red Dragon Tooth"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "The tooth would summon a level 41 skeleton pet that had a 20 pt life tap. Since this could be used by any class at any level, it was nerfed. [Zone: Nagafen’s Lair ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-red-wurm-gut
+    name: "Red Wurm Gut"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-kunark, lore-item, no-drop]
+    notes: "The red wurm guts aren’t the real bottle-neck for the bard epic. Kedge Keep and Old Seb hold the true stop-gaps for the Singing Short Sword. [Zone: Burning Woods ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-ringed-mace-of-the-ykesha
+    name: "Ringed Mace of the Ykesha"
+    category: weapon
+    slots: 1
+    damage_one: d8
+    damage_two: d8
+    tags: [magic, eq-rpg, era-kunark, melee]
+    notes: "Nothing really all that impressive about this weapon. Especially since it doesn’t proc until level 50. [Zone: Karnor’s Castle ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-ring-of-the-oceancaller
+    name: "Ring of the Oceancaller"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "The Allizewsaur is sort of the “boss” of ocean of tears. I’ve never personally seen him, but I understand he looks like a giant alligator. [Zone: Ocean of Tears ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-robe-of-living-fungus
+    name: "Robe of Living Fungus"
+    category: armor
+    slots: 1
+    ac_base: 13
+    ac_dex: true
+    tags: [magic, eq-rpg, era-kunark, lore-item]
+    notes: "This move really pissed off the clerics and druids who could wear this item. They felt the regen let them concentrate more on healing others in their group. [Zone: Old Sebilis ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-rod-of-annihilation
+    name: "Rod of Annihilation"
+    category: weapon
+    slots: 1
+    damage_one: d12
+    damage_two: d12
+    tags: [magic, eq-rpg, era-kunark, lore-item, melee]
+    notes: "This thing sure made you dumb, but boy, does it hit hard! [Zone: Old Sebilis ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-rod-of-mourning
+    name: "Rod of Mourning"
+    category: weapon
+    slots: 1
+    damage_one: d12
+    damage_two: d12
+    tags: [magic, eq-rpg, era-kunark, lore-item, melee, two-handed]
+    notes: "I’m not sure if this item has been removed or not. You’d have to check your database to be sure. [Zone: Old Sebilis ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-rubicite-armor-boots-bracer-gauntlets-greaves-helm-vem-brace
+    name: "Rubicite Armor (Boots, Bracer, Gauntlets, Greaves, Helm, Vem- braces)"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "Okay, I’m calmed down now. All rubicite armor was removed be- cause very early in EQ’s history twinking was seen as a cardinal sin in the game. [Zone: The Accursed Temple of Cazic Thule ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-rubicite-breastplate
+    name: "Rubicite Breastplate"
+    category: armor
+    slots: 1
+    ac_base: 15
+    ac_dex: true
+    tags: [magic, eq-rpg, era-classic, lore-item]
+    notes: "This is the item that caused ALL the trouble. This breastplate re- generated characters at a measly 3 hit points per tick. [Zone: The Accursed Temple of Cazic Thule ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-rubicite-cloak
+    name: "Rubicite Cloak"
+    category: armor
+    slots: 1
+    ac_base: 13
+    ac_dex: true
+    tags: [magic, eq-rpg, era-classic]
+    notes: "See entry on Rubicite Armor. [Zone: The Accursed Temple of Cazic Thule ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-rubicite-collar
+    name: "Rubicite Collar"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "See entry on Rubicite Armor. [Zone: The Accursed Temple of Cazic Thule ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-rubicite-mask
+    name: "Rubicite Mask"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "See entry on Rubicite Armor. [Zone: The Accursed Temple of Cazic Thule ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-rubicite-pauldron
+    name: "Rubicite Pauldron"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "See entry on Rubicite Armor. [Zone: The Accursed Temple of Cazic Thule ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-rubicite-waisteband
+    name: "Rubicite Waisteband"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "See entry on Rubicite Armor. [Zone: The Accursed Temple of Cazic Thule ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-runed-fighters-staff
+    name: "Runed Fighters Staff"
+    category: weapon
+    slots: 1
+    damage_one: d12
+    damage_two: d12
+    tags: [magic, eq-rpg, era-kunark, lore-item, melee, two-handed]
+    notes: "They said it was too powerful in the hands of a warrior…as if monks aren’t known for their dps or something. [Zone: Old Sebilis ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-sarnak-ceremonial-bracer
+    name: "Sarnak Ceremonial Bracer"
+    category: armor
+    slots: 1
+    ac_base: 12
+    ac_dex: true
+    tags: [magic, eq-rpg, era-kunark, lore-item, no-drop]
+    notes: "I’ve only read passing mentions of this item. However, the vitriol surrounding its removal seems real enough. [Zone: Various Kunark Zones ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-sarnak-liberator
+    name: "Sarnak Liberator"
+    category: weapon
+    slots: 1
+    damage_one: d6
+    damage_two: d6
+    tags: [magic, eq-rpg, era-kunark, melee]
+    notes: "The devs didn’t like seeing clerics wielding a sword. [Zone: The Overthere ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-sarnak-wristguard
+    name: "Sarnak Wristguard"
+    category: armor
+    slots: 1
+    ac_base: 12
+    ac_dex: true
+    tags: [magic, eq-rpg, era-kunark, lore-item, no-drop]
+    notes: "No reason was ever given, though I honestly don’t remember any- one talking about this when it happened. It’s possible this item never existed or perhaps it was only in the beta test. [Zone: Numerous Kunark Zones ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-sash-of-infinite-blows
+    name: "Sash of Infinite Blows"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, lore-item]
+    notes: "This was the PoF version of the Basson Gauntlets. The only dif- ference was this thing was droppable for some reason."
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-scimitar-of-the-mistwalker
+    name: "Scimitar of the Mistwalker"
+    category: weapon
+    slots: 1
+    damage_one: d8
+    damage_two: d8
+    tags: [magic, eq-rpg, era-classic, lore-item, melee]
+    notes: "I was unable to find the proc rate for this weapon. [Zone: Permafrost ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-scourgetail-whip
+    name: "Scourgetail Whip"
+    category: weapon
+    slots: 1
+    damage_one: d12
+    damage_two: d12
+    tags: [magic, eq-rpg, era-kunark, melee]
+    notes: "Verant offered an apology in their patch notes about changing this item, but I think few would argue that a 30/5 weapon that proced at level 1 was appro- priate for the game. Given the massive numbers of items, especially those from Kunark, that were nerfed... [Zone: Field of Bone ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-scoutting-dagger
+    name: "Scoutting Dagger"
+    category: weapon
+    slots: 1
+    damage_one: d6
+    damage_two: d6
+    tags: [magic, eq-rpg, era-classic, lore-item, melee]
+    notes: "This change affected me personally and made me quit the game for a few months. The quest is hard at that level and causes you to ruin your Rivervale faction if the other halfling guards got in the way of killing the traitor. [Zone: High Keep ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-sense-magic-spell
+    name: "Sense Magic Spell"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "This spell’s effect was the same as the higher level “Sense the Dead” spell, but came at a much much higher mana cost. It really had little effect in the game. [Zone: Various ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-shield-of-the-arisen-cultist
+    name: "Shield of the Arisen Cultist"
+    category: armor
+    slots: 1
+    ac_base: 15
+    ac_dex: true
+    tags: [magic, eq-rpg, era-kunark, lore-item]
+    notes: "I don’t know if this item’s disappearance was directly related to the Sleeper or not, and honestly, I can’t for sure verify that it no longer drops. But in case it has ceased to exist in the game, I wanted to include it here. [Zone: Trakanon’s Teeth ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-shield-of-the-immaculate
+    name: "Shield of the Immaculate"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, lore-item]
+    notes: "I don’t know what to tell ya here. This item changed so much, that it’s hard to tell what the original intention was. [Zone: Plane of Hate ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-shimmering-ruby-stiletto
+    name: "Shimmering Ruby Stiletto"
+    category: weapon
+    slots: 1
+    damage_one: d8
+    damage_two: d8
+    tags: [magic, eq-rpg, era-classic, no-drop, melee]
+    notes: "There were several mobs removed from Befallen in 2002 for lore reasons. Korven was one of them. [Zone: Befallen ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-shralok-pack
+    name: "Shralok Pack"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "I’ve had several of these on the same character at the same time. Perhaps those accounts are just mistaken. [Zone: Highpass Hold ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-silk-lined-steel-helm
+    name: "Silk Lined Steel Helm"
+    category: helmet
+    slots: 1
+    ac_bonus: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "The nerf, of course, defeated the entire purpse of the helm being lined with silk!!! This nerf made no sense from a game balance standpoint and a lore standpoint. [Zone: Ak’Anon ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-silver-plated-war-sword
+    name: "Silver Plated War Sword"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, lore-item, no-drop]
+    notes: "This mob was related to several others I have mentioned previous- ly. [Zone: Befallen ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-singing-steel-boots
+    name: "Singing Steel Boots"
+    category: armor
+    slots: 1
+    ac_base: 15
+    ac_dex: true
+    tags: [magic, eq-rpg, era-kunark, lore-item]
+    notes: "Players complained that the effect was not commiserate with the other clicky armors of Kunark. So it went from an inventory clicky item to an equip clicky item and gained the group lev song. [Zone: Karnor’s Castle ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-singing-steel-greaves
+    name: "Singing Steel Greaves"
+    category: armor
+    slots: 1
+    ac_base: 15
+    ac_dex: true
+    tags: [magic, eq-rpg, era-kunark, lore-item]
+    notes: "See previous entry. [Zone: Karnor’s Castle ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-six-note-blade
+    name: "Six Note Blade"
+    category: weapon
+    slots: 1
+    damage_one: d8
+    damage_two: d8
+    tags: [magic, eq-rpg, era-classic, lore-item, no-drop, melee]
+    notes: "A lot of bard items in a row, that’s kind of strange. But Verant had a hard time knowing what to do with this class. [Zone: Plane of Hate ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-skeletal-rod
+    name: "Skeletal Rod"
+    category: weapon
+    slots: 1
+    damage_one: d6
+    damage_two: d6
+    tags: [magic, eq-rpg, era-classic, lore-item, melee]
+    notes: "This is nothing more than a magic club. Nothing special, other than the name of the item rhymed with the name of the mob that dropped it. [Zone: Befallen ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-skull-mask-of-innervation
+    name: "Skull Mask of Innervation"
+    category: helmet
+    slots: 1
+    ac_bonus: 1
+    tags: [magic, eq-rpg, era-classic, lore-item]
+    notes: "I find it interesting that so many items that used to drop but were removed later became rewards in GM events. Well…were they broken or not? [Zone: Plane of Hate ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-small-brass-trumpet
+    name: "Small Brass Trumpet"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, lore-item]
+    notes: "There are very few magical bard instruments in the game. This one shows why. [Zone: Castle Mistmoore ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-solist-s-icy-wand
+    name: "Solist’s Icy Wand"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-kunark, lore-item]
+    notes: "Yeah…to prevent twinking…cause they drop in a low level dun- geon. Okay. [Zone: Kurn’s Tower ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-songweaver-s-mantle-v1-0
+    name: "Songweaver’s Mantle (v1.0)"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, no-drop]
+    notes: "For the difficulty in completing it, this is a pretty weak reward in its nerfed form. It’s doubtful anyone would take the time to do the quest for it for only 5 charges. [Zone: Plane of Sky ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-songweaver-s-mantle-v2-0
+    name: "Songweaver’s Mantle (v2.0)"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, no-drop]
+    notes: "See above entry. [Zone: Plane of Sky ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-sorrowsong-boots
+    name: "Sorrowsong Boots"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "This was a rare drop off a rare spawn. Very few bards got their hands on a pair. [Zone: The Accursed Temple of Cazic Thule ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-sphinx-eye-amulet
+    name: "Sphinx Eye Amulet"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, no-drop]
+    notes: "All the stats of the new amulet are the same except it has 7 more AC. No reason was given for the upgrade, other than for a PoSky quest, the original amulet is hardly worth the trouble. [Zone: Plane of Sky ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-spiroc-healer-s-cloak-v1-0
+    name: "Spiroc Healer’s Cloak (v1.0)"
+    category: armor
+    slots: 1
+    ac_base: 12
+    ac_dex: true
+    tags: [magic, eq-rpg, era-classic]
+    notes: "This is the last of the PoSky quest changes contained in this tome. There were a number of Plane of Sky quests that received nerfs in 2001. [Zone: Plane of Sky ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-spiroc-healer-s-cloak-v2-0
+    name: "Spiroc Healer’s Cloak (v2.0)"
+    category: armor
+    slots: 1
+    ac_base: 12
+    ac_dex: true
+    tags: [magic, eq-rpg, era-classic]
+    notes: "See above entry. [Zone: Plane of Sky ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-staff-of-forbidden-rites
+    name: "Staff of Forbidden Rites"
+    category: weapon
+    slots: 1
+    damage_one: d12
+    damage_two: d12
+    tags: [magic, eq-rpg, era-classic, melee, two-handed]
+    notes: "Ah, the funny old exploits of years gone by. [Zone: Permafrost ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-staff-of-the-arisen-cultist
+    name: "Staff of the Arisen Cultist"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-kunark, lore-item]
+    notes: "You’ll need to double check your database to see if he is still in there. [Zone: Trakanon’s Teeth ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-staff-of-temperate-flux
+    name: "Staff of Temperate Flux"
+    category: weapon
+    slots: 1
+    damage_one: d6
+    damage_two: d6
+    tags: [magic, eq-rpg, era-classic, lore-item, no-drop, melee]
+    notes: "The effect was later retroactively changed to Lower Element I. [Zone: Lesser Faydark ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-staff-of-udead-leagions
+    name: "Staff of Udead Leagions"
+    category: weapon
+    slots: 1
+    damage_one: d12
+    damage_two: d12
+    tags: [magic, eq-rpg, era-classic, melee, two-handed]
+    notes: "This was changed to a combat proc rather than a charm proc, which is more practical. [Zone: Plane of Fear ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-stein-of-moggok
+    name: "Stein of Moggok"
+    category: weapon
+    slots: 1
+    damage_one: d6
+    damage_two: d6
+    tags: [magic, eq-rpg, era-classic, lore-item, melee]
+    notes: "I really hate how the nerfed version had charges. I get why it was changed. [Zone: Oggok ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-stone-of-morid
+    name: "Stone of Morid"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-kunark, lore-item]
+    notes: "Most people are going to remember this item as being Iksar only. If you choose to make a Legendary version, I would suggest making it the one that is useable by BAR TRL OGR IKS. [Zone: Temple of Droga ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-targishin-s-bone-mask
+    name: "Targishin's Bone Mask"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-kunark, lore-item]
+    notes: "Never saw one of these masks. They were probably just sold to merchants since there’s no real stats attached to them. [Zone: Field of Bone ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-terror-forged-mask
+    name: "Terror Forged Mask"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, lore-item, no-drop]
+    notes: "The fact that this could be activated from your inventory made it especially good. While it’s not as broken as some of the items on this list, it is still pret- ty darn good. [Zone: Paineel ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-thaumaturgist-s-sash
+    name: "Thaumaturgist’s Sash"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, lore-item, no-drop]
+    notes: "There were so many problems leading up to Luclin. Zones were crashing, mobs were spawning at a higher level than they should have. [Zone: Be- fallen ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-thex-dagger
+    name: "Thex Dagger"
+    category: weapon
+    slots: 1
+    damage_one: d6
+    damage_two: d6
+    tags: [magic, eq-rpg, era-classic, lore-item, melee]
+    notes: "Fun and very involved quest. Too bad it was taken out. [Zone: Felwithe ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-ton-po-s-bo-stick-of-understanding
+    name: "Ton Po’s Bo Stick of Understanding"
+    category: weapon
+    slots: 1
+    damage_one: d12
+    damage_two: d12
+    tags: [magic, eq-rpg, era-kunark, lore-item, melee, two-handed]
+    notes: "This item absolutely was on live, but I’m not sure it only dropped once. None-the-less, it was an incredible item. [Zone: Old Sebilis ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-totem-of-the-wizened-spirits
+    name: "Totem of the Wizened Spirits"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-kunark]
+    notes: "Several of the other “spirit totems” survived to today, so I have no idea what this one didn’t. [Zone: Lake Of Ill Omen/Warslicks Wood ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-unicorn-horn
+    name: "Unicorn Horn"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "Your database may still have Equestrielle in it. It’s hard to say when she was removed from the game. [Zone: Lesser Faydark ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-venomous-axe-of-the-velium-brood
+    name: "Venomous Axe of the Velium Brood"
+    category: weapon
+    slots: 1
+    damage_one: d8
+    damage_two: d8
+    tags: [magic, eq-rpg, era-velious, lore-item, melee]
+    notes: "This action was taken to prevent twinking, however, it was done some time after the release of Luclin. In classic, this weapon always proced at level 1. [Zone: Velketor's Labyrinth ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-warding-star
+    name: "Warding Star"
+    category: weapon
+    slots: 1
+    damage_one: d10
+    damage_two: d10
+    tags: [magic, eq-rpg, era-kunark, lore-item, melee]
+    notes: "The only difference between the two items is that the Guardian’s Mace can’t be used by warriors. I guess Verant felt a 14/24 weapon was too strong for the warrior class. [Zone: Howling Stones ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-werewolf-tail
+    name: "Werewolf Tail"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic, lore-item, no-drop]
+    notes: "This was one of the items that made Mistmoore as legendary as it was. And contrary to urban myth, this was never part of Mayong Mistmoore’s loot ta- ble. [Zone: Castle Mistmoore ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-white-dragon-tooth
+    name: "White Dragon Tooth"
+    category: gear
+    slots: 1
+    tags: [magic, eq-rpg, era-classic]
+    notes: "The tooth would summon a level 41 skeleton pet that had a 20 pt life tap. Since this could be used by any class at any level, it was nerfed. [Zone: Permafrost ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-writhing-lash
+    name: "Writhing Lash"
+    category: weapon
+    slots: 1
+    damage_one: d6
+    damage_two: d6
+    tags: [magic, eq-rpg, era-classic, melee]
+    notes: "Supposedly, according to one source, Writhing Lashes were retro- actively changed to Tentacle Whips. I have no idea if this is accurate or not. [Zone: Najena, The Estate of Unrest ]"
+    system: eq-rpg
+    source_book: item-guide-revised
+
+  - id: eq-wurmslayer
+    name: "Wurmslayer"
+    category: weapon
+    slots: 1
+    damage_one: d12
+    damage_two: d12
+    tags: [magic, eq-rpg, era-kunark, thrown, ranged]
+    notes: "This item changed from a spear-like weapon to more of a hack-n’- slash type weapon. It looks sorta like a spear, but swings like a sword. [Zone: Firiona Vie ]"
+    system: eq-rpg
+    source_book: item-guide-revised
