@@ -189,6 +189,77 @@ export async function importAll(json: string): Promise<void> {
   await tx.done;
 }
 
+interface ArtExport {
+  id: string;
+  type: string;
+  createdAt?: number;
+  data: string;
+}
+
+/**
+ * Export selected characters (or all, if no ids) plus their portrait art as a
+ * portable, self-contained hero pack. Re-importable on any device.
+ */
+export async function exportCharacters(ids?: string[]): Promise<string> {
+  const db = await getDB();
+  let characters = await db.getAll('characters');
+  if (ids && ids.length) characters = characters.filter((c) => ids.includes(c.id));
+  characters.sort((a, b) => b.updatedAt - a.updatedAt);
+  const artIds = [...new Set(characters.map((c) => c.portraitArtId).filter((x): x is string => !!x))];
+  const art: ArtExport[] = [];
+  for (const id of artIds) {
+    const rec = await db.get('art', id);
+    if (rec) art.push({ id: rec.id, type: rec.type, createdAt: rec.createdAt, data: await blobToBase64(rec.blob) });
+  }
+  return JSON.stringify({ kind: 'shadowdark-heroes', version: 1, exportedAt: Date.now(), characters, art }, null, 2);
+}
+
+/**
+ * Import characters (with their art) from a hero pack, a single character, a raw
+ * array, or a full backup. Merges by id, so re-importing your own pack updates in
+ * place rather than duplicating. Returns the number of characters imported.
+ */
+export async function importCharacters(json: string): Promise<number> {
+  const data = JSON.parse(json);
+  let characters: Character[] = [];
+  let art: ArtExport[] = [];
+  if (Array.isArray(data)) {
+    characters = data as Character[];
+  } else if (data && Array.isArray(data.characters)) {
+    characters = data.characters;
+    art = Array.isArray(data.art) ? data.art : [];
+  } else if (data && typeof data === 'object' && data.id && data.stats) {
+    characters = [data as Character];
+  } else {
+    throw new Error('Not a recognized hero file.');
+  }
+  characters = characters.filter((c) => c && c.id && c.stats);
+  if (!characters.length) throw new Error('No heroes found in this file.');
+
+  // Convert art blobs up front: an IndexedDB transaction can't stay open across
+  // the fetch() inside base64ToBlob.
+  const artRecords: { id: string; blob: Blob; type: string; createdAt: number }[] = [];
+  for (const a of art) {
+    try {
+      artRecords.push({
+        id: a.id,
+        blob: await base64ToBlob(a.data, a.type),
+        type: a.type,
+        createdAt: a.createdAt ?? Date.now(),
+      });
+    } catch {
+      // Skip unreadable art; the character still imports, just without its portrait.
+    }
+  }
+
+  const db = await getDB();
+  const tx = db.transaction(['characters', 'art'], 'readwrite');
+  for (const c of characters) await tx.objectStore('characters').put(c);
+  for (const a of artRecords) await tx.objectStore('art').put(a);
+  await tx.done;
+  return characters.length;
+}
+
 function blobToBase64(blob: Blob): Promise<string> {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
