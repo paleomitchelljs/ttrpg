@@ -39,12 +39,12 @@ pools:
   - id: everquest-classic
     name: "EverQuest — Classic era"
     description: "Original EverQuest dungeons and creatures: Befallen, Blackburrow, Solusek's Eye, Permafrost, etc."
-    enabled_tags: [eq-rpg, era-classic, befallen, soluseks-eye, temple-of-solusek-ro, everfrost-peaks]
+    enabled_tags: [eq-rpg, era-classic, befallen, soluseks-eye, temple-of-solusek-ro, everfrost-peaks, permafrost, cazic-thule, najena]
 
   - id: everquest-kunark
     name: "EverQuest — Ruins of Kunark"
-    description: "Iksar lands: Dalnir, Chardok, Howling Stones, Sebilis."
-    enabled_tags: [eq-rpg, era-kunark, kunark]
+    description: "Iksar lands: Kaesora, Charasis (Howling Stones), City of Mist (Torsis), Dalnir, Chardok, Sebilis."
+    enabled_tags: [eq-rpg, era-kunark, kunark, kaesora, charasis, city-of-mist, dalnir]
 
   - id: everquest-velious
     name: "EverQuest — Scars of Velious"

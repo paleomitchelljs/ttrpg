@@ -2,14 +2,14 @@ import { useState } from 'react';
 import { CharacterTab } from './pages/CharacterTab';
 import { DiceTab } from './pages/DiceTab';
 import { EnemyTab } from './pages/EnemyTab';
-import { DungeonTab } from './pages/DungeonTab';
+import { AdventureTab } from './pages/AdventureTab';
 
-type TabId = 'characters' | 'enemies' | 'dungeons' | 'dice';
+type TabId = 'characters' | 'enemies' | 'adventure' | 'dice';
 
 const TABS: { id: TabId; label: string }[] = [
   { id: 'characters', label: 'Heroes' },
   { id: 'enemies', label: 'Monsters' },
-  { id: 'dungeons', label: 'Dungeons' },
+  { id: 'adventure', label: 'Adventure' },
   { id: 'dice', label: 'Dice' },
 ];
 
@@ -35,7 +35,7 @@ export function App() {
       <main className="app-main">
         {tab === 'characters' && <CharacterTab />}
         {tab === 'enemies' && <EnemyTab />}
-        {tab === 'dungeons' && <DungeonTab />}
+        {tab === 'adventure' && <AdventureTab />}
         {tab === 'dice' && <DiceTab />}
       </main>
     </div>

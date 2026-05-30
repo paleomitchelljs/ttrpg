@@ -2,19 +2,7 @@ import { useState } from 'react';
 import { roll, type RollMode } from '../lib/dice';
 import { clearRolls, pushRoll, useLatestRoll, useRollLog } from '../lib/rollLog';
 
-interface QuickDie {
-  faces: number;
-  emoji: string;
-}
-
-const QUICK_DICE: QuickDie[] = [
-  { faces: 4, emoji: '🔺' },
-  { faces: 6, emoji: '🎲' },
-  { faces: 8, emoji: '🔷' },
-  { faces: 10, emoji: '🔟' },
-  { faces: 12, emoji: '💎' },
-  { faces: 20, emoji: '✨' },
-];
+const QUICK_DICE = [4, 6, 8, 10, 12, 20];
 
 export function DiceTab() {
   const [expr, setExpr] = useState('1d20');
@@ -61,10 +49,9 @@ export function DiceTab() {
       )}
 
       <div className="dice-grid">
-        {QUICK_DICE.map((d) => (
-          <button key={d.faces} className="dice-tile" onClick={() => rollDie(d.faces)}>
-            <div className="dice-tile-emoji">{d.emoji}</div>
-            <div className="dice-tile-label">d{d.faces}</div>
+        {QUICK_DICE.map((faces) => (
+          <button key={faces} className="dice-tile" onClick={() => rollDie(faces)}>
+            <div className="dice-tile-label">d{faces}</div>
           </button>
         ))}
       </div>
@@ -75,7 +62,7 @@ export function DiceTab() {
             className={`mode-button ${mode === 'disadvantage' ? 'active' : ''}`}
             onClick={() => setMode('disadvantage')}
           >
-            👎 Bad luck
+            Bad luck
           </button>
           <button
             className={`mode-button ${mode === 'normal' ? 'active' : ''}`}
@@ -87,7 +74,7 @@ export function DiceTab() {
             className={`mode-button ${mode === 'advantage' ? 'active' : ''}`}
             onClick={() => setMode('advantage')}
           >
-            👍 Lucky
+            Lucky
           </button>
         </div>
       </div>

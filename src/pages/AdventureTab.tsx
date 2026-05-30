@@ -1,0 +1,248 @@
+// The Adventure portal: pick an adventure + a ruleset + 1–4 heroes from the
+// pool, then play a scripted text adventure. Replaces the old Dungeons tab; the
+// random rollers + maps live on in the collapsible QuickTools panel.
+
+import { useEffect, useMemo, useState } from 'react';
+import { useArtUrl, useCharacters } from '../lib/hooks';
+import { getAncestry } from '../lib/shadowdark/ancestries';
+import { getClass } from '../lib/shadowdark/classes';
+import type { Character } from '../lib/shadowdark/types';
+import { ADVENTURES, getAdventure } from '../lib/adventure/data';
+import { createGame, step } from '../lib/adventure/engine';
+import type { GameState } from '../lib/adventure/types';
+import {
+  clearAdventureSave,
+  getAdventureSave,
+  saveAdventure,
+  type AdventureSave,
+} from '../lib/storage';
+import { AdventurePlayer } from '../components/Adventure/AdventurePlayer';
+import { QuickTools } from '../components/Adventure/QuickTools';
+
+const MAX_PARTY = 4;
+
+const RULESET_NAMES: Record<string, string> = {
+  shadowdark: 'Shadowdark',
+  'eq-rpg': 'EverQuest d20',
+};
+
+function rulesetName(system: string): string {
+  return RULESET_NAMES[system] ?? system;
+}
+
+export function AdventureTab() {
+  const { characters, loading } = useCharacters();
+  const [adventureId, setAdventureId] = useState(ADVENTURES[0]?.id ?? '');
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [showTools, setShowTools] = useState(false);
+
+  const [game, setGame] = useState<GameState | null>(null);
+  const [partyIds, setPartyIds] = useState<string[]>([]);
+  const [save, setSave] = useState<AdventureSave | null>(null);
+
+  useEffect(() => {
+    getAdventureSave().then((s) => setSave(s ?? null));
+  }, []);
+
+  const adventure = useMemo(() => getAdventure(adventureId), [adventureId]);
+
+  function toggle(id: string) {
+    setSelectedIds((ids) =>
+      ids.includes(id) ? ids.filter((x) => x !== id) : ids.length >= MAX_PARTY ? ids : [...ids, id],
+    );
+  }
+
+  async function persist(state: GameState, ids: string[]) {
+    await saveAdventure(state, ids);
+    setSave((await getAdventureSave()) ?? null);
+  }
+
+  function embark() {
+    if (!adventure) return;
+    const party = selectedIds
+      .map((id) => characters.find((c) => c.id === id))
+      .filter((c): c is Character => !!c);
+    if (party.length === 0) return;
+    const state = createGame(adventure, party);
+    setGame(state);
+    setPartyIds(party.map((c) => c.id));
+    void persist(state, party.map((c) => c.id));
+  }
+
+  function resume() {
+    if (!save) return;
+    setGame(save.state);
+    setPartyIds(save.partyIds);
+  }
+
+  function runCommand(cmd: string) {
+    if (!game) return;
+    const adv = getAdventure(game.adventureId);
+    if (!adv) return;
+    const next = step(game, adv, cmd);
+    setGame(next);
+    void persist(next, partyIds);
+  }
+
+  function exitToLobby() {
+    setGame(null);
+    getAdventureSave().then((s) => setSave(s ?? null));
+  }
+
+  async function finishAndClear() {
+    await clearAdventureSave();
+    setSave(null);
+    setGame(null);
+  }
+
+  // ───────── active play ─────────
+  if (game) {
+    const adv = getAdventure(game.adventureId);
+    if (adv) {
+      return (
+        <AdventurePlayer
+          adventure={adv}
+          state={game}
+          onCommand={runCommand}
+          onExit={exitToLobby}
+          onFinish={finishAndClear}
+        />
+      );
+    }
+  }
+
+  // ───────── lobby ─────────
+  const selectedCount = selectedIds.length;
+  const canEmbark = !!adventure && selectedCount >= 1 && selectedCount <= MAX_PARTY;
+  const resumeAdventure = save ? getAdventure(save.adventureId) : undefined;
+
+  return (
+    <div className="col" style={{ gap: '1.25rem' }}>
+      <h1 style={{ margin: 0 }}>Adventure</h1>
+
+      {save && resumeAdventure && (
+        <div className="card adv-resume row" style={{ alignItems: 'center', gap: '0.75rem' }}>
+          <div className="col grow" style={{ gap: '0.15rem' }}>
+            <div className="big-label">Continue your adventure</div>
+            <div className="muted" style={{ fontSize: '0.85rem' }}>
+              {resumeAdventure.title} · {save.state.party.length} hero{save.state.party.length === 1 ? '' : 'es'} ·{' '}
+              {save.state.outcome ? (save.state.outcome === 'win' ? 'finished (won)' : 'finished (lost)') : 'in progress'}
+            </div>
+          </div>
+          <button className="primary" onClick={resume}>Resume</button>
+          <button className="ghost danger" onClick={finishAndClear}>Discard</button>
+        </div>
+      )}
+
+      <div className="col" style={{ gap: '0.6rem' }}>
+        <div className="big-label">Choose an adventure</div>
+        <div className="adv-pick-grid">
+          {ADVENTURES.map((a) => (
+            <button
+              key={a.id}
+              className={`adv-pick-card ${a.id === adventureId ? 'active' : ''}`}
+              onClick={() => setAdventureId(a.id)}
+            >
+              {a.mapImage && (
+                <img
+                  className="adv-pick-thumb"
+                  src={`${import.meta.env.BASE_URL}${a.mapImage}`}
+                  alt=""
+                  loading="lazy"
+                />
+              )}
+              <div className="adv-pick-body">
+                <div className="adv-pick-title">{a.title}</div>
+                <div className="adv-pick-system">Ruleset: {rulesetName(a.system)}</div>
+                <div className="adv-pick-synopsis">{a.synopsis}</div>
+                {a.recommendedParty && (
+                  <div className="muted" style={{ fontSize: '0.8rem' }}>{a.recommendedParty}</div>
+                )}
+              </div>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div className="col" style={{ gap: '0.6rem' }}>
+        <div className="row" style={{ alignItems: 'baseline' }}>
+          <div className="big-label grow">Choose your party</div>
+          <div className={`muted ${selectedCount > MAX_PARTY ? 'over' : ''}`} style={{ fontSize: '0.85rem' }}>
+            {selectedCount}/{MAX_PARTY} selected
+          </div>
+        </div>
+
+        {loading ? (
+          <div className="placeholder">Loading heroes…</div>
+        ) : characters.length === 0 ? (
+          <div className="card placeholder">
+            No heroes yet. Create some on the <strong>Heroes</strong> tab, then come back to embark.
+          </div>
+        ) : (
+          <div className="adv-party-grid">
+            {characters.map((c) => (
+              <PartyPickCard
+                key={c.id}
+                character={c}
+                selected={selectedIds.includes(c.id)}
+                order={selectedIds.indexOf(c.id)}
+                disabled={!selectedIds.includes(c.id) && selectedCount >= MAX_PARTY}
+                onToggle={() => toggle(c.id)}
+              />
+            ))}
+          </div>
+        )}
+
+        <button className="primary" onClick={embark} disabled={!canEmbark} style={{ alignSelf: 'flex-start' }}>
+          Embark{selectedCount > 0 ? ` with ${selectedCount}` : ''}
+        </button>
+      </div>
+
+      <div className="col" style={{ gap: '0.5rem' }}>
+        <button className="ghost" onClick={() => setShowTools((s) => !s)} style={{ alignSelf: 'flex-start' }}>
+          {showTools ? 'Hide GM quick tools' : 'GM quick tools (scenes, treasure, traps, maps)'}
+        </button>
+        {showTools && <QuickTools />}
+      </div>
+    </div>
+  );
+}
+
+function PartyPickCard({
+  character,
+  selected,
+  order,
+  disabled,
+  onToggle,
+}: {
+  character: Character;
+  selected: boolean;
+  order: number;
+  disabled: boolean;
+  onToggle: () => void;
+}) {
+  const url = useArtUrl(character.portraitArtId);
+  const ancestry = getAncestry(character.ancestryId);
+  const cls = getClass(character.classId);
+  return (
+    <button
+      className={`adv-party-card ${selected ? 'selected' : ''} ${disabled ? 'disabled' : ''}`}
+      onClick={onToggle}
+      disabled={disabled}
+    >
+      {selected && <span className="adv-party-badge">{order + 1}</span>}
+      {url ? (
+        <img src={url} alt={character.name} className="adv-party-portrait" />
+      ) : (
+        <div className="adv-party-portrait placeholder">{character.name.slice(0, 1).toUpperCase()}</div>
+      )}
+      <div className="adv-party-name">{character.name}</div>
+      <div className="muted" style={{ fontSize: '0.75rem' }}>
+        L{character.level} {ancestry?.name ?? ''} {cls?.name ?? ''}
+      </div>
+      <div className="muted" style={{ fontSize: '0.75rem' }}>
+        HP {character.hp.current}/{character.hp.max} · AC {character.ac}
+      </div>
+    </button>
+  );
+}

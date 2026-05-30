@@ -1,6 +1,7 @@
 import { useArtUrl, useCharacters, emitCharactersChanged } from '../../lib/hooks';
 import { getAncestry } from '../../lib/shadowdark/ancestries';
 import { getClass } from '../../lib/shadowdark/classes';
+import { characterCombatProfile } from '../../lib/shadowdark/combat';
 import type { Character } from '../../lib/shadowdark/types';
 import { deleteCharacter, exportAll, importAll, saveCharacter } from '../../lib/storage';
 import { newCharacterId } from '../../lib/shadowdark/character';
@@ -112,6 +113,7 @@ function LibraryCard({
   const url = useArtUrl(character.portraitArtId);
   const ancestry = getAncestry(character.ancestryId);
   const cls = getClass(character.classId);
+  const ac = characterCombatProfile(character).ac;
   return (
     <div className="library-card">
       <div onClick={onOpen} className="col" style={{ cursor: 'pointer', gap: '0.5rem' }}>
@@ -125,7 +127,7 @@ function LibraryCard({
           Lvl {character.level} {ancestry?.name ?? ''} {cls?.name ?? ''}
         </div>
         <div className="meta">
-          HP {character.hp.current}/{character.hp.max} · AC {character.ac}
+          HP {character.hp.current}/{character.hp.max} · AC {ac}
         </div>
       </div>
       <div className="row" style={{ gap: '0.3rem' }}>

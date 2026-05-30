@@ -1,0 +1,207 @@
+# Najena — a scripted text adventure (EQ / P1999 conversion).
+#
+# The dark-elf magician Najena's underground lair in Lavastorm: undead experiments,
+# summoned terrors, hired ogres, and the witch's daughter Drelzna guarding the inner
+# door. Najena (L28 archmage) is a flatter-or-flee apex; her lost crystal buys peace.
+# Condensed ~11 rooms. Schema: see src/data/adventures/sunless-citadel.yaml.
+
+id: najena
+title: Najena
+system: eq-rpg
+synopsis: >-
+  A lair carved into the Lavastorm Mountains by the dark-elf magician Najena: a warren of
+  undead experiments, summoned terrors, pit-trap prisons, and hired ogres. Her daughter
+  Drelzna guards the inner door, and Najena herself waits beyond. The witch badly outmatches a
+  young party, but she is vain. Return her lost crystal, flatter her, or flee.
+recommended_party: "2–4 heroes, level 1–2"
+map_image: maps/everquest/Najenamap.jpg
+intro: >-
+  A worked iron door stands in the black rock of Lavastorm, hot wind moaning past it. Beyond
+  lies the lair of Najena, a dark-elf magician who carved this place for her experiments and
+  fills it still with the dead, the summoned, and the bought. The first thing through the door
+  is a smell of cold magic and old blood.
+start: najena-gate
+
+rooms:
+  - id: najena-gate
+    name: The Iron Door
+    description: "A guardroom just inside Najena's iron door, cut square from black volcanic rock. A cold draft carries the sound of something wet shifting in the hall beyond."
+    safe: true
+    features:
+      - { keywords: [door, iron, rock, glyph, glyphs], text: "Najena's glyphs are worked into the door-frame. Wards, mostly spent, and a sigil that is plainly the magician's own vain monogram." }
+    exits:
+      - { dir: in, to: najena-entry-hall, label: "In, toward the wet shifting sound" }
+
+  - id: najena-entry-hall
+    name: The Entry Hall
+    description: "A long hall where Najena keeps her doorway 'greeters,' writhing tentacled things summoned from somewhere worse than here."
+    encounter:
+      id: nj-entry-fight
+      monsters: [eq-najena-tentacle-terror, eq-najena-tentacle-terror]
+      intro: "Two tentacle terrors unfold from the ceiling, lashing down at you!"
+      victory_text: "The terrors flop dead to the floor, twitching. The hall opens onto a crossroads."
+      flag: nj-entry-cleared
+    exits:
+      - { dir: out, to: najena-gate, label: "Back to the iron door" }
+      - { dir: in, to: najena-crossroads, label: "On, to a crossroads of halls" }
+
+  - id: najena-crossroads
+    name: The Crossroads
+    description: "A junction where four halls meet under a cracked dome. Darkbone skeletons, Najena's risen experiments, stand sentry at each opening with no mind left to them."
+    encounter:
+      id: nj-cross-fight
+      monsters: [eq-najena-darkbone-skeleton, eq-najena-darkbone-skeleton]
+      intro: "Darkbone skeletons clatter forward from two of the halls at once!"
+      victory_text: "The skeletons fall to bone-dust. Four ways lead on."
+      flag: nj-cross-cleared
+    exits:
+      - { dir: out, to: najena-entry-hall, label: "Back to the entry hall" }
+      - { dir: w, to: najena-torture-rooms, label: "West, to the torture rooms" }
+      - { dir: e, to: najena-crystal-room, label: "East, to a crystal-lit room" }
+      - { dir: n, to: najena-ogre-watch, label: "North, toward heavy footsteps" }
+      - { dir: down, to: najena-drelzna-chamber, label: "Down, to a sealed inner stair" }
+
+  - id: najena-torture-rooms
+    name: The Torture Rooms
+    description: "Cramped chambers of rusted iron and old stains, where Najena's apprentices 'study' the living. A dark elf necromancer looks up from his grim work."
+    encounter:
+      id: nj-torture-fight
+      monsters: [eq-najena-dark-elf-necromancer, eq-najena-darkbone-skeleton]
+      intro: "The dark elf necromancer flings up a hand wreathed in shadow. 'A fresh subject. Two!'"
+      victory_text: "The necromancer crumples among his instruments. The rooms go silent."
+      flag: nj-torture-cleared
+      loot:
+        - { name: "Hollowed bone bracers", description: "Caster's bracers the necromancer wore, carved from hollowed bone, light and faintly humming.", gold: 60 }
+    exits:
+      - { dir: e, to: najena-crossroads, label: "Back to the crossroads" }
+
+  - id: najena-crystal-room
+    name: The Crystal Room
+    description: "A vaulted room lit by a great growth of cold blue crystal, Najena's prize and her vanity. A single fist-sized shard sits loose on a velvet stand. The rest is fused to the walls."
+    encounter:
+      id: nj-crystal-fight
+      monsters: [eq-najena-giant-black-widow]
+      intro: "A giant black widow drops from the crystal growth on a line of silk!"
+      victory_text: "The widow curls up dead. Najena's loose crystal shard is yours for the taking."
+      flag: nj-crystal-cleared
+      loot:
+        - { name: "Najena's Crystal", description: "The fist-sized shard of cold blue crystal Najena prizes above all. She would want it back. Badly enough to bargain." }
+    features:
+      - { keywords: [crystal, shard, blue, stand], text: "The crystal is Najena's pride. The loose shard on the stand is the heart of it, and the one thing the vain magician might trade your lives for." }
+    exits:
+      - { dir: w, to: najena-crossroads, label: "Back to the crossroads" }
+      - { dir: in, to: najena-widow-tunnels, label: "Deeper, into web-choked tunnels" }
+
+  - id: najena-widow-tunnels
+    name: The Widow Tunnels
+    description: "Silk-choked side-tunnels where the Widowmistress's brood nests. Egg-sacs the size of melons hang from the ceiling. The floor crunches with old husks."
+    encounter:
+      id: nj-widow-fight
+      monsters: [eq-najena-giant-black-widow, eq-najena-darkbone-skeleton]
+      intro: "A widow drops from the webs while a darkbone skeleton lurches up from a cocooned husk!"
+      victory_text: "The tunnel goes still. Among the husks, an old victim's purse survived."
+      flag: nj-widow-cleared
+      loot:
+        - { name: "Cocooned purse", description: "A coin-purse from some long-digested victim, still heavy.", gold: 45 }
+    exits:
+      - { dir: out, to: najena-crystal-room, label: "Back to the crystal room" }
+
+  - id: najena-ogre-watch
+    name: The Ogre Watch
+    description: "A guard-station where Najena's hired ogres keep watch over a locked inner door. An ogre guard heaves to its feet, a heavy iron key swinging at its belt."
+    encounter:
+      id: nj-ogre-fight
+      monsters: [eq-najena-ogre-guard]
+      intro: "The ogre guard hefts its greatclub. 'Boss say no visitors. Boss pay good.' It does not sound like it loves the work."
+      victory_text: "The ogre topples with a crash. You take the iron key off its belt. It fits the locked chamber past the prison."
+      flag: nj-ogre-cleared
+      parley:
+        dc: 12
+        success_text: 'The ogre is a hireling, not a zealot. You offer it the one thing Najena never will: a way out, alive. It thinks this over with visible effort, then shrugs, drops the iron key at your feet, and lumbers off toward the surface. "Boss don''t pay THAT good." The locked chamber stands open to you.'
+        failure_text: "'Boss say no visitors.' The greatclub comes up."
+      loot:
+        - { name: "Ogre's iron key", description: "A heavy key from the ogre guard. It opens the necromancer's locked chamber past the prison." }
+    exits:
+      - { dir: s, to: najena-crossroads, label: "Back to the crossroads" }
+      - { dir: n, to: najena-prison, label: "North, to the prison" }
+
+  - id: najena-prison
+    name: The Prison Pits
+    description: "A row of barred pits sunk into the floor, the stone around them rigged with pressure-plates. Fall in and you join the prisoners. One cell holds a living captive who waves you over, urgent."
+    search_text: "You spot the pit-trap plates before you tread on them, a clean drop into a barred pit. Skirt the marked stones and the floor is safe."
+    npcs:
+      - name: "The Caged Dwarf"
+        keywords: [dwarf, captive, prisoner, caged]
+        sets_flag: nj-freed-captive
+        text: "Quick, before the ogres come back. Najena's down the inner stair past her brat Drelzna, and you can NOT out-magic her. She'll cinder you. But she's vain as a peacock. She lost her favorite crystal to the widows in the east room. Give it back and flatter her stupid and she'll wave you off. One thing, though. Don't let her talk you into handing ME over instead. She'd love that, and it'd save you the crystal. Don't. Now get me OUT of here."
+    encounter:
+      id: nj-prison-fight
+      monsters: [eq-najena-darkbone-skeleton, eq-najena-darkbone-skeleton]
+      intro: "Darkbone jailers rise from two of the pits, blades scraping!"
+      victory_text: "The jailers fall. The captive sags in relief."
+      flag: nj-prison-cleared
+    features:
+      - { keywords: [pit, pits, trap, plate, plates, floor], text: "Pit-trap plates ring the cells. Step wrong and you drop into a barred pit with the other prisoners. Search the floor before crossing." }
+    exits:
+      - { dir: s, to: najena-ogre-watch, label: "Back to the ogre watch" }
+      - { dir: in, to: najena-rathyl-chamber, label: "Through the locked chamber door", locked_by: nj-ogre-cleared, locked_text: "The chamber door is locked fast. The ogre guard at the watch carried the key. Take it from him first." }
+
+  - id: najena-rathyl-chamber
+    name: Rathyl's Chamber
+    description: "A necromancer's sanctum behind the locked door, thick with the smell of grave-dust. Rathyl rises from his own coffin, slain once, self-raised, and very annoyed."
+    encounter:
+      id: nj-rathyl-fight
+      monsters: [eq-najena-rathyl, eq-najena-darkbone-skeleton]
+      intro: "Rathyl sits up in his coffin, necrotic light gathering. 'Who DARES my rest a second time?'"
+      victory_text: "Rathyl falls back into his coffin, this time for good. His hoard is yours."
+      flag: nj-rathyl-cleared
+      loot:
+        - { name: "Dark circlet", description: "Rathyl's circlet of black iron, a necromancer's prize.", gold: 90 }
+    exits:
+      - { dir: out, to: najena-prison, label: "Back to the prison" }
+
+  - id: najena-drelzna-chamber
+    name: Drelzna's Chamber
+    description: "A cold antechamber before the inner stair, hung with dark banners. Drelzna bars the sealed door to her mother's lair, a shadow knight with her mother's pride. 'Mother is not to be disturbed,' she says, drawing a cursed blade."
+    encounter:
+      id: nj-drelzna-fight
+      monsters: [eq-najena-drelzna, eq-najena-darkbone-skeleton]
+      intro: "Drelzna sets herself before the sealed door, cursed blade low. 'You'll go through me, then. Few do.'"
+      victory_text: "Drelzna falls at her post. Behind her, the sealed door to Najena's lair grinds open."
+      flag: nj-drelzna-cleared
+    exits:
+      - { dir: up, to: najena-crossroads, label: "Back up to the crossroads" }
+      - { dir: in, to: najena-lair, label: "Through the inner door (Najena's lair)", locked_by: nj-drelzna-cleared, locked_text: "The inner door is sealed, and Drelzna will not let you near it. You must defeat her first." }
+
+  - id: najena-lair
+    name: Najena's Lair
+    description: "The magician's sanctum, lit by floating witch-lights. Najena turns from her workbench, a pillar of lightning already crackling in one hand, and looks you over with cold, vain amusement. 'You got past my daughter. How interesting. Tell me why I shouldn't reduce you to a smear.'"
+    objective: true
+    win_text: >-
+      Najena's lightning never falls. You quell it with her own crystal pressed back into her
+      hands, with flattery she cannot resist, or, against every sensible odds, with your steel.
+      The witch-lights gutter and her hold on the lair loosens. You climb back past the empty
+      pits and the dead-still halls and out through the iron door into the hot Lavastorm wind.
+      You did what almost no young party does. You walked into Najena's lair, and you walked
+      back out.
+    encounter:
+      id: nj-najena-fight
+      monsters: [eq-najena-najena, eq-najena-darkbone-skeleton]
+      intro: >-
+        Najena raises her pillar of lightning, witch-lights swarming. What rules her is vanity, pure
+        and bottomless. The lair, the horrors, the crystal she lost to the spiders: all of it a
+        monument to herself, and the worst thing you can be in her presence is unimpressed. You cannot
+        out-cast a dark-elf archmage and live. Return her crystal, flatter her, or flee. Do NOT trade
+        spells with her.
+      prompt: 'Najena wants her vanity fed. Give back the Crystal you took from the widows and she will preen and wave you off. (She would also, she purrs, settle for the little dwarf you let out of her cells. You will not give her that.) (negotiate)'
+      victory_text: "Against every sensible odds, Najena is thrown down in her own lair, and her flowing black robe is left behind."
+      flag: nj-najena-resolved
+      parley:
+        dc: 15
+        cost_item: "Najena's Crystal"
+        success_text: 'You set Najena''s Crystal back in her hand and tell her, truthfully enough, that no lair in Norrath is its equal. Vanity beats murder, just barely. "...You have SOME taste." The lightning dies. "Take a trinket and go, before I remember my mood." She turns back to her bench, cradling the crystal, already bored of you.'
+        failure_text: "'Flattery and empty hands. How dull.' The pillar of lightning swings toward you."
+      loot:
+        - { name: "Flowing black robe", description: "Najena's own spare robe of woven shadow. Yours only if you somehow brought the archmage down.", gold: 160 }
+    exits:
+      - { dir: out, to: najena-drelzna-chamber, label: "Back to Drelzna's chamber" }

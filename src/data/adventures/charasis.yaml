@@ -1,0 +1,181 @@
+# The Howling Stones (Charasis) — a scripted text adventure (EQ / P1999).
+#
+# The sealed iksar tomb-complex whose screams "filter through the very earth."
+# Four key-gated wings of Sathir undead and bone-golems, pit traps throughout,
+# and the necromancer Drusella Sathir in the inner crypt. Drusella (L55) is a
+# bargain-or-flee apex, not a level-2 kill. Condensed ~10 rooms.
+# Schema: see src/data/adventures/sunless-citadel.yaml.
+
+id: charasis
+title: The Howling Stones
+system: eq-rpg
+synopsis: >-
+  Charasis, an iksar burial-complex in the Frontier Mountains, marked by standing stones that
+  scream through the earth. Its wings are sealed behind keys the Crypt Keeper holds, its dead
+  are servants of the Sathir line, and in the inner crypt waits Drusella Sathir herself. Take
+  the keys, cross the wings, and reach her. She is far too strong to simply kill. Bargain, or run.
+recommended_party: "2–4 heroes, level 1–2"
+map_image: maps/everquest/Map_charasis1.jpg
+intro: >-
+  The Howling Stones stand in a ring at the tomb's mouth, and they do exactly what their name
+  promises. A low, ceaseless scream rises through the rock and into your teeth. The carved doors
+  of Charasis hang open. Inside, four wings branch into the dark, each one sealed, and pit traps
+  wait under the dust for the careless.
+start: charasis-entrance
+
+rooms:
+  - id: charasis-entrance
+    name: The Howling Stones
+    description: "A ring of black standing stones frames the open doors of the tomb. The screaming is worst here, rising straight up out of the earth. The iksar built the stones to ward Charasis. Now they only warn."
+    safe: true
+    features:
+      - { keywords: [stones, stone, ring, howl, scream, screaming], text: "The stones are hollow, and something deeper than wind moans through them without end." }
+    exits:
+      - { dir: in, to: charasis-antechamber, label: "In through the carved doors" }
+
+  - id: charasis-antechamber
+    name: The Antechamber
+    description: "A pillared antechamber thick with dust and old bone. Helot skeletons, the tomb's diggers and drudges, shuffle among the rubble with no mind left to them."
+    encounter:
+      id: ch-ante-fight
+      monsters: [eq-charasis-helot-skeleton, eq-charasis-helot-skeleton]
+      intro: "Two helot skeletons lurch up from the rubble, bone blades scraping."
+      victory_text: "The skeletons fall to pieces. The hall opens toward the north wing."
+      flag: ch-ante-cleared
+    exits:
+      - { dir: out, to: charasis-entrance, label: "Back out to the stones" }
+      - { dir: n, to: charasis-north-wing, label: "North, into the first wing" }
+
+  - id: charasis-north-wing
+    name: The North Wing
+    description: "A junction hall where the four wings meet. Crypt spectres drift the arches. Great sealed doors lead west into the deeper wings, each one with a key-socket waiting."
+    encounter:
+      id: ch-north-fight
+      monsters: [eq-charasis-crypt-spectre, eq-charasis-helot-skeleton]
+      intro: "A crypt spectre wails out of an arch, a helot skeleton stumbling after it."
+      victory_text: "The spectre's wail dies. The screaming of the stones fills the silence it leaves."
+      flag: ch-north-cleared
+    features:
+      - { keywords: [door, doors, seal, socket, key, keys], text: "Each wing-door wants a key: the Skull-engraved Coin, the Sigil of the Calendar, the Coin Depicting Innoruuk. The Crypt Keeper holds them all, in his vault to the east." }
+    exits:
+      - { dir: s, to: charasis-antechamber, label: "Back to the antechamber" }
+      - { dir: e, to: charasis-keepers-vault, label: "East, to the Crypt Keeper's vault" }
+      - { dir: w, to: charasis-west-wing, label: "West, through the sealed wing-doors", locked_by: ch-keeper-cleared, locked_text: "The wing-doors hold fast and their key-sockets sit empty. The Crypt Keeper keeps the keys in his vault to the east. Take them from him first." }
+
+  - id: charasis-keepers-vault
+    name: The Crypt Keeper's Vault
+    description: "A low vault stacked with the tomb's keys, ledgers, and grave-goods. The Crypt Keeper looks up from his counting, a necromancer-warden annoyed at the interruption."
+    encounter:
+      id: ch-keeper-fight
+      monsters: [eq-charasis-the-crypt-keeper, eq-charasis-helot-skeleton]
+      intro: "The Crypt Keeper raises a withered hand. 'The keys are MINE to give, and I give them to no one.'"
+      victory_text: "The Crypt Keeper crumbles over his ledgers. You lift his ring of wing-keys."
+      flag: ch-keeper-cleared
+      loot:
+        - { name: "Ring of wing-keys", description: "The Crypt Keeper's keys: the Skull-engraved Coin, the Sigil of the Calendar, the Coin Depicting Innoruuk. They open the inner wings." }
+        - { name: "Coin Depicting Innoruuk", description: "A black coin stamped with the face of Innoruuk, god of hate. Holy to the Sathir dead, and a thing to bargain with." }
+    exits:
+      - { dir: w, to: charasis-north-wing, label: "Back to the north wing" }
+
+  - id: charasis-west-wing
+    name: The West Wing
+    description: "Past the unsealed doors, the west wing opens into a foundry-hall where bone-golems are assembled. One stands half-finished on a bench. Another is finished, and turning toward you."
+    encounter:
+      id: ch-west-fight
+      monsters: [eq-charasis-bile-golem]
+      intro: "A bile golem lurches off its bench, acid dripping from fists of fused bone."
+      victory_text: "The golem collapses into a steaming heap. The wing lies open."
+      flag: ch-west-cleared
+    exits:
+      - { dir: e, to: charasis-north-wing, label: "Back to the north wing" }
+      - { dir: n, to: charasis-golem-foundry, label: "North, deeper into the foundry" }
+      - { dir: s, to: charasis-south-wing, label: "South, to the south wing" }
+
+  - id: charasis-golem-foundry
+    name: The Golem Foundry
+    description: "Vats of bile and racks of sorted bone. This is the workshop where the tomb's guardians get made. Tools and grave-treasures sit among the parts."
+    encounter:
+      id: ch-foundry-fight
+      monsters: [eq-charasis-bile-golem, eq-charasis-helot-skeleton]
+      intro: "A bile golem and its skeletal handler turn from the vats."
+      victory_text: "The foundry goes still. The vats bubble on, untended."
+      flag: ch-foundry-cleared
+      loot:
+        - { name: "Kylong armor scrap", description: "A piece of the old empire's Kylong plate, salvageable and worth a good deal.", gold: 70 }
+    exits:
+      - { dir: s, to: charasis-west-wing, label: "Back to the west wing" }
+
+  - id: charasis-south-wing
+    name: The South Wing
+    description: "A long gallery of niche-tombs, the floor treacherous with hidden pit traps. A mortiferous protector stands its endless watch mid-hall."
+    search_text: "Probing the floor with a pole, you find the pressure-plates of two pit traps, a long drop onto old spikes. Now that you see them, you can step around."
+    encounter:
+      id: ch-south-fight
+      monsters: [eq-charasis-mortiferous-protector, eq-charasis-crypt-spectre]
+      intro: "The mortiferous protector lowers its greatblade. A crypt spectre rises shrieking beside it."
+      victory_text: "The guard falls. The way east, toward the Sathir dead, lies open."
+      flag: ch-south-cleared
+    features:
+      - { keywords: [pit, pits, trap, traps, floor, plate], text: "Pit traps hide under the dust here, a long fall onto spikes. Search the floor before you cross, or test it with a pole." }
+    exits:
+      - { dir: n, to: charasis-west-wing, label: "Back to the west wing" }
+      - { dir: e, to: charasis-pit-trap-gallery, label: "East, down a side gallery" }
+      - { dir: in, to: charasis-east-wing, label: "Onward, into the east wing" }
+
+  - id: charasis-pit-trap-gallery
+    name: The Spiked Gallery
+    description: "A dead-end gallery built as one great trap. Most of the floor is a covered pit. Across it, on a narrow ledge, sits a grave-offering no looter ever reached."
+    search_text: "The whole floor is one pit under a thin shell. Edge along the wall to reach the ledge and the offering on it."
+    items:
+      - { name: "Untouched grave-offering", description: "A gold-and-jade offering, left on a ledge no thief ever crossed the pit to claim. Until now.", gold: 90 }
+    features:
+      - { keywords: [pit, floor, trap, ledge], text: "The floor is one covered pit. The offering sits on a ledge across it, reachable only by hugging the wall." }
+    exits:
+      - { dir: w, to: charasis-south-wing, label: "Back to the south wing" }
+
+  - id: charasis-east-wing
+    name: The East Wing
+    description: "The east wing belongs to the Sathir dead. The Undertaker Lord keeps it, scythe across his shoulder, unhurried. Past him, cold light marks the inner crypt and the mistress of this place."
+    encounter:
+      id: ch-east-fight
+      monsters: [eq-charasis-the-undertaker-lord, eq-charasis-crypt-spectre]
+      intro: "The Undertaker Lord turns, scythe scraping stone. 'Visitors. Drusella will want to greet you.' There is no malice in it. He has greeted a great many visitors, and buried all of them."
+      victory_text: "The Undertaker Lord falls across the threshold. The inner crypt waits beyond."
+      flag: ch-east-cleared
+      parley:
+        dc: 13
+        success_text: 'You speak to the Undertaker Lord as a steward of the dead, not a thing to be put down, and thank him for the long watch. The scythe lowers. "Courtesy. How rare." He steps from the threshold. "The lady within holds her faith above all. Come to her in Hate''s name, or do not come at all." He lets you pass unharmed.'
+        failure_text: "'Courtesy is for the living.' The scythe comes up."
+    exits:
+      - { dir: out, to: charasis-south-wing, label: "Back to the south wing" }
+      - { dir: in, to: charasis-inner-crypt, label: "Into the inner crypt" }
+
+  - id: charasis-inner-crypt
+    name: The Inner Crypt
+    description: "A vaulted crypt of black stone, colder than the grave. Drusella Sathir floats above an altar of bone, robes of deathfire stirring in no wind. 'A Sathir is never disturbed without consequence,' she says. 'Unless, of course, you have something I want.'"
+    objective: true
+    win_text: >-
+      Drusella Sathir lets you go, or you put her down. Either way her hold breaks. The scream
+      that filled Charasis from the moment you passed the standing stones sinks to silence, and
+      the bound dead of the wings slump where they stood. You climb back up through quiet halls
+      and out between the stones, which do not howl as you leave.
+    encounter:
+      id: ch-drusella-fight
+      monsters: [eq-charasis-drusella-sathir, eq-charasis-crypt-spectre]
+      intro: >-
+        Drusella Sathir descends, deathfire gathering in both hands. She is neither mad nor
+        mindless. She is faithful: every soul she binds is an offering to Innoruuk, god of hate,
+        and she has kept that faith five hundred years. It is the one thing in her larger than her
+        pride. No young party trades blows with a Sathir necromancer and lives. Speak, or flee.
+      prompt: 'Drusella spares only the faithful. Give the Coin Depicting Innoruuk into her god''s keeping and she will let you pass. The relic is hers for good after that. (negotiate)'
+      victory_text: "Past all expectation, Drusella Sathir comes apart, and the Rod of Oblations clatters to the floor."
+      flag: ch-drusella-resolved
+      parley:
+        dc: 16
+        cost_item: "Coin Depicting Innoruuk"
+        success_text: 'The deathfire dims as the coin leaves your hand for her altar. "...You give Hate its due. Then walk out, quickly, before I find a reason to keep you." The way behind her opens.'
+        failure_text: "Empty-handed before a fanatic, your words mean nothing. 'Faithless,' Drusella hisses, and the deathfire flares."
+      loot:
+        - { name: "Rod of Oblations", description: "Drusella's rod of deathfire. Yours only if you somehow brought her down.", gold: 170 }
+    exits:
+      - { dir: out, to: charasis-east-wing, label: "Back to the east wing" }

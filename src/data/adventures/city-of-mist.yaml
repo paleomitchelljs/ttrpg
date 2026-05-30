@@ -1,0 +1,194 @@
+# The City of Mist (Torsis) — a scripted text adventure (EQ / P1999).
+#
+# The ruined Kunark trade-city of Torsis, drowned in fog and walked by its dead.
+# Its wizard-overlord Lord Rak'Ashiir (L54) rules from the high hall; Lord Ghiosk
+# and the Black Reavers guard the way. Rak'Ashiir is a bargain-or-flee apex; the
+# Key of Torsis buys you passage. Condensed ~11 rooms.
+# Schema: see src/data/adventures/sunless-citadel.yaml.
+
+id: city-of-mist
+title: The City of Mist
+system: eq-rpg
+synopsis: >-
+  Torsis, once a mighty iksar trade-city, now a ruin lost in endless haze where the dead
+  walk seeking souls. Its merchants died with gems in their fists; its overlords refuse to
+  admit the city fell. Find the Key of Torsis, cross the fog to the high hall, and treat with
+  Lord Rak'Ashiir. A young party cannot fight a wizard-overlord and win. Talk past him, or flee.
+recommended_party: "2–4 heroes, level 1–2"
+map_image: maps/everquest/Map_citymist.jpg
+intro: >-
+  The fog never lifts in this valley. The broken towers of Torsis rise out of it, silent but
+  for the slow scuff of dead feet on dead streets. In the city's last days, merchants dropped
+  dead in the markets with gems still in their hands. The gems are still here. So are the
+  merchants. So are the overlords who would not let the city die.
+start: citymist-broken-causeway
+
+rooms:
+  - id: citymist-broken-causeway
+    name: The Broken Causeway
+    description: "A grand stone causeway crosses into the city, half-collapsed into the fog below. The far gate stands open, mist pouring out of it like slow water."
+    safe: true
+    features:
+      - { keywords: [causeway, bridge, gate, fog, mist], text: "The causeway was built for caravans. Now nothing crosses it but the fog, which seems almost to breathe." }
+    exits:
+      - { dir: in, to: citymist-fog-streets, label: "Cross into the fog-streets" }
+
+  - id: citymist-fog-streets
+    name: The Fog-Streets
+    description: "Empty avenues vanish into grey haze in every direction. Spectral couriers drift past on errands a millennium overdue, paying you no mind until you cross their path."
+    encounter:
+      id: cm-streets-fight
+      monsters: [eq-city-of-mist-spectral-courier, eq-city-of-mist-spectral-courier]
+      intro: "Two spectral couriers turn, their cold eyes fixing on the warmth of the living!"
+      victory_text: "The couriers dissolve back into fog. The street lies open ahead."
+      flag: cm-streets-cleared
+    exits:
+      - { dir: out, to: citymist-broken-causeway, label: "Back to the causeway" }
+      - { dir: n, to: citymist-market-square, label: "Toward the old market square" }
+
+  - id: citymist-market-square
+    name: The Market Square
+    description: "A vast plaza ringed by ruined stalls and dry fountains. Phantoms drift between the stalls, still haggling over wares long sold. The mist pools thick here."
+    encounter:
+      id: cm-market-fight
+      monsters: [eq-city-of-mist-plaguebone-skeleton, eq-city-of-mist-spectral-courier]
+      intro: "A plaguebone skeleton draws its blade and a courier shrieks the alarm!"
+      victory_text: "The phantoms fade. The square's roads lie open."
+      flag: cm-market-cleared
+    exits:
+      - { dir: s, to: citymist-fog-streets, label: "Back to the fog-streets" }
+      - { dir: w, to: citymist-merchant-stalls, label: "West, into the merchant stalls" }
+      - { dir: e, to: citymist-temple-ruins, label: "East, to a ruined temple" }
+      - { dir: n, to: citymist-dead-legion, label: "North, toward marching echoes" }
+
+  - id: citymist-merchant-stalls
+    name: The Merchant Stalls
+    description: "A row of collapsed trade-stalls, their goods long rotted. The ghostly merchants still clutch their finest stock: gems, in dead grey hands."
+    encounter:
+      id: cm-stalls-fight
+      monsters: [eq-city-of-mist-spectral-courier, eq-city-of-mist-spectral-courier]
+      intro: "Two phantom merchants round on you, bony hands closing over fistfuls of gems."
+      victory_text: "The merchants let go of their hoards at last, gems clinking to the stone."
+      flag: cm-stalls-cleared
+      loot:
+        - { name: "Fistful of Torsis gems", description: "Emeralds and bloodstones the dead merchants clutched for ten centuries.", gold: 80 }
+    exits:
+      - { dir: e, to: citymist-market-square, label: "Back to the market square" }
+      - { dir: w, to: citymist-counting-house, label: "West, to a counting-house" }
+
+  - id: citymist-counting-house
+    name: The Counting-House
+    description: "A merchant guild's counting-house, its strongboxes burst and scattered. Coin and gem lie untouched; the dead want souls, not silver. On the master's desk, under the dust, sits a heavy ornate key."
+    search_text: "Under a fallen ledger you find the guild master's strongbox, still locked and heavy. Behind the desk hangs the Key of Torsis itself."
+    items:
+      - { name: "Key of Torsis", description: "The great key of the city, a mark of authority to the living and the dead alike. The overlords still answer to what it stands for." }
+      - { name: "Guild strongbox", description: "A heavy iron strongbox, still packed with old coin.", gold: 100 }
+    features:
+      - { keywords: [ledger, ledgers, books, key], text: "A water-ruined ledger names the city's last masters: the overlords Rak'Ashiir and Ghiosk, who 'will not hear of evacuation.' The Key of Torsis hangs behind the desk." }
+    exits:
+      - { dir: e, to: citymist-merchant-stalls, label: "Back to the stalls" }
+
+  - id: citymist-temple-ruins
+    name: The Temple Ruins
+    description: "A roofless temple to forgotten iksar gods, its altar cracked. A single calm ghost kneels in prayer, a priest who never abandoned his post."
+    npcs:
+      - name: "The Praying Priest"
+        keywords: [priest, ghost, prayer, spirit]
+        sets_flag: cm-priest-blessing
+        text: "You still breathe. Good. Hear me. Lord Rak'Ashiir holds the high hall at the city's heart, and no party as green as yours will cut him down. But he is mad with grief for a city that fell, and the Key of Torsis is the proof he aches for. Find it in the counting-house and put it in his hand as the city's steward. He will take it, and keep it, poor thing, and let you by. It is a dear price to leave the city's own key behind. It is cheaper than his fire. Go with what blessing a dead priest can give."
+    encounter:
+      id: cm-temple-fight
+      monsters: [eq-city-of-mist-spectral-courier]
+      intro: "A courier coils up between you and the praying ghost, jealous of the living."
+      victory_text: "The courier disperses. The praying ghost never stirs from its devotion."
+      flag: cm-temple-cleared
+    exits:
+      - { dir: w, to: citymist-market-square, label: "Back to the market square" }
+
+  - id: citymist-dead-legion
+    name: The Dead Legion
+    description: "The mustering-yard of Torsis's army. Plaguebone soldiers still drill in silent ranks, blades raised to a captain only they can see."
+    encounter:
+      id: cm-legion-fight
+      monsters: [eq-city-of-mist-plaguebone-skeleton, eq-city-of-mist-plaguebone-skeleton]
+      intro: "The dead rank breaks formation and levels its plague-blades at the living!"
+      victory_text: "The soldiers waver and fall. Their drill is dismissed at last."
+      flag: cm-legion-cleared
+    exits:
+      - { dir: s, to: citymist-market-square, label: "Back to the market square" }
+      - { dir: e, to: citymist-the-armory, label: "East, to the armory" }
+      - { dir: n, to: citymist-statue-avenue, label: "North, up the avenue of statues" }
+
+  - id: citymist-the-armory
+    name: The Armory
+    description: "Racks of corroded weapons and one suit of officer's plate. A Black Reaver wears the plate still, a wraith-knight that refuses to give up its command."
+    encounter:
+      id: cm-armory-fight
+      monsters: [eq-city-of-mist-black-reaver]
+      intro: "A Black Reaver wrenches its blade from a rack and turns on you, visor empty and cold."
+      victory_text: "The Reaver crashes down in a heap of corroded plate."
+      flag: cm-armory-cleared
+      loot:
+        - { name: "Officer's intact blade", description: "The one weapon the centuries spared. A fine, balanced longsword.", gold: 70 }
+    exits:
+      - { dir: w, to: citymist-dead-legion, label: "Back to the dead legion" }
+
+  - id: citymist-statue-avenue
+    name: The Avenue of Statues
+    description: "A processional avenue lined with towering statues of iksar overlords. Two mist golems grind to life as you pass and step down to bar the road to the high hall."
+    encounter:
+      id: cm-avenue-fight
+      monsters: [eq-city-of-mist-mist-golem, eq-city-of-mist-mist-golem]
+      intro: "Two mist golems step off their pedestals, fog-fists rising. The road will not be given freely."
+      victory_text: "The golems topple into drifting fog. The high hall stands ahead."
+      flag: cm-avenue-cleared
+    exits:
+      - { dir: s, to: citymist-dead-legion, label: "Back to the dead legion" }
+      - { dir: n, to: citymist-palace-gate, label: "North, to the gates of the high hall" }
+
+  - id: citymist-palace-gate
+    name: The Gates of the High Hall
+    description: "The overlords' hall rises out of the mist, its gates flung wide. Lord Ghiosk stands the last watch with a Black Reaver: the warrior-overlord and his grim lieutenant."
+    encounter:
+      id: cm-gate-fight
+      monsters: [eq-city-of-mist-lord-ghiosk, eq-city-of-mist-black-reaver]
+      intro: "Lord Ghiosk levels his spectral glaive. 'None reach my brother unannounced.' He has guarded that door so long he no longer remembers what is behind it."
+      victory_text: "Ghiosk and his reaver fall. The high hall lies just beyond, lit by cold mist-light."
+      flag: cm-gate-cleared
+      parley:
+        dc: 13
+        success_text: 'You raise no weapon. You tell Lord Ghiosk the thing none of the dead will say: the city is gone, the empire fell, and his watch guards a tomb. The cold pride flickers, for a moment, into something like grief. "...You should not have said that." But the glaive lowers, and he steps aside, and does not watch you go in.'
+        failure_text: "'Lies of the living.' Ghiosk's glaive comes level again."
+    exits:
+      - { dir: s, to: citymist-statue-avenue, label: "Back to the avenue" }
+      - { dir: in, to: citymist-high-hall, label: "Into the high hall" }
+
+  - id: citymist-high-hall
+    name: The High Hall
+    description: "A vast hall drowned in glowing fog. Lord Rak'Ashiir floats above a throne of black jade, soul-fire curling off his hands, crowned and patient. 'A delegation of the living,' he rasps. 'How long since the living came to my hall. Speak, quickly, or burn.'"
+    objective: true
+    win_text: >-
+      The high hall goes quiet behind you. Whether you gave Rak'Ashiir his lie or his ending, his
+      grip on the fog loosens, and as you cross back over the causeway the mist thins for the first
+      time in a thousand years. The drifting dead sink, one by one, to a rest long owed them. You
+      carry whatever Torsis let you keep back into the daylight.
+    encounter:
+      id: cm-rakashiir-fight
+      monsters: [eq-city-of-mist-lord-rakashiir, eq-city-of-mist-plaguebone-skeleton]
+      intro: >-
+        Lord Rak'Ashiir rises, soul-fire flaring. He is not raving. He is a wizard who has spent a
+        thousand years refusing one fact: Torsis fell, his city is a corpse, he rules nothing. He
+        keeps the court because to stop is to admit it. A green party cannot trade spells with a
+        wizard-overlord and survive. Show the Key, talk fast, or run.
+      prompt: 'Rak''Ashiir needs to believe his city still stands. Surrender the Key of Torsis to him as its steward and he grants you passage like a lord granting a boon. The Key is his after that, and so is the lie. (negotiate)'
+      victory_text: "Somehow, you throw down an overlord of Torsis, and the Throneblade of the Ykesha falls from his hand."
+      flag: cm-rakashiir-resolved
+      parley:
+        dc: 15
+        cost_item: "Key of Torsis"
+        success_text: 'You present the Key and name him the city''s living steward. The soul-fire gutters, and relief crosses his dead face, terrible and total: proof, at last, that the city is real. "...Then it stands. It STANDS." He waves you through with a lord''s grandeur, cradling the Key like a sleeping child.'
+        failure_text: "Without the Key, you are only more proof he would rather burn than believe. The soul-fire roars out."
+      loot:
+        - { name: "Throneblade of the Ykesha", description: "Rak'Ashiir's soul-fire blade. Yours only if you somehow felled an overlord.", gold: 190 }
+    exits:
+      - { dir: out, to: citymist-palace-gate, label: "Back to the gates" }

@@ -1,0 +1,173 @@
+# Kaesora — a scripted text adventure (EQ / P1999 conversion).
+#
+# The buried iksar library-city, split between the undead and the spiders, with
+# the necromancer-vampire Xalgoz (emissary of Venril Sathir) in the lower church.
+# Xalgoz is a L40 boss, deadly to a young party. The win is freeing the trapped
+# souls; you reach it by killing him (hard), bargaining (his master's tablet, or a
+# good Charisma roll), or slipping past. Condensed ~9 rooms.
+# Schema: see src/data/adventures/sunless-citadel.yaml.
+
+id: kaesora
+title: Kaesora
+system: eq-rpg
+synopsis: >-
+  The buried library-city of the old iksar empire, shared now by undead and pale spiders
+  and ruled from its lower church by Xalgoz, a necromancer-vampire and emissary of Venril
+  Sathir. Descend the stacks, take his master's tablet for leverage, and free the souls his
+  traps still hold. Xalgoz is too strong to simply cut down. Bargain, or run.
+recommended_party: "2–4 heroes, level 1–2"
+map_image: maps/everquest/Map_kaesora1.jpg
+intro: >-
+  Kaesora clings to a cliff above the Field of Bone, its towers long collapsed into the earth
+  that swallowed the great library beneath. The iksar who built it died a thousand years gone
+  and have not gone quiet. From below comes a dry rasp of bone on stone, and under it, fainter,
+  the keening of souls that cannot leave.
+start: kaesora-broken-gate
+
+rooms:
+  - id: kaesora-broken-gate
+    name: The Broken Gate
+    description: "A shattered iksar gatehouse clings to the cliff edge, its scaled stonework cracked and tilting. Beyond, a sunken courtyard drops into the buried city. Clean-picked bones litter the threshold."
+    safe: true
+    features:
+      - { keywords: [gate, gatehouse, carving, carvings, scaled], text: "The carvings show robed iksar holding tablets and stars. Kaesora was a place of learning before it became a grave." }
+    items:
+      - { name: "Bronze gate-token", description: "A scaled bronze token off the gate, stamped with the sigil of old Sebilis.", gold: 15 }
+    exits:
+      - { dir: down, to: kaesora-sunken-courtyard, label: "Climb down into the sunken courtyard" }
+
+  - id: kaesora-sunken-courtyard
+    name: The Sunken Courtyard
+    description: "A wide court half-swallowed by the hillside, ringed by toppled columns. Skeletal minions shuffle their endless rounds across the cracked flagstones."
+    encounter:
+      id: ka-court-fight
+      monsters: [eq-kaesora-skeletal-minion, eq-kaesora-skeletal-minion]
+      intro: "Two skeletal minions turn their eyeless skulls toward you and raise rusted claws."
+      victory_text: "The skeletons clatter into loose bone. The courtyard goes still again."
+      flag: ka-court-cleared
+    exits:
+      - { dir: up, to: kaesora-broken-gate, label: "Back up to the gate" }
+      - { dir: w, to: kaesora-collapsed-hall, label: "West, into a collapsed hall" }
+      - { dir: down, to: kaesora-library-descent, label: "Down a dark stair into the library" }
+
+  - id: kaesora-collapsed-hall
+    name: Collapsed Hall
+    description: "A long hall with its roof fallen in, strung floor to ceiling with pale webs. This is the spiders' half of Kaesora, and they do not share it."
+    encounter:
+      id: ka-spiders
+      monsters: [eq-kaesora-strathbone-spider, eq-kaesora-strathbone-spider]
+      intro: "Two Strathbone spiders drop from the broken ceiling on threads of silk!"
+      victory_text: "The spiders curl up and go still. Something heavier waits below."
+      flag: ka-hall-cleared
+      loot:
+        - { name: "Jade study-bead", description: "A polished jade bead on a broken cord, wrapped in old web.", gold: 30 }
+    exits:
+      - { dir: e, to: kaesora-sunken-courtyard, label: "Back to the courtyard" }
+
+  - id: kaesora-library-descent
+    name: The Library Descent
+    description: "The stair spirals down into the buried library proper. The air turns cold and dead. Faint blue lights drift between the shelves below, and a thin keening rises to meet you."
+    features:
+      - { keywords: [lights, souls, soul, blue, keening], text: "The drifting lights are souls, caught in Kaesora's traps and unable to move on. Free them and the keening stops. It is why this place is shunned." }
+    exits:
+      - { dir: up, to: kaesora-sunken-courtyard, label: "Back up to the courtyard" }
+      - { dir: down, to: kaesora-the-stacks, label: "Down into the stacks" }
+
+  - id: kaesora-the-stacks
+    name: The Stacks
+    description: "Endless shelves of rotted scrolls and stone tablets run off into the dark. Two spectral librarians drift the aisles, still 'reading' with empty sockets."
+    encounter:
+      id: ka-stacks-fight
+      monsters: [eq-kaesora-spectral-librarian, eq-kaesora-spectral-librarian, eq-kaesora-skeletal-minion]
+      intro: "The spectral librarians hiss and raise withered hands wreathed in cold."
+      victory_text: "The librarians collapse over their eternal studies."
+      flag: ka-stacks-cleared
+    items:
+      - { name: "Intact iksar codex", description: "One scroll-case survived the centuries. A codex of star-charts, worth a fortune to the right scholar.", gold: 60 }
+    exits:
+      - { dir: up, to: kaesora-library-descent, label: "Back up the descent" }
+      - { dir: n, to: kaesora-soul-traps, label: "North, where the keening is loudest" }
+      - { dir: e, to: kaesora-archive-vault, label: "East, to a sealed vault" }
+
+  - id: kaesora-soul-traps
+    name: The Soul-Traps
+    description: "A circular room ringed with glyph-etched pillars, each one crowned by a captive soul-light. The glyphs pulse, and they snatch at the living too if you step wrong. One trapped soul, brighter than the rest, is trying to speak."
+    search_text: "Reading the glyphs, you work out how the trap fires, and that shattering the central pillar would release every soul at once. Step on the dark tiles, not the lit ones."
+    npcs:
+      - name: "The Trapped Scholar"
+        keywords: [soul, scholar, spirit, trapped, light]
+        sets_flag: ka-freed-soul
+        text: "Free, at last. Listen, warm one. Xalgoz rules below, in the church past the round room. You will not beat him in a fight. He heals on the blood he draws and charms with a glance. But he is loyal to Venril Sathir. Find his master's Tablet in the vault, and he will take it as tribute and let you by. Handing a servant of the lich a thing like that is no small price. It is smaller than dying here. Free the rest of us, and go."
+    encounter:
+      id: ka-traps-spirit
+      monsters: [eq-kaesora-spectral-librarian]
+      intro: "A spectral librarian tears loose from a pillar and flings itself at you, keening."
+      victory_text: "The spirit unravels into a sigh. The brightest soul-light pulses, grateful."
+      flag: ka-traps-cleared
+    exits:
+      - { dir: s, to: kaesora-the-stacks, label: "Back to the stacks" }
+      - { dir: n, to: kaesora-whispering-gallery, label: "North, into a whispering gallery" }
+
+  - id: kaesora-archive-vault
+    name: The Archive Vault
+    description: "A heavy stone door, locked, guards the library's treasure-vault. Inside sit its most precious tablets, and the undead warder set to keep them forever."
+    encounter:
+      id: ka-vault-warder
+      monsters: [eq-kaesora-warder-of-xalgoz, eq-kaesora-skeletal-minion]
+      intro: "An undead warder lifts its staff, dark light crackling. 'The archive is sealed,' it rasps. There is something tired in the way it says it, like a clerk on the last hour of a shift that has lasted a thousand years."
+      victory_text: "The warder falls. The vault's tablets are yours to read, and to carry off."
+      flag: ka-vault-cleared
+      parley:
+        dc: 12
+        success_text: 'You lower your weapons and speak to the bound cleric kindly, naming the watch it never chose and the centuries no one thanked it for. The staff dips. "...Long. It has been long. Take what you came for. I will not stop you." It turns back to its guard, and lets you pass to the vault unharmed.'
+        failure_text: "The warder is too far into its orders to hear you. The dark light gathers."
+      loot:
+        - { name: "Tablet of Venril Sathir", description: "A black basalt tablet bearing the lichlord's seal. Xalgoz serves him. Show it and the vampire will honor it." }
+    features:
+      - { keywords: [door, lock, vault, tablet], text: "The vault holds the Tablet of Venril Sathir, leverage over anything that serves the lichlord. Xalgoz included." }
+    exits:
+      - { dir: w, to: kaesora-the-stacks, label: "Back to the stacks" }
+
+  - id: kaesora-whispering-gallery
+    name: The Round Room
+    description: "A domed round room past the library, where the whispers of the dead pool together. Here waits the Reaver of Xalgoz, a lesser echo of the vampire's power and the last guard before the church."
+    encounter:
+      id: ka-reaver-fight
+      monsters: [eq-kaesora-reaver-of-xalgoz, eq-kaesora-skeletal-minion]
+      intro: "The Reaver of Xalgoz rises, soul-light bleeding from its hands. 'My master is not to be disturbed.'"
+      victory_text: "The Reaver collapses. Cold air pours from the church door beyond."
+      flag: ka-reaver-cleared
+    exits:
+      - { dir: s, to: kaesora-soul-traps, label: "Back to the soul-traps" }
+      - { dir: down, to: kaesora-xalgoz-sanctum, label: "Down, into the church of Xalgoz" }
+
+  - id: kaesora-xalgoz-sanctum
+    name: The Church of Xalgoz
+    description: "A black-marble church lit by cold candleflame. Xalgoz reclines on a throne of bone, pale and unhurried, soul-light pooling at his feet. 'Venril sends so few visitors,' he purrs. 'Few who can still speak, anyway. Have you something to say? Or shall I add you to the choir?'"
+    objective: true
+    win_text: >-
+      Xalgoz is behind you, one way or another. You climb to the soul-traps and break the central
+      pillar. The blue lights of Kaesora come free all at once and rise through the broken stone
+      toward a sky a thousand years gone. The keening stops. Whatever the library cost you to walk
+      out of, its dead are finally at rest.
+    encounter:
+      id: ka-xalgoz-fight
+      monsters: [eq-kaesora-xalgoz, eq-kaesora-skeletal-minion]
+      intro: >-
+        Xalgoz does not rise so much as uncoil. A thousand years of hunger and a thousand years of
+        boredom look out of him at once. He does not hate you. He is hungry, you are warm, and his
+        master left him to mind a library no one reads. A young party does not win this fight.
+        Speak fast, or run.
+      prompt: 'Xalgoz wants two things: proof you matter to his master, and a taste. Offer Venril Sathir''s own Tablet and he will trade your passage for a sip of blood. (negotiate)'
+      victory_text: "By a violence you will never quite be able to repeat, the vampire comes apart on his own throne. The bloodstone amulet is yours."
+      flag: ka-xalgoz-resolved
+      parley:
+        dc: 15
+        cost_item: "Tablet of Venril Sathir"
+        cost_hp: 2
+        success_text: 'Xalgoz weighs you and decides you are worth more intact than emptied. He takes his due, unhurried, almost courteous. "Free your little lights and go. Tell no one the door was open." He settles back onto his throne and waves you past.'
+        failure_text: "Without his master's seal to show him, Xalgoz hears only noise. 'Words, words. I prefer the choir.' He glides forward, claws first."
+      loot:
+        - { name: "Xalgoz's bloodstone amulet", description: "A ruby amulet the vampire wore for ten centuries, still faintly warm. Yours only if you somehow felled him.", gold: 150 }
+    exits:
+      - { dir: up, to: kaesora-whispering-gallery, label: "Back up to the round room" }

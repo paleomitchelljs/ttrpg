@@ -2039,3 +2039,584 @@ monsters:
     system: eq-rpg
     source_book: heroes-of-norrath
     source_page: 120
+
+  # ═══════════════════════════════════════════
+  # EQ dungeon dwellers (P1999-sourced). Trash + mini-bosses are scaled so a
+  # level 1–2 party can win; apex bosses (Xalgoz, the Avatar of Fear, Najena,
+  # Drusella Sathir, Lord Rak'Ashiir, The Kly) are deliberately deadly — the
+  # intended path past them is parley or flight, not a fair fight.
+  # ═══════════════════════════════════════════
+
+  # ───────── Permafrost Keep (era-classic) ─────────
+  - id: eq-permafrost-king-thexka-iv
+    name: "King Thex'Ka IV"
+    hp_max: 20
+    ac: 14
+    move: near
+    level: 4
+    tags: [tier-2, goblinoid, leader, boss, eq-rpg, era-classic, permafrost]
+    icon: icons/game-icons/lorc/crowned-skull.svg
+    attacks:
+      - { name: Frost Scepter, bonus: 3, damage: 1d8 }
+    notes: "King of the ice goblins who hold Permafrost Keep. Vain, and under the bluster a coward. He can be cowed or bargained with."
+    system: eq-rpg
+    source_book: everfrost-peaks
+  - id: eq-permafrost-tensiel
+    name: "Tensiel, the Champion"
+    hp_max: 14
+    ac: 14
+    move: near
+    level: 3
+    tags: [tier-2, goblinoid, eq-rpg, era-classic, permafrost]
+    icon: icons/game-icons/delapouite/goblin-head.svg
+    attacks:
+      - { name: Great Spear, bonus: 3, damage: 1d8 }
+    notes: "The king's son and chosen champion. Fights at his father's side and never breaks first."
+    system: eq-rpg
+    source_book: everfrost-peaks
+
+  # ───────── Kaesora (era-kunark) ─────────
+  - id: eq-kaesora-skeletal-minion
+    name: "Skeletal Minion"
+    hp_max: 5
+    ac: 12
+    move: near
+    level: 1
+    tags: [tier-1, undead, eq-rpg, era-kunark, kaesora]
+    icon: icons/game-icons/lorc/skull-bolt.svg
+    attacks:
+      - { name: Rusted Claw, bonus: 1, damage: 1d6 }
+    notes: "A dead iksar bound to Xalgoz's will. Mindless; it cannot be reasoned with."
+    system: eq-rpg
+    source_book: kaesora
+  - id: eq-kaesora-strathbone-spider
+    name: "Strathbone Spider"
+    hp_max: 6
+    ac: 13
+    move: "double-near (climb)"
+    level: 1
+    tags: [tier-1, beast, eq-rpg, era-kunark, kaesora]
+    icon: icons/game-icons/lorc/hanging-spider.svg
+    attacks:
+      - { name: Venomous Bite, bonus: 2, damage: 1d4, note: "On hit: DC 11 CON save or -1 to attacks from venom." }
+    notes: "One of the pale spiders that share Kaesora with the undead. Drops from the broken ceilings."
+    system: eq-rpg
+    source_book: kaesora
+  - id: eq-kaesora-spectral-librarian
+    name: "Spectral Librarian"
+    hp_max: 12
+    ac: 13
+    move: "near (fly)"
+    level: 2
+    tags: [tier-2, undead, eq-rpg, era-kunark, kaesora]
+    icon: icons/game-icons/lorc/ghost.svg
+    attacks:
+      - { name: Chill Touch, bonus: 2, damage: 1d6, note: "Ignores armor." }
+    notes: "An archivist who never left his post, still shelving scrolls that crumbled centuries ago."
+    system: eq-rpg
+    source_book: kaesora
+  - id: eq-kaesora-warder-of-xalgoz
+    name: "Warder of Xalgoz"
+    hp_max: 14
+    ac: 14
+    move: near
+    level: 3
+    tags: [tier-2, undead, caster, eq-rpg, era-kunark, kaesora]
+    icon: icons/game-icons/lorc/skull-mask.svg
+    attacks:
+      - { name: Dark Bolt, bonus: 3, damage: 1d6 }
+    notes: "An undead cleric set to guard the church. Will trade words before blows, if pressed."
+    system: eq-rpg
+    source_book: kaesora
+  - id: eq-kaesora-reaver-of-xalgoz
+    name: "Reaver of Xalgoz"
+    hp_max: 18
+    ac: 14
+    move: near
+    level: 3
+    tags: [tier-2, undead, caster, boss, eq-rpg, era-kunark, kaesora]
+    icon: icons/game-icons/lorc/daemon-skull.svg
+    attacks:
+      - { name: Soul Reave, bonus: 3, damage: 1d8, note: "On hit: the Reaver heals 2 HP." }
+    notes: "A lesser copy of the vampire's power, set in the round room past the library."
+    system: eq-rpg
+    source_book: kaesora
+  - id: eq-kaesora-xalgoz
+    name: "Xalgoz"
+    hp_max: 48
+    ac: 16
+    move: "near (fly close)"
+    level: 5
+    tags: [boss, undead, vampire, caster, named-character, eq-rpg, era-kunark, kaesora]
+    icon: icons/game-icons/lorc/crowned-skull.svg
+    attacks:
+      - { name: Necrotic Claws, bonus: 5, damage: 1d8, note: "On hit: Xalgoz heals 3 HP." }
+    notes: "A L40 necromancer-vampire, emissary of Venril Sathir. Far beyond a young party in a straight fight. Bargain, or run. Charms with a gaze and raises the fallen."
+    system: eq-rpg
+    source_book: kaesora
+
+  # ───────── The Howling Stones / Charasis (era-kunark) ─────────
+  - id: eq-charasis-helot-skeleton
+    name: "Helot Skeleton"
+    hp_max: 5
+    ac: 12
+    move: near
+    level: 1
+    tags: [tier-1, undead, eq-rpg, era-kunark, charasis]
+    icon: icons/game-icons/lorc/broken-skull.svg
+    attacks:
+      - { name: Bone Blade, bonus: 1, damage: 1d6 }
+    notes: "A servant-skeleton of the old crypt, raised to dig and to guard. Mindless."
+    system: eq-rpg
+    source_book: charasis
+  - id: eq-charasis-crypt-spectre
+    name: "Crypt Spectre"
+    hp_max: 7
+    ac: 13
+    move: "near (fly)"
+    level: 2
+    tags: [tier-2, undead, eq-rpg, era-kunark, charasis]
+    icon: icons/game-icons/delapouite/floating-ghost.svg
+    attacks:
+      - { name: Wailing Touch, bonus: 2, damage: 1d6, note: "On hit: DC 12 WIS save or flee one round." }
+    notes: "Part of the chorus of screams that gives the Howling Stones their name."
+    system: eq-rpg
+    source_book: charasis
+  - id: eq-charasis-bile-golem
+    name: "Bile Golem"
+    hp_max: 14
+    ac: 14
+    move: near
+    level: 3
+    tags: [tier-2, construct, eq-rpg, era-kunark, charasis]
+    icon: icons/game-icons/delapouite/ice-golem.svg
+    attacks:
+      - { name: Acid Slam, bonus: 3, damage: 1d8 }
+    notes: "A guardian-construct of fused bone and bile. Tireless and unthinking."
+    system: eq-rpg
+    source_book: charasis
+  - id: eq-charasis-mortiferous-protector
+    name: "Mortiferous Protector"
+    hp_max: 16
+    ac: 15
+    move: near
+    level: 3
+    tags: [tier-2, undead, eq-rpg, era-kunark, charasis]
+    icon: icons/game-icons/lorc/skull-shield.svg
+    attacks:
+      - { name: Greatblade, bonus: 3, damage: 1d8 }
+    notes: "An armored honor-guard of the Sathir dead, standing watch in the east wing."
+    system: eq-rpg
+    source_book: charasis
+  - id: eq-charasis-the-undertaker-lord
+    name: "The Undertaker Lord"
+    hp_max: 22
+    ac: 15
+    move: near
+    level: 4
+    tags: [tier-2, undead, boss, named-character, eq-rpg, era-kunark, charasis]
+    icon: icons/game-icons/lorc/horned-skull.svg
+    attacks:
+      - { name: Grave Scythe, bonus: 4, damage: 1d10 }
+    notes: "The keeper of the east wing's dead. Proud and talkative for a corpse. He will hear an offer."
+    system: eq-rpg
+    source_book: charasis
+  - id: eq-charasis-the-crypt-keeper
+    name: "The Crypt Keeper"
+    hp_max: 20
+    ac: 14
+    move: near
+    level: 4
+    tags: [tier-2, undead, caster, boss, eq-rpg, era-kunark, charasis]
+    icon: icons/game-icons/lorc/skull-mask.svg
+    attacks:
+      - { name: Necrotic Bolt, bonus: 4, damage: 1d8, note: "On hit: heals 2 HP." }
+    notes: "Necromancer-warden of the north wing, where the keys are kept."
+    system: eq-rpg
+    source_book: charasis
+  - id: eq-charasis-drusella-sathir
+    name: "Drusella Sathir"
+    hp_max: 50
+    ac: 16
+    move: near
+    level: 5
+    tags: [boss, undead, caster, named-character, eq-rpg, era-kunark, charasis]
+    icon: icons/game-icons/lorc/daemon-skull.svg
+    attacks:
+      - { name: Deathfire, bonus: 5, damage: 1d10 }
+    notes: "A L55 necromancer of the Sathir line, mistress of the inner crypt. Too strong to brute-force. Answer her, bargain, or flee. Raises the dead to fight for her."
+    system: eq-rpg
+    source_book: charasis
+
+  # ───────── The City of Mist / Torsis (era-kunark) ─────────
+  - id: eq-city-of-mist-plaguebone-skeleton
+    name: "Plaguebone Skeleton"
+    hp_max: 6
+    ac: 12
+    move: near
+    level: 1
+    tags: [tier-1, undead, eq-rpg, era-kunark, city-of-mist]
+    icon: icons/game-icons/lorc/chewed-skull.svg
+    attacks:
+      - { name: Plague Blade, bonus: 2, damage: 1d6 }
+    notes: "A soldier of Torsis's dead army, drilling forever in the fog. Mindless."
+    system: eq-rpg
+    source_book: city-of-mist
+  - id: eq-city-of-mist-spectral-courier
+    name: "Spectral Courier"
+    hp_max: 6
+    ac: 13
+    move: "near (fly)"
+    level: 1
+    tags: [tier-1, undead, eq-rpg, era-kunark, city-of-mist]
+    icon: icons/game-icons/lorc/ghost.svg
+    attacks:
+      - { name: Cold Touch, bonus: 2, damage: 1d4 }
+    notes: "Still running a message to an emperor a thousand years dead."
+    system: eq-rpg
+    source_book: city-of-mist
+  - id: eq-city-of-mist-mist-golem
+    name: "Mist Golem"
+    hp_max: 14
+    ac: 14
+    move: near
+    level: 3
+    tags: [tier-2, construct, eq-rpg, era-kunark, city-of-mist]
+    icon: icons/game-icons/delapouite/gargoyle.svg
+    attacks:
+      - { name: Fog-Fist, bonus: 3, damage: 1d8 }
+    notes: "A guardian of living fog that crushed every looter for a thousand years."
+    system: eq-rpg
+    source_book: city-of-mist
+  - id: eq-city-of-mist-black-reaver
+    name: "Black Reaver"
+    hp_max: 20
+    ac: 15
+    move: near
+    level: 4
+    tags: [tier-2, undead, eq-rpg, era-kunark, city-of-mist]
+    icon: icons/game-icons/lorc/tentacles-skull.svg
+    attacks:
+      - { name: Reaving Claw, bonus: 4, damage: 1d8, note: "On hit: heals 2 HP." }
+    notes: "A towering wraith-knight of the fallen city. The Overlords rise from its corpse."
+    system: eq-rpg
+    source_book: city-of-mist
+  - id: eq-city-of-mist-lord-ghiosk
+    name: "Lord Ghiosk"
+    hp_max: 24
+    ac: 15
+    move: near
+    level: 4
+    tags: [tier-2, undead, boss, named-character, eq-rpg, era-kunark, city-of-mist]
+    icon: icons/game-icons/lorc/horned-skull.svg
+    attacks:
+      - { name: Spectral Glaive, bonus: 4, damage: 1d10 }
+    notes: "One of the warrior-overlords of Torsis, risen in cold pride."
+    system: eq-rpg
+    source_book: city-of-mist
+  - id: eq-city-of-mist-lord-rakashiir
+    name: "Lord Rak'Ashiir"
+    hp_max: 52
+    ac: 17
+    move: near
+    level: 6
+    tags: [boss, undead, caster, named-character, eq-rpg, era-kunark, city-of-mist]
+    icon: icons/game-icons/lorc/crowned-skull.svg
+    attacks:
+      - { name: Soul Fire, bonus: 5, damage: 1d10 }
+    notes: "A L54 wizard-overlord of the City of Mist. Lethal to a young party. Talk past him, or escape. Gates away when truly threatened."
+    system: eq-rpg
+    source_book: city-of-mist
+
+  # ───────── Dalnir (era-kunark) ─────────
+  - id: eq-dalnir-ravenous-nibbler
+    name: "Ravenous Nibbler"
+    hp_max: 3
+    ac: 12
+    move: "near (climb)"
+    level: 0
+    tags: [tier-1, beast, swarm, eq-rpg, era-kunark, dalnir]
+    icon: icons/game-icons/delapouite/rat.svg
+    attacks:
+      - { name: Gnaw, bonus: 1, damage: 1d4 }
+    notes: "Fattened on what the criminals left behind. Hunts in skittering packs."
+    system: eq-rpg
+    source_book: dalnir
+  - id: eq-dalnir-coerced-thrall
+    name: "Coerced Thrall"
+    hp_max: 5
+    ac: 12
+    move: near
+    level: 1
+    tags: [tier-1, undead, eq-rpg, era-kunark, dalnir]
+    icon: icons/game-icons/lorc/skull-bolt.svg
+    attacks:
+      - { name: Clawing Hand, bonus: 1, damage: 1d6 }
+    notes: "A trespasser bound into undeath by The Kly. No will of its own left to bargain with."
+    system: eq-rpg
+    source_book: dalnir
+  - id: eq-dalnir-smoldering-goo
+    name: "Smoldering Goo"
+    hp_max: 7
+    ac: 11
+    move: near
+    level: 1
+    tags: [tier-1, ooze, eq-rpg, era-kunark, dalnir]
+    icon: icons/game-icons/delapouite/slime.svg
+    attacks:
+      - { name: Burning Pseudopod, bonus: 2, damage: 1d6 }
+    notes: "A crawling slick of hot crypt-rot. It does not think; it only digests."
+    system: eq-rpg
+    source_book: dalnir
+  - id: eq-dalnir-coerced-crusader
+    name: "Coerced Crusader"
+    hp_max: 14
+    ac: 14
+    move: near
+    level: 2
+    tags: [tier-2, undead, eq-rpg, era-kunark, dalnir]
+    icon: icons/game-icons/lorc/skull-shield.svg
+    attacks:
+      - { name: Crusader Blade, bonus: 3, damage: 1d8 }
+    notes: "An iksar warrior bent into The Kly's service, armor and all."
+    system: eq-rpg
+    source_book: dalnir
+  - id: eq-dalnir-kly-overseer
+    name: "Kly Overseer"
+    hp_max: 20
+    ac: 14
+    move: near
+    level: 4
+    tags: [tier-2, humanoid, caster, leader, boss, eq-rpg, era-kunark, dalnir]
+    icon: icons/game-icons/lorc/imp.svg
+    attacks:
+      - { name: Sarnak Spellblade, bonus: 3, damage: 1d8 }
+    notes: "A sarnak lieutenant of The Kly's cult, driving the coerced dead at their work."
+    system: eq-rpg
+    source_book: dalnir
+  - id: eq-dalnir-the-kly
+    name: "The Kly"
+    hp_max: 46
+    ac: 16
+    move: near
+    level: 5
+    tags: [boss, humanoid, caster, named-character, eq-rpg, era-kunark, dalnir]
+    icon: icons/game-icons/lorc/crowned-skull.svg
+    attacks:
+      - { name: Arcane Lash, bonus: 5, damage: 1d10 }
+    notes: "A L42 sarnak wizard who claimed the crypt and woke its dead. Outmatches a young party badly. Bargain (he wants the crypt's peace restored) or flee. Curses those who strike him."
+    system: eq-rpg
+    source_book: dalnir
+
+  # ───────── Lost Temple of Cazic-Thule (era-classic) ─────────
+  - id: eq-cazic-thule-lizard-crusader
+    name: "Lizardman Crusader"
+    hp_max: 6
+    ac: 13
+    move: near
+    level: 1
+    tags: [tier-1, humanoid, reptilian, eq-rpg, era-classic, cazic-thule]
+    icon: icons/game-icons/delapouite/orc-head.svg
+    attacks:
+      - { name: Thulian Spear, bonus: 2, damage: 1d6 }
+    notes: "A scaled warrior of the temple's lizardman tribe. Hisses prayers to the god of fear as it fights."
+    system: eq-rpg
+    source_book: cazic-thule
+  - id: eq-cazic-thule-lizard-zealot
+    name: "Lizardman Zealot"
+    hp_max: 5
+    ac: 12
+    move: near
+    level: 1
+    tags: [tier-1, humanoid, caster, reptilian, eq-rpg, era-classic, cazic-thule]
+    icon: icons/game-icons/lorc/imp.svg
+    attacks:
+      - { name: Fear Bolt, bonus: 1, damage: 1d6 }
+    notes: "A lizardman priest of Cazic-Thule, channeling the Faceless one's dread."
+    system: eq-rpg
+    source_book: cazic-thule
+  - id: eq-cazic-thule-feerrott-alligator
+    name: "Feerrott Alligator"
+    hp_max: 10
+    ac: 13
+    move: "near (swim)"
+    level: 2
+    tags: [tier-2, beast, eq-rpg, era-classic, cazic-thule]
+    icon: icons/game-icons/lorc/frog.svg
+    attacks:
+      - { name: Bite, bonus: 3, damage: 1d8 }
+    notes: "Lurks in the temple's flooded gator pit. Drags prey under, then rolls."
+    system: eq-rpg
+    source_book: cazic-thule
+  - id: eq-cazic-thule-clay-golem
+    name: "Clay Golem"
+    hp_max: 14
+    ac: 14
+    move: near
+    level: 3
+    tags: [tier-2, construct, eq-rpg, era-classic, cazic-thule]
+    icon: icons/game-icons/delapouite/ice-golem.svg
+    attacks:
+      - { name: Clay Fist, bonus: 3, damage: 1d8 }
+    notes: "A guardian of the maze, built from temple clay. The lizards make more from the same pit."
+    system: eq-rpg
+    source_book: cazic-thule
+  - id: eq-cazic-thule-cazic-cenobite
+    name: "Cazic Cenobite"
+    hp_max: 22
+    ac: 15
+    move: near
+    level: 4
+    tags: [tier-2, humanoid, caster, boss, reptilian, eq-rpg, era-classic, cazic-thule]
+    icon: icons/game-icons/lorc/skull-mask.svg
+    attacks:
+      - { name: Touch of Fear, bonus: 4, damage: 1d8 }
+    notes: "A high lizardman ascetic of the temple. Speaks for the Faceless, and will speak with you, if you dare."
+    system: eq-rpg
+    source_book: cazic-thule
+  - id: eq-cazic-thule-tae-ew-templar
+    name: "Tae Ew Templar"
+    hp_max: 22
+    ac: 15
+    move: near
+    level: 4
+    tags: [tier-2, humanoid, boss, named-character, reptilian, eq-rpg, era-classic, cazic-thule]
+    icon: icons/game-icons/delapouite/orc-head.svg
+    attacks:
+      - { name: Lizardscale Blade, bonus: 4, damage: 1d10 }
+    notes: "A war-priest of the Tae Ew, the temple's ruling caste. Guards the throne room."
+    system: eq-rpg
+    source_book: cazic-thule
+  - id: eq-cazic-thule-tae-ew-archon
+    name: "Tae Ew Archon"
+    hp_max: 40
+    ac: 16
+    move: near
+    level: 5
+    tags: [boss, humanoid, caster, named-character, reptilian, eq-rpg, era-classic, cazic-thule]
+    icon: icons/game-icons/lorc/horned-skull.svg
+    attacks:
+      - { name: Archon's Wrath, bonus: 4, damage: 1d10 }
+    notes: "The high priest of the temple, atop the archon pyramid. Dangerous, proud, and open to flattery or an offering."
+    system: eq-rpg
+    source_book: cazic-thule
+  - id: eq-cazic-thule-avatar-of-fear
+    name: "The Avatar of Fear"
+    hp_max: 60
+    ac: 18
+    move: near
+    level: 7
+    tags: [boss, fiend, avatar, named-character, eq-rpg, era-classic, cazic-thule]
+    icon: icons/game-icons/lorc/daemon-skull.svg
+    attacks:
+      - { name: Bladed Thulian Claws, bonus: 6, damage: 2d6 }
+    notes: "An avatar of Cazic-Thule himself, god of fear. Not a thing a mortal party kills. Make your offering and go, or run. Its aura alone breaks lesser hearts."
+    system: eq-rpg
+    source_book: cazic-thule
+
+  # ───────── Najena (era-classic) ─────────
+  - id: eq-najena-darkbone-skeleton
+    name: "Darkbone Skeleton"
+    hp_max: 6
+    ac: 12
+    move: near
+    level: 1
+    tags: [tier-1, undead, eq-rpg, era-classic, najena]
+    icon: icons/game-icons/lorc/skull-bolt.svg
+    attacks:
+      - { name: Darkbone Blade, bonus: 2, damage: 1d6 }
+    notes: "One of the magician's risen experiments. Mindless and tireless."
+    system: eq-rpg
+    source_book: najena
+  - id: eq-najena-tentacle-terror
+    name: "Tentacle Terror"
+    hp_max: 7
+    ac: 13
+    move: near
+    level: 2
+    tags: [tier-2, aberration, eq-rpg, era-classic, najena]
+    icon: icons/game-icons/lorc/tentacles-skull.svg
+    attacks:
+      - { name: Lashing Tentacle, bonus: 2, damage: 1d6 }
+    notes: "A writhing thing summoned into the entry hall to greet trespassers."
+    system: eq-rpg
+    source_book: najena
+  - id: eq-najena-dark-elf-necromancer
+    name: "Dark Elf Necromancer"
+    hp_max: 8
+    ac: 13
+    move: near
+    level: 2
+    tags: [tier-2, humanoid, caster, eq-rpg, era-classic, najena]
+    icon: icons/game-icons/lorc/imp.svg
+    attacks:
+      - { name: Shadow Bolt, bonus: 3, damage: 1d6 }
+    notes: "One of Najena's apprentices, raising the dead in her name."
+    system: eq-rpg
+    source_book: najena
+  - id: eq-najena-giant-black-widow
+    name: "Giant Black Widow"
+    hp_max: 12
+    ac: 13
+    move: "near (climb)"
+    level: 2
+    tags: [tier-2, beast, eq-rpg, era-classic, najena]
+    icon: icons/game-icons/lorc/hanging-spider.svg
+    attacks:
+      - { name: Venomous Bite, bonus: 3, damage: 1d6, note: "On hit: DC 12 CON save or be poisoned (-1 attacks)." }
+    notes: "The Widowmistress's brood. They nest in the dark side-tunnels."
+    system: eq-rpg
+    source_book: najena
+  - id: eq-najena-ogre-guard
+    name: "Ogre Guard"
+    hp_max: 16
+    ac: 14
+    move: near
+    level: 3
+    tags: [tier-2, giant, eq-rpg, era-classic, najena]
+    icon: icons/game-icons/delapouite/giant.svg
+    attacks:
+      - { name: Greatclub, bonus: 3, damage: 1d10 }
+    notes: "A hired ogre of the Guard Captain's watch. Slow, strong, and bribable."
+    system: eq-rpg
+    source_book: najena
+  - id: eq-najena-rathyl
+    name: "Rathyl"
+    hp_max: 20
+    ac: 14
+    move: near
+    level: 4
+    tags: [tier-2, undead, caster, boss, named-character, eq-rpg, era-classic, najena]
+    icon: icons/game-icons/lorc/daemon-skull.svg
+    attacks:
+      - { name: Necrotic Bolt, bonus: 4, damage: 1d8, note: "On hit: heals 2 HP." }
+    notes: "A necromancer of Najena's circle, slain and self-raised in his own locked chamber."
+    system: eq-rpg
+    source_book: najena
+  - id: eq-najena-drelzna
+    name: "Drelzna"
+    hp_max: 24
+    ac: 15
+    move: near
+    level: 4
+    tags: [tier-2, humanoid, boss, named-character, eq-rpg, era-classic, najena]
+    icon: icons/game-icons/lorc/skull-shield.svg
+    attacks:
+      - { name: Cursed Blade, bonus: 4, damage: 1d10 }
+    notes: "Najena's daughter, a shadow knight kept behind a locked door. Fights with her mother's cold pride."
+    system: eq-rpg
+    source_book: najena
+  - id: eq-najena-najena
+    name: "Najena"
+    hp_max: 50
+    ac: 16
+    move: near
+    level: 6
+    tags: [boss, humanoid, caster, named-character, eq-rpg, era-classic, najena]
+    icon: icons/game-icons/lorc/crowned-skull.svg
+    attacks:
+      - { name: Pillar of Lightning, bonus: 5, damage: 1d10 }
+    notes: "The dark elf magician who carved this lair. A L28 archmage, death for a young party head-on. She is vain; flattery and tribute go further than steel. Summons elementals when pressed."
+    system: eq-rpg
+    source_book: najena
+

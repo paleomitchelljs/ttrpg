@@ -1,0 +1,208 @@
+# Permafrost Keep — a scripted text adventure (EQ d20 conversion).
+#
+# Condensed from Realms of Norrath: Everfrost Peaks, ch. 4 (the keyed keep).
+# Monsters reuse the existing Everfrost bestiary + two new ice-goblin royals.
+# Lady Vox (a raid-deadly dragon) is left sealed, not fought; the winnable climax
+# is the goblin king's throne.
+#
+# Schema: see src/data/adventures/sunless-citadel.yaml.
+
+id: permafrost
+title: Permafrost Keep
+system: eq-rpg
+synopsis: >-
+  A giant-built fortress half-buried in the glaciers of Everfrost, held now by a tribe
+  of ice goblins who answer to the white dragon Lady Vox. Slip past the giant-guarded
+  gate, fight through the warren, and unseat King Thex'Ka IV. Whatever you do, leave the
+  thing in the sub-basement asleep.
+recommended_party: "2–4 heroes, level 1–2"
+map_image: maps/everquest/Zone_permafrost.jpg
+intro: >-
+  The wind off the Northlands cuts like a blade. Permafrost Keep rises from the ice ahead,
+  its hundred-foot wall sheathed in frozen glass. Two ice giants doze at the great
+  drawbridge, far too big to fight. But a meltwater crack splits the wall to one side,
+  just wide enough to squeeze through.
+start: permafrost-gate
+
+rooms:
+  - id: permafrost-gate
+    name: The Postern Crack
+    description: "You squeeze through the meltwater crack into a cold guardroom just inside the wall. The giant sentries rumble to each other in the gatehouse, none the wiser. A table holds three giant-sized chairs and an iron plaque scratched with Ancient Giantish runes."
+    safe: true
+    features:
+      - { keywords: [plaque, runes, giantish, wall], text: "The runes are a warning and a boast at once. Giants carved this keep from a single mountain. Giants do not forget a slight." }
+      - { keywords: [giants, sentry, sentries, drawbridge, gate], text: "Through the slit windows you can see the gate-giants. Each is thirty feet of bone-white muscle. Better they never notice you at all." }
+    exits:
+      - { dir: s, to: permafrost-winch-room, label: "A small door to the south" }
+      - { dir: in, to: permafrost-flag-room, label: "Inward, toward the noise of goblins" }
+
+  - id: permafrost-winch-room
+    name: The Winch Room
+    description: "Two giant levers jut from the wall beside a tangle of coldsteel chains that run up into the ceiling. One works the portcullis. The other works the drawbridge."
+    features:
+      - { keywords: [lever, levers, chain, chains, winch], text: "The levers are giant-sized and enchanted, but a hard pull would still move one. Throwing the drawbridge open might make for a fast escape later. It might also bring the gate-giants running." }
+    exits:
+      - { dir: n, to: permafrost-gate, label: "Back to the gate room" }
+
+  - id: permafrost-flag-room
+    name: The Flag Room
+    description: "A wide, smoothly tiled hall branches three ways to the north. Battle tapestries hang on every wall, each one showing ice giants crushing some foe. This is where the goblins muster for raids."
+    encounter:
+      id: pf-patrol
+      monsters: [eq-everfrost-peaks-ice-goblin, eq-everfrost-peaks-ice-goblin]
+      intro: "Two ice goblins on patrol round a tapestry and screech at the sight of you!"
+      victory_text: "The goblins go down in a flurry of blue limbs. The hall falls quiet."
+      flag: pf-flag-cleared
+      parley:
+        dc: 12
+        success_text: "You make it plain you have come for their king, not for them, and that Lady Vox would not shed a tear over two goblins. They trade a look, decide their loyalty stops well short of dying, and slink back into the warren to let you by."
+        failure_text: "They are too frightened of the king to listen, and come on screeching."
+    features:
+      - { keywords: [tapestry, tapestries, flag, banner], text: "The tapestries show the giants' old wars. One newer hanging shows a white dragon coiled atop the keep. That would be Lady Vox, the goblins' real mistress." }
+    exits:
+      - { dir: s, to: permafrost-gate, label: "Back toward the gate" }
+      - { dir: e, to: permafrost-jail-row, label: "East, through a barred metal gate (Jail Row)" }
+      - { dir: w, to: permafrost-goblin-living, label: "West, toward goblin clamor" }
+      - { dir: n, to: permafrost-goblin-temple, label: "North, toward ornate doors" }
+      - { dir: down, to: permafrost-animal-pens, label: "Down a wide ramp (Animal Pens)" }
+
+  - id: permafrost-jail-row
+    name: Jail Row
+    description: "A row of cramped cells lines a frost-rimed corridor. Most stand open and empty. Old chains hang from the walls. One cell at the end still holds a shivering prisoner."
+    npcs:
+      - name: "Brannon Stonehand"
+        keywords: [brannon, prisoner, dwarf, stonehand]
+        sets_flag: pf-freed-brannon
+        text: "By my beard, living folk! Brannon Stonehand, at your service. The goblins caught me scouting. Free me and I'll tell you this: the king keeps the dragon's relics in his throne room, and there's a sealed stair down to HER lair behind the throne. Don't open it. I mean that."
+    encounter:
+      id: pf-jail-ghoul
+      monsters: [eq-everfrost-peaks-frozen-ghoul]
+      intro: "Something stirs in a heaped cell. A frozen ghoul lurches out, claws first!"
+      victory_text: "The ghoul shatters like an icicle. Brannon lets out a shaky breath."
+      flag: pf-jail-cleared
+    items:
+      - { name: "Cell keyring", description: "A ring of crude iron keys taken from the ghoul. They fit the cells, and maybe other locks." }
+    exits:
+      - { dir: w, to: permafrost-flag-room, label: "Back to the Flag Room" }
+
+  - id: permafrost-goblin-living
+    name: Goblin Living Quarters
+    description: "A reeking, noisy warren of bedrolls and cook-fires and bone piles. The ice goblins pack in close here, near their king and their kin."
+    encounter:
+      id: pf-living-fight
+      monsters: [eq-everfrost-peaks-ice-goblin, eq-everfrost-peaks-ice-goblin, eq-everfrost-peaks-ice-goblin]
+      intro: "Three ice goblins leap up from their cook-fire, snatching up jagged blades!"
+      victory_text: "The last goblin bolts down a side tunnel, shrieking for the king."
+      flag: pf-living-cleared
+      loot:
+        - { name: "Pouch of frost-coins", description: "Cold silver and copper, looted off a dozen travelers.", gold: 35 }
+    features:
+      - { keywords: [bone, pile, bones, bedroll], text: "The bone piles are mostly animal. A few of them aren't. The goblins are not picky." }
+    exits:
+      - { dir: e, to: permafrost-flag-room, label: "Back to the Flag Room" }
+      - { dir: n, to: permafrost-frozen-storeroom, label: "North, to a frost-sealed door" }
+
+  - id: permafrost-frozen-storeroom
+    name: Frozen Storeroom
+    description: "A cold larder of frozen meat and stacked crates, with a few chests rimed shut by ice. A snow leopard the goblins keep half-tame prowls between the shelves."
+    encounter:
+      id: pf-store-leopard
+      monsters: [eq-everfrost-peaks-snow-leopard]
+      intro: "A snow leopard drops from atop the crates, fangs bared!"
+      victory_text: "The great cat slinks off wounded, leaving you the run of the storeroom."
+      flag: pf-store-cleared
+      loot:
+        - { name: "Giant-forged dagger", description: "A finely made blade. Small for a giant, a fine short sword for you.", gold: 40 }
+    exits:
+      - { dir: s, to: permafrost-goblin-living, label: "Back to the living quarters" }
+
+  - id: permafrost-animal-pens
+    name: The Animal Pens
+    description: "A cavernous sub-basement of iron-barred pens, most of them empty, the floor slick with frozen muck. Something heavy paces in the dark at the far end."
+    encounter:
+      id: pf-pens-leopard
+      monsters: [eq-everfrost-peaks-snow-leopard, eq-everfrost-peaks-ice-goblin]
+      intro: "A goblin handler looses a snow leopard from its pen and sets it on you!"
+      victory_text: "Handler and beast both fall. The other pens hold only old bones."
+      flag: pf-pens-cleared
+    features:
+      - { keywords: [pen, pens, bars, cage], text: "Most pens are empty. One holds the gnawed remains of whatever the goblins fed to the cats. You leave it at that." }
+    exits:
+      - { dir: up, to: permafrost-flag-room, label: "Up the ramp to the Flag Room" }
+
+  - id: permafrost-goblin-temple
+    name: The Goblin Temple
+    description: "A vaulted chamber where the Cyth goblins worship. A crude idol of a coiled white dragon fills the far wall, ringed by guttering blue candles."
+    encounter:
+      id: pf-temple-fight
+      monsters: [eq-everfrost-peaks-frozen-ghoul, eq-everfrost-peaks-ice-goblin, eq-everfrost-peaks-ice-goblin]
+      intro: "Goblin acolytes howl a prayer to Vox and rush you, a frozen ghoul shambling in their midst!"
+      victory_text: "The last candle gutters out. The dragon idol stares down, unimpressed."
+      flag: pf-temple-cleared
+    features:
+      - { keywords: [idol, dragon, vox, candles, statue], text: "The idol is Lady Vox, the white dragon who truly rules this keep. The goblins fear her far more than they fear you." }
+    exits:
+      - { dir: s, to: permafrost-flag-room, label: "Back to the Flag Room" }
+      - { dir: up, to: permafrost-balcony, label: "Up a narrow stair to a balcony" }
+      - { dir: n, to: permafrost-throne-approach, label: "North, toward great ornate doors" }
+
+  - id: permafrost-balcony
+    name: The Inner Balcony
+    description: "A wind-scoured balcony overlooks the keep's frozen courtyard. The view runs for miles. A lone ice giant sentry watches the plains from the last standing tower, his back to you."
+    features:
+      - { keywords: [giant, sentry, tower], text: "The sentry hasn't noticed you. One ice giant is one too many. Stay low and stay quiet." }
+      - { keywords: [view, courtyard, plains], text: "From here you can see the whole keep: the goblins' warren, the giants' wing, and a dark stair dropping somewhere far below where the air shimmers with cold." }
+    items:
+      - { name: "Sentry's frost-charm", description: "A small carved charm dropped on the balcony, cold to the touch.", gold: 25 }
+    exits:
+      - { dir: down, to: permafrost-goblin-temple, label: "Back down to the temple" }
+
+  - id: permafrost-throne-approach
+    name: The Ornate Doors
+    description: "A short hall ends at a massive set of stone double doors, carved and inset with gold and jewels. A frozen ghoul stands chained beside them as a grisly door-guard."
+    encounter:
+      id: pf-approach-ghoul
+      monsters: [eq-everfrost-peaks-frozen-ghoul]
+      intro: "The chained ghoul lunges as far as its bonds allow, snapping at you!"
+      victory_text: "The ghoul slumps in its chains. The great doors stand unguarded."
+      flag: pf-approach-cleared
+    features:
+      - { keywords: [door, doors, gold, jewels], text: "The doors are giant-sized, two feet of stone inlaid with gold. Behind them, a reedy goblin voice is giving orders." }
+    exits:
+      - { dir: s, to: permafrost-goblin-temple, label: "Back to the temple" }
+      - { dir: n, to: permafrost-throne-room, label: "Through the ornate doors (Throne Room)" }
+
+  - id: permafrost-throne-room
+    name: The Throne Room
+    description: "A great chamber built around a gleaming gold throne, a smaller seat beside it. King Thex'Ka IV of the ice goblins rises with his frost-scepter, his champion son Tensiel at his shoulder. Behind the throne, a stair drops away into killing cold."
+    objective: true
+    win_text: >-
+      King Thex'Ka IV is off his throne for good, and his goblins break and scatter into
+      the deep tunnels. The warren is yours. You lift the dragon's relics from behind the
+      throne. Then the cold breath rises from the sealed stair below, and you decide,
+      wisely, not to go down and meet it. Lady Vox can keep her lair. You climb back toward
+      the light of the Northlands.
+    encounter:
+      id: pf-throne-fight
+      monsters: [eq-permafrost-king-thexka-iv, eq-permafrost-tensiel, eq-everfrost-peaks-ice-goblin, eq-everfrost-peaks-ice-goblin]
+      intro: >-
+        "Living things, in MY hall?" shrieks King Thex'Ka IV. But his eyes keep darting to the sealed
+        stair behind the throne and the cold that breathes up out of it. He rules this keep, and every
+        hour of every day he is terrified of the thing that rules HIM. "Tensiel! Kill them and feed
+        them to the cats!"
+      prompt: 'Thex''Ka fears Lady Vox far more than he fears you. Hand over the goblins'' coin-pouch as "tribute he took for the dragon" and he will save face and bolt. Or gamble on a pure bluff. (negotiate)'
+      victory_text: "The king is down, and his champion with him."
+      flag: pf-king-defeated
+      parley:
+        dc: 13
+        cost_item: "Pouch of frost-coins"
+        success_text: 'You promise the king a far worse death at Lady Vox''s claws if he spills one drop of blood in her keep. Vanity and terror do the rest. "I... I drove you off! Yes!" He bolts from his own throne, Tensiel scrambling after, and the keep is yours without another blow struck.'
+        failure_text: '"You think to FRIGHTEN me? In MY hall?" The king''s scepter crackles with frost. So much for talk.'
+      loot:
+        - { name: "The Icicle of Vox", description: "A dagger of unmelting blue ice. The goblins kept it as tribute to their dragon.", gold: 120 }
+        - { name: "The Torch of Nagafen", description: "A torch that burns cold red and never gutters, a gift to Vox from her fiery lover.", gold: 120 }
+    features:
+      - { keywords: [stair, stairs, sealed, vox, lair, cold], text: "Behind the throne a stair drops into a darkness that breathes freezing air. That way lies Lady Vox's lair. Every instinct you have, and Brannon's warning besides, says do not go down there." }
+      - { keywords: [throne, gold, relics], text: "The gold throne is heaped with tribute. Two things stand out: a dagger of blue ice and a torch burning cold red flame." }
+    exits:
+      - { dir: s, to: permafrost-throne-approach, label: "Back through the ornate doors" }

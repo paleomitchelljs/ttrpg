@@ -1,9 +1,14 @@
+// GM quick-roll tools: the random scene / treasure / trap rollers and the
+// reference-map gallery that used to live on the standalone "Dungeons" tab.
+// Preserved here (inside the Adventure portal) so nothing was lost when that
+// tab was replaced.
+
 import { useEffect, useState } from 'react';
-import { rollScene, type Scene } from '../lib/shadowdark/scenes';
-import { rollTreasure, type Treasure, type TreasureTier } from '../lib/shadowdark/treasure';
-import { rollTrap, type Trap } from '../lib/shadowdark/traps';
-import { mapsBySource, type DungeonMap } from '../lib/shadowdark/maps';
-import { roll } from '../lib/dice';
+import { rollScene, type Scene } from '../../lib/shadowdark/scenes';
+import { rollTreasure, type Treasure, type TreasureTier } from '../../lib/shadowdark/treasure';
+import { rollTrap, type Trap } from '../../lib/shadowdark/traps';
+import { mapsBySource, type DungeonMap } from '../../lib/shadowdark/maps';
+import { roll } from '../../lib/dice';
 
 interface Roll {
   kind: 'scene' | 'treasure' | 'trap';
@@ -13,7 +18,7 @@ interface Roll {
   valueRoll?: string;
 }
 
-export function DungeonTab() {
+export function QuickTools() {
   const [history, setHistory] = useState<Roll[]>([]);
   const [showMaps, setShowMaps] = useState(false);
   const [openMap, setOpenMap] = useState<DungeonMap | null>(null);
@@ -37,7 +42,6 @@ export function DungeonTab() {
     const t = rollTreasure(tier);
     let valueRoll: string | undefined;
     if (t.value) {
-      // If value is a dice expression like "5d6 cp", roll it and show the total.
       const match = t.value.match(/^(\d+d\d+(?:[+-]\d+)?)\s*(.*)$/);
       if (match) {
         try {
@@ -60,26 +64,24 @@ export function DungeonTab() {
   }
 
   return (
-    <div className="col" style={{ gap: '1.25rem' }}>
-      <h1>Dungeons</h1>
-
+    <div className="col" style={{ gap: '1rem' }}>
       <div className="card col">
         <div className="big-label">Roll a room</div>
         <div className="row" style={{ flexWrap: 'wrap', gap: '0.4rem' }}>
-          <button className="primary" onClick={pushScene}>🗺️ Roll a scene</button>
+          <button className="primary" onClick={pushScene}>Roll a scene</button>
         </div>
 
         <div className="big-label" style={{ marginTop: '0.5rem' }}>Roll treasure</div>
         <div className="row" style={{ flexWrap: 'wrap', gap: '0.4rem' }}>
-          <button onClick={() => pushTreasure(1)}>💰 Tier 1</button>
-          <button onClick={() => pushTreasure(2)}>💎 Tier 2</button>
-          <button onClick={() => pushTreasure(3)}>👑 Tier 3</button>
-          <button onClick={() => pushTreasure(4)}>✨ Tier 4 (epic)</button>
+          <button onClick={() => pushTreasure(1)}>Tier 1</button>
+          <button onClick={() => pushTreasure(2)}>Tier 2</button>
+          <button onClick={() => pushTreasure(3)}>Tier 3</button>
+          <button onClick={() => pushTreasure(4)}>Tier 4 (epic)</button>
         </div>
 
         <div className="big-label" style={{ marginTop: '0.5rem' }}>Roll a trap</div>
         <div className="row" style={{ flexWrap: 'wrap', gap: '0.4rem' }}>
-          <button onClick={pushTrap}>⚠️ Trap</button>
+          <button onClick={pushTrap}>Trap</button>
         </div>
 
         {groupedMaps.length > 0 && (
@@ -87,7 +89,7 @@ export function DungeonTab() {
             <div className="big-label" style={{ marginTop: '0.5rem' }}>Reference maps</div>
             <div className="row" style={{ flexWrap: 'wrap', gap: '0.4rem' }}>
               <button onClick={() => setShowMaps((s) => !s)}>
-                🗺️ {showMaps ? 'Hide maps' : 'Show maps'}
+                {showMaps ? 'Hide maps' : 'Show maps'}
               </button>
             </div>
           </>
@@ -102,11 +104,7 @@ export function DungeonTab() {
               <div className="map-gallery">
                 {group.maps.map((m) => (
                   <button key={m.id} className="map-thumb" onClick={() => setOpenMap(m)}>
-                    <img
-                      src={`${import.meta.env.BASE_URL}${m.image}`}
-                      alt={m.name}
-                      loading="lazy"
-                    />
+                    <img src={`${import.meta.env.BASE_URL}${m.image}`} alt={m.name} loading="lazy" />
                     <div className="map-thumb-name">{m.name}</div>
                   </button>
                 ))}
@@ -149,21 +147,13 @@ export function DungeonTab() {
         </div>
       )}
 
-      {history.length === 0 ? (
-        <div className="card placeholder-tile">
-          <div className="placeholder-icon">🗺️</div>
-          <div className="placeholder-title">Nothing rolled yet.</div>
-          <div className="placeholder-sub">
-            Tap a button above to roll a room, a treasure, or both.
-          </div>
-        </div>
-      ) : (
+      {history.length > 0 && (
         <div className="col" style={{ gap: '0.7rem' }}>
           {history.map((r, i) => (
             <div key={i} className="card scene-card">
               {r.kind === 'scene' && r.scene && (
                 <>
-                  <div className="big-label">🗺️ {r.scene.name}</div>
+                  <div className="big-label">{r.scene.name}</div>
                   <p style={{ margin: '0.25rem 0', fontSize: '1.05rem' }}>{r.scene.description}</p>
                   {r.scene.tags.length > 0 && (
                     <div className="row" style={{ gap: '0.25rem', flexWrap: 'wrap' }}>
@@ -177,14 +167,8 @@ export function DungeonTab() {
               {r.kind === 'treasure' && r.treasure && (
                 <>
                   <div className="row" style={{ alignItems: 'center', gap: '0.6rem' }}>
-                    {r.treasure.icon ? (
-                      <img
-                        src={`${import.meta.env.BASE_URL}${r.treasure.icon}`}
-                        alt=""
-                        className="treasure-icon"
-                      />
-                    ) : (
-                      <span style={{ fontSize: '1.4rem' }}>💰</span>
+                    {r.treasure.icon && (
+                      <img src={`${import.meta.env.BASE_URL}${r.treasure.icon}`} alt="" className="treasure-icon" />
                     )}
                     <div className="big-label grow">{r.treasure.name}</div>
                     {r.valueRoll && <div className="treasure-value">{r.valueRoll}</div>}
@@ -198,7 +182,7 @@ export function DungeonTab() {
               )}
               {r.kind === 'trap' && r.trap && (
                 <>
-                  <div className="big-label">⚠️ {r.trap.name}</div>
+                  <div className="big-label">{r.trap.name}</div>
                   <div className="row muted" style={{ gap: '1rem', fontSize: '0.85rem' }}>
                     <span>Detect DC {r.trap.detectDc ?? '—'}</span>
                     <span>Disarm DC {r.trap.disarmDc ?? '—'}</span>

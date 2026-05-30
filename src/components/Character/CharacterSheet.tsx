@@ -1,9 +1,9 @@
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { formatMod, statMod } from '../../lib/dice';
 import { getAncestry } from '../../lib/shadowdark/ancestries';
 import { getClass } from '../../lib/shadowdark/classes';
+import { characterCombatProfile } from '../../lib/shadowdark/combat';
 import {
-  armorACBase,
   findArmor,
   findHelmet,
   findWeapon,
@@ -38,25 +38,10 @@ export function CharacterSheet({ character, onEdit, onClose, onDelete }: Props) 
 
   const equipment: Equipment = character.equipment ?? {};
   const mainHand = findWeapon(equipment.mainHand);
-  const offHand = findWeapon(equipment.offHand);
   const armor = findArmor(equipment.armor);
   const helmet = findHelmet(equipment.helmet);
 
-  const strMod = statMod(character.stats.STR);
-  const dexMod = statMod(character.stats.DEX);
-  const ranged = isRanged(mainHand);
-  const attackMod = ranged ? dexMod : strMod;
-  const twoHanded = isTwoHanded(mainHand) || !offHand;
-  const damageDie = weaponDamageDie(mainHand, twoHanded);
-  const damageMod = ranged ? dexMod : strMod;
-
-  const computedAC = useMemo(() => {
-    const { base, addsDex } = armorACBase(armor);
-    let ac = base + (addsDex ? dexMod : 0);
-    if (isShield(offHand?.name)) ac += 2;
-    if (helmet) ac += 1;
-    return ac;
-  }, [armor, offHand, helmet, dexMod]);
+  const { attackMod, damageDie, damageMod, ac: computedAC } = characterCombatProfile(character);
 
   async function patch(p: Partial<Character>) {
     const next: Character = { ...character, ...p, ac: computedAC, updatedAt: Date.now() };
@@ -126,7 +111,6 @@ export function CharacterSheet({ character, onEdit, onClose, onDelete }: Props) 
 
       <div className="hud-grid">
         <div className="hud-tile hud-hp">
-          <div className="hud-icon">❤️</div>
           <div className="hud-label">HP</div>
           <div className="hud-value">
             {character.hp.current}<span className="hud-sub">/{character.hp.max}</span>
@@ -138,16 +122,14 @@ export function CharacterSheet({ character, onEdit, onClose, onDelete }: Props) 
         </div>
 
         <div className="hud-tile hud-ac">
-          <div className="hud-icon">🛡️</div>
           <div className="hud-label">AC</div>
           <div className="hud-value">{computedAC}</div>
           <div className="hud-controls muted hud-foot">
-            {armor?.name ?? 'No armor'}{isShield(offHand?.name) ? ' · shield' : ''}{helmet ? ' · helm' : ''}
+            {armor?.name ?? 'No armor'}{isShield(equipment.offHand) ? ' · shield' : ''}{helmet ? ' · helm' : ''}
           </div>
         </div>
 
         <button className="hud-tile hud-attack" onClick={rollAttack}>
-          <div className="hud-icon">⚔️</div>
           <div className="hud-label">Attack</div>
           <div className="hud-value">{formatMod(attackMod)}</div>
           <div className="hud-controls muted hud-foot">
@@ -161,14 +143,12 @@ export function CharacterSheet({ character, onEdit, onClose, onDelete }: Props) 
         <div className="equip-row">
           <EquipSlot
             label="Main hand"
-            icon="⚔️"
             value={equipment.mainHand}
             options={weapons.map((w) => ({ value: w.name, label: `${w.name} (${weaponDamageDie(w, isTwoHanded(w))})` }))}
             onChange={(v) => setEquipSlot('mainHand', v)}
           />
           <EquipSlot
             label="Off hand"
-            icon="🛡️"
             value={equipment.offHand}
             options={[
               { value: 'Shield', label: 'Shield (+2 AC)' },
@@ -180,14 +160,12 @@ export function CharacterSheet({ character, onEdit, onClose, onDelete }: Props) 
           />
           <EquipSlot
             label="Armor"
-            icon="👕"
             value={equipment.armor}
             options={bodyArmor.map((a) => ({ value: a.name, label: a.name }))}
             onChange={(v) => setEquipSlot('armor', v)}
           />
           <EquipSlot
             label="Helmet"
-            icon="⛑️"
             value={equipment.helmet}
             options={[{ value: 'Helmet', label: 'Helmet (+1 AC)' }]}
             onChange={(v) => setEquipSlot('helmet', v)}
@@ -306,7 +284,6 @@ export function CharacterSheet({ character, onEdit, onClose, onDelete }: Props) 
 
 interface EquipSlotProps {
   label: string;
-  icon: string;
   value?: string;
   options: { value: string; label: string }[];
   onChange: (value: string | undefined) => void;
@@ -314,13 +291,10 @@ interface EquipSlotProps {
   disabledHint?: string;
 }
 
-function EquipSlot({ label, icon, value, options, onChange, disabled, disabledHint }: EquipSlotProps) {
+function EquipSlot({ label, value, options, onChange, disabled, disabledHint }: EquipSlotProps) {
   return (
     <label className={`equip-slot ${disabled ? 'disabled' : ''}`}>
-      <div className="equip-slot-label">
-        <span className="equip-icon">{icon}</span>
-        {label}
-      </div>
+      <div className="equip-slot-label">{label}</div>
       <select
         value={value ?? ''}
         onChange={(e) => onChange(e.target.value || undefined)}

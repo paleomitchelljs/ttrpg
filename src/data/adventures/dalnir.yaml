@@ -1,0 +1,188 @@
+# Dalnir — a scripted text adventure (EQ / P1999 conversion).
+#
+# The ancient iksar crypt near Cabilis, broken open by criminals who never came
+# back. The sarnak wizard "The Kly" has claimed it and bound the dead as Coerced
+# thralls. The Kly (L42) is a bargain-or-flee apex; returning the noble's stolen
+# idol settles him. Condensed ~10 rooms.
+# Schema: see src/data/adventures/sunless-citadel.yaml.
+
+id: dalnir
+title: Dalnir
+system: eq-rpg
+synopsis: >-
+  The lost crypt of Dalnir, a wealthy noble of the first Iksar Empire, cracked open by thieves
+  who never returned. The sarnak wizard called The Kly has taken the crypt and bound its dead,
+  and the thieves besides, into Coerced service. Recover the stolen idol, reach The Kly, and
+  settle the crypt. He badly outmatches a young party. Return the idol, bargain, or flee.
+recommended_party: "2–4 heroes, level 1–2"
+map_image: maps/everquest/Map_dalnir1.jpg
+intro: >-
+  Not far from the iksar city of Cabilis, a cave hides a worked stone door older than the cave
+  itself: the crypt of Dalnir. Thieves cracked it open to plunder a noble's tomb and were never
+  seen again. The sarnak called The Kly came after them, and now the noble's dead and the dead
+  thieves both serve him. The door breathes cold.
+start: dalnir-cave-mouth
+
+rooms:
+  - id: dalnir-cave-mouth
+    name: The Cave Mouth
+    description: "A damp hillside cave, its back wall split by a worked stone doorway. Dropped torches and moldering supplies mark where the iksar criminals camped before they went in. They did not come out."
+    safe: true
+    features:
+      - { keywords: [supplies, camp, torches, gear], text: "The thieves left in a hurry. Whatever they found, they didn't expect it. Or him." }
+      - { keywords: [door, doorway, stone, sealed], text: "The doorway bears a noble's crest and a warning in old iksar script: 'Dalnir rests. Let him rest.' Someone didn't." }
+    items:
+      - { name: "Thieves' lantern", description: "A still-fueled lantern the criminals abandoned at the cave mouth." }
+    exits:
+      - { dir: down, to: dalnir-entry-stair, label: "Down through the crypt doorway" }
+
+  - id: dalnir-entry-stair
+    name: The Entry Stair
+    description: "A long stair descends into cold dark, the walls slick with crypt-damp. Something small and many-legged skitters away from your light."
+    encounter:
+      id: dl-stair-rats
+      monsters: [eq-dalnir-ravenous-nibbler, eq-dalnir-ravenous-nibbler, eq-dalnir-ravenous-nibbler]
+      intro: "A pack of ravenous nibblers boils up the stair, fearless and hungry!"
+      victory_text: "The nibblers scatter into the cracks, leaving the stair clear."
+      flag: dl-stair-cleared
+    exits:
+      - { dir: up, to: dalnir-cave-mouth, label: "Back up to the cave mouth" }
+      - { dir: in, to: dalnir-antechamber, label: "Down into the antechamber" }
+
+  - id: dalnir-antechamber
+    name: The Antechamber
+    description: "A pillared antechamber where the burial procession once gathered. Coerced thralls, the bound dead, shuffle in the gloom with no will of their own left."
+    encounter:
+      id: dl-ante-fight
+      monsters: [eq-dalnir-coerced-thrall, eq-dalnir-coerced-thrall]
+      intro: "Two coerced thralls lurch from behind the pillars, clawed hands grasping."
+      victory_text: "The thralls crumple. Two passages lead deeper."
+      flag: dl-ante-cleared
+    exits:
+      - { dir: out, to: dalnir-entry-stair, label: "Back up to the stair" }
+      - { dir: w, to: dalnir-thieves-end, label: "West, where bones lie fresh" }
+      - { dir: e, to: dalnir-offering-hall, label: "East, to a hall of offerings" }
+
+  - id: dalnir-thieves-end
+    name: The Thieves' End
+    description: "A dead-end chamber where the criminals met their fate, their gear and bones scattered, a smoldering goo creeping over the remains. One faint ghost lingers, clutching a stolen idol."
+    npcs:
+      - name: "Sythik's Ghost"
+        keywords: [sythik, ghost, thief, criminal, spirit]
+        sets_flag: dl-met-sythik
+        text: "We only wanted gold. We never should have touched his idol. The Kly woke, and he's no tomb-haunt. He's a sarnak wizard, and he'll burn you to ash if you fight him. But he only wants the crypt put right. Take the idol back to him in the burial chamber. Give it over. Maybe then he lets you live."
+    encounter:
+      id: dl-thieves-fight
+      monsters: [eq-dalnir-smoldering-goo, eq-dalnir-coerced-thrall]
+      intro: "Smoldering goo oozes up from the bones as a coerced thrall rises to guard the hoard!"
+      victory_text: "The goo hisses and draws back. Sythik's ghost watches you, sad, but no longer attacks."
+      flag: dl-thieves-cleared
+      loot:
+        - { name: "Stolen jade idol", description: "The idol the thieves pried from Dalnir's tomb. The theft that woke The Kly. Return it to him and he may let you go." }
+        - { name: "Thieves' coin-stash", description: "What little the criminals stole before they died for it.", gold: 40 }
+    exits:
+      - { dir: e, to: dalnir-antechamber, label: "Back to the antechamber" }
+
+  - id: dalnir-offering-hall
+    name: The Hall of Offerings
+    description: "A long hall lined with stone offering-niches, most of them looted. A Coerced crusader stands guard mid-hall, an iksar warrior bent to The Kly's will, armor and all."
+    encounter:
+      id: dl-offering-fight
+      monsters: [eq-dalnir-coerced-crusader, eq-dalnir-coerced-thrall]
+      intro: "The coerced crusader lifts its blade and advances in slow, certain steps. It moves like a man being made to, not a man who wants to."
+      victory_text: "The crusader falls with a crash of old armor. The hall opens up."
+      flag: dl-offering-cleared
+      parley:
+        dc: 12
+        success_text: 'You do not strike. You speak to the bound warrior as a person and name the life The Kly stole from him. For one breath the dead eyes clear. "...I was a guard. I was loyal." The blade lowers. "He only wants the crypt put right. Give back what was taken." The crusader steps aside, and does not rise against you again.'
+        failure_text: "Whatever the iksar was in life, The Kly's hold is total now. The blade does not waver."
+    exits:
+      - { dir: w, to: dalnir-antechamber, label: "Back to the antechamber" }
+      - { dir: s, to: dalnir-incense-crypt, label: "South, to a smoke-stained crypt" }
+      - { dir: n, to: dalnir-hall-of-wardens, label: "North, into the wardens' hall" }
+
+  - id: dalnir-incense-crypt
+    name: The Incense Crypt
+    description: "A small side-crypt black with the soot of old funeral incense. Smoldering goo pools in the corners. A sealed urn glints behind it."
+    encounter:
+      id: dl-incense-fight
+      monsters: [eq-dalnir-smoldering-goo]
+      intro: "The smoldering goo gathers and lunges, hot and reeking!"
+      victory_text: "The goo bursts and goes cold. The urn is yours."
+      flag: dl-incense-cleared
+      loot:
+        - { name: "Noble's funeral urn", description: "A gilt urn of Dalnir's house, its contents long dust, its gold leaf intact.", gold: 55 }
+    exits:
+      - { dir: n, to: dalnir-offering-hall, label: "Back to the hall of offerings" }
+
+  - id: dalnir-hall-of-wardens
+    name: The Hall of Wardens
+    description: "A pillared hall where Dalnir's loyal guard were entombed standing. The Kly has bent them too. Two Coerced crusaders step from their alcoves at your approach."
+    encounter:
+      id: dl-wardens-fight
+      monsters: [eq-dalnir-coerced-crusader, eq-dalnir-coerced-crusader]
+      intro: "Two coerced crusaders stride from their alcoves, blades crossing to bar the way north."
+      victory_text: "The wardens fall. The way deeper stands open."
+      flag: dl-wardens-cleared
+    exits:
+      - { dir: s, to: dalnir-offering-hall, label: "Back to the hall of offerings" }
+      - { dir: e, to: dalnir-flooded-vault, label: "East, to a flooded vault" }
+      - { dir: n, to: dalnir-overseers-room, label: "North, toward sarnak voices" }
+
+  - id: dalnir-flooded-vault
+    name: The Flooded Vault
+    description: "A treasure-vault half-flooded with black crypt-water. Coffers sit submerged, their locks long rusted away. Smoldering goo drifts the surface, hissing where heat meets water."
+    encounter:
+      id: dl-vault-fight
+      monsters: [eq-dalnir-smoldering-goo, eq-dalnir-coerced-thrall]
+      intro: "The black water heaves. A coerced thrall surges up out of it, smoldering goo roiling at its back!"
+      victory_text: "The water stills. The submerged coffers are yours to plunder."
+      flag: dl-vault-cleared
+      loot:
+        - { name: "Waterlogged treasure-coffer", description: "A coffer of Dalnir's house, silver and gem gone black with tarnish but intact.", gold: 90 }
+    exits:
+      - { dir: w, to: dalnir-hall-of-wardens, label: "Back to the wardens' hall" }
+
+  - id: dalnir-overseers-room
+    name: The Overseer's Room
+    description: "A working chamber where a Kly Overseer drives the coerced dead at their digging, a sarnak lieutenant with a cracking spellblade. Past it, a doorway glows with arcane light. That is The Kly's claimed sanctum."
+    encounter:
+      id: dl-overseer-fight
+      monsters: [eq-dalnir-kly-overseer, eq-dalnir-coerced-thrall]
+      intro: "The Kly Overseer rounds on you, sarnak spellblade crackling. 'The master is WORKING. Be gone, or be bound.'"
+      victory_text: "The Overseer falls. The arcane doorway beyond stands open."
+      flag: dl-overseer-cleared
+    exits:
+      - { dir: s, to: dalnir-hall-of-wardens, label: "Back to the wardens' hall" }
+      - { dir: in, to: dalnir-burial-chamber, label: "Through the glowing doorway (The Kly's sanctum)" }
+
+  - id: dalnir-burial-chamber
+    name: The Kly's Sanctum
+    description: "Dalnir's burial chamber, vaulted and cold, the noble's sarcophagus shoved aside for a worktable. The Kly turns from his work, a sarnak wizard wreathed in arcane light. 'More thieves. Unless...' His eyes find what you carry. 'Unless you have come to put right what the others broke.'"
+    objective: true
+    win_text: >-
+      The Kly is settled, by the idol or by your blades, and the arcane light dims. All through
+      the crypt the coerced dead slump into real rest. You climb back toward the cave mouth and
+      the green light of Kunark. Whether you carried out Dalnir's gold or only your lives, the
+      crypt is quiet at your back for the first time in an age.
+    encounter:
+      id: dl-kly-fight
+      monsters: [eq-dalnir-the-kly, eq-dalnir-coerced-crusader]
+      intro: >-
+        The Kly raises both hands, arcane lash gathering. He is no rampaging horror. He is a
+        scholar, and what drives him is offense: thieves cracked open a tomb he had sworn to keep,
+        and he woke furious that its order was broken. Put it right and his rage has nowhere left
+        to go. No young party out-casts a sarnak wizard. Return the idol, or flee. Do not trade
+        spells with him.
+      prompt: 'The Kly wants one thing: the crypt made whole again. Return the Stolen jade idol to its place and he will let you leave in peace, asking only that you take nothing more of Dalnir''s. (negotiate)'
+      victory_text: "Against long odds, The Kly's spellfire gutters and dies, and the Robe of Dalnir is left to you."
+      flag: dl-kly-resolved
+      parley:
+        dc: 14
+        cost_item: "Stolen jade idol"
+        success_text: 'You set the idol back in its place. The lash dissolves from his hands. "...The debt is repaid." Something almost grateful crosses the sarnak''s face. "Then the crypt is whole. Take nothing more, and go in peace. Let Dalnir rest." He returns to his work. You leave the noble''s treasures where they lie.'
+        failure_text: "Empty-handed, you are only one more thief to him. 'Insolent,' he hisses, and the arcane lash cracks toward you."
+      loot:
+        - { name: "Robe of Dalnir", description: "The Kly's arcane robe, taken from the noble's own wardrobe. Yours only if you somehow brought the wizard down.", gold: 150 }
+    exits:
+      - { dir: out, to: dalnir-overseers-room, label: "Back to the Overseer's room" }

@@ -1,0 +1,189 @@
+# The Lost Temple of Cazic-Thule — a scripted text adventure (EQ / P1999).
+#
+# The lizardman temple in the Feerrott swamp, ruled by the Tae Ew priest-caste and
+# haunted by an Avatar of the fear-god Cazic-Thule. The Avatar is a god-avatar, not
+# killable by a mortal party; the win is making an offering and escaping. Condensed
+# ~10 rooms. Schema: see src/data/adventures/sunless-citadel.yaml.
+
+id: cazic-thule
+title: The Lost Temple of Cazic-Thule
+system: eq-rpg
+synopsis: >-
+  A sunken temple in the Feerrott swamp, home to a tribe of lizardmen and the Tae Ew priests
+  of Cazic-Thule, god of fear. Clay golems guard the maze, alligators the pit, and in the
+  deepest pyramid an Avatar of the Faceless one stirs. You will not kill a god's avatar. Bring
+  it an offering, abase yourself, and flee with your lives.
+recommended_party: "2–4 heroes, level 1–2"
+map_image: maps/everquest/Ct.jpg
+intro: >-
+  The Feerrott steams. A sunken step-pyramid temple rises out of the swamp, its mouth a black
+  doorway between weeping stone idols. Lizardmen chant somewhere within. Under the chant runs a
+  colder sound, the breathing of something that should not be awake. This is the temple of
+  Cazic-Thule, god of fear, and it earns the name.
+start: cazic-thule-temple-doors
+
+rooms:
+  - id: cazic-thule-temple-doors
+    name: The Temple Doors
+    description: "A black doorway gapes between two weeping idols of the Faceless one. Swamp water laps the threshold. Lizardman glyphs are daubed in old blood on the lintel. The chanting echoes up from somewhere deep inside."
+    safe: true
+    features:
+      - { keywords: [idol, idols, faceless, glyph, glyphs, lintel], text: "The idols have no faces. Cazic-Thule is worshipped as the Faceless, the fear that needs no shape. The glyphs warn the unfaithful to turn back." }
+    exits:
+      - { dir: in, to: cazic-thule-courtyard, label: "In through the temple doors" }
+
+  - id: cazic-thule-courtyard
+    name: The Courtyard
+    description: "A broad sunken courtyard, busy with lizardman traffic. Scaled warriors drill in the shallow water and chant-priests watch from the steps. This is the temple's heart, and it is never empty."
+    encounter:
+      id: ct-court-fight
+      monsters: [eq-cazic-thule-lizard-crusader, eq-cazic-thule-lizard-crusader, eq-cazic-thule-lizard-zealot]
+      intro: "Lizardman crusaders splash forward, spears leveled, a zealot hissing fear-prayers behind them! They are defending their home, in their way."
+      victory_text: "The lizards break and scatter into the side-passages. The courtyard quiets."
+      flag: ct-court-cleared
+      parley:
+        dc: 13
+        success_text: 'You make it plain you have not come to burn their home, only to pass through it. The lizardmen hiss among themselves and then draw back into the shallow water, watching. The courtyard lets you by. They will not help you. They will not die for the priests today, either.'
+        failure_text: "The zealot's fear-prayer drowns out your words, and the crusaders charge."
+    exits:
+      - { dir: out, to: cazic-thule-temple-doors, label: "Back to the temple doors" }
+      - { dir: e, to: cazic-thule-gator-pit, label: "East, to a flooded pit" }
+      - { dir: down, to: cazic-thule-sewers, label: "Down, into the temple sewers" }
+      - { dir: n, to: cazic-thule-throne-room, label: "North, up toward the throne room" }
+
+  - id: cazic-thule-gator-pit
+    name: The Gator Pit
+    description: "A flooded pit where the temple keeps its alligators. By the gnawed bones on the ledge, it feeds them well. Something gold glints in the murk at the bottom."
+    encounter:
+      id: ct-gator-fight
+      monsters: [eq-cazic-thule-feerrott-alligator]
+      intro: "A Feerrott alligator erupts from the murk, jaws wide!"
+      victory_text: "The great gator goes still in the bloodied water. The glint at the bottom is yours."
+      flag: ct-gator-cleared
+      loot:
+        - { name: "Sunken temple-gold", description: "Offerings the temple's victims dropped into the pit over the years.", gold: 70 }
+    exits:
+      - { dir: w, to: cazic-thule-courtyard, label: "Back to the courtyard" }
+
+  - id: cazic-thule-sewers
+    name: The Sewers
+    description: "Low, flooded tunnels run beneath the temple, a foul confusing warren the lizards use to move unseen. An escape this way would be slow and grim."
+    encounter:
+      id: ct-sewers-fight
+      monsters: [eq-cazic-thule-lizard-zealot, eq-cazic-thule-lizard-zealot]
+      intro: "Two lizardman zealots rise from the muck, fear-bolts crackling on their claws!"
+      victory_text: "The zealots sink back into the filth. A passage leads on to the maze."
+      flag: ct-sewers-cleared
+    exits:
+      - { dir: up, to: cazic-thule-courtyard, label: "Up to the courtyard" }
+      - { dir: in, to: cazic-thule-maze, label: "Onward, into the maze" }
+
+  - id: cazic-thule-maze
+    name: The Maze
+    description: "A twisting maze of identical stone corridors, built to break the mind. A clay golem patrols it. At a dead end, the ghost of some long-lost adventurer flickers and mouths a warning."
+    npcs:
+      - name: "The Lost Adventurer"
+        keywords: [ghost, adventurer, spirit, lost]
+        sets_flag: ct-knows-avatar
+        text: "Turn back. No. You won't. Then listen. The Avatar waits in the deepest pyramid, the green-lit one. You cannot kill it. I tried. We all tried. But it is a god of fear, and fear loves an offering. The Cenobite keeps a vial of sacred lizard blood. Bring it. Offer it. Then RUN."
+    encounter:
+      id: ct-maze-golem
+      monsters: [eq-cazic-thule-clay-golem]
+      intro: "A clay golem rounds a corner and raises fists of wet temple-clay."
+      victory_text: "The golem slumps into formless clay. The ghost nods once, and fades."
+      flag: ct-maze-cleared
+    exits:
+      - { dir: out, to: cazic-thule-sewers, label: "Back to the sewers" }
+      - { dir: n, to: cazic-thule-clay-pits, label: "North, to the clay pits" }
+
+  - id: cazic-thule-clay-pits
+    name: The Clay Pits
+    description: "The pits where the temple's clay golems are dug and shaped. Half-formed guardians slump against the walls. One is finished enough to move."
+    encounter:
+      id: ct-pits-golem
+      monsters: [eq-cazic-thule-clay-golem, eq-cazic-thule-lizard-zealot]
+      intro: "A finished clay golem heaves up from the pit, a zealot chanting it to life!"
+      victory_text: "The golem crumbles back into the clay it came from."
+      flag: ct-pits-cleared
+      loot:
+        - { name: "Golem-shaper's tools", description: "The bronze tools the priests use to shape their guardians, finely made and valuable.", gold: 50 }
+    exits:
+      - { dir: s, to: cazic-thule-maze, label: "Back to the maze" }
+
+  - id: cazic-thule-throne-room
+    name: The Throne Room
+    description: "A pillared hall where the temple's war-priests hold court. A Tae Ew Templar guards the dais, lizardscale blade drawn, the way to the inner shrines behind him."
+    encounter:
+      id: ct-throne-fight
+      monsters: [eq-cazic-thule-tae-ew-templar, eq-cazic-thule-lizard-crusader]
+      intro: "The Tae Ew Templar steps off the dais. 'The Faceless does not receive the unfaithful. You, He receives by my blade.'"
+      victory_text: "The Templar falls across his dais. The inner shrine lies open."
+      flag: ct-throne-cleared
+    exits:
+      - { dir: s, to: cazic-thule-courtyard, label: "Back to the courtyard" }
+      - { dir: n, to: cazic-thule-cenobite-shrine, label: "North, to the cenobite's shrine" }
+
+  - id: cazic-thule-cenobite-shrine
+    name: The Cenobite's Shrine
+    description: "A shrine of dripping candles and faceless idols, tended by the Cazic Cenobite, a lizardman ascetic who speaks for the Faceless. On the altar sits a stoppered vial of dark, sacred blood."
+    encounter:
+      id: ct-cenobite-fight
+      monsters: [eq-cazic-thule-cazic-cenobite, eq-cazic-thule-lizard-zealot]
+      intro: "The Cazic Cenobite opens eyes filmed white. 'Fear has sent you to me. Good. FEAR ME.' Dread rolls off him in waves."
+      victory_text: "The Cenobite folds over his altar. The vial of sacred blood is yours, the offering the ghost spoke of."
+      flag: ct-cenobite-cleared
+      loot:
+        - { name: "Vial of Lizard Blood", description: "Sacred blood of the temple, kept for the Faceless. An offering an Avatar of Fear will accept." }
+    exits:
+      - { dir: s, to: cazic-thule-throne-room, label: "Back to the throne room" }
+      - { dir: up, to: cazic-thule-archon-pyramid, label: "Up, into the archon's pyramid" }
+
+  - id: cazic-thule-archon-pyramid
+    name: The Archon's Pyramid
+    description: "A stepped pyramid-chamber, its summit lost in shadow. The Tae Ew Archon descends to meet you, the temple's high priest, robed in lizardscale and authority."
+    encounter:
+      id: ct-archon-fight
+      monsters: [eq-cazic-thule-tae-ew-archon, eq-cazic-thule-lizard-crusader]
+      intro: >-
+        The Tae Ew Archon raises both clawed hands. He is the temple's truest believer: every drop
+        of blood spilled here, his own people's included, is worship, and he means to send you down
+        to his god as the finest offering of all. 'You have spilled much faithful blood to reach me.
+        The Faceless noticed. He WAITS for you below.' A dangerous foe, though not yet a god.
+      prompt: 'The Archon would rather you meet his god than his blade. Speak of your respect for the Faceless and he may send you down to be judged. (negotiate)'
+      victory_text: "The Archon falls from his pyramid. Below, a green light pulses: the Avatar's chamber."
+      flag: ct-archon-cleared
+      parley:
+        dc: 14
+        success_text: "You meet the Archon's dread with words of respect for the Faceless, and offer to make your obeisance below. Pride wars with suspicion, and pride wins. 'Go to Him, then. He will judge you as I cannot.' He stands aside, almost eager to send you on."
+        failure_text: "'Empty piety.' The Archon's wrath gathers. 'The Faceless will have you either way.'"
+    exits:
+      - { dir: down, to: cazic-thule-cenobite-shrine, label: "Back to the shrine" }
+      - { dir: in, to: cazic-thule-avatar-pyramid, label: "Down into the green light (the Avatar's pyramid)" }
+
+  - id: cazic-thule-avatar-pyramid
+    name: The Avatar's Pyramid
+    description: "The deepest pyramid, lit sick green by a 'gumdrop' of pure dread at its heart. Within it stands the Avatar of Fear, a fragment of Cazic-Thule himself, taller than the room should allow, bladed claws spread. Your courage drains just looking at it. This is not a thing you fight."
+    objective: true
+    win_text: >-
+      You do the only sane thing, and you live through it. Up through the pyramid, the maze, the
+      courtyard, out into the steaming Feerrott, hearts hammering. You did not slay the god of fear.
+      Whatever it took from you on the way out, you survived him, and walked out of his temple with
+      the tale. Few can say as much.
+    encounter:
+      id: ct-avatar-fight
+      monsters: [eq-cazic-thule-avatar-of-fear]
+      intro: >-
+        The Avatar of Fear regards you with the face it does not have. It feels no hatred for you,
+        which is somehow worse. It is hunger in the shape of a god, you are afraid, and that is all
+        it ever wanted. To raise a weapon here is to die. Kneel and OFFER, or flee while you still can.
+      prompt: 'The Avatar does not bargain. It feeds. Pour out the Vial of Lizard Blood and it will take that, and a measure of each of your courage besides, and let you crawl away. The mark fear leaves does not heal. (negotiate)'
+      victory_text: "By an impossibility you will never brag about, the Avatar's fragment is banished. The temple will not believe it."
+      flag: ct-avatar-resolved
+      parley:
+        dc: 16
+        cost_item: "Vial of Lizard Blood"
+        cost_hp: 3
+        success_text: "You kneel and pour the sacred blood out before the Avatar. The green dread coils around the offering, and for a moment around you, and takes its tithe of nerve. Then the no-face turns away. You are beneath its notice now, which is the only mercy fear knows. Crawl out, and do not look back."
+        failure_text: "Your offering is nothing and your words are less. The Avatar's aura closes like a fist. There is no reasoning with terror itself, only feeding it or fleeing it."
+    exits:
+      - { dir: out, to: cazic-thule-archon-pyramid, label: "Back up to the archon's pyramid" }

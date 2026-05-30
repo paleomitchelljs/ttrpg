@@ -1,0 +1,244 @@
+# The Sunless Citadel — a scripted text adventure (trial module).
+#
+# An adventure is an authored room graph the engine in src/lib/adventure/ walks.
+# Rooms borrow their prose from scenes.yaml by `scene_id` (so the same room
+# descriptions feed both "Roll a scene" and this adventure); anything written
+# inline on a room overrides the scene.
+#
+# ROOM SCHEMA
+#   id            unique room id (reuse the matching scene_id where one exists)
+#   scene_id      pull name + description from scenes.yaml
+#   name          override display name (optional)
+#   description   override prose (optional)
+#   first_visit   extra text shown only the first time the party enters
+#   search_text   text revealed by the `search` command
+#   safe          true → the party may `rest` here
+#   objective     true → winning this room's fight (or entering it) wins the game
+#   win_text      ending read-aloud, shown on an objective victory
+#   exits         list of { dir, to, label?, locked_by?, locked_text? }
+#   items         list of { name, description?, gold? } lying in the room
+#   features      list of { keywords: [...], text, hidden? } the party can examine
+#   npcs          list of { name, keywords: [...], text, sets_flag? }
+#   encounter     { id, monsters: [monster_id...], intro?, victory_text?, flag?, loot?, parley? }
+#
+# Directions understood: n/s/e/w/up/down/in/out (plus full words).
+
+id: sunless-citadel
+title: The Sunless Citadel
+system: shadowdark
+synopsis: >-
+  A ravine east of Oakhurst swallows a fortress that sank into the earth long ago.
+  Kobolds and goblins war in its halls over a stolen dragon, and far below a twisted
+  druid tends a pale, blood-fed tree. Find the missing Hucrele heirs, and whatever
+  took them.
+recommended_party: "1–4 heroes, level 1"
+map_image: maps/sunless-citadel/fortress-level.png
+intro: >-
+  The Old Road runs east from Oakhurst to a rocky cleft where broken pillars lean over
+  a dark ravine. A knotted rope dangles into the gloom. Somewhere below, the brother
+  and sister you were sent to find, Talgen and Sharwyn Hucrele, vanished a month ago.
+start: sc-dark-ravine
+
+rooms:
+  # ───────── Fortress level ─────────
+  - id: sc-dark-ravine
+    scene_id: sc-dark-ravine
+    safe: true
+    first_visit: "The wind moans across the cleft. The rope is old but holds. Boot-scuffs and the odd dropped copper say others have climbed down before you."
+    items:
+      - { name: "Knotted rope", description: "A long, sturdy climbing rope, knotted every foot. Useful for the climb back up." }
+    features:
+      - { keywords: [pillar, pillars, runes, graffiti, dwarven, writing], text: "Among the dwarven graffiti warning trespassers away, one phrase is scratched again and again in old Draconic: 'Ashardalon.'" }
+    exits:
+      - { dir: down, to: sc-crumbled-courtyard, label: "Climb down the knotted rope" }
+
+  - id: sc-crumbled-courtyard
+    scene_id: sc-crumbled-courtyard
+    safe: true
+    search_text: "Tapping the flagstones, you find two that wobble. A covered pit trap waits to your left. Now that you know, you can step around it."
+    features:
+      - { keywords: [flagstones, floor, stones, crenellations, battlement], text: "The sunken battlement is level with the cavern floor. Some flagstones sit oddly, as if laid over a hole." }
+      - { keywords: [trapdoor, pit, trap, hole], hidden: true, text: "A trapdoor pit yawns beneath the loose flagstones, a ten-foot drop onto old bones. Easy to avoid once you've spotted it." }
+    exits:
+      - { dir: up, to: sc-dark-ravine, label: "Climb back up the rope" }
+      - { dir: in, to: sc-tower-shell, label: "Enter the hollow tower" }
+
+  - id: sc-tower-shell
+    scene_id: sc-tower-shell
+    features:
+      - { keywords: [runes, draconic, ashardalon, wall], text: "The old Draconic runes spell 'Ashardalon.' A name said with dread." }
+      - { keywords: [goblin, goblins, corpse, body, spear, bodies], text: "Four long-dead goblins sprawl in the dust. One is pinned to the wall by the spear that killed him. The kobolds and goblins have been at war down here a long time." }
+    items:
+      - { name: "Pinning spear", description: "A serviceable, if grim, spear pried from a dead goblin." }
+    exits:
+      - { dir: out, to: sc-crumbled-courtyard, label: "Back out to the courtyard" }
+      - { dir: e, to: sc-hall-of-dragons, label: "East, toward kobold territory" }
+      - { dir: s, to: sc-gallery-of-forlorn-notes, label: "South, to a sealed gallery" }
+
+  # ───────── Side branch: the dragon-priest's wing ─────────
+  - id: sc-gallery-of-forlorn-notes
+    scene_id: sc-gallery-of-forlorn-notes
+    features:
+      - { keywords: [globe, globes, crystal, music, pedestal, alcove, song], text: "One crystal globe glows soft blue and tinkles a brooding music. Lift it from its pedestal and the song comes with you." }
+    items:
+      - { name: "Singing crystal globe", description: "A blue crystal globe that hums a faint, melancholy tune.", gold: 50 }
+    exits:
+      - { dir: n, to: sc-tower-shell, label: "North, back to the tower" }
+      - { dir: e, to: sc-dragons-riddle, label: "East, down a dusty passage" }
+
+  - id: sc-dragons-riddle
+    scene_id: sc-dragons-riddle
+    npcs:
+      - name: "The Marble Dragon"
+        keywords: [dragon, statue, marble, riddle]
+        sets_flag: solved-riddle
+        text: "Speak, little thief. I am older than your road. Born of fire, I sleep in stone, and wake only when the brave speak true. You meet my carved eye and answer plainly. Pleased, the dragon's jaws grind a hidden door open to the east."
+    features:
+      - { keywords: [dust, snow, floor], text: "Dust lies thick as gray snow, undisturbed for an age." }
+    exits:
+      - { dir: w, to: sc-gallery-of-forlorn-notes, label: "West, back to the gallery" }
+      - { dir: e, to: sc-tomb-of-the-failed-dragonpriest, label: "East, through the dragon's door", locked_by: solved-riddle, locked_text: "A blank stone wall blocks the way. The marble dragon watches. Perhaps it wants to be spoken to (talk to the dragon)." }
+
+  - id: sc-tomb-of-the-failed-dragonpriest
+    scene_id: sc-tomb-of-the-failed-dragonpriest
+    encounter:
+      id: tomb-quasit
+      monsters: [sc-jot-quasit]
+      intro: "A tiny, leathery demon winks into view above the sarcophagus, cackling. Jot the Quasit guards this tomb!"
+      victory_text: "The quasit bursts into foul smoke. The sarcophagus stays sealed. Best not to open what a demon was set to guard."
+      flag: tomb-cleared
+      loot:
+        - { name: "Dragonpriest's cloak clasp", description: "A heavy silver clasp shaped like a coiled dragon.", gold: 60 }
+    exits:
+      - { dir: w, to: sc-dragons-riddle, label: "West, back through the dragon's door" }
+
+  # ───────── Kobold halls ─────────
+  - id: sc-hall-of-dragons
+    scene_id: sc-hall-of-dragons
+    encounter:
+      id: hall-kobolds
+      monsters: [kobold, kobold, kobold]
+      intro: "Three kobold honor guards level their spears and shriek an alarm! They have the jumpy look of soldiers who have lost too many fights lately."
+      victory_text: "The last kobold drops its spear and flees yipping into the dark. The hall is yours."
+      flag: hall-cleared
+      parley:
+        dc: 12
+        success_text: "You lower your guard and make it plain you are no goblin raiding party. The kobolds keep their spears up, suspicious, then bob their heads. They have lost enough to the goblins of late to know a possible ally when one walks in. They lead you on toward their keeper Meepo instead of dying on your blades."
+        failure_text: "Goblin-haunted and twitchy, the guards strike first and ask nothing."
+    features:
+      - { keywords: [column, columns, dragons, carving, carvings], text: "Two rows of marble columns, each carved with entwining dragons worn smooth by centuries of kobold hands." }
+    exits:
+      - { dir: w, to: sc-tower-shell, label: "West, back to the tower" }
+      - { dir: n, to: sc-dragon-pen, label: "North, to a guarded den" }
+      - { dir: e, to: sc-goblinville, label: "East, through the battered goblin door" }
+
+  - id: sc-dragon-pen
+    scene_id: sc-dragon-pen
+    safe: true
+    npcs:
+      - name: "Meepo"
+        keywords: [meepo, kobold, keeper]
+        sets_flag: met-meepo
+        text: "You found me! I am Meepo, Keeper of Dragons, but the dragon is GONE. The stinking goblins stole Calcryx, our white wyrmling, through that east door. Help me get Calcryx back and Queen Yusdrayl will reward you! The goblin chief Durnn keeps her chained in his hall."
+    features:
+      - { keywords: [cage, pit, ashes, bones], text: "A burst metal cage stands by a bonfire pit choked with ash and bits of kobold armor. Whatever was caged here broke out, or was dragged out." }
+    items:
+      - { name: "Meepo's gratitude token", description: "A crude dragon-shaped pendant Meepo presses into your hand once you agree to help." }
+    exits:
+      - { dir: s, to: sc-hall-of-dragons, label: "South, back to the dragon hall" }
+
+  # ───────── Goblin warren ─────────
+  - id: sc-goblinville
+    scene_id: sc-goblinville
+    encounter:
+      id: goblinville-fight
+      monsters: [goblin, goblin, goblin]
+      intro: "A knot of goblins drops its dinner and snatches up rusty blades, screeching for the chief!"
+      victory_text: "The surviving goblins scatter into the fungus-light. The warren falls quiet but for dripping water."
+      flag: goblinville-cleared
+    features:
+      - { keywords: [heap, wall, wheels, antiques, trophy, junk], text: "A heaped wall of wagon wheels and broken antiques, sixty years of plunder dragged into the dark." }
+    exits:
+      - { dir: w, to: sc-hall-of-dragons, label: "West, back to the dragon hall" }
+      - { dir: s, to: sc-hall-of-the-goblin-chief, label: "South, to the chief's hall" }
+
+  - id: sc-hall-of-the-goblin-chief
+    scene_id: sc-hall-of-the-goblin-chief
+    encounter:
+      id: chief-fight
+      monsters: [sc-durnn-hobgoblin-chief, sc-calcryx-white-dragon-wyrmling, goblin]
+      intro: "Durnn the hobgoblin chief rises from his stone throne, longsword drawn. Beside him a chained white dragon wyrmling, Calcryx, snarls and snaps its frosty jaws!"
+      victory_text: "Durnn falls across his throne. Calcryx, suddenly unguarded, eyes you warily. There will be a reckoning later over who keeps the little dragon. On the chief's hand you find the Hucrele family signet ring."
+      flag: chief-cleared
+      loot:
+        - { name: "Hucrele signet ring", description: "A gold signet bearing the Hucrele crest. Proof of the heirs' fate, and the reward you were promised." }
+        - { name: "Pouch of goblin coins", description: "A greasy pouch of mixed copper and silver.", gold: 30 }
+    features:
+      - { keywords: [throne, chest, iron], text: "A crude stone throne sits before a vine-lined shaft, an iron chest at its foot." }
+      - { keywords: [sapling, tree, pot, plant], text: "A sapling grows in a stone pot beside the throne, pale and wrong, a gift to the chief from someone called Belak." }
+      - { keywords: [shaft, pit, vines], text: "A vine-lined shaft drops through the floor into a faint violet glow far below. That is the Grove." }
+    exits:
+      - { dir: n, to: sc-goblinville, label: "North, back to the warren" }
+      - { dir: down, to: sc-compost-central, label: "Climb down the vine-lined shaft to the Grove" }
+
+  # ───────── The Twilight Grove ─────────
+  - id: sc-compost-central
+    scene_id: sc-compost-central
+    encounter:
+      id: compost-blights
+      monsters: [sc-twig-blight, sc-twig-blight]
+      intro: "Two bundles of animate twigs unfold from the compost heap and clatter toward you, thorny claws clicking!"
+      victory_text: "The twig blights collapse into ordinary sticks. The reek of loam and decay presses close."
+      flag: compost-cleared
+    features:
+      - { keywords: [fungus, light, bin, bins, compost, heap], text: "Luminescent fungus drips violet light over rusted bins of turned earth, the heap that feeds whatever grows below." }
+    exits:
+      - { dir: up, to: sc-hall-of-the-goblin-chief, label: "Climb the shaft back up" }
+      - { dir: e, to: sc-ashardalons-shrine, label: "East, to a dragon shrine" }
+      - { dir: s, to: sc-twilight-grove, label: "South, toward a pale glow" }
+
+  - id: sc-ashardalons-shrine
+    scene_id: sc-ashardalons-shrine
+    encounter:
+      id: shrine-shadow
+      monsters: [sc-shadow]
+      intro: "The inky shadow behind the dragon statue peels away from the wall and drifts toward you, cold and hungry."
+      victory_text: "The shadow unravels into nothing. The red glow in the statue's eyes seems, for a moment, to dim."
+      flag: shrine-cleared
+      loot:
+        - { name: "Tarnished silver chalice", description: "A heavy chalice left as an offering before the dragon statue, black with age.", gold: 40 }
+    features:
+      - { keywords: [statue, dragon, tile, redstone, eyes], text: "A huge marble dragon rears over a five-foot redstone tile set in the floor. Its eye sockets are empty, yet a red glow lingers." }
+    exits:
+      - { dir: w, to: sc-compost-central, label: "West, back to the compost cavern" }
+
+  - id: sc-twilight-grove
+    scene_id: sc-twilight-grove
+    objective: true
+    win_text: >-
+      However it ended at the Gulthias Tree, you climb back toward the rope with the Hucrele heirs
+      in tow, blinking and weak but alive, and the long walk to Oakhurst ahead of you. You came to
+      learn their fate. You leave having changed it.
+    encounter:
+      id: belak-fight
+      monsters: [sc-belak-the-outcast, sc-kulket-giant-tree-frog, sc-twig-blight, sc-twig-blight]
+      intro: >-
+        Beneath a pale tree whose roots clutch a black, splintered stake, Belak the Outcast turns to
+        face you, sickle raised. He does not look like a monster. He looks like a tired man who found
+        something wonderful in the dark and cannot understand why the world keeps sending people to
+        take it from him. His giant frog Kulket croaks from the branches, and twig blights, the
+        garden's children, rise from the loam. "You should not have come to my garden," he says, and
+        he sounds more sad than angry.
+      prompt: 'Belak does not want a fight; he wants to be left alone with his Tree. Swear to leave the grove standing and he will free the Hucrele heirs to you. The corruption lives on after you go. (negotiate)'
+      victory_text: "Belak falls. As he dies the Gulthias Tree shudders and its hold breaks; Sharwyn and Sir Braford slump free, themselves again, and you put the pale tree to the torch."
+      flag: belak-defeated
+      parley:
+        dc: 13
+        grants_flag: grove-spared
+        success_text: "Belak lowers the sickle, almost relieved to be asked rather than attacked. 'Then we understand each other. Take the children of that other house. They were never mine.' He wakes Sharwyn and Sir Braford from the Tree's dream and gives them into your care, asking only that you leave his garden be. The Gulthias Tree still stands when you go. So, today, does everyone."
+        failure_text: "'No. The garden is not yours to judge.' Belak raises the sickle, and the grief in his face hardens."
+    features:
+      - { keywords: [tree, gulthias, stake, roots], text: "The pale Gulthias Tree grows from a black, splintered stake driven through whatever lies beneath. Its fruit is what sprouts the twig blights." }
+      - { keywords: [sharwyn, braford, supplicant, supplicants, branches], text: "Two figures stand glassy-eyed among the branches: Sharwyn Hucrele and Sir Braford, lost to the tree. They will not wake while it lives." }
+    exits:
+      - { dir: n, to: sc-compost-central, label: "North, back to the compost cavern" }

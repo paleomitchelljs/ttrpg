@@ -143,9 +143,9 @@ export function EnemyTab() {
     <div className="col" style={{ gap: '1.25rem' }}>
       <div className="row" style={{ flexWrap: 'wrap', gap: '0.5rem' }}>
         <h1 style={{ margin: 0 }} className="grow">Monsters</h1>
-        <button className="ghost" onClick={() => rollEncounter(1)}>🎲 Tier 1</button>
-        <button className="ghost" onClick={() => rollEncounter(2)}>🎲 Tier 2</button>
-        <button className="ghost" onClick={() => rollEncounter(3)}>🎲 Boss</button>
+        <button className="ghost" onClick={() => rollEncounter(1)}>Tier 1</button>
+        <button className="ghost" onClick={() => rollEncounter(2)}>Tier 2</button>
+        <button className="ghost" onClick={() => rollEncounter(3)}>Boss</button>
         <button className="primary" onClick={createEncounter}>+ New encounter</button>
       </div>
 
@@ -218,8 +218,8 @@ function MonsterLibraryCard({ monster, onAdd }: { monster: Monster; onAdd: () =>
         <div className="monster-lib-name grow">{monster.name}</div>
       </div>
       <div className="monster-lib-stats">
-        <span>❤️ {monster.hpMax}</span>
-        <span>🛡️ {monster.ac}</span>
+        <span>HP {monster.hpMax}</span>
+        <span>AC {monster.ac}</span>
         <span className="muted">L{monster.level}</span>
       </div>
       {monster.tags.length > 0 && (
@@ -365,7 +365,7 @@ function MonsterInstanceCard({ instance, onPatch, onRemove }: MonsterInstancePro
       <div className="monster-card-hud">
         <div className="monster-hp">
           <div className="monster-hp-value">
-            <span className="hud-icon">❤️</span> {instance.hp.current}<span className="hud-sub">/{instance.hp.max}</span>
+            <span className="hud-sub">HP</span> {instance.hp.current}<span className="hud-sub">/{instance.hp.max}</span>
           </div>
           <div className="monster-hp-buttons">
             <button className="hp-button" onClick={() => adjustHP(-1)}>−</button>
@@ -373,7 +373,7 @@ function MonsterInstanceCard({ instance, onPatch, onRemove }: MonsterInstancePro
           </div>
         </div>
         <div className="monster-ac">
-          <span className="hud-icon">🛡️</span> {template.ac}
+          <span className="hud-sub">AC</span> {template.ac}
         </div>
       </div>
       <div className="monster-card-attacks">
