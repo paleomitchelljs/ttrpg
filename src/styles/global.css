@@ -1284,6 +1284,13 @@ button.hud-attack .hud-value { color: var(--accent); }
 .adv-chip-rest { color: var(--accent); }
 .adv-chip-talk { border-color: var(--border-strong); color: var(--ink); background: var(--bg-2); }
 .adv-chip-spell { border-color: var(--accent-hot); color: var(--accent-hot); }
+.adv-spellcast { display: inline-flex; gap: 0.3rem; align-items: center; }
+.adv-spellcast select {
+  font-size: 0.85rem;
+  padding: 0.4rem 0.5rem;
+  border-radius: 999px;
+  max-width: 14rem;
+}
 
 /* Player: command bar + end card */
 .adv-cmdbar { display: flex; gap: 0.5rem; }

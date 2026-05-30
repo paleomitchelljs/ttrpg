@@ -4,6 +4,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { useArtUrl } from '../../lib/hooks';
+import { getSpell } from '../../lib/shadowdark/spells';
 import {
   activeMember,
   currentRoom,
@@ -24,6 +25,7 @@ interface Props {
 export function AdventurePlayer({ adventure, state, onCommand, onExit, onFinish }: Props) {
   const [input, setInput] = useState('');
   const [showMap, setShowMap] = useState(false);
+  const [spell, setSpell] = useState('');
   const endRef = useRef<HTMLDivElement>(null);
 
   const room = currentRoom(state, adventure);
@@ -32,6 +34,18 @@ export function AdventurePlayer({ adventure, state, onCommand, onExit, onFinish 
   const enemies = livingEnemies(state);
   const items = roomItems(state, room);
   const active = activeMember(state);
+
+  // The active caster's still-castable spells, grouped by level for the dropdown.
+  const castable = active ? active.spells.filter((sp) => !active.spentSpells.includes(sp)) : [];
+  const spellsByLevel = (() => {
+    const m = new Map<number, string[]>();
+    for (const name of castable) {
+      const tier = getSpell(name)?.tier ?? 1;
+      if (!m.has(tier)) m.set(tier, []);
+      m.get(tier)!.push(name);
+    }
+    return [...m.entries()].sort((a, b) => a[0] - b[0]);
+  })();
   const REASON_TAGS = new Set([
     'humanoid', 'goblinoid', 'gnoll', 'kobold', 'leader', 'boss', 'named-character',
     'hero', 'caster', 'fiend', 'druid', 'wizard', 'fighter', 'dragon', 'vampire',
@@ -50,6 +64,11 @@ export function AdventurePlayer({ adventure, state, onCommand, onExit, onFinish 
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [showMap]);
+
+  // Clear the spell selection when the active caster changes or combat ends.
+  useEffect(() => {
+    setSpell('');
+  }, [state.activeIndex, state.mode]);
 
   function submit() {
     const cmd = input.trim();
@@ -111,10 +130,31 @@ export function AdventurePlayer({ adventure, state, onCommand, onExit, onFinish 
               {enemies.map((e) =>
                 chip(`${e.name} (${e.hp.current}/${e.hp.max})`, `attack ${e.name}`, 'adv-chip-foe'),
               )}
-              {active &&
-                active.spells
-                  .filter((sp) => !active.spentSpells.includes(sp))
-                  .map((sp) => chip(`Cast ${sp}`, `cast ${sp}`, 'adv-chip-spell'))}
+              {castable.length > 0 && (
+                <span className="adv-spellcast">
+                  <select aria-label="Choose a spell to cast" value={spell} onChange={(e) => setSpell(e.target.value)}>
+                    <option value="">Cast a spell…</option>
+                    {spellsByLevel.map(([tier, names]) => (
+                      <optgroup key={tier} label={`Level ${tier}`}>
+                        {names.map((n) => (
+                          <option key={n} value={n}>{n}</option>
+                        ))}
+                      </optgroup>
+                    ))}
+                  </select>
+                  <button
+                    className="adv-chip adv-chip-spell"
+                    disabled={!spell}
+                    onClick={() => {
+                      if (!spell) return;
+                      onCommand(`cast ${spell}`);
+                      setSpell('');
+                    }}
+                  >
+                    Cast
+                  </button>
+                </span>
+              )}
               {canNegotiate && chip('Negotiate', 'negotiate', 'adv-chip-talk')}
               {chip('Flee', 'flee', 'adv-chip-warn')}
               {chip('Look', 'look')}
