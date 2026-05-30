@@ -147,9 +147,19 @@ export interface PartyMemberState {
   /** Charisma modifier, used for parley reaction rolls. */
   chaMod: number;
   weaponName: string;
+  /** Known spell names (empty for non-casters). */
+  spells: string[];
+  /** Spellcasting modifier: INT for wizards, WIS for priests. */
+  spellMod: number;
   hp: { current: number; max: number };
   /** Has this member acted in the current combat round. */
   acted: boolean;
+  /** Spells lost (failed cast) this fight; reset on a new combat. */
+  spentSpells: string[];
+  /** Temporary combat buffs from spells; reset on a new combat. */
+  atkBonus: number;
+  dmgBonus: number;
+  acBonus: number;
 }
 
 export interface EnemyState {

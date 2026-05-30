@@ -111,6 +111,10 @@ export function AdventurePlayer({ adventure, state, onCommand, onExit, onFinish 
               {enemies.map((e) =>
                 chip(`${e.name} (${e.hp.current}/${e.hp.max})`, `attack ${e.name}`, 'adv-chip-foe'),
               )}
+              {active &&
+                active.spells
+                  .filter((sp) => !active.spentSpells.includes(sp))
+                  .map((sp) => chip(`Cast ${sp}`, `cast ${sp}`, 'adv-chip-spell'))}
               {canNegotiate && chip('Negotiate', 'negotiate', 'adv-chip-talk')}
               {chip('Flee', 'flee', 'adv-chip-warn')}
               {chip('Look', 'look')}

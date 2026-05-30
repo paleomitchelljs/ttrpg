@@ -10,6 +10,7 @@ import { formatMod, pick, statMod } from '../dice';
 import { rollAndLog } from '../rollLog';
 import { getMonster } from '../shadowdark/monsters';
 import { characterCombatProfile } from '../shadowdark/combat';
+import { getSpell } from '../shadowdark/spells';
 import type { Character } from '../shadowdark/types';
 import type {
   Adventure,
@@ -186,7 +187,13 @@ function maybeStartCombat(s: GameState, adv: Adventure) {
   if (!enemies.length) return;
   s.combat = { encounterId: enc.id, enemies, round: 1 };
   s.mode = 'combat';
-  for (const m of s.party) m.acted = false;
+  for (const m of s.party) {
+    m.acted = false;
+    m.spentSpells = [];
+    m.atkBonus = 0;
+    m.dmgBonus = 0;
+    m.acBonus = 0;
+  }
   s.activeIndex = firstConsciousIndex(s);
   if (enc.intro) push(s, 'combat', enc.intro);
   push(s, 'combat', `Foes: ${enemies.map((e) => `${e.name} (AC ${e.ac}, HP ${e.hp.max})`).join(', ')}.`);
@@ -281,7 +288,8 @@ function enemyTurn(s: GameState) {
       push(s, 'combat', `${enemy.name} lunges at ${target.name} and misses.`);
       continue;
     }
-    if (atk.isCrit || atk.total >= target.ac) {
+    const effAc = target.ac + target.acBonus;
+    if (atk.isCrit || atk.total >= effAc) {
       const crit = atk.isCrit;
       const dealt = rollDamageTotal(attack.damage, crit, `${enemy.name} ${attack.name}`);
       target.hp.current = Math.max(0, target.hp.current - dealt);
@@ -292,7 +300,7 @@ function enemyTurn(s: GameState) {
       );
       if (target.hp.current <= 0) push(s, 'combat', `${target.name} is knocked out!`);
     } else {
-      push(s, 'combat', `${enemy.name} attacks ${target.name} but misses. (rolled ${atk.total} vs AC ${target.ac})`);
+      push(s, 'combat', `${enemy.name} attacks ${target.name} but misses. (rolled ${atk.total} vs AC ${effAc})`);
     }
   }
   if (consciousParty(s).length === 0) {
@@ -494,12 +502,12 @@ function doAttack(s: GameState, adv: Adventure, target: string) {
     push(s, 'system', target ? `There's no "${target}" to attack.` : 'No foes remain.');
     return;
   }
-  const atk = rollAndLog(`1d20${formatMod(member.attackMod)}`, 'normal', `${member.name} attacks ${enemy.name}`);
+  const atk = rollAndLog(`1d20${formatMod(member.attackMod + member.atkBonus)}`, 'normal', `${member.name} attacks ${enemy.name}`);
   if (atk.isFumble) {
     push(s, 'combat', `${member.name} swings at ${enemy.name} and fumbles! (rolled ${atk.total})`);
   } else if (atk.isCrit || atk.total >= enemy.ac) {
     const crit = atk.isCrit;
-    const dealt = rollDamageTotal(`1${member.damageDie}${formatMod(member.damageMod)}`, crit, `${member.name} damage`);
+    const dealt = rollDamageTotal(`1${member.damageDie}${formatMod(member.damageMod + member.dmgBonus)}`, crit, `${member.name} damage`);
     enemy.hp.current = Math.max(0, enemy.hp.current - dealt);
     push(
       s,
@@ -611,6 +619,180 @@ function doParley(s: GameState, adv: Adventure) {
   push(s, 'result', parley.failureText ?? 'There is something they want, and you do not have it. There will be no bargain.');
 }
 
+// ───────── spellcasting ─────────
+
+type SpellFx =
+  | { kind: 'damage'; dice: string }
+  | { kind: 'heal'; dice: string }
+  | { kind: 'turn' }
+  | { kind: 'sleep' }
+  | { kind: 'charm' }
+  | { kind: 'buffAc'; amount: number; self?: boolean }
+  | { kind: 'buffAtk'; atk: number; dmg: number }
+  | { kind: 'none' };
+
+// How each tier-1 spell behaves in a fight. Utility spells ('none') do nothing
+// useful in combat and don't cost the caster their turn.
+const SPELL_FX: Record<string, SpellFx> = {
+  'Magic Missile': { kind: 'damage', dice: '1d4+1' },
+  'Burning Hands': { kind: 'damage', dice: '1d6' },
+  'Cure Wounds': { kind: 'heal', dice: '1d6+1' },
+  'Turn Undead': { kind: 'turn' },
+  Sleep: { kind: 'sleep' },
+  'Charm Person': { kind: 'charm' },
+  'Shield of Faith': { kind: 'buffAc', amount: 2, self: true },
+  'Protection From Evil': { kind: 'buffAc', amount: 2 },
+  'Holy Weapon': { kind: 'buffAtk', atk: 1, dmg: 1 },
+  Light: { kind: 'none' },
+  Alarm: { kind: 'none' },
+  'Detect Magic': { kind: 'none' },
+  'Floating Disk': { kind: 'none' },
+  'Hold Portal': { kind: 'none' },
+};
+
+const CHARMABLE = new Set(['humanoid', 'goblinoid', 'gnoll', 'kobold']);
+
+function findMember(s: GameState, token: string): PartyMemberState | undefined {
+  return token ? s.party.find((m) => nameMatches(token, m.name)) : undefined;
+}
+
+function mostHurt(s: GameState): PartyMemberState | undefined {
+  const hurt = consciousParty(s).filter((m) => m.hp.current < m.hp.max);
+  if (!hurt.length) return undefined;
+  return hurt.reduce((a, b) => (a.hp.max - a.hp.current >= b.hp.max - b.hp.current ? a : b));
+}
+
+function doCast(s: GameState, adv: Adventure, spellArg: string, targetToken: string) {
+  if (s.mode !== 'combat' || !s.combat) {
+    push(s, 'system', 'There is nothing to cast at here.');
+    return;
+  }
+  const combat = s.combat;
+  const member = activeMember(s);
+  if (!member || member.hp.current <= 0) {
+    push(s, 'system', 'No conscious caster is ready. Tap a hero to make them active.');
+    return;
+  }
+  if (!member.spells.length) {
+    push(s, 'system', `${member.name} knows no spells.`);
+    return;
+  }
+  if (!spellArg) {
+    push(s, 'system', `${member.name} knows: ${member.spells.join(', ')}. Try "cast <spell>".`);
+    return;
+  }
+  const known = member.spells.find((sp) => nameMatches(spellArg, sp));
+  if (!known) {
+    push(s, 'system', `${member.name} doesn't know "${spellArg}". They know: ${member.spells.join(', ')}.`);
+    return;
+  }
+  if (member.spentSpells.includes(known)) {
+    push(s, 'result', `${member.name} already lost ${known} this fight. It returns after a rest.`);
+    return;
+  }
+  const fx = SPELL_FX[known] ?? { kind: 'none' };
+  if (fx.kind === 'none') {
+    push(s, 'result', `${member.name} could cast ${known}, but it would do nothing useful in a fight.`);
+    return; // no turn lost
+  }
+
+  const dc = 10 + (getSpell(known)?.tier ?? 1);
+  const check = rollAndLog(`1d20${formatMod(member.spellMod)}`, 'normal', `${member.name} casts ${known}`);
+  if (check.isFumble || check.total < dc) {
+    push(s, 'combat', `${member.name}'s ${known} sputters and slips away. (rolled ${check.total} vs DC ${dc}) Lost until they rest.`);
+    member.spentSpells.push(known);
+    member.acted = true;
+    advanceActive(s);
+    return;
+  }
+
+  switch (fx.kind) {
+    case 'damage': {
+      const enemy = findEnemy(s, targetToken);
+      if (!enemy) {
+        push(s, 'combat', 'There is no foe left to strike.');
+        break;
+      }
+      const dmg = rollDamageTotal(fx.dice, false, `${known} damage`);
+      enemy.hp.current = Math.max(0, enemy.hp.current - dmg);
+      push(s, 'combat', `${member.name}'s ${known} strikes ${enemy.name} for ${dmg}!`);
+      if (enemy.hp.current <= 0) push(s, 'combat', `${enemy.name} is destroyed!`);
+      break;
+    }
+    case 'heal': {
+      const target = findMember(s, targetToken) ?? mostHurt(s) ?? member;
+      const heal = rollDamageTotal(fx.dice, false, `${known} healing`);
+      const before = target.hp.current;
+      target.hp.current = Math.min(target.hp.max, target.hp.current + heal);
+      push(s, 'combat', `${member.name}'s ${known} mends ${target.name} for ${target.hp.current - before} HP. (${target.hp.current}/${target.hp.max})`);
+      break;
+    }
+    case 'turn': {
+      const undead = livingEnemies(s).filter((e) => e.tags.includes('undead') && !e.tags.includes('boss'));
+      if (!undead.length) {
+        push(s, 'combat', `${member.name} brandishes holy power, but nothing here is undead enough to flee.`);
+        break;
+      }
+      combat.enemies = combat.enemies.filter((e) => !undead.includes(e));
+      push(s, 'combat', `${member.name} turns the undead! ${undead.map((e) => e.name).join(', ')} flee shrieking into the dark.`);
+      break;
+    }
+    case 'sleep': {
+      const budget = rollDamageTotal('2d8', false, 'Sleep');
+      const sorted = livingEnemies(s)
+        .filter((e) => !e.tags.includes('boss'))
+        .sort((a, b) => a.hp.current - b.hp.current);
+      const put: EnemyState[] = [];
+      let spent = 0;
+      for (const e of sorted) {
+        if (spent + e.hp.max <= budget) {
+          put.push(e);
+          spent += e.hp.max;
+        }
+      }
+      if (!put.length) {
+        push(s, 'combat', `${member.name}'s Sleep washes over the foes, but they are too strong to drop.`);
+        break;
+      }
+      combat.enemies = combat.enemies.filter((e) => !put.includes(e));
+      push(s, 'combat', `${member.name}'s Sleep takes hold. ${put.map((e) => e.name).join(', ')} crumple into slumber.`);
+      break;
+    }
+    case 'charm': {
+      const alive = livingEnemies(s);
+      const target =
+        (targetToken ? findEnemy(s, targetToken) : undefined) ?? alive.find((e) => e.tags.some((t) => CHARMABLE.has(t)));
+      if (!target || !target.tags.some((t) => CHARMABLE.has(t))) {
+        push(s, 'combat', `${member.name}'s charm finds nothing here willing to heed it.`);
+        break;
+      }
+      combat.enemies = combat.enemies.filter((e) => e !== target);
+      push(s, 'combat', `${member.name} charms ${target.name}; it lowers its weapon and wanders off, suddenly friendly.`);
+      break;
+    }
+    case 'buffAc': {
+      const target = fx.self ? member : findMember(s, targetToken) ?? member;
+      target.acBonus += fx.amount;
+      push(s, 'combat', `${member.name}'s ${known} wards ${target.name}: +${fx.amount} AC for the fight.`);
+      break;
+    }
+    case 'buffAtk': {
+      const target = findMember(s, targetToken) ?? member;
+      target.atkBonus += fx.atk;
+      target.dmgBonus += fx.dmg;
+      push(s, 'combat', `${member.name}'s ${known} blesses ${target.name}'s weapon: +${fx.atk} to hit, +${fx.dmg} damage for the fight.`);
+      break;
+    }
+  }
+
+  member.acted = true;
+  if (livingEnemies(s).length === 0) {
+    resolveVictory(s, adv);
+    return;
+  }
+  advanceActive(s);
+}
+
 function doWho(s: GameState) {
   push(s, 'system', 'Your party:');
   s.party.forEach((m, i) => {
@@ -680,7 +862,7 @@ function doHelp(s: GameState) {
       '  Look: look · examine <thing> · search',
       '  Items: take <item> · drop <item> · inventory',
       '  People: talk to <name>',
-      '  Combat: attack <foe> · negotiate · flee · who · select <name>',
+      '  Combat: attack <foe> · cast <spell> · negotiate · flee · who · select <name>',
       '  Other: rest (in safe rooms) · map · help',
     ].join('\n'),
   );
@@ -702,8 +884,19 @@ export function createGame(adv: Adventure, characters: Character[]): GameState {
       ac: p.ac,
       chaMod: statMod(c.stats.CHA),
       weaponName: p.weaponName,
+      spells: c.spells ?? [],
+      spellMod:
+        c.classId === 'wizard'
+          ? statMod(c.stats.INT)
+          : c.classId === 'priest'
+            ? statMod(c.stats.WIS)
+            : Math.max(statMod(c.stats.INT), statMod(c.stats.WIS)),
       hp: { current: c.hp.current, max: c.hp.max },
       acted: false,
+      spentSpells: [],
+      atkBonus: 0,
+      dmgBonus: 0,
+      acBonus: 0,
     };
   });
 
@@ -796,6 +989,17 @@ export function step(prev: GameState, adv: Adventure, raw: string): GameState {
     case 'negotiate': case 'parley': case 'bargain': case 'surrender': case 'persuade': case 'bribe':
       doParley(s, adv);
       break;
+    case 'cast': case 'spell': case 'invoke': {
+      let casted = rest;
+      let spellTarget = '';
+      const ti = casted.findIndex((t) => t === 'at' || t === 'on');
+      if (ti >= 0) {
+        spellTarget = cleanTarget(casted.slice(ti + 1));
+        casted = casted.slice(0, ti);
+      }
+      doCast(s, adv, cleanTarget(casted), spellTarget);
+      break;
+    }
     case 'who': case 'party': case 'status':
       doWho(s);
       break;
