@@ -49,13 +49,49 @@ export interface Deity {
   description: string;
 }
 
+/** What a spell does when cast in adventure combat. Data-driven so new combat
+ *  spells need no engine change (as long as `kind` is one the engine handles). */
+export type SpellCombatKind =
+  | 'damage'
+  | 'heal'
+  | 'turn'
+  | 'sleep'
+  | 'charm'
+  | 'buff-ac'
+  | 'buff-atk'
+  | 'none';
+
+export interface SpellCombat {
+  kind: SpellCombatKind;
+  /** Dice for damage/heal, e.g. "1d4+1". */
+  dice?: string;
+  /** AC bonus for buff-ac. */
+  amount?: number;
+  /** Attack/damage bonuses for buff-atk. */
+  atk?: number;
+  dmg?: number;
+  /** buff-ac that always targets the caster. */
+  self?: boolean;
+}
+
 export interface Spell {
+  /** kebab-case unique id. */
+  id: string;
   name: string;
   tier: number;
+  /** Classes that can learn it (lowercase class ids), e.g. ["wizard"] or ["wizard","priest"]. */
+  classes: string[];
   duration: string;
   range: string;
-  type: 'Wizard' | 'Priest';
   text: string;
+  /** Free-form tags for search/filter: damage, healing, fire, undead, control, buff, utility… */
+  tags: string[];
+  /** Combat behavior; absent means it does nothing useful in a fight. */
+  combat?: SpellCombat;
+  /** Source-tracking (matches the rest of the data; enables active-pool filtering). */
+  system?: string;
+  source_book?: string;
+  source_page?: number;
 }
 
 export interface GearItem {

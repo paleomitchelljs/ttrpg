@@ -1,145 +1,94 @@
-import type { Spell } from './types';
+// Typed view onto src/data/spells.yaml. Mirrors monsters.ts / scenes.ts.
+//
+// Spells are hand-editable YAML: tagged, searchable, and expandable. A new spell
+// is a YAML entry, not a code change — including its combat behavior, which lives
+// in the `combat` block and is read by the adventure engine.
 
-// Tier 1 spells from the Shadowdark Quickstart.
-export const SPELLS: Spell[] = [
-  // Priest tier 1
-  {
-    name: 'Cure Wounds',
-    tier: 1,
-    type: 'Priest',
-    duration: 'Instant',
-    range: 'Close',
-    text: 'Touched ally regains 1d6 HP per priest level, up to maximum.',
-  },
-  {
-    name: 'Holy Weapon',
-    tier: 1,
-    type: 'Priest',
-    duration: '5 rounds',
-    range: 'Close',
-    text: 'A weapon you touch gains +1 to attack and damage rolls. Only one Holy Weapon at a time.',
-  },
-  {
-    name: 'Light',
-    tier: 1,
-    type: 'Priest',
-    duration: '1 hour real time',
-    range: 'Close',
-    text: 'An object you touch glows with bright light, illuminating close range. Casting again ends prior Light.',
-  },
-  {
-    name: 'Protection From Evil',
-    tier: 1,
-    type: 'Priest',
-    duration: 'Focus',
-    range: 'Close',
-    text: 'A willing creature you touch has disadvantage on attacks against, and advantage on saves against, aberrations, demons, fiends, and undead.',
-  },
-  {
-    name: 'Shield of Faith',
-    tier: 1,
-    type: 'Priest',
-    duration: 'Focus',
-    range: 'Self',
-    text: 'A shimmering force grants you +2 AC.',
-  },
-  {
-    name: 'Turn Undead',
-    tier: 1,
-    type: 'Priest',
-    duration: 'Instant',
-    range: 'Near',
-    text: 'Each undead in near rebuked, fleeing for 5 rounds or until attacked. Mightier undead may resist.',
-  },
-  // Wizard tier 1
-  {
-    name: 'Alarm',
-    tier: 1,
-    type: 'Wizard',
-    duration: '1 day real time',
-    range: 'Close',
-    text: 'You set a magical alarm on an object or area. It alerts you mentally when triggered.',
-  },
-  {
-    name: 'Burning Hands',
-    tier: 1,
-    type: 'Wizard',
-    duration: 'Instant',
-    range: 'Close',
-    text: 'A cone of flame erupts from your hands. Creatures in close take 1d6 damage. Flammable objects ignite.',
-  },
-  {
-    name: 'Charm Person',
-    tier: 1,
-    type: 'Wizard',
-    duration: '1d8 days real time',
-    range: 'Close',
-    text: 'A humanoid you target becomes friendly. They obey reasonable requests that don\'t endanger them.',
-  },
-  {
-    name: 'Detect Magic',
-    tier: 1,
-    type: 'Wizard',
-    duration: 'Focus',
-    range: 'Near',
-    text: 'You can sense the presence of magic within near range.',
-  },
-  {
-    name: 'Floating Disk',
-    tier: 1,
-    type: 'Wizard',
-    duration: '5 rounds',
-    range: 'Close',
-    text: 'A disk of magical force floats beside you, carrying up to 20 gear slots.',
-  },
-  {
-    name: 'Hold Portal',
-    tier: 1,
-    type: 'Wizard',
-    duration: '5 rounds',
-    range: 'Close',
-    text: 'You magically hold shut a door, gate, or other portal.',
-  },
-  {
-    name: 'Light',
-    tier: 1,
-    type: 'Wizard',
-    duration: '1 hour real time',
-    range: 'Close',
-    text: 'An object you touch glows with bright light, illuminating close range.',
-  },
-  {
-    name: 'Magic Missile',
-    tier: 1,
-    type: 'Wizard',
-    duration: 'Instant',
-    range: 'Far',
-    text: 'You launch a bolt of magical force. The target takes 1d4+1 damage.',
-  },
-  {
-    name: 'Protection From Evil',
-    tier: 1,
-    type: 'Wizard',
-    duration: 'Focus',
-    range: 'Close',
-    text: 'A willing creature you touch has disadvantage on attacks against, and advantage on saves against, aberrations, demons, fiends, and undead.',
-  },
-  {
-    name: 'Sleep',
-    tier: 1,
-    type: 'Wizard',
-    duration: 'Instant',
-    range: 'Near',
-    text: 'A group of nearby creatures fall into a deep sleep. Closes 2d8 HD worth, starting with lowest.',
-  },
-];
+import rawData from '../../data/spells.yaml';
+import type { Spell, SpellCombat } from './types';
+import { filterByActivePool } from './activePool';
 
-export function spellsForClass(classId: string): Spell[] {
-  if (classId === 'wizard') return SPELLS.filter((s) => s.type === 'Wizard');
-  if (classId === 'priest') return SPELLS.filter((s) => s.type === 'Priest');
-  return [];
+interface RawSpell {
+  id: string;
+  name: string;
+  tier?: number;
+  classes?: string[];
+  duration?: string;
+  range?: string;
+  text?: string;
+  tags?: string[];
+  combat?: SpellCombat;
+  system?: string;
+  source_book?: string;
+  source_page?: number;
 }
 
+interface SpellsFile {
+  spells: RawSpell[];
+}
+
+function normalize(raw: RawSpell): Spell {
+  return {
+    id: raw.id,
+    name: raw.name,
+    tier: raw.tier ?? 1,
+    classes: raw.classes ?? [],
+    duration: raw.duration ?? '',
+    range: raw.range ?? '',
+    text: raw.text ?? '',
+    tags: raw.tags ?? [],
+    combat: raw.combat,
+    system: raw.system,
+    source_book: raw.source_book,
+    source_page: raw.source_page,
+  };
+}
+
+const file = rawData as SpellsFile;
+export const SPELLS: Spell[] = file.spells.map(normalize);
+
+const byId = new Map(SPELLS.map((s) => [s.id, s]));
+const byName = new Map(SPELLS.map((s) => [s.name.toLowerCase(), s]));
+
+/** Look up by display name (case-insensitive). Characters store spells by name. */
 export function getSpell(name: string): Spell | undefined {
-  return SPELLS.find((s) => s.name === name);
+  return byName.get(name.toLowerCase());
+}
+
+export function getSpellById(id: string): Spell | undefined {
+  return byId.get(id);
+}
+
+/** Spells a given class can learn (lowercase class id, e.g. "wizard"). */
+export function spellsForClass(classId: string): Spell[] {
+  return SPELLS.filter((s) => s.classes.includes(classId));
+}
+
+export function spellsByTier(tier: number): Spell[] {
+  return SPELLS.filter((s) => s.tier === tier);
+}
+
+export function spellsByTag(tag: string): Spell[] {
+  const t = tag.toLowerCase();
+  return SPELLS.filter((s) => s.tags.some((x) => x.toLowerCase() === t));
+}
+
+/**
+ * Free-text search across name, tags, class, and rules text. Multiple
+ * space-separated terms must all match (AND).
+ */
+export function searchSpells(query: string): Spell[] {
+  const terms = query.toLowerCase().split(/\s+/).filter(Boolean);
+  if (!terms.length) return SPELLS;
+  return SPELLS.filter((s) => {
+    const hay = [s.name, s.text, s.classes.join(' '), s.tags.join(' '), `tier${s.tier}`]
+      .join(' ')
+      .toLowerCase();
+    return terms.every((t) => hay.includes(t));
+  });
+}
+
+/** Spells eligible under the active pool (by system/source_book/tags). */
+export function spellsInActivePool(): Spell[] {
+  return filterByActivePool(SPELLS);
 }

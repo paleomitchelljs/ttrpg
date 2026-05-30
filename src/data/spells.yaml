@@ -1,0 +1,188 @@
+# Spells — hand-editable, tagged, searchable. Typed view in src/lib/shadowdark/spells.ts.
+#
+# Each spell:
+#   id            kebab-case unique id (required)
+#   name          display name (required)
+#   tier          spell tier (1+); the cast DC in adventure combat is 10 + tier
+#   classes       which classes can learn it: [wizard], [priest], or [wizard, priest]
+#   duration      flavor duration text
+#   range         flavor range text
+#   text          rules text (read-aloud / reference)
+#   tags          free-form, for search & filtering — damage, healing, fire, force,
+#                 holy, undead, control, mind, buff, ward, protection, utility, light,
+#                 area, ranged, divination, conjuration, enchantment, weapon
+#   combat        what it does in an adventure fight (optional; omit = no combat effect)
+#                   kind: damage | heal | turn | sleep | charm | buff-ac | buff-atk
+#                   dice: "1d4+1"      (damage / heal)
+#                   amount: 2          (buff-ac AC bonus)
+#                   self: true         (buff-ac always targets the caster)
+#                   atk: 1, dmg: 1     (buff-atk bonuses)
+#
+# Source-tracking (optional, matches monsters/items/etc.; enables active-pool filtering):
+#   system, source_book, source_page
+
+spells:
+  # ───────── Priest, tier 1 ─────────
+  - id: cure-wounds
+    name: Cure Wounds
+    tier: 1
+    classes: [priest]
+    duration: Instant
+    range: Close
+    text: "Touched ally regains 1d6 HP per priest level, up to maximum."
+    tags: [healing, holy, restoration]
+    combat: { kind: heal, dice: 1d6+1 }
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: holy-weapon
+    name: Holy Weapon
+    tier: 1
+    classes: [priest]
+    duration: 5 rounds
+    range: Close
+    text: "A weapon you touch gains +1 to attack and damage rolls. Only one Holy Weapon at a time."
+    tags: [buff, holy, weapon]
+    combat: { kind: buff-atk, atk: 1, dmg: 1 }
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: protection-from-evil
+    name: Protection From Evil
+    tier: 1
+    classes: [priest, wizard]
+    duration: Focus
+    range: Close
+    text: "A willing creature you touch has disadvantage on attacks against, and advantage on saves against, aberrations, demons, fiends, and undead."
+    tags: [buff, ward, protection, holy]
+    combat: { kind: buff-ac, amount: 2 }
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: shield-of-faith
+    name: Shield of Faith
+    tier: 1
+    classes: [priest]
+    duration: Focus
+    range: Self
+    text: "A shimmering force grants you +2 AC."
+    tags: [buff, ward, protection, holy]
+    combat: { kind: buff-ac, amount: 2, self: true }
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: turn-undead
+    name: Turn Undead
+    tier: 1
+    classes: [priest]
+    duration: Instant
+    range: Near
+    text: "Each undead in near is rebuked, fleeing for 5 rounds or until attacked. Mightier undead may resist."
+    tags: [control, holy, undead]
+    combat: { kind: turn }
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  # ───────── Wizard, tier 1 ─────────
+  - id: alarm
+    name: Alarm
+    tier: 1
+    classes: [wizard]
+    duration: 1 day real time
+    range: Close
+    text: "You set a magical alarm on an object or area. It alerts you mentally when triggered."
+    tags: [utility, ward, divination]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: burning-hands
+    name: Burning Hands
+    tier: 1
+    classes: [wizard]
+    duration: Instant
+    range: Close
+    text: "A cone of flame erupts from your hands. Creatures in close take 1d6 damage. Flammable objects ignite."
+    tags: [damage, fire, area]
+    combat: { kind: damage, dice: 1d6 }
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: charm-person
+    name: Charm Person
+    tier: 1
+    classes: [wizard]
+    duration: 1d8 days real time
+    range: Close
+    text: "A humanoid you target becomes friendly. They obey reasonable requests that don't endanger them."
+    tags: [control, mind, enchantment]
+    combat: { kind: charm }
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: detect-magic
+    name: Detect Magic
+    tier: 1
+    classes: [wizard]
+    duration: Focus
+    range: Near
+    text: "You can sense the presence of magic within near range."
+    tags: [utility, divination]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: floating-disk
+    name: Floating Disk
+    tier: 1
+    classes: [wizard]
+    duration: 5 rounds
+    range: Close
+    text: "A disk of magical force floats beside you, carrying up to 20 gear slots."
+    tags: [utility, force, conjuration]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: hold-portal
+    name: Hold Portal
+    tier: 1
+    classes: [wizard]
+    duration: 5 rounds
+    range: Close
+    text: "You magically hold shut a door, gate, or other portal."
+    tags: [utility, force]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: light
+    name: Light
+    tier: 1
+    classes: [wizard, priest]
+    duration: 1 hour real time
+    range: Close
+    text: "An object you touch glows with bright light, illuminating close range. Casting again ends prior Light."
+    tags: [utility, light]
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: magic-missile
+    name: Magic Missile
+    tier: 1
+    classes: [wizard]
+    duration: Instant
+    range: Far
+    text: "You launch a bolt of magical force. The target takes 1d4+1 damage."
+    tags: [damage, force, ranged]
+    combat: { kind: damage, dice: 1d4+1 }
+    system: shadowdark-core
+    source_book: shadowdark-quickstart
+
+  - id: sleep
+    name: Sleep
+    tier: 1
+    classes: [wizard]
+    duration: Instant
+    range: Near
+    text: "A group of nearby creatures fall into a deep sleep. Closes 2d8 HD worth, starting with lowest."
+    tags: [control, mind, enchantment]
+    combat: { kind: sleep }
+    system: shadowdark-core
+    source_book: shadowdark-quickstart

@@ -11,7 +11,7 @@ import { rollAndLog } from '../rollLog';
 import { getMonster } from '../shadowdark/monsters';
 import { characterCombatProfile } from '../shadowdark/combat';
 import { getSpell } from '../shadowdark/spells';
-import type { Character } from '../shadowdark/types';
+import type { Character, SpellCombat } from '../shadowdark/types';
 import type {
   Adventure,
   AdvEncounter,
@@ -620,35 +620,10 @@ function doParley(s: GameState, adv: Adventure) {
 }
 
 // ───────── spellcasting ─────────
-
-type SpellFx =
-  | { kind: 'damage'; dice: string }
-  | { kind: 'heal'; dice: string }
-  | { kind: 'turn' }
-  | { kind: 'sleep' }
-  | { kind: 'charm' }
-  | { kind: 'buffAc'; amount: number; self?: boolean }
-  | { kind: 'buffAtk'; atk: number; dmg: number }
-  | { kind: 'none' };
-
-// How each tier-1 spell behaves in a fight. Utility spells ('none') do nothing
-// useful in combat and don't cost the caster their turn.
-const SPELL_FX: Record<string, SpellFx> = {
-  'Magic Missile': { kind: 'damage', dice: '1d4+1' },
-  'Burning Hands': { kind: 'damage', dice: '1d6' },
-  'Cure Wounds': { kind: 'heal', dice: '1d6+1' },
-  'Turn Undead': { kind: 'turn' },
-  Sleep: { kind: 'sleep' },
-  'Charm Person': { kind: 'charm' },
-  'Shield of Faith': { kind: 'buffAc', amount: 2, self: true },
-  'Protection From Evil': { kind: 'buffAc', amount: 2 },
-  'Holy Weapon': { kind: 'buffAtk', atk: 1, dmg: 1 },
-  Light: { kind: 'none' },
-  Alarm: { kind: 'none' },
-  'Detect Magic': { kind: 'none' },
-  'Floating Disk': { kind: 'none' },
-  'Hold Portal': { kind: 'none' },
-};
+//
+// A spell's combat behavior comes from its `combat` block in spells.yaml, so new
+// combat spells are a data edit. The engine handles these `kind`s; anything else
+// (or no combat block) does nothing useful in a fight.
 
 const CHARMABLE = new Set(['humanoid', 'goblinoid', 'gnoll', 'kobold']);
 
@@ -690,13 +665,14 @@ function doCast(s: GameState, adv: Adventure, spellArg: string, targetToken: str
     push(s, 'result', `${member.name} already lost ${known} this fight. It returns after a rest.`);
     return;
   }
-  const fx = SPELL_FX[known] ?? { kind: 'none' };
+  const spell = getSpell(known);
+  const fx: SpellCombat = spell?.combat ?? { kind: 'none' };
   if (fx.kind === 'none') {
     push(s, 'result', `${member.name} could cast ${known}, but it would do nothing useful in a fight.`);
     return; // no turn lost
   }
 
-  const dc = 10 + (getSpell(known)?.tier ?? 1);
+  const dc = 10 + (spell?.tier ?? 1);
   const check = rollAndLog(`1d20${formatMod(member.spellMod)}`, 'normal', `${member.name} casts ${known}`);
   if (check.isFumble || check.total < dc) {
     push(s, 'combat', `${member.name}'s ${known} sputters and slips away. (rolled ${check.total} vs DC ${dc}) Lost until they rest.`);
@@ -713,7 +689,7 @@ function doCast(s: GameState, adv: Adventure, spellArg: string, targetToken: str
         push(s, 'combat', 'There is no foe left to strike.');
         break;
       }
-      const dmg = rollDamageTotal(fx.dice, false, `${known} damage`);
+      const dmg = rollDamageTotal(fx.dice ?? '1d6', false, `${known} damage`);
       enemy.hp.current = Math.max(0, enemy.hp.current - dmg);
       push(s, 'combat', `${member.name}'s ${known} strikes ${enemy.name} for ${dmg}!`);
       if (enemy.hp.current <= 0) push(s, 'combat', `${enemy.name} is destroyed!`);
@@ -721,7 +697,7 @@ function doCast(s: GameState, adv: Adventure, spellArg: string, targetToken: str
     }
     case 'heal': {
       const target = findMember(s, targetToken) ?? mostHurt(s) ?? member;
-      const heal = rollDamageTotal(fx.dice, false, `${known} healing`);
+      const heal = rollDamageTotal(fx.dice ?? '1d6', false, `${known} healing`);
       const before = target.hp.current;
       target.hp.current = Math.min(target.hp.max, target.hp.current + heal);
       push(s, 'combat', `${member.name}'s ${known} mends ${target.name} for ${target.hp.current - before} HP. (${target.hp.current}/${target.hp.max})`);
@@ -770,17 +746,20 @@ function doCast(s: GameState, adv: Adventure, spellArg: string, targetToken: str
       push(s, 'combat', `${member.name} charms ${target.name}; it lowers its weapon and wanders off, suddenly friendly.`);
       break;
     }
-    case 'buffAc': {
+    case 'buff-ac': {
       const target = fx.self ? member : findMember(s, targetToken) ?? member;
-      target.acBonus += fx.amount;
-      push(s, 'combat', `${member.name}'s ${known} wards ${target.name}: +${fx.amount} AC for the fight.`);
+      const amount = fx.amount ?? 2;
+      target.acBonus += amount;
+      push(s, 'combat', `${member.name}'s ${known} wards ${target.name}: +${amount} AC for the fight.`);
       break;
     }
-    case 'buffAtk': {
+    case 'buff-atk': {
       const target = findMember(s, targetToken) ?? member;
-      target.atkBonus += fx.atk;
-      target.dmgBonus += fx.dmg;
-      push(s, 'combat', `${member.name}'s ${known} blesses ${target.name}'s weapon: +${fx.atk} to hit, +${fx.dmg} damage for the fight.`);
+      const atk = fx.atk ?? 1;
+      const dmg = fx.dmg ?? 1;
+      target.atkBonus += atk;
+      target.dmgBonus += dmg;
+      push(s, 'combat', `${member.name}'s ${known} blesses ${target.name}'s weapon: +${atk} to hit, +${dmg} damage for the fight.`);
       break;
     }
   }
