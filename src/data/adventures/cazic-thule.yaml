@@ -11,8 +11,7 @@ system: eq-rpg
 synopsis: >-
   A sunken temple in the Feerrott swamp, home to a tribe of lizardmen and the Tae Ew priests
   of Cazic-Thule, god of fear. Clay golems guard the maze, alligators the pit, and in the
-  deepest pyramid an Avatar of the Faceless one stirs. You will not kill a god's avatar. Bring
-  it an offering, abase yourself, and flee with your lives.
+  deepest pyramid an Avatar of the Faceless one stirs. You will not kill a god's avatar.
 recommended_party: "2–4 heroes, level 1–2"
 map_image: maps/everquest/Ct.jpg
 intro: >-
@@ -148,8 +147,7 @@ rooms:
         The Tae Ew Archon raises both clawed hands. He is the temple's truest believer: every drop
         of blood spilled here, his own people's included, is worship, and he means to send you down
         to his god as the finest offering of all. 'You have spilled much faithful blood to reach me.
-        The Faceless noticed. He WAITS for you below.' A dangerous foe, though not yet a god.
-      prompt: 'The Archon would rather you meet his god than his blade. Speak of your respect for the Faceless and he may send you down to be judged. (negotiate)'
+        The Faceless noticed. He WAITS for you below.'
       victory_text: "The Archon falls from his pyramid. Below, a green light pulses: the Avatar's chamber."
       flag: ct-archon-cleared
       parley:
@@ -175,8 +173,7 @@ rooms:
       intro: >-
         The Avatar of Fear regards you with the face it does not have. It feels no hatred for you,
         which is somehow worse. It is hunger in the shape of a god, you are afraid, and that is all
-        it ever wanted. To raise a weapon here is to die. Kneel and OFFER, or flee while you still can.
-      prompt: 'The Avatar does not bargain. It feeds. Pour out the Vial of Lizard Blood and it will take that, and a measure of each of your courage besides, and let you crawl away. The mark fear leaves does not heal. (negotiate)'
+        it ever wanted. To raise a weapon against it is to die.
       victory_text: "By an impossibility you will never brag about, the Avatar's fragment is banished. The temple will not believe it."
       flag: ct-avatar-resolved
       parley:

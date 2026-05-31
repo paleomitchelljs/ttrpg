@@ -229,7 +229,6 @@ rooms:
         take it from him. His giant frog Kulket croaks from the branches, and twig blights, the
         garden's children, rise from the loam. "You should not have come to my garden," he says, and
         he sounds more sad than angry.
-      prompt: 'Belak does not want a fight; he wants to be left alone with his Tree. Swear to leave the grove standing and he will free the Hucrele heirs to you. The corruption lives on after you go. (negotiate)'
       victory_text: "Belak falls. As he dies the Gulthias Tree shudders and its hold breaks; Sharwyn and Sir Braford slump free, themselves again, and you put the pale tree to the torch."
       flag: belak-defeated
       parley:

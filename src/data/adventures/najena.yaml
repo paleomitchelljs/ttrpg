@@ -12,7 +12,7 @@ synopsis: >-
   A lair carved into the Lavastorm Mountains by the dark-elf magician Najena: a warren of
   undead experiments, summoned terrors, pit-trap prisons, and hired ogres. Her daughter
   Drelzna guards the inner door, and Najena herself waits beyond. The witch badly outmatches a
-  young party, but she is vain. Return her lost crystal, flatter her, or flee.
+  young party, but she is vain.
 recommended_party: "2–4 heroes, level 1–2"
 map_image: maps/everquest/Najenamap.jpg
 intro: >-
@@ -133,7 +133,7 @@ rooms:
       - name: "The Caged Dwarf"
         keywords: [dwarf, captive, prisoner, caged]
         sets_flag: nj-freed-captive
-        text: "Quick, before the ogres come back. Najena's down the inner stair past her brat Drelzna, and you can NOT out-magic her. She'll cinder you. But she's vain as a peacock. She lost her favorite crystal to the widows in the east room. Give it back and flatter her stupid and she'll wave you off. One thing, though. Don't let her talk you into handing ME over instead. She'd love that, and it'd save you the crystal. Don't. Now get me OUT of here."
+        text: "Quick, before the ogres come back. Najena's down the inner stair past her brat Drelzna. You can NOT out-magic her. She'll cinder you. But she's vain as a peacock. She lost her favorite crystal to the widows in the east room. Give it back, flatter her stupid, and she'll wave you off. Now get me OUT of here."
     encounter:
       id: nj-prison-fight
       monsters: [eq-najena-darkbone-skeleton, eq-najena-darkbone-skeleton]
@@ -190,10 +190,7 @@ rooms:
       intro: >-
         Najena raises her pillar of lightning, witch-lights swarming. What rules her is vanity, pure
         and bottomless. The lair, the horrors, the crystal she lost to the spiders: all of it a
-        monument to herself, and the worst thing you can be in her presence is unimpressed. You cannot
-        out-cast a dark-elf archmage and live. Return her crystal, flatter her, or flee. Do NOT trade
-        spells with her.
-      prompt: 'Najena wants her vanity fed. Give back the Crystal you took from the widows and she will preen and wave you off. (She would also, she purrs, settle for the little dwarf you let out of her cells. You will not give her that.) (negotiate)'
+        monument to herself, and the worst thing you can be in her presence is unimpressed.
       victory_text: "Against every sensible odds, Najena is thrown down in her own lair, and her flowing black robe is left behind."
       flag: nj-najena-resolved
       parley:

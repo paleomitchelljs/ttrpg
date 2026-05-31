@@ -13,7 +13,7 @@ synopsis: >-
   Charasis, an iksar burial-complex in the Frontier Mountains, marked by standing stones that
   scream through the earth. Its wings are sealed behind keys the Crypt Keeper holds, its dead
   are servants of the Sathir line, and in the inner crypt waits Drusella Sathir herself. Take
-  the keys, cross the wings, and reach her. She is far too strong to simply kill. Bargain, or run.
+  the keys, cross the wings, and reach her. She is far too strong to kill head-on.
 recommended_party: "2–4 heroes, level 1–2"
 map_image: maps/everquest/Map_charasis1.jpg
 intro: >-
@@ -166,8 +166,7 @@ rooms:
         Drusella Sathir descends, deathfire gathering in both hands. She is neither mad nor
         mindless. She is faithful: every soul she binds is an offering to Innoruuk, god of hate,
         and she has kept that faith five hundred years. It is the one thing in her larger than her
-        pride. No young party trades blows with a Sathir necromancer and lives. Speak, or flee.
-      prompt: 'Drusella spares only the faithful. Give the Coin Depicting Innoruuk into her god''s keeping and she will let you pass. The relic is hers for good after that. (negotiate)'
+        pride.
       victory_text: "Past all expectation, Drusella Sathir comes apart, and the Rod of Oblations clatters to the floor."
       flag: ch-drusella-resolved
       parley:

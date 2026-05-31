@@ -13,7 +13,7 @@ synopsis: >-
   Torsis, once a mighty iksar trade-city, now a ruin lost in endless haze where the dead
   walk seeking souls. Its merchants died with gems in their fists; its overlords refuse to
   admit the city fell. Find the Key of Torsis, cross the fog to the high hall, and treat with
-  Lord Rak'Ashiir. A young party cannot fight a wizard-overlord and win. Talk past him, or flee.
+  Lord Rak'Ashiir. A young party cannot fight a wizard-overlord and win.
 recommended_party: "2–4 heroes, level 1–2"
 map_image: maps/everquest/Map_citymist.jpg
 intro: >-
@@ -178,9 +178,7 @@ rooms:
       intro: >-
         Lord Rak'Ashiir rises, soul-fire flaring. He is not raving. He is a wizard who has spent a
         thousand years refusing one fact: Torsis fell, his city is a corpse, he rules nothing. He
-        keeps the court because to stop is to admit it. A green party cannot trade spells with a
-        wizard-overlord and survive. Show the Key, talk fast, or run.
-      prompt: 'Rak''Ashiir needs to believe his city still stands. Surrender the Key of Torsis to him as its steward and he grants you passage like a lord granting a boon. The Key is his after that, and so is the lie. (negotiate)'
+        keeps the court because to stop is to admit it.
       victory_text: "Somehow, you throw down an overlord of Torsis, and the Throneblade of the Ykesha falls from his hand."
       flag: cm-rakashiir-resolved
       parley:

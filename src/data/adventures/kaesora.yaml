@@ -14,7 +14,7 @@ synopsis: >-
   The buried library-city of the old iksar empire, shared now by undead and pale spiders
   and ruled from its lower church by Xalgoz, a necromancer-vampire and emissary of Venril
   Sathir. Descend the stacks, take his master's tablet for leverage, and free the souls his
-  traps still hold. Xalgoz is too strong to simply cut down. Bargain, or run.
+  traps still hold. Xalgoz is too strong to simply cut down.
 recommended_party: "2–4 heroes, level 1–2"
 map_image: maps/everquest/Map_kaesora1.jpg
 intro: >-
@@ -156,9 +156,7 @@ rooms:
       intro: >-
         Xalgoz does not rise so much as uncoil. A thousand years of hunger and a thousand years of
         boredom look out of him at once. He does not hate you. He is hungry, you are warm, and his
-        master left him to mind a library no one reads. A young party does not win this fight.
-        Speak fast, or run.
-      prompt: 'Xalgoz wants two things: proof you matter to his master, and a taste. Offer Venril Sathir''s own Tablet and he will trade your passage for a sip of blood. (negotiate)'
+        master left him to mind a library no one reads.
       victory_text: "By a violence you will never quite be able to repeat, the vampire comes apart on his own throne. The bloodstone amulet is yours."
       flag: ka-xalgoz-resolved
       parley:

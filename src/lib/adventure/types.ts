@@ -182,6 +182,8 @@ export interface CombatState {
 
 export interface GameState {
   adventureId: string;
+  /** Target level the dungeon's monsters are scaled to (party avg, or override). */
+  powerLevel: number;
   currentRoomId: string;
   prevRoomId?: string;
   party: PartyMemberState[];

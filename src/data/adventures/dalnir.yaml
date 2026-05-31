@@ -13,7 +13,7 @@ synopsis: >-
   The lost crypt of Dalnir, a wealthy noble of the first Iksar Empire, cracked open by thieves
   who never returned. The sarnak wizard called The Kly has taken the crypt and bound its dead,
   and the thieves besides, into Coerced service. Recover the stolen idol, reach The Kly, and
-  settle the crypt. He badly outmatches a young party. Return the idol, bargain, or flee.
+  settle the crypt. He badly outmatches a young party.
 recommended_party: "2–4 heroes, level 1–2"
 map_image: maps/everquest/Map_dalnir1.jpg
 intro: >-
@@ -172,9 +172,7 @@ rooms:
         The Kly raises both hands, arcane lash gathering. He is no rampaging horror. He is a
         scholar, and what drives him is offense: thieves cracked open a tomb he had sworn to keep,
         and he woke furious that its order was broken. Put it right and his rage has nowhere left
-        to go. No young party out-casts a sarnak wizard. Return the idol, or flee. Do not trade
-        spells with him.
-      prompt: 'The Kly wants one thing: the crypt made whole again. Return the Stolen jade idol to its place and he will let you leave in peace, asking only that you take nothing more of Dalnir''s. (negotiate)'
+        to go.
       victory_text: "Against long odds, The Kly's spellfire gutters and dies, and the Robe of Dalnir is left to you."
       flag: dl-kly-resolved
       parley:

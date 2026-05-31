@@ -35,6 +35,7 @@ export function AdventureTab() {
   const [adventureId, setAdventureId] = useState(ADVENTURES[0]?.id ?? '');
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [showTools, setShowTools] = useState(false);
+  const [levelOverride, setLevelOverride] = useState<number | null>(null);
 
   const [game, setGame] = useState<GameState | null>(null);
   const [partyIds, setPartyIds] = useState<string[]>([]);
@@ -63,7 +64,7 @@ export function AdventureTab() {
       .map((id) => characters.find((c) => c.id === id))
       .filter((c): c is Character => !!c);
     if (party.length === 0) return;
-    const state = createGame(adventure, party);
+    const state = createGame(adventure, party, levelOverride ?? undefined);
     setGame(state);
     setPartyIds(party.map((c) => c.id));
     void persist(state, party.map((c) => c.id));
@@ -115,6 +116,15 @@ export function AdventureTab() {
   const selectedCount = selectedIds.length;
   const canEmbark = !!adventure && selectedCount >= 1 && selectedCount <= MAX_PARTY;
   const resumeAdventure = save ? getAdventure(save.adventureId) : undefined;
+
+  // Dungeon scaling target: defaults to the selected party's average level.
+  const selectedParty = selectedIds
+    .map((id) => characters.find((c) => c.id === id))
+    .filter((c): c is Character => !!c);
+  const autoLevel = selectedParty.length
+    ? Math.max(1, Math.round(selectedParty.reduce((s, c) => s + Math.max(1, c.level || 1), 0) / selectedParty.length))
+    : 1;
+  const effectiveLevel = levelOverride ?? autoLevel;
 
   return (
     <div className="col" style={{ gap: '1.25rem' }}>
@@ -193,8 +203,36 @@ export function AdventureTab() {
           </div>
         )}
 
+        <div className="row" style={{ alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <label style={{ margin: 0 }}>Scale dungeon to level</label>
+          <input
+            type="number"
+            min={1}
+            max={20}
+            value={effectiveLevel}
+            onChange={(e) => {
+              const v = parseInt(e.target.value, 10);
+              setLevelOverride(Number.isNaN(v) ? null : Math.max(1, Math.min(20, v)));
+            }}
+            style={{ width: '4rem' }}
+          />
+          <span className="muted" style={{ fontSize: '0.8rem' }}>
+            {levelOverride == null
+              ? `auto from party (avg level ${autoLevel})`
+              : (
+                <>
+                  manual ·{' '}
+                  <button className="ghost" style={{ fontSize: '0.75rem' }} onClick={() => setLevelOverride(null)}>
+                    reset to auto
+                  </button>
+                </>
+              )}
+          </span>
+        </div>
+
         <button className="primary" onClick={embark} disabled={!canEmbark} style={{ alignSelf: 'flex-start' }}>
           Embark{selectedCount > 0 ? ` with ${selectedCount}` : ''}
+          {effectiveLevel > 1 ? ` · level ${effectiveLevel}` : ''}
         </button>
       </div>
 

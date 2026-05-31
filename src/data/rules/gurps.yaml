@@ -1,0 +1,107 @@
+# GURPS (4th Edition) — reference descriptor only.
+#
+# GURPS is © Steve Jackson Games. This file is a short, factual summary of the
+# system's chassis for in-app reference (the Rules tab), not a reproduction of
+# the rulebook. The portal does not resolve play in GURPS; it runs Shadowdark.
+# Schema matches the other rulesets (chassis + books[] + sections[]/entries[]).
+
+id: gurps
+name: GURPS (4th Edition)
+publisher: Steve Jackson Games
+license: "Reference summary only — GURPS © Steve Jackson Games"
+year: 2004
+edition: Fourth Edition
+dice_system: 3d6 roll-under (roll at or under your effective skill)
+ability_scores: [ST, DX, IQ, HT]
+saving_throws: [Dodge, Parry, Block, HT, Will]   # active defenses + resistance rolls
+setting: Universal (system-neutral; any genre)
+summary: |
+  A universal point-buy system resolved on 3d6 rolled at or under an effective skill
+  or attribute. Because 3d6 clusters around 10–11, results are far more average than a
+  d20's flat spread. Characters are bought with points (advantages, disadvantages,
+  skills) rather than rolled by class. Combat uses maneuvers, active defenses, and
+  damage reduced by armor's DR. Included here as a reference baseline for GURPS-derived
+  systems like The Elder Scrolls: GURPS.
+
+books:
+  - id: gurps-basic-set
+    name: GURPS Basic Set (Characters & Campaigns)
+    year: 2004
+    summary: "The two-volume core: character building, skills, combat, and GM rules."
+
+sections:
+  - id: core-mechanics
+    name: Core resolution
+    description: "How GURPS resolves an action. Factual summary; see the Basic Set for full rules."
+    entries:
+      - id: success-roll
+        name: Success roll
+        summary: "Roll 3d6 and succeed on a total at or under your effective skill (skill ± modifiers). Lower target = harder odds because 3d6 centers on 10–11."
+      - id: margin
+        name: Margin of success/failure
+        summary: "How far you beat (or miss) the target often matters — e.g. how well a skill goes, or extra effect on a contest."
+      - id: criticals
+        name: Criticals
+        summary: "A 3 or 4 is a critical success; an 18 (and often 17) is a critical failure. A 5 or 6 usually succeeds regardless of skill."
+      - id: contests
+        name: Contests
+        summary: "Opposed actions are quick or regular contests: each side makes a success roll and compares margins."
+
+  - id: attributes
+    name: Primary attributes
+    description: "Four attributes, average 10. Higher costs points; lower grants them."
+    entries:
+      - id: st
+        name: Strength (ST)
+        summary: "Carrying, lifting, and melee damage; sets Hit Points."
+      - id: dx
+        name: Dexterity (DX)
+        summary: "Coordination and most physical skills; sets Basic Speed."
+      - id: iq
+        name: Intelligence (IQ)
+        summary: "Reasoning and mental skills; sets Will and Perception."
+      - id: ht
+        name: Health (HT)
+        summary: "Stamina and resistance; sets Fatigue Points and Basic Speed."
+
+  - id: secondary
+    name: Secondary characteristics
+    description: "Derived from the four attributes (and individually adjustable)."
+    entries:
+      - id: hp
+        name: Hit Points (HP)
+        summary: "Based on ST. Damage is tracked against HP."
+      - id: will-per
+        name: Will & Perception
+        summary: "Based on IQ. Resistance to mental effects, and noticing things."
+      - id: fp
+        name: Fatigue Points (FP)
+        summary: "Based on HT. Spent on exertion and some abilities."
+      - id: defenses
+        name: Basic Speed, Move & active defenses
+        summary: "Basic Speed sets Move and Dodge. Parry and Block come from weapon/shield skills."
+
+  - id: character-creation
+    name: Character creation
+    description: "Point-buy, not class-and-level."
+    entries:
+      - id: points
+        name: Point budget
+        summary: "A campaign sets a point total. Buy attributes, advantages, and skills; take disadvantages and quirks to gain points back."
+      - id: skills
+        name: Skills
+        summary: "Skills are bought individually and rated as effective targets for the 3d6 roll, keyed to a controlling attribute and a difficulty (Easy → Very Hard)."
+
+  - id: combat
+    name: Combat
+    description: "Maneuver-based, with active defenses and armor DR."
+    entries:
+      - id: maneuvers
+        name: Maneuvers
+        summary: "On your turn you take one maneuver (Attack, All-Out Attack, Move, Defend, etc.)."
+      - id: attack-defense
+        name: Attack & defense
+        summary: "Attacker makes a success roll on weapon skill; defender rolls an active defense (Dodge, Parry, or Block) to avoid it."
+      - id: damage
+        name: Damage & armor
+        summary: "Weapons deal thrust or swing damage scaled to ST; armor's Damage Resistance (DR) subtracts before HP loss."

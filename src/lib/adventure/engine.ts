@@ -11,6 +11,7 @@ import { rollAndLog } from '../rollLog';
 import { getMonster } from '../shadowdark/monsters';
 import { characterCombatProfile } from '../shadowdark/combat';
 import { getSpell } from '../shadowdark/spells';
+import { scaleMonster } from './scaling';
 import type { Character, SpellCombat } from '../shadowdark/types';
 import type {
   Adventure,
@@ -136,7 +137,7 @@ function describeRoom(s: GameState, adv: Adventure, firstTime: boolean) {
   );
 }
 
-function buildEnemies(enc: AdvEncounter): EnemyState[] {
+function buildEnemies(enc: AdvEncounter, powerLevel: number): EnemyState[] {
   const monsters = enc.monsters.map(getMonster).filter((m): m is NonNullable<typeof m> => !!m);
   const totals: Record<string, number> = {};
   for (const m of monsters) totals[m.name] = (totals[m.name] ?? 0) + 1;
@@ -144,13 +145,15 @@ function buildEnemies(enc: AdvEncounter): EnemyState[] {
   return monsters.map((m, i) => {
     seen[m.name] = (seen[m.name] ?? 0) + 1;
     const label = totals[m.name] > 1 ? `${m.name} ${seen[m.name]}` : m.name;
+    // Scale per instance, so a room of mooks comes out as a ragged spread.
+    const sc = scaleMonster(m, powerLevel);
     return {
       id: `e${i}`,
       monsterId: m.id,
       name: label,
-      ac: m.ac,
-      hp: { current: m.hpMax, max: m.hpMax },
-      attacks: m.attacks.map((a) => ({ name: a.name, bonus: a.bonus, damage: String(a.damage) })),
+      ac: sc.ac,
+      hp: { current: sc.hpMax, max: sc.hpMax },
+      attacks: sc.attacks,
       tags: m.tags ?? [],
     };
   });
@@ -183,7 +186,7 @@ function maybeStartCombat(s: GameState, adv: Adventure) {
   const enc = room.encounter;
   if (!enc) return;
   if (enc.flag && s.flags.includes(enc.flag)) return;
-  const enemies = buildEnemies(enc);
+  const enemies = buildEnemies(enc, s.powerLevel);
   if (!enemies.length) return;
   s.combat = { encounterId: enc.id, enemies, round: 1 };
   s.mode = 'combat';
@@ -849,7 +852,14 @@ function doHelp(s: GameState) {
 
 // ───────── public API ─────────
 
-export function createGame(adv: Adventure, characters: Character[]): GameState {
+/** Average party level, used as the default scaling target. */
+function partyLevel(characters: Character[]): number {
+  if (!characters.length) return 1;
+  const sum = characters.reduce((s, c) => s + Math.max(1, c.level || 1), 0);
+  return Math.max(1, Math.round(sum / characters.length));
+}
+
+export function createGame(adv: Adventure, characters: Character[], powerLevel?: number): GameState {
   const party: PartyMemberState[] = characters.map((c) => {
     const p = characterCombatProfile(c);
     return {
@@ -881,6 +891,7 @@ export function createGame(adv: Adventure, characters: Character[]): GameState {
 
   const s: GameState = {
     adventureId: adv.id,
+    powerLevel: Math.max(1, powerLevel ?? partyLevel(characters)),
     currentRoomId: adv.start,
     party,
     activeIndex: 0,

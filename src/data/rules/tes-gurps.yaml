@@ -1,0 +1,82 @@
+# The Elder Scrolls: GURPS (TES:G) — reference descriptor only.
+#
+# A fan-made GURPS 4th Edition conversion of The Elder Scrolls, by Cosmo Goblin.
+# Source: https://tesg.cosmogoblin.com/  (GURPS © Steve Jackson Games; The Elder
+# Scrolls © Bethesda). This is a short factual summary for the Rules tab, not a
+# copy of the site's text. The portal does not resolve play in GURPS; see the
+# source for the actual rules.
+
+id: tes-gurps
+name: "The Elder Scrolls: GURPS (TES:G)"
+publisher: Cosmo Goblin (fan conversion)
+license: "Fan-made GURPS 4e conversion — see source site"
+dice_system: 3d6 roll-under (GURPS 4e)
+ability_scores: [ST, DX, IQ, HT]
+saving_throws: [Dodge, Parry, Block, HT, Will]
+setting: Tamriel (The Elder Scrolls)
+summary: |
+  A fan adaptation of The Elder Scrolls onto GURPS 4th Edition. Characters are built
+  on 150 points with a race and a birthsign; magic is reworked into six Schools cast
+  with Magicka; and alchemy, enchantment, religion, and Tamrielic monsters are mapped
+  onto GURPS. Reference only — for the full rules see the source site.
+
+books:
+  - id: tesg-site
+    name: "TES:G website (tesg.cosmogoblin.com)"
+    summary: "The living rules: Characters, Magic, Religion, Alchemy & Enchantment, Monsters, Adventures, and Tools, in suggested chapter order."
+
+sections:
+  - id: characters
+    name: Characters
+    source_book: tesg-site
+    description: "Built on GURPS 4e: 150 starting character points, a playable race, and a birthsign that spends from that total."
+    entries:
+      - id: race-men
+        name: Men (humans)
+        summary: "Imperial, Breton, Redguard, Nord."
+      - id: race-mer
+        name: Mer (elves)
+        summary: "Dunmer, Bosmer, Altmer, Orsimer."
+      - id: race-beast
+        name: Beastfolk
+        summary: "Argonian, Khajiit."
+      - id: birthsigns
+        name: Birthsigns
+        summary: "A sign chosen at creation (The Warrior, The Mage, The Thief, and so on) granting traits at a point cost."
+
+  - id: magic
+    name: Magic
+    source_book: tesg-site
+    description: "Six Schools of Magic. Each spell is a Hard Technique under its School, cast using Magicka (a mana resource bought at 27 points per 10 Magicka). Spells are learned at a Mages Guild for gold scaled to their complexity."
+    entries:
+      - { id: alteration, name: Alteration }
+      - { id: conjuration, name: Conjuration }
+      - { id: destruction, name: Destruction }
+      - { id: illusion, name: Illusion }
+      - { id: mysticism, name: Mysticism }
+      - { id: restoration, name: Restoration }
+
+  - id: religion
+    name: Religion
+    source_book: tesg-site
+    description: "Belief systems and divine mechanics of Tamriel — the Divines, the Daedric Princes, and what worship grants."
+
+  - id: alchemy-enchantment
+    name: Alchemy & Enchantment
+    source_book: tesg-site
+    description: "Crafting systems: brewing potions from ingredient effects, and binding enchantments into gear."
+
+  - id: monsters
+    name: Monsters
+    source_book: tesg-site
+    description: "Tamrielic creatures and NPC options statted for GURPS."
+
+  - id: adventures
+    name: Adventures
+    source_book: tesg-site
+    description: "Included scenarios, e.g. Elsweyr (Skooma)."
+
+  - id: tools
+    name: Tools
+    source_book: tesg-site
+    description: "Generators and references that support play."

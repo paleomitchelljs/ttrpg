@@ -92,6 +92,7 @@ export function AdventurePlayer({ adventure, state, onCommand, onExit, onFinish 
           <div className="big-label">{room.name}</div>
           <div className="muted" style={{ fontSize: '0.8rem' }}>
             {adventure.title} · {inCombat ? `Combat — round ${state.combat?.round ?? 1}` : over ? 'Finished' : 'Exploring'}
+            {state.powerLevel > 1 ? ` · scaled to L${state.powerLevel}` : ''}
           </div>
         </div>
         {adventure.mapImage && (

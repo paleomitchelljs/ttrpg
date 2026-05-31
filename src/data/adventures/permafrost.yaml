@@ -190,7 +190,6 @@ rooms:
         stair behind the throne and the cold that breathes up out of it. He rules this keep, and every
         hour of every day he is terrified of the thing that rules HIM. "Tensiel! Kill them and feed
         them to the cats!"
-      prompt: 'Thex''Ka fears Lady Vox far more than he fears you. Hand over the goblins'' coin-pouch as "tribute he took for the dragon" and he will save face and bolt. Or gamble on a pure bluff. (negotiate)'
       victory_text: "The king is down, and his champion with him."
       flag: pf-king-defeated
       parley:

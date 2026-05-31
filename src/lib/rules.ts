@@ -7,6 +7,8 @@
 
 import shadowdarkRaw from '../data/rules/shadowdark.yaml';
 import eqRaw from '../data/rules/eq-rpg.yaml';
+import gurpsRaw from '../data/rules/gurps.yaml';
+import tesGurpsRaw from '../data/rules/tes-gurps.yaml';
 
 export interface RuleBook {
   id: string;
@@ -55,7 +57,12 @@ export interface Ruleset {
 }
 
 // Native engine first, then reference-only systems.
-export const RULESETS: Ruleset[] = [shadowdarkRaw as Ruleset, eqRaw as Ruleset];
+export const RULESETS: Ruleset[] = [
+  shadowdarkRaw as Ruleset,
+  eqRaw as Ruleset,
+  gurpsRaw as Ruleset,
+  tesGurpsRaw as Ruleset,
+];
 
 export function getRuleset(id: string): Ruleset | undefined {
   return RULESETS.find((r) => r.id === id);

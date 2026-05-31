@@ -2620,3 +2620,195 @@ monsters:
     system: eq-rpg
     source_book: najena
 
+  # ═══════════════════════════════════════════
+  # The Elder Scrolls: GURPS (tes-gurps). Tamrielic creatures statted as
+  # Shadowdark blocks so they play on the engine, tagged for the Elder Scrolls
+  # pool. Source roster: tesg.cosmogoblin.com/monsters.
+  # ═══════════════════════════════════════════
+
+  # ───────── Daedra ─────────
+  - id: tesg-scamp
+    name: Scamp
+    hp_max: 4
+    ac: 12
+    move: near
+    level: 1
+    tags: [tier-1, fiend, daedra, minion, tamriel, tes-gurps]
+    icon: icons/game-icons/lorc/imp-laugh.svg
+    attacks:
+      - { name: Claw, bonus: 1, damage: 1d4 }
+    notes: "A small, cowardly lesser daedra of Oblivion. Yips, throws weak firebolts, and runs in numbers."
+    system: tes-gurps
+    source_book: tesg-site
+  - id: tesg-clannfear
+    name: Clannfear
+    hp_max: 12
+    ac: 14
+    move: double-near
+    level: 2
+    tags: [tier-2, fiend, daedra, beast, skirmisher, tamriel, tes-gurps]
+    icon: icons/game-icons/lorc/horned-skull.svg
+    attacks:
+      - { name: Horned Charge, bonus: 3, damage: 1d6 }
+    notes: "A reptilian daedric hound, beaked and crested. Fast and vicious; hunts in a pack with scamps."
+    system: tes-gurps
+    source_book: tesg-site
+  - id: tesg-hunger
+    name: Hunger
+    hp_max: 10
+    ac: 14
+    move: near
+    level: 2
+    tags: [tier-2, fiend, daedra, skirmisher, tamriel, tes-gurps]
+    icon: icons/game-icons/lorc/tentacles-skull.svg
+    attacks:
+      - { name: Lashing Tongue, bonus: 3, damage: 1d6, note: "On hit: DC 12 DEX save or be paralyzed one round." }
+    notes: "A gaunt, long-tongued daedra that paralyzes prey and devours it whole. Servant of Boethiah."
+    system: tes-gurps
+    source_book: tesg-site
+  - id: tesg-spider-daedra
+    name: Spider Daedra
+    hp_max: 16
+    ac: 13
+    move: "near (climb)"
+    level: 3
+    tags: [tier-2, fiend, daedra, caster, leader, tamriel, tes-gurps]
+    icon: icons/game-icons/lorc/hanging-spider.svg
+    attacks:
+      - { name: Shock Bolt, bonus: 3, damage: 1d6 }
+    notes: "A spider-bodied daedric sorceress of Mephala. Spits lightning and births swarms of spiderlings."
+    system: tes-gurps
+    source_book: tesg-site
+  - id: tesg-winged-twilight
+    name: Winged Twilight
+    hp_max: 10
+    ac: 14
+    move: "near (fly)"
+    level: 2
+    tags: [tier-2, fiend, daedra, skirmisher, tamriel, tes-gurps]
+    icon: icons/game-icons/delapouite/bat.svg
+    attacks:
+      - { name: Tail Lash, bonus: 3, damage: 1d6, note: "On hit: DC 12 CON save or be shocked (skip next turn)." }
+    notes: "A winged, bat-legged messenger of Azura. Strikes from the air with a paralytic tail."
+    system: tes-gurps
+    source_book: tesg-site
+  - id: tesg-flame-atronach
+    name: Flame Atronach
+    hp_max: 12
+    ac: 14
+    move: near
+    level: 3
+    tags: [tier-2, elemental, daedra, caster, artillery, tamriel, tes-gurps]
+    icon: icons/game-icons/lorc/imp.svg
+    attacks:
+      - { name: Firebolt, bonus: 3, damage: 1d6, note: "Fire. On death: bursts for 1d4 to anyone in close." }
+    notes: "A summoned fire elemental of feminine shape. Hurls flame and detonates when destroyed."
+    system: tes-gurps
+    source_book: tesg-site
+  - id: tesg-frost-atronach
+    name: Frost Atronach
+    hp_max: 16
+    ac: 14
+    move: near
+    level: 3
+    tags: [tier-2, elemental, daedra, brute, tamriel, tes-gurps]
+    icon: icons/game-icons/delapouite/ice-golem.svg
+    attacks:
+      - { name: Ice Slam, bonus: 3, damage: 1d8 }
+    notes: "A lumbering elemental of jagged ice. Slow, strong, and immune to cold."
+    system: tes-gurps
+    source_book: tesg-site
+  - id: tesg-storm-atronach
+    name: Storm Atronach
+    hp_max: 40
+    ac: 16
+    move: near
+    level: 5
+    tags: [tier-3, elemental, daedra, brute, tamriel, tes-gurps]
+    icon: icons/game-icons/delapouite/gargoyle.svg
+    attacks:
+      - { name: Thunder Fist, bonus: 4, damage: 1d10, note: "On hit: DC 13 DEX save or take +1d6 shock." }
+    notes: "A whirling cairn of rock bound by crackling lightning. A serious threat to a young party."
+    system: tes-gurps
+    source_book: tesg-site
+  - id: tesg-dremora
+    name: Dremora Kynval
+    hp_max: 16
+    ac: 15
+    move: near
+    level: 3
+    tags: [tier-2, fiend, daedra, humanoid, soldier, tamriel, tes-gurps]
+    icon: icons/game-icons/lorc/skull-shield.svg
+    attacks:
+      - { name: Daedric Longsword, bonus: 4, damage: 1d8 }
+    notes: "A disciplined warrior-caste daedra of Mehrunes Dagon. Proud, armored, and skilled — and willing to trade words before blows."
+    system: tes-gurps
+    source_book: tesg-site
+  - id: tesg-daedroth
+    name: Daedroth
+    hp_max: 40
+    ac: 15
+    move: near
+    level: 5
+    tags: [tier-3, fiend, daedra, brute, tamriel, tes-gurps]
+    icon: icons/game-icons/lorc/daemon-skull.svg
+    attacks:
+      - { name: Crushing Bite, bonus: 4, damage: 2d6, note: "On hit: +1d4 fire." }
+    notes: "A towering crocodile-headed daedra wreathed in flame. Deadly to a low-level party — flee or out-think it."
+    system: tes-gurps
+    source_book: tesg-site
+  - id: tesg-xivilai
+    name: Xivilai
+    hp_max: 44
+    ac: 15
+    move: near
+    level: 5
+    tags: [tier-3, fiend, daedra, caster, leader, tamriel, tes-gurps]
+    icon: icons/game-icons/lorc/horned-skull.svg
+    attacks:
+      - { name: Daedric Greatsword, bonus: 4, damage: 1d10 }
+    notes: "A blue-skinned, horned daedra of immense strength and arrogance, able to conjure dremora to its side. An apex foe — bargain or run."
+    system: tes-gurps
+    source_book: tesg-site
+
+  # ───────── Other Tamrielic foes ─────────
+  - id: tesg-goblin-warlord
+    name: Goblin Warlord
+    hp_max: 18
+    ac: 14
+    move: near
+    level: 3
+    tags: [tier-2, goblinoid, leader, boss, tamriel, tes-gurps]
+    icon: icons/game-icons/delapouite/goblin-head.svg
+    attacks:
+      - { name: Bone Bardiche, bonus: 3, damage: 1d8, note: "1/fight: a rallied goblin attacks again immediately." }
+    notes: "Chief of a Tamrielic goblin tribe, bigger and meaner than its kin. Cunning enough to be cowed."
+    system: tes-gurps
+    source_book: tesg-site
+  - id: tesg-ogre
+    name: Ogre
+    hp_max: 22
+    ac: 13
+    move: near
+    level: 4
+    tags: [tier-2, giant, brute, tamriel, tes-gurps]
+    icon: icons/game-icons/delapouite/giant.svg
+    attacks:
+      - { name: Massive Fist, bonus: 3, damage: 1d10 }
+    notes: "A hulking brute of the wilds. Slow to anger, devastating once roused — and sometimes biddable for food or shinies."
+    system: tes-gurps
+    source_book: tesg-site
+  - id: tesg-headless-zombie
+    name: Headless Zombie
+    hp_max: 12
+    ac: 10
+    move: near
+    level: 2
+    tags: [tier-2, undead, brute, tamriel, tes-gurps]
+    icon: icons/game-icons/delapouite/shambling-zombie.svg
+    attacks:
+      - { name: Clammy Grasp, bonus: 2, damage: 1d6 }
+    notes: "A shambling, headless corpse. Slow and easy to hit, but it simply will not stop coming. Mindless."
+    system: tes-gurps
+    source_book: tesg-site
+

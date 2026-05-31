@@ -65,3 +65,8 @@ pools:
     name: "Easy mode (tier-1 only)"
     description: "Only tier-1 monsters and basic items. For very young players."
     enabled_tags: [tier-1, shadowdark-core]
+
+  - id: elder-scrolls
+    name: "The Elder Scrolls (TES:G)"
+    description: "Tamrielic creatures — daedra, atronachs, and the like — from the GURPS conversion."
+    enabled_tags: [tes-gurps, tamriel, daedra]
