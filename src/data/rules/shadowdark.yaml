@@ -1,0 +1,131 @@
+# Shadowdark RPG — the system the app actually runs on.
+#
+# This descriptor documents the live engine (character gen, AC, attacks, HP,
+# spellcasting, the adventure combat + parley rules). The mechanics themselves
+# live in code (src/lib/shadowdark/, src/lib/adventure/) and data (items.yaml,
+# monsters.yaml, spells.yaml, ...); this is the human-readable reference, stored
+# the same way as every other ruleset so adding a system is just a YAML file.
+#
+# Schema matches eq-rpg.yaml: top-level chassis + books[] + sections[] (entries[]).
+
+id: shadowdark
+name: Shadowdark RPG
+publisher: The Arcane Library
+license: Free Quickstart Set content
+year: 2023
+edition: First Edition
+native: true                # the engine the app actually resolves play with
+dice_system: d20
+ability_scores: [STR, DEX, CON, INT, WIS, CHA]
+saving_throws: [STR, DEX, CON, INT, WIS, CHA]   # saves are ability checks vs a DC, not separate Fort/Ref/Will
+setting: System-neutral dungeon fantasy (the portal pairs it with Lego-based play)
+summary: |
+  A lean OSR-flavored d20 fantasy game. Six ability scores, a flat modifier ladder,
+  ascending AC, and d20-vs-DC for nearly everything. This is the chassis the portal
+  runs: characters, monsters, items, and spells are all resolved with these rules, and
+  every adventure — Shadowdark or EverQuest-flavored — plays on this engine.
+
+books:
+  - id: shadowdark-quickstart
+    name: Shadowdark Quickstart Set
+    year: 2023
+    summary: "Free starter rules: ancestries, four classes, tier-1 spells, core combat, sample gear and foes."
+
+sections:
+  # ────────── Core resolution ──────────
+  - id: core-mechanics
+    name: Core mechanics
+    description: "How the engine resolves play. These are implemented in code (dice.ts, combat.ts) and data."
+    entries:
+      - id: ability-modifiers
+        name: Ability modifiers
+        summary: "Each score gives a flat modifier: 3 or less = -4; 4-5 = -3; 6-7 = -2; 8-9 = -1; 10-11 = 0; 12-13 = +1; 14-15 = +2; 16-17 = +3; 18+ = +4."
+      - id: checks-and-saves
+        name: Checks & saves
+        summary: "Roll 1d20 + the relevant ability modifier against a difficulty class (DC). There are no separate Fortitude/Reflex/Will saves; a 'save' is an ability check vs a DC (e.g. DC 12 CON to resist poison)."
+      - id: armor-class
+        name: Armor class
+        summary: "AC = armor base + DEX mod (where the armor allows it), +2 for a shield, +1 for a helmet. Unarmored is 10 + DEX."
+      - id: attacks
+        name: Attacks
+        summary: "1d20 + attack modifier (STR for melee, DEX for ranged) vs the target's AC. On a hit, roll the weapon's damage die + the same modifier. A natural 20 is a critical hit (double the damage dice); a natural 1 always misses."
+      - id: hit-points
+        name: Hit points
+        summary: "Starting HP = the class hit die + CON modifier (minimum 1). Dwarves roll with advantage and add +2. At 0 HP a hero is knocked out; if the whole party drops, the run is lost (saved heroes are never harmed)."
+      - id: spellcasting
+        name: Spellcasting
+        summary: "Casters know spells by name (see spells.yaml). In a fight, casting rolls 1d20 + INT (wizard) or WIS (priest) against DC 10 + the spell's tier. On a failure the spell is lost until the caster rests. Each spell's combat effect lives in its `combat` block."
+
+  # ────────── The adventure layer ──────────
+  - id: adventure-rules
+    name: Adventure & combat rules (portal)
+    description: "Rules specific to the text-adventure engine (src/lib/adventure/)."
+    entries:
+      - id: turn-order
+        name: Turn order
+        summary: "Each round, every conscious hero acts once (attack, cast, negotiate), then the foes act. Tap a hero to make them the active actor."
+      - id: parley
+        name: Parley (negotiate)
+        summary: "Many foes can be talked down. A scripted bargain may cost a held item (surrendered for good) or a toll of HP; otherwise roll 1d20 + the party's best CHA vs a DC. Mindless foes (beasts, constructs, mindless undead) refuse. A failed reaction roll costs the round."
+      - id: flee
+        name: Flee
+        summary: "The party can break off any fight and retreat to the previous room. Apex bosses are built to be fled or bargained with, not necessarily killed at low level."
+      - id: rest
+        name: Rest
+        summary: "In a safe (cleared) room the party can catch their breath once, healing a little and rousing the downed to 1 HP."
+
+  # ────────── Classes ──────────
+  - id: classes
+    name: Classes
+    source_book: shadowdark-quickstart
+    description: "Four starting classes. Full features live in classes.ts and on the character sheet."
+    entries:
+      - id: fighter
+        name: Fighter
+        hit_die: d8
+        summary: "Martial all-rounder. Best HP and gear, weapon mastery, extra starting gold."
+      - id: priest
+        name: Priest
+        hit_die: d6
+        spell_stat: WIS
+        summary: "Divine caster. Heals, wards, and turns undead; serves a deity."
+      - id: thief
+        name: Thief
+        hit_die: d4
+        summary: "Skirmisher. Stealth, backstab, and trap-craft."
+      - id: wizard
+        name: Wizard
+        hit_die: d4
+        spell_stat: INT
+        summary: "Arcane caster. Damage and control spells; fragile."
+
+  # ────────── Ancestries ──────────
+  - id: ancestries
+    name: Ancestries
+    source_book: shadowdark-quickstart
+    description: "Playable ancestries. Full traits live in ancestries.ts."
+    entries:
+      - id: human
+        name: Human
+        summary: "Versatile; a bonus talent."
+      - id: dwarf
+        name: Dwarf
+        summary: "Tough; rolls starting HP with advantage and adds +2."
+      - id: elf
+        name: Elf
+        summary: "Keen senses; a knack for ranged or arcane skill."
+      - id: goblin
+        name: Goblin
+        summary: "Small and quick; keen night-sight."
+      - id: halfling
+        name: Halfling
+        summary: "Stealthy and lucky."
+      - id: half-orc
+        name: Half-Orc
+        summary: "Powerful; a ferocious knack in battle."
+      - id: yuan-ti
+        name: Yuan-ti
+        summary: "Snakefolk (added for serpent/EQ content); resistant and subtle."
+      - id: iksar
+        name: Iksar
+        summary: "Lizardfolk (added for EverQuest content); scaled hide and cold blood."

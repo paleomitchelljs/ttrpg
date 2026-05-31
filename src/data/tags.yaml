@@ -1,0 +1,90 @@
+# Content tag taxonomy — the controlled vocabulary for tagging monsters (and other
+# content). Two axes matter most for play and for any future cross-system
+# conversion: THREAT (how dangerous) and ROLE (how it fights). Creature TYPE and
+# THEME tags are for flavor, search, and filtering.
+#
+# How it's used today:
+#   - Threat = the `tier-N` tag a monster already carries.
+#   - Role = a role tag if the monster has one (caster, leader, brute, swarm→minion,
+#     boss→solo); otherwise derived from its creature type. See src/lib/shadowdark/tags.ts.
+#   - A future converter would read (role, threat) to generate a stat line for a
+#     different ruleset. Special abilities stay as authored notes — they don't convert.
+
+# ───────── Threat: how dangerous (the stat budget) ─────────
+threats:
+  - id: tier-1
+    name: Tier 1 — easy
+    profile: "HP ~2–8, AC 11–13, attack +1/+2, damage 1d4–1d6"
+    description: "A level-1 hero can handle one or two. The bread and butter of early rooms."
+  - id: tier-2
+    name: Tier 2 — real threat
+    profile: "HP ~10–24, AC 13–15, attack +3/+4, damage 1d6–1d10"
+    description: "Mini-bosses and dangerous packs. A party fight."
+  - id: tier-3
+    name: Tier 3 — deadly
+    profile: "HP ~35–60+, AC 16–18, attack +4/+6, damage 2d6+"
+    description: "Apex threats. Often meant to be fled or bargained with, not killed at low level."
+
+# ───────── Role: how it fights (drives the stat shape) ─────────
+roles:
+  - id: brute
+    name: Brute
+    profile: "Above-tier HP, at-or-below-tier AC, one big melee attack."
+    description: "Soaks hits and hits back hard. Giants, oozes, troll-types."
+  - id: soldier
+    name: Soldier
+    profile: "At-tier HP, above-tier AC, reliable melee."
+    description: "The defender/line-holder. Armored humanoids, guardians, golems."
+  - id: skirmisher
+    name: Skirmisher
+    profile: "At-tier HP and AC, mobile, sneaky."
+    description: "Hit-and-run. Beasts, thieves, scouts."
+  - id: artillery
+    name: Artillery
+    profile: "Below-tier HP, ranged attacks."
+    description: "Glass cannon at range. Archers, bolt-throwers."
+  - id: caster
+    name: Caster
+    profile: "Below-tier HP, spells (damage, control, or support)."
+    description: "Controllers and blasters. Necromancers, mages, priests."
+  - id: leader
+    name: Leader
+    profile: "At-or-above-tier, buffs/commands allies."
+    description: "Makes the rest of the encounter worse. Chiefs, sergeants, queens."
+  - id: minion
+    name: Minion
+    profile: "Below-tier HP, numerous, weak."
+    description: "Swarms and mooks. Dangerous in numbers, trivial alone."
+  - id: solo
+    name: Solo
+    profile: "Far above-tier HP/AC; an encounter by itself."
+    description: "Bosses meant to be faced alone. Dragons, named apex foes."
+
+# ───────── Creature type: what it is (flavor + filtering) ─────────
+creature_types:
+  - { id: humanoid, name: Humanoid }
+  - { id: goblinoid, name: Goblinoid }
+  - { id: kobold, name: Kobold }
+  - { id: gnoll, name: Gnoll }
+  - { id: beast, name: Beast }
+  - { id: undead, name: Undead }
+  - { id: construct, name: Construct }
+  - { id: dragon, name: Dragon }
+  - { id: fiend, name: Fiend }
+  - { id: elemental, name: Elemental }
+  - { id: giant, name: Giant }
+  - { id: plant, name: Plant }
+  - { id: aberration, name: Aberration }
+  - { id: ooze, name: Ooze }
+  - { id: reptilian, name: Reptilian }
+  - { id: vampire, name: Vampire }
+
+# ───────── Theme: search/flavor facets (non-exclusive) ─────────
+themes:
+  - { id: fire, name: Fire }
+  - { id: ice, name: Ice / cold }
+  - { id: holy, name: Holy }
+  - { id: shadow, name: Shadow }
+  - { id: force, name: Force }
+  - { id: poison, name: Poison }
+  - { id: fey, name: Fey }

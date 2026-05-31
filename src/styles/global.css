@@ -1304,3 +1304,22 @@ button.hud-attack .hud-value { color: var(--accent); }
   .adv-pick-thumb { width: 100%; height: 110px; }
   .adv-transcript { max-height: 40vh; }
 }
+
+/* ═══════════════════════════════════════════
+   Rules reference tab
+   ═══════════════════════════════════════════ */
+details.card > summary {
+  cursor: pointer;
+  list-style: none;
+}
+details.card > summary::-webkit-details-marker { display: none; }
+details.card > summary::before {
+  content: '▸ ';
+  color: var(--accent);
+}
+details.card[open] > summary::before { content: '▾ '; }
+.rule-entry {
+  padding: 0.4rem 0;
+  border-bottom: 1px dashed var(--border);
+}
+.rule-entry:last-child { border-bottom: none; }
