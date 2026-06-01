@@ -137,7 +137,8 @@ rooms:
       flag: php-pretender-resolved
       parley:
         dc: 15
-        cost_item: "Priests' binding seal"
+        modifiers:
+          - { offer: "Priests' binding seal", bonus: 19, label: "the seal he craves" }
         success_text: "He fixes on the lead disc in your hand and his smooth voice turns honey-desperate. 'That ugly thing? Give it here and the matter ends. The crown's true hoard is yours, every coin, and I ask only to be let out of the dark.' You hand him the seal. He crushes it to powder, laughs like a man who has won, tells you truly where the gold is hidden, and walks up out of the prison past you into the light, free for the first time in an age."
         failure_text: "Your words bounce off a liar far older and better at this than you, and the smiling thing decides talk is over."
     exits:

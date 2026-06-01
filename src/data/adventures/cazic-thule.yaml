@@ -178,8 +178,10 @@ rooms:
       flag: ct-avatar-resolved
       parley:
         dc: 16
-        cost_item: "Vial of Lizard Blood"
-        cost_hp: 3
+        modifiers:
+          - { offer: "Vial of Lizard Blood", bonus: 20, label: "the sacred offering" }
+          - { sacrifice_hp: 3, bonus: 2, label: "a tithe of nerve" }
+          - { knows: ct-knows-avatar, bonus: 2, label: "the ghost's warning" }
         success_text: "You kneel and pour the sacred blood out before the Avatar. The green dread coils around the offering, and for a moment around you, and takes its tithe of nerve. Then the no-face turns away. You are beneath its notice now, which is the only mercy fear knows. Crawl out, and do not look back."
         failure_text: "Your offering is nothing and your words are less. The Avatar's aura closes like a fist. There is no reasoning with terror itself, only feeding it or fleeing it."
     exits:

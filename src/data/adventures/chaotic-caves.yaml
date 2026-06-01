@@ -195,7 +195,11 @@ rooms:
       flag: cc-priest-resolved
       parley:
         dc: 16
-        cost_item: "Chaos idol"
+        modifiers:
+          - { offer: "Chaos idol", bonus: 20, label: "his idol, returned" }
+          - { allied: cc-hobgoblins-dealt, bonus: 3, label: "Grosh stood down" }
+          - { allied: cc-goblins-allied, bonus: 2, label: "the goblins' diversion" }
+          - { knows: cc-knows-cult, bonus: 2, label: "the captive's warning" }
         success_text: "You hold up the looted idol, and for the first time the priest's calm cracks into naked want. 'You have it. Give it back to me and walk out alive, with a tithe of the offerings for your trouble. Chaos rewards the practical.' You set the idol in his hands. He cradles it like a child, waves you and your purse out, and goes back to his patient, dangerous work as though you were never here."
         failure_text: "The priest only smiles wider at your words. 'Chaos does not bargain. It consumes.' He brings the mace up."
     exits:

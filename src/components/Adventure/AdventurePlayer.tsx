@@ -10,6 +10,7 @@ import {
   currentRoom,
   exitLabel,
   livingEnemies,
+  parleyOdds,
   roomItems,
 } from '../../lib/adventure/engine';
 import type { Adventure, GameState, PartyMemberState } from '../../lib/adventure/types';
@@ -46,11 +47,8 @@ export function AdventurePlayer({ adventure, state, onCommand, onExit, onFinish 
     }
     return [...m.entries()].sort((a, b) => a[0] - b[0]);
   })();
-  const REASON_TAGS = new Set([
-    'humanoid', 'goblinoid', 'gnoll', 'kobold', 'leader', 'boss', 'named-character',
-    'hero', 'caster', 'fiend', 'druid', 'wizard', 'fighter', 'dragon', 'vampire',
-  ]);
-  const canNegotiate = !!room.encounter?.parley || enemies.some((e) => e.tags.some((t) => REASON_TAGS.has(t)));
+  // Live parley forecast: whether anyone will talk, and the roll the legwork buys.
+  const odds = inCombat ? parleyOdds(state, adventure) : null;
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
@@ -156,7 +154,22 @@ export function AdventurePlayer({ adventure, state, onCommand, onExit, onFinish 
                   </button>
                 </span>
               )}
-              {canNegotiate && chip('Negotiate', 'negotiate', 'adv-chip-talk')}
+              {odds && (
+                <span className="adv-parley">
+                  {chip(
+                    odds.gatedBy ? 'Negotiate' : odds.needs >= 21 ? 'Negotiate (nat 20)' : `Negotiate (${odds.needs}+)`,
+                    'negotiate',
+                    'adv-chip-talk',
+                  )}
+                  <span className="adv-parley-odds">
+                    {odds.gatedBy
+                      ? "they won't hear you yet"
+                      : `1d20 + ${odds.total} vs ${odds.dc}${
+                          odds.mods.length ? ` — ${odds.mods.map((m) => `${m.label} +${m.bonus}`).join(', ')}` : ''
+                        }`}
+                  </span>
+                </span>
+              )}
               {chip('Flee', 'flee', 'adv-chip-warn')}
               {chip('Look', 'look')}
               {chip('Who', 'who')}

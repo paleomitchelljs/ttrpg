@@ -161,8 +161,9 @@ rooms:
       flag: ka-xalgoz-resolved
       parley:
         dc: 15
-        cost_item: "Tablet of Venril Sathir"
-        cost_hp: 2
+        modifiers:
+          - { offer: "Tablet of Venril Sathir", bonus: 19, label: "the lichlord's seal" }
+          - { sacrifice_hp: 2, bonus: 2, label: "blood paid in tribute" }
         success_text: 'Xalgoz weighs you and decides you are worth more intact than emptied. He takes his due, unhurried, almost courteous. "Free your little lights and go. Tell no one the door was open." He settles back onto his throne and waves you past.'
         failure_text: "Without his master's seal to show him, Xalgoz hears only noise. 'Words, words. I prefer the choir.' He glides forward, claws first."
       loot:

@@ -171,7 +171,8 @@ rooms:
       flag: ch-drusella-resolved
       parley:
         dc: 16
-        cost_item: "Coin Depicting Innoruuk"
+        modifiers:
+          - { offer: "Coin Depicting Innoruuk", bonus: 20, label: "Hate's due, paid" }
         success_text: 'The deathfire dims as the coin leaves your hand for her altar. "...You give Hate its due. Then walk out, quickly, before I find a reason to keep you." The way behind her opens.'
         failure_text: "Empty-handed before a fanatic, your words mean nothing. 'Faithless,' Drusella hisses, and the deathfire flares."
       loot:

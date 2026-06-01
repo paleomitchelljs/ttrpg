@@ -156,7 +156,8 @@ rooms:
       flag: tsk-ssarraketh-resolved
       parley:
         dc: 14
-        cost_item: "Singing sword"
+        modifiers:
+          - { offer: "Singing sword", bonus: 18, label: "his line's blade, brought home" }
         success_text: "You set the humming sword at the edge of his dais, the blade of his own line, brought home. Ssarraketh regards it for a long, cold moment, then inclines his withered head. 'A courtesy. How rare, from soft things. Take the lesser dead's gold and go, and leave my rest to me.' The venom-light fades."
         failure_text: "Ssarraketh tilts his head, almost amused. 'You bring me nothing, and yet you stay. Then stay.' The venom-light flares."
     exits:

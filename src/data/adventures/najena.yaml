@@ -195,7 +195,8 @@ rooms:
       flag: nj-najena-resolved
       parley:
         dc: 15
-        cost_item: "Najena's Crystal"
+        modifiers:
+          - { offer: "Najena's Crystal", bonus: 19, label: "her prized crystal" }
         success_text: 'You set Najena''s Crystal back in her hand and tell her, truthfully enough, that no lair in Norrath is its equal. Vanity beats murder, just barely. "...You have SOME taste." The lightning dies. "Take a trinket and go, before I remember my mood." She turns back to her bench, cradling the crystal, already bored of you.'
         failure_text: "'Flattery and empty hands. How dull.' The pillar of lightning swings toward you."
       loot:

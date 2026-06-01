@@ -179,8 +179,9 @@ rooms:
       flag: bwb-wyrm-resolved
       parley:
         dc: 16
-        requires_flag: bwb-knows-truth
-        cost_item: "Durgan's brother's locket"
+        modifiers:
+          - { offer: "Durgan's brother's locket", bonus: 20, label: "the locket" }
+          - { knows: bwb-knows-truth, bonus: 6, label: "the witch's truth" }
         success_text: "You do not raise a weapon. You set the locket on the coins where he can see it, and you say the name the witch gave you: Durgan. The smoke falters. For a long, terrible moment the wyrm stares at the two tiny faces, the brother he was and the brother he killed, and something that is almost the dwarf again folds down over the hoard. 'Go,' he rasps. 'Take a tithe and GO, before I remember what I am.'"
         failure_text: "He does not know that name, his eye says, he does not, and the denial comes out as fire."
     exits:

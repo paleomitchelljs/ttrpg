@@ -43,10 +43,19 @@ interface RawExit {
   locked_text?: string;
 }
 
+interface RawParleyModifier {
+  offer?: string;
+  knows?: string;
+  allied?: string;
+  sacrifice_hp?: number;
+  bonus: number;
+  consume?: boolean;
+  label?: string;
+}
+
 interface RawParley {
-  dc?: number;
-  cost_item?: string;
-  cost_hp?: number;
+  dc: number;
+  modifiers?: RawParleyModifier[];
   requires_flag?: string;
   prompt?: string;
   success_text: string;
@@ -125,8 +134,15 @@ function normEncounter(r: RawEncounter): AdvEncounter {
     parley: r.parley
       ? {
           dc: r.parley.dc,
-          costItem: r.parley.cost_item,
-          costHp: r.parley.cost_hp,
+          modifiers: (r.parley.modifiers ?? []).map((m) => ({
+            offer: m.offer,
+            knows: m.knows,
+            allied: m.allied,
+            sacrificeHp: m.sacrifice_hp,
+            bonus: m.bonus,
+            consume: m.consume,
+            label: m.label,
+          })),
           requiresFlag: r.parley.requires_flag,
           prompt: r.parley.prompt,
           successText: r.parley.success_text,

@@ -18,6 +18,7 @@ import type {
   AdvEncounter,
   AdvExit,
   AdvItem,
+  AdvParley,
   AdvRoom,
   EnemyState,
   GameState,
@@ -545,18 +546,89 @@ function doFlee(s: GameState, adv: Adventure) {
   enterRoom(s, adv, back);
 }
 
+// A parley lever that is satisfied right now, with the bonus it contributes.
+interface ActiveMod {
+  label: string;
+  bonus: number;
+  /** Inventory item surrendered on success, if this is a consumed offering. */
+  offerName?: string;
+  /** HP each conscious hero gives up on success. */
+  sacrificeHp?: number;
+}
+
+/** Which of a parley's modifiers apply now (offering held, secret known, faction
+ *  won, or an always-available costly gesture) and what each adds to the check. */
+function activeParleyMods(s: GameState, parley: AdvParley): ActiveMod[] {
+  const out: ActiveMod[] = [];
+  for (const m of parley.modifiers ?? []) {
+    if (m.offer) {
+      const idx = s.inventory.findIndex((i) => nameMatches(m.offer!, i.name));
+      if (idx >= 0) {
+        out.push({ label: m.label ?? `offering the ${m.offer}`, bonus: m.bonus, offerName: m.consume === false ? undefined : m.offer });
+      }
+    } else if (m.knows) {
+      if (s.flags.includes(m.knows)) out.push({ label: m.label ?? 'what you have learned', bonus: m.bonus });
+    } else if (m.allied) {
+      if (s.flags.includes(m.allied)) out.push({ label: m.label ?? 'your alliance', bonus: m.bonus });
+    } else if (m.sacrificeHp) {
+      out.push({ label: m.label ?? 'a costly gesture', bonus: m.bonus, sacrificeHp: m.sacrificeHp });
+    }
+  }
+  return out;
+}
+
+function clampNeeds(n: number): number {
+  return Math.max(1, Math.min(21, n));
+}
+
+export interface ParleyForecast {
+  dc: number;
+  chaMod: number;
+  mods: { label: string; bonus: number }[];
+  /** chaMod + sum of active modifier bonuses: the fixed part of the roll. */
+  total: number;
+  /** d20 result needed to hit the DC (1..21; 21 means only a natural 20 works). */
+  needs: number;
+  /** Set when a hard gate blocks the parley outright. */
+  gatedBy?: string;
+}
+
+/** Read-only forecast of the current parley, for the play UI. Null when there is
+ *  nothing here to talk to (no scripted parley and no foe that would listen). */
+export function parleyOdds(s: GameState, adv: Adventure): ParleyForecast | null {
+  if (s.mode !== 'combat' || !s.combat) return null;
+  const cha = bestChaMod(s);
+  const parley = currentRoom(s, adv).encounter?.parley;
+  if (!parley) {
+    if (!livingEnemies(s).some(canReason)) return null;
+    return { dc: 13, chaMod: cha, mods: [], total: cha, needs: clampNeeds(13 - cha) };
+  }
+  if (parley.requiresFlag && !s.flags.includes(parley.requiresFlag)) {
+    return { dc: parley.dc, chaMod: cha, mods: [], total: cha, needs: clampNeeds(parley.dc - cha), gatedBy: parley.requiresFlag };
+  }
+  const active = activeParleyMods(s, parley);
+  const total = cha + active.reduce((a, m) => a + m.bonus, 0);
+  return {
+    dc: parley.dc,
+    chaMod: cha,
+    mods: active.map((m) => ({ label: m.label, bonus: m.bonus })),
+    total,
+    needs: clampNeeds(parley.dc - total),
+  };
+}
+
 function doParley(s: GameState, adv: Adventure) {
   if (s.mode !== 'combat' || !s.combat) {
     push(s, 'system', 'There is no one here to bargain with. (Try "talk" to speak with someone.)');
     return;
   }
   const room = currentRoom(s, adv);
-  const enc = room.encounter;
-  const parley = enc?.parley;
+  const parley = room.encounter?.parley;
   const foes = livingEnemies(s);
   const cha = bestChaMod(s);
 
-  // No scripted deal on offer: only intelligent foes will even listen.
+  // No scripted deal: only intelligent foes will even listen, and it is a plain
+  // CHA reaction roll with no levers to pull.
   if (!parley) {
     if (!foes.some(canReason)) {
       push(s, 'result', 'These are not foes you can reason with. There is no talking your way out of this one.');
@@ -573,53 +645,45 @@ function doParley(s: GameState, adv: Adventure) {
     return;
   }
 
-  // Scripted deal. A required item or flag closes it without a roll.
-  // Gate: some deals only open once you've done something first (freed someone, etc.).
+  // Hard gate: some foes will not hear a word until you have done something first.
   if (parley.requiresFlag && !s.flags.includes(parley.requiresFlag)) {
     push(s, 'result', parley.failureText ?? 'They will not be moved. Not yet.');
     return;
   }
 
-  // Can you pay the price they're asking?
-  const payIdx = parley.costItem ? s.inventory.findIndex((i) => nameMatches(parley.costItem!, i.name)) : -1;
-  const canPay = payIdx >= 0;
+  // Everything else is one CHA speech check, lifted by whatever legwork you did:
+  // offerings in hand, secrets learned, factions won, a costly gesture offered.
+  const active = activeParleyMods(s, parley);
+  const bonus = active.reduce((a, m) => a + m.bonus, 0);
+  if (active.length) {
+    push(s, 'result', `Weighing in your favor: ${active.map((m) => `${m.label} (+${m.bonus})`).join(', ')}.`);
+  }
+  const r = rollAndLog(`1d20${formatMod(cha + bonus)}`, 'normal', 'Party negotiates');
+  if (!r.isCrit && r.total < parley.dc) {
+    push(s, 'result', parley.failureText ?? 'The bargain falls flat. The fight goes on.');
+    enemyTurn(s);
+    return;
+  }
 
-  const succeed = () => {
-    if (canPay) {
-      const [given] = s.inventory.splice(payIdx, 1);
+  // Success: surrender offered items and pay any toll, then make peace.
+  for (const m of active) {
+    if (!m.offerName) continue;
+    const idx = s.inventory.findIndex((i) => nameMatches(m.offerName!, i.name));
+    if (idx >= 0) {
+      const [given] = s.inventory.splice(idx, 1);
       push(s, 'result', `You give up the ${given.name}. It is gone for good.`);
     }
-    if (parley.costHp && parley.costHp > 0) {
-      for (const m of consciousParty(s)) {
-        m.hp.max = Math.max(1, m.hp.max - parley.costHp);
-        m.hp.current = Math.max(1, Math.min(m.hp.current, m.hp.max));
-      }
-      push(s, 'result', `The price comes out of flesh and nerve. Each hero is left worn for good (-${parley.costHp} HP).`);
-    }
-    push(s, 'result', parley.successText);
-    resolvePeace(s, adv, parley.grantsFlag);
-  };
-
-  // Paying the named price always works.
-  if (canPay) {
-    succeed();
-    return;
   }
-
-  // No price in hand. A silver tongue can still try, if the foe will hear words at all.
-  if (parley.dc != null) {
-    const r = rollAndLog(`1d20${formatMod(cha)}`, 'normal', 'Party negotiates');
-    if (r.isCrit || r.total >= parley.dc) {
-      succeed();
-    } else {
-      push(s, 'result', parley.failureText ?? 'The bargain falls flat. The fight goes on.');
-      enemyTurn(s);
+  const toll = active.reduce((a, m) => a + (m.sacrificeHp ?? 0), 0);
+  if (toll > 0) {
+    for (const m of consciousParty(s)) {
+      m.hp.max = Math.max(1, m.hp.max - toll);
+      m.hp.current = Math.max(1, Math.min(m.hp.current, m.hp.max));
     }
-    return;
+    push(s, 'result', `The bargain takes its toll: each hero is left worn for good (-${toll} HP).`);
   }
-
-  // No price, no words will do: they want one specific thing you don't have.
-  push(s, 'result', parley.failureText ?? 'There is something they want, and you do not have it. There will be no bargain.');
+  push(s, 'result', parley.successText);
+  resolvePeace(s, adv, parley.grantsFlag);
 }
 
 // ───────── spellcasting ─────────

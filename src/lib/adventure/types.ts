@@ -43,24 +43,43 @@ export interface AdvNpc {
   setsFlag?: string;
 }
 
+/** One lever that improves a parley check. Exactly one trigger is set; when that
+ *  trigger is satisfied the modifier's `bonus` is added to the 1d20 + CHA roll.
+ *  This is how legwork pays off: an offering, a learned secret, a faction won
+ *  over, or a costly gesture each tilt the odds instead of auto-winning. */
+export interface AdvParleyModifier {
+  /** An item the foe covets. Held in inventory → bonus; SURRENDERED on success
+   *  unless `consume: false`. The hard choice: give up a thing you wanted. */
+  offer?: string;
+  /** A flag standing for information learned (an NPC's secret, a clue). */
+  knows?: string;
+  /** A flag standing for factional work: a favor done, an alliance struck. */
+  allied?: string;
+  /** A toll in vitality paid ON SUCCESS: every conscious hero loses this much HP
+   *  (current & max, floored at 1). Blood, courage, years, traded for goodwill. */
+  sacrificeHp?: number;
+  /** Bonus added to the CHA check when this modifier is active. */
+  bonus: number;
+  /** For `offer`: surrender the item on success (default true). */
+  consume?: boolean;
+  /** Short label for the play-UI breakdown, e.g. "the witch's truth". */
+  label?: string;
+}
+
 export interface AdvParley {
-  /** Reaction-roll DC (1d20 + party's best CHA mod). If omitted, there is no
-   *  talk-your-way-out option: the foe will only stand down for the price. */
-  dc?: number;
-  /** The price. Holding this item lets you pay it; on success it is SURRENDERED
-   *  (removed from inventory). The hard choice: give up a thing you wanted. */
-  costItem?: string;
-  /** A toll in vitality: every conscious hero loses this much HP (current & max,
-   *  floored at 1) on a successful parley. Blood, courage, years. */
-  costHp?: number;
-  /** Only offer this parley once this flag is set (e.g. you freed someone first). */
+  /** Target number for the speech check: 1d20 + party's best CHA mod + the sum of
+   *  every active modifier's bonus. A natural 20 always succeeds. */
+  dc: number;
+  /** Levers that add to the check: offerings, information, faction work, deals. */
+  modifiers?: AdvParleyModifier[];
+  /** Hard gate: the foe will not even listen until this flag is set. Rare; most
+   *  prerequisites should be a `knows`/`allied` bonus instead of a wall. */
   requiresFlag?: string;
   /** The foe's demand and drive, shown when the fight begins. */
   prompt?: string;
   /** Text on a successful parley (the foe stands down / cuts a deal). */
   successText: string;
-  /** Text on a failed or impossible parley. Combat continues; if a roll failed,
-   *  the foes also act. */
+  /** Text on a failed parley. Combat continues and the foes act. */
   failureText?: string;
   /** Flag set on a successful parley (in addition to the encounter flag). */
   grantsFlag?: string;

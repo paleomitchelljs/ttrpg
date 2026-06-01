@@ -209,7 +209,9 @@ rooms:
       flag: rdt-cinderhowl-resolved
       parley:
         dc: 16
-        cost_item: "Cinderhowl's egg"
+        modifiers:
+          - { offer: "Cinderhowl's egg", bonus: 20, label: "her egg, returned" }
+          - { knows: rdt-freed-alax, bonus: 2, label: "Alax's counsel" }
         success_text: "You kneel and set the great warm egg on the stone before her. The furnace-glow gutters. Cinderhowl gathers her egg against her breast with terrible gentleness, and looks at you with something that is not quite mercy but will do. 'Go,' she says. 'Before I remember to be angry.'"
         failure_text: "Empty-handed before a grieving dragon, words are nothing but kindling. Her chest blazes white."
     exits:

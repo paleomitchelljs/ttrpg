@@ -177,7 +177,8 @@ rooms:
       flag: dl-kly-resolved
       parley:
         dc: 14
-        cost_item: "Stolen jade idol"
+        modifiers:
+          - { offer: "Stolen jade idol", bonus: 18, label: "the idol, restored" }
         success_text: 'You set the idol back in its place. The lash dissolves from his hands. "...The debt is repaid." Something almost grateful crosses the sarnak''s face. "Then the crypt is whole. Take nothing more, and go in peace. Let Dalnir rest." He returns to his work. You leave the noble''s treasures where they lie.'
         failure_text: "Empty-handed, you are only one more thief to him. 'Insolent,' he hisses, and the arcane lash cracks toward you."
       loot:

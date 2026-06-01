@@ -194,7 +194,8 @@ rooms:
       flag: pf-king-defeated
       parley:
         dc: 13
-        cost_item: "Pouch of frost-coins"
+        modifiers:
+          - { offer: "Pouch of frost-coins", bonus: 17, label: "a pouch of tribute" }
         success_text: 'You promise the king a far worse death at Lady Vox''s claws if he spills one drop of blood in her keep. Vanity and terror do the rest. "I... I drove you off! Yes!" He bolts from his own throne, Tensiel scrambling after, and the keep is yours without another blow struck.'
         failure_text: '"You think to FRIGHTEN me? In MY hall?" The king''s scepter crackles with frost. So much for talk.'
       loot:

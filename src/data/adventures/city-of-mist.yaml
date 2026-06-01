@@ -183,7 +183,8 @@ rooms:
       flag: cm-rakashiir-resolved
       parley:
         dc: 15
-        cost_item: "Key of Torsis"
+        modifiers:
+          - { offer: "Key of Torsis", bonus: 19, label: "the city's Key" }
         success_text: 'You present the Key and name him the city''s living steward. The soul-fire gutters, and relief crosses his dead face, terrible and total: proof, at last, that the city is real. "...Then it stands. It STANDS." He waves you through with a lord''s grandeur, cradling the Key like a sleeping child.'
         failure_text: "Without the Key, you are only more proof he would rather burn than believe. The soul-fire roars out."
       loot:
