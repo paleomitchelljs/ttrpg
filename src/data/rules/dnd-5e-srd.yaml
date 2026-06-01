@@ -1,0 +1,53 @@
+# D&D 5e SRD 5.1 — reference descriptor only.
+#
+# The System Reference Document 5.1, released by Wizards of the Coast under the
+# Creative Commons Attribution 4.0 license in 2023. This summarizes the open SRD,
+# not any specific WotC book. The portal does not resolve play in 5e; this is a
+# reference summary and a conversion target for our tagged monsters.
+# Schema matches eq-rpg.yaml: chassis + books[] + sections[] (entries[]).
+
+id: dnd-5e-srd
+name: "D&D 5e (SRD 5.1)"
+publisher: Wizards of the Coast
+license: CC BY 4.0 (SRD 5.1)
+year: 2014
+edition: Fifth Edition
+dice_system: d20 (advantage/disadvantage; proficiency bonus)
+ability_scores: [STR, DEX, CON, INT, WIS, CHA]
+saving_throws: [STR, DEX, CON, INT, WIS, CHA]
+setting: System-neutral (SRD content)
+summary: |
+  The open core of fifth-edition D&D: six ability scores, ascending armor class,
+  a proficiency bonus added to trained rolls, and advantage/disadvantage as the
+  main situational lever. Saving throws are made with any of the six abilities.
+  The SRD includes a large open monster list, which makes 5e a natural
+  conversion target for the portal's tagged bestiary.
+
+books:
+  - id: srd-51
+    name: System Reference Document 5.1
+    year: 2023
+    summary: "Open (CC BY 4.0) core rules subset: ability scores, classes, spells, combat, and an open monster list."
+
+sections:
+  - id: core
+    name: Core resolution
+    source_book: srd-51
+    description: "How 5e handles checks, combat, and saves."
+    entries:
+      - id: checks
+        name: Checks & advantage
+        summary: "Roll 1d20 + ability modifier + proficiency (if proficient) vs a DC. Advantage rolls two d20 and keeps the higher; disadvantage keeps the lower."
+      - id: combat
+        name: Combat
+        summary: "Attack roll 1d20 + ability mod + proficiency vs the target's AC; on a hit, roll weapon/spell damage. A natural 20 is a critical hit (extra damage dice)."
+      - id: saves
+        name: Saving throws
+        summary: "A save is 1d20 + the relevant ability modifier (+ proficiency for trained saves) vs a DC, one for each of the six abilities."
+  - id: conversion
+    name: Conversion notes
+    description: "How our (threat, role) tags map onto 5e."
+    entries:
+      - id: stat-mapping
+        name: Stat mapping
+        summary: "Tier maps to a Challenge Rating band (tier-1 ~ CR 1/8-1/2, tier-3 ~ CR 5-10) and sets HP, AC, attack bonus, and save DC. Role shapes the action economy. Our ascending AC carries over directly."

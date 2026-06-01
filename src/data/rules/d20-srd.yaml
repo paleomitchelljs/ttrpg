@@ -1,0 +1,53 @@
+# d20 SRD (D&D 3.5) — reference descriptor only.
+#
+# The original System Reference Document for the d20 System (D&D 3rd/3.5
+# edition), released by Wizards of the Coast under the Open Game License 1.0a.
+# This summarizes the open SRD. The portal does not resolve play in 3.5; this is
+# a reference summary. (Our EverQuest RPG content is built on this same d20/OGL base.)
+# Schema matches eq-rpg.yaml: chassis + books[] + sections[] (entries[]).
+
+id: d20-srd
+name: "d20 System (D&D 3.5 SRD)"
+publisher: Wizards of the Coast
+license: OGL 1.0a (SRD)
+year: 2003
+edition: 3.5 (d20 System)
+dice_system: d20 (base attack bonus; ascending AC)
+ability_scores: [STR, DEX, CON, INT, WIS, CHA]
+saving_throws: [Fortitude, Reflex, Will]
+setting: System-neutral (SRD content)
+summary: |
+  The open d20 ruleset that powered an entire generation of third-party games,
+  the EverQuest RPG among them. Six ability scores, ascending armor class, a base
+  attack bonus, skills with ranks, feats, and the three Fortitude/Reflex/Will
+  saves. Crunchy and modular, with the deepest open monster and spell library of
+  any system here.
+
+books:
+  - id: d20-srd-doc
+    name: d20 System Reference Document
+    year: 2003
+    summary: "Open (OGL) core rules: abilities, classes, skills, feats, combat, spells, and an extensive monster list."
+
+sections:
+  - id: core
+    name: Core resolution
+    source_book: d20-srd-doc
+    description: "How the d20 System handles checks, combat, and saves."
+    entries:
+      - id: checks
+        name: Checks
+        summary: "Roll 1d20 + ability modifier + skill ranks/other bonuses vs a DC."
+      - id: combat
+        name: Combat
+        summary: "Attack roll 1d20 + base attack bonus + ability mod vs ascending AC; on a hit, roll weapon damage. Natural 20 threatens a critical."
+      - id: saves
+        name: Saving throws
+        summary: "Three saves: Fortitude (CON), Reflex (DEX), Will (WIS), each 1d20 + base save + ability mod vs a DC."
+  - id: conversion
+    name: Conversion notes
+    description: "How our (threat, role) tags map onto 3.5."
+    entries:
+      - id: stat-mapping
+        name: Stat mapping
+        summary: "Tier maps to a Challenge Rating and sets HD, AC, BAB, and save DCs; role shapes feats and tactics. This is the same base our eq-rpg content uses, so EverQuest monsters convert most directly here."

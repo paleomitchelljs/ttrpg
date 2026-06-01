@@ -1,0 +1,53 @@
+# Dungeon World — reference descriptor only.
+#
+# A Powered-by-the-Apocalypse fantasy game by Sage LaTorra and Adam Koebel; the
+# Dungeon World text/SRD is available under Creative Commons Attribution. This is
+# a reference summary; the portal does not resolve play in Dungeon World. It is
+# here largely because its "Parley" move is the clearest published cousin of the
+# portal's negotiate system.
+# Schema matches eq-rpg.yaml: chassis + books[] + sections[] (entries[]).
+
+id: dungeon-world
+name: Dungeon World
+publisher: Sage LaTorra & Adam Koebel
+license: CC BY 4.0 (SRD/text)
+year: 2012
+edition: First Edition
+dice_system: 2d6 + stat (Powered by the Apocalypse)
+ability_scores: [STR, DEX, CON, INT, WIS, CHA]
+saving_throws: [Defy Danger (by stat)]
+setting: System-neutral fantasy fiction-first play
+summary: |
+  A fiction-first PbtA game. Players roll 2d6 + an ability modifier against fixed
+  bands: 10+ is a full success, 7-9 a success with cost or complication, 6 or less
+  a miss the GM turns into trouble. There is no separate to-hit or AC; everything is
+  a "move" triggered by what the characters do. Most relevant here: Parley is a core
+  move. When you have real leverage and press someone with 2d6 + CHA, 10+ means they
+  do as asked; 7-9 means they will, but first they want a promise or proof. That
+  leverage-and-cost shape is exactly the portal's stacking-bonus parley.
+
+books:
+  - id: dw-srd
+    name: Dungeon World SRD
+    year: 2012
+    summary: "Open (CC BY) rules: stats, basic and special moves (including Parley), classes, monsters, GM principles."
+
+sections:
+  - id: core
+    name: Core resolution
+    source_book: dw-srd
+    description: "How Dungeon World resolves action through moves."
+    entries:
+      - id: moves
+        name: Moves & the 2d6 ladder
+        summary: "Roll 2d6 + stat: 10+ clean success, 7-9 success with a cost or hard choice, 6- a miss and a GM move. No AC or attack roll; damage is rolled by class on a successful Hack & Slash."
+      - id: parley
+        name: Parley (the move)
+        summary: "When you have leverage and press an NPC to do something, roll 2d6 + CHA. On 10+ they do it; on 7-9 they need concrete assurance first (a promise, payment, or proof). Leverage gates whether you can even roll, much like our requires-flag gate plus offering bonuses."
+  - id: conversion
+    name: Conversion notes
+    description: "How our (threat, role) tags map onto Dungeon World, and how parley lines up."
+    entries:
+      - id: stat-mapping
+        name: Stat mapping
+        summary: "Monsters convert by HP, damage die, tags, and a special move rather than a full stat block; tier sets HP/damage, role suggests the move. Our parley modifiers (offer/info/faction) read naturally as the 'leverage' and 7-9 promises of the Parley move."

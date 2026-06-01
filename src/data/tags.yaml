@@ -88,3 +88,29 @@ themes:
   - { id: force, name: Force }
   - { id: poison, name: Poison }
   - { id: fey, name: Fey }
+
+# ───────── System: the cross-conversion vocabulary ─────────
+# The set of rulesets a piece of content can be authored for or converted to.
+# A monster/spell's `system:` field should use one of these ids; each id has a
+# descriptor under src/data/rules/ (registered in src/lib/rules.ts). `shadowdark`
+# is the only system the portal actually resolves play in (native engine); the
+# rest are reference-only conversion targets. A converter reads a monster's
+# (threat, role) tags + base stats and re-expresses them in the target system.
+systems:
+  - { id: shadowdark, name: Shadowdark RPG, license: "Free Quickstart content", native: true }
+  - { id: dnd-5e-srd, name: "D&D 5e (SRD 5.1)", license: "CC BY 4.0" }
+  - { id: d20-srd, name: "d20 System (D&D 3.5 SRD)", license: "OGL 1.0a" }
+  - { id: pathfinder-1e, name: Pathfinder 1e, license: "OGL 1.0a" }
+  - { id: pathfinder-2e, name: Pathfinder 2e, license: "ORC License" }
+  - { id: eq-rpg, name: EverQuest RPG, license: "OGL/d20" }
+  - { id: basic-fantasy, name: Basic Fantasy RPG, license: "CC BY-SA 4.0" }
+  - { id: osric, name: OSRIC, license: "OGL + OSRIC License" }
+  - { id: swords-wizardry, name: Swords & Wizardry, license: "OGL 1.0a" }
+  - { id: cairn, name: Cairn, license: "CC BY-SA 4.0" }
+  - { id: dungeon-world, name: Dungeon World, license: "CC BY 4.0" }
+  - { id: fate-core, name: Fate Core / Accelerated, license: "CC BY 3.0" }
+  - { id: gurps, name: GURPS 4e, license: "Reference only" }
+  - { id: tes-gurps, name: "The Elder Scrolls: GURPS", license: "Fan conversion" }
+  - { id: cepheus-engine, name: "Cepheus Engine (Traveller)", license: "OGL 1.0a" }
+  - { id: basic-roleplaying, name: Basic Roleplaying (BRP), license: "ORC License" }
+  - { id: mini-six, name: Mini Six (OpenD6), license: "OGL" }

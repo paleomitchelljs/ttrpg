@@ -1,0 +1,55 @@
+# Cairn — reference descriptor only.
+#
+# A lightweight NSR dark-fantasy game by Yochai Gal, built on Into the Odd and
+# Knave. Free and openly licensed (CC BY-SA 4.0); see cairnrpg.com. The portal
+# does not resolve play in Cairn; this is a short factual summary for the Rules
+# tab, and a conversion target for our tagged monsters.
+# Schema matches eq-rpg.yaml: chassis + books[] + sections[] (entries[]).
+
+id: cairn
+name: Cairn
+publisher: Yochai Gal
+license: CC BY-SA 4.0 (free)
+year: 2020
+edition: First Edition
+dice_system: d20 roll-under saves; no attack rolls (damage applied directly)
+ability_scores: [STR, DEX, WIL]
+saving_throws: [STR, DEX, WIL]
+setting: NSR folkloric dark fantasy (system-neutral)
+summary: |
+  A rules-light dungeon-crawler descended from Into the Odd and Knave. Three
+  attributes (STR, DEX, WIL), each with a save made by rolling d20 under the score.
+  Combat has no to-hit roll: attacks deal their weapon die straight to HP, then to
+  STR once HP is gone, with a STR save to avoid death. Inventory is slot-based and
+  diegetic; advancement is through use and play, not XP grinds. Reaction rolls and
+  morale make talking and fleeing first-class options, which maps cleanly onto the
+  portal's parley and flee rules.
+
+books:
+  - id: cairn-srd
+    name: Cairn SRD / core book (cairnrpg.com)
+    year: 2020
+    summary: "Free core rules and SRD: attributes, saves, slot inventory, combat, monsters."
+
+sections:
+  - id: core
+    name: Core resolution
+    source_book: cairn-srd
+    description: "How Cairn handles checks, combat, and harm."
+    entries:
+      - id: saves
+        name: Saves
+        summary: "Roll d20 equal to or under the relevant attribute (STR, DEX, or WIL) to succeed. Most uncertain actions are a save."
+      - id: combat
+        name: Combat & damage
+        summary: "Attacks hit automatically and deal their weapon die to HP; excess damage burns STR. At 0 HP a hit forces a STR save or death. Armor reduces incoming damage."
+      - id: reactions
+        name: Reactions & morale
+        summary: "Encounters open with a reaction roll, and foes check morale when bloodied or cornered. Negotiation and retreat are expected, not exceptional."
+  - id: conversion
+    name: Conversion notes
+    description: "How our (threat, role) tags map onto Cairn."
+    entries:
+      - id: stat-mapping
+        name: Stat mapping
+        summary: "Tier sets HP and damage die (tier-1 ~1d6 / a few HP, tier-3 a heavy die and a big HP pool). Role flavors behavior (brute = bigger die, skirmisher = mobile). Cairn monsters have no AC; soldier/armored types convert to damage reduction instead."

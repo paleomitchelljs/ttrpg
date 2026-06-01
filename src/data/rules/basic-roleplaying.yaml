@@ -1,0 +1,50 @@
+# Basic Roleplaying (BRP) — reference descriptor only.
+#
+# Chaosium's percentile d100 engine (the chassis behind RuneQuest and Call of
+# Cthulhu), whose System Reference Document was released under the ORC License in
+# 2023. This is a reference summary; the portal does not resolve play in BRP.
+# Schema matches eq-rpg.yaml: chassis + books[] + sections[] (entries[]).
+
+id: basic-roleplaying
+name: Basic Roleplaying (BRP)
+publisher: Chaosium
+license: ORC License (BRP SRD)
+year: 2023
+edition: BRP SRD / Universal Game Engine
+dice_system: d100 roll-under (percentile skills)
+ability_scores: [STR, CON, SIZ, INT, POW, DEX, APP]
+saving_throws: [Resistance table / characteristic rolls]
+setting: System-neutral (any genre)
+summary: |
+  A long-running percentile engine. Characteristics on a roughly 3-18 scale feed
+  skills rated as percentages; you act by rolling d100 equal to or under the skill,
+  with specials and criticals on low fractions of it. There are no levels: skills
+  improve through use. Opposed efforts use the resistance table or contested rolls.
+  Skill-based, lethal, and genre-flexible, a very different shape from the portal's
+  level-and-tier d20 chassis.
+
+books:
+  - id: brp-srd
+    name: Basic Roleplaying SRD (Universal Game Engine)
+    year: 2023
+    summary: "Open (ORC) percentile rules: characteristics, skills, combat, powers (magic/psychic/mutations), and creatures."
+
+sections:
+  - id: core
+    name: Core resolution
+    source_book: brp-srd
+    description: "How BRP resolves skills and combat."
+    entries:
+      - id: skills
+        name: Skill rolls
+        summary: "Roll d100 equal to or under the skill percentage. A roll at or under one-fifth is a special; one-twentieth (or 01-05) is a critical."
+      - id: combat
+        name: Combat
+        summary: "Roll the attack skill to hit; the defender may parry or dodge with their own roll. Weapons deal dice of damage to hit points, reduced by armor."
+  - id: conversion
+    name: Conversion notes
+    description: "How our (threat, role) tags map onto BRP."
+    entries:
+      - id: stat-mapping
+        name: Stat mapping
+        summary: "Tier maps to hit points and attack-skill percentage and damage; role shapes skills and tactics. Our d20 AC has no direct analog: armored 'soldier' types become armor points plus a parry skill instead."

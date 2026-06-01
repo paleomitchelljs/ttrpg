@@ -1,0 +1,48 @@
+# Pathfinder 1st Edition — reference descriptor only.
+#
+# Paizo's expansion of the d20 3.5 ruleset, published under the Open Game License
+# 1.0a (the Pathfinder Reference Document is open). This is a reference summary;
+# the portal does not resolve play in Pathfinder.
+# Schema matches eq-rpg.yaml: chassis + books[] + sections[] (entries[]).
+
+id: pathfinder-1e
+name: Pathfinder (1st Edition)
+publisher: Paizo
+license: OGL 1.0a (Pathfinder Reference Document)
+year: 2009
+edition: First Edition
+dice_system: d20 (base attack bonus; ascending AC)
+ability_scores: [STR, DEX, CON, INT, WIS, CHA]
+saving_throws: [Fortitude, Reflex, Will]
+setting: System-neutral (open PRD content)
+summary: |
+  A refinement and extension of the d20 3.5 ruleset, often called "3.75." Keeps
+  six abilities, ascending AC, base attack bonus, and Fortitude/Reflex/Will saves,
+  while folding in combat maneuvers, archetypes, and a deep feat and spell list.
+  Heavier than the portal's chassis, with an enormous open bestiary to convert against.
+
+books:
+  - id: pf1-prd
+    name: Pathfinder Reference Document (Core)
+    year: 2009
+    summary: "Open core rules: races, classes, skills, feats, combat, spells, and a large open monster list."
+
+sections:
+  - id: core
+    name: Core resolution
+    source_book: pf1-prd
+    description: "How Pathfinder 1e handles combat and saves."
+    entries:
+      - id: combat
+        name: Combat & maneuvers
+        summary: "Attack 1d20 + base attack bonus + ability mod vs ascending AC. Combat Maneuver Bonus/Defense govern trips, grapples, and the like."
+      - id: saves
+        name: Saving throws
+        summary: "Fortitude (CON), Reflex (DEX), Will (WIS), each 1d20 + base save + ability mod vs a DC."
+  - id: conversion
+    name: Conversion notes
+    description: "How our (threat, role) tags map onto Pathfinder 1e."
+    entries:
+      - id: stat-mapping
+        name: Stat mapping
+        summary: "Tier maps to Challenge Rating (HP, AC, attack, save DCs); role shapes feats and maneuvers. Very close to the 3.5/eq-rpg conversion, with more moving parts."

@@ -9,6 +9,19 @@ import shadowdarkRaw from '../data/rules/shadowdark.yaml';
 import eqRaw from '../data/rules/eq-rpg.yaml';
 import gurpsRaw from '../data/rules/gurps.yaml';
 import tesGurpsRaw from '../data/rules/tes-gurps.yaml';
+import dnd5eRaw from '../data/rules/dnd-5e-srd.yaml';
+import d20Raw from '../data/rules/d20-srd.yaml';
+import pathfinder1eRaw from '../data/rules/pathfinder-1e.yaml';
+import pathfinder2eRaw from '../data/rules/pathfinder-2e.yaml';
+import basicFantasyRaw from '../data/rules/basic-fantasy.yaml';
+import osricRaw from '../data/rules/osric.yaml';
+import swordsWizardryRaw from '../data/rules/swords-wizardry.yaml';
+import cairnRaw from '../data/rules/cairn.yaml';
+import dungeonWorldRaw from '../data/rules/dungeon-world.yaml';
+import fateCoreRaw from '../data/rules/fate-core.yaml';
+import cepheusRaw from '../data/rules/cepheus-engine.yaml';
+import basicRoleplayingRaw from '../data/rules/basic-roleplaying.yaml';
+import miniSixRaw from '../data/rules/mini-six.yaml';
 
 export interface RuleBook {
   id: string;
@@ -56,12 +69,29 @@ export interface Ruleset {
   sections?: RuleSection[];
 }
 
-// Native engine first, then reference-only systems.
+// Native engine first, then reference-only systems, grouped by family.
 export const RULESETS: Ruleset[] = [
   shadowdarkRaw as Ruleset,
+  // d20 family (the EverQuest RPG sits here too)
+  dnd5eRaw as Ruleset,
+  d20Raw as Ruleset,
+  pathfinder1eRaw as Ruleset,
+  pathfinder2eRaw as Ruleset,
   eqRaw as Ruleset,
+  // OSR / NSR
+  basicFantasyRaw as Ruleset,
+  osricRaw as Ruleset,
+  swordsWizardryRaw as Ruleset,
+  cairnRaw as Ruleset,
+  // narrative / parley-forward
+  dungeonWorldRaw as Ruleset,
+  fateCoreRaw as Ruleset,
+  // other engines
   gurpsRaw as Ruleset,
   tesGurpsRaw as Ruleset,
+  cepheusRaw as Ruleset,
+  basicRoleplayingRaw as Ruleset,
+  miniSixRaw as Ruleset,
 ];
 
 export function getRuleset(id: string): Ruleset | undefined {

@@ -1,0 +1,49 @@
+# Swords & Wizardry — reference descriptor only.
+#
+# Matthew Finch's open restatement of the original 1974 D&D, published under the
+# OGL. Best known for its single unified saving throw. Free to reference. The
+# portal does not resolve play in S&W; this is a reference summary.
+# Schema matches eq-rpg.yaml: chassis + books[] + sections[] (entries[]).
+
+id: swords-wizardry
+name: Swords & Wizardry
+publisher: Matthew Finch / Mythmere Games
+license: OGL 1.0a (free SRD)
+year: 2008
+edition: Complete / Revised
+dice_system: d20 (ascending & descending AC both supported)
+ability_scores: [STR, DEX, CON, INT, WIS, CHA]
+saving_throws: [Single saving throw]
+setting: System-neutral original-edition fantasy
+summary: |
+  A streamlined take on original-edition D&D. Its signature move is one saving
+  throw for everything (modified by class against certain effects), instead of the
+  usual five categories. Supports both ascending and descending AC, keeps classes
+  and spells spare, and leaves rulings to the table. Light enough to sit close to
+  the portal's chassis while staying recognizably old-school.
+
+books:
+  - id: sw-core
+    name: Swords & Wizardry core rules (SRD)
+    year: 2008
+    summary: "Free SRD: characters, the single save, combat, spells, monsters."
+
+sections:
+  - id: core
+    name: Core resolution
+    source_book: sw-core
+    description: "How S&W handles combat and the unified save."
+    entries:
+      - id: combat
+        name: Combat
+        summary: "1d20 to hit; AC may be run ascending (higher is better) or descending. Roll weapon damage on a hit."
+      - id: save
+        name: The single save
+        summary: "One saving-throw number per character, improving by class and level, with small class bonuses against particular threats. Roll equal or over."
+  - id: conversion
+    name: Conversion notes
+    description: "How our (threat, role) tags map onto S&W."
+    entries:
+      - id: stat-mapping
+        name: Stat mapping
+        summary: "Tier maps to Hit Dice and AC (ascending mode reads almost straight from our monsters). Role shapes attacks; a single save number replaces our ability-check saves."

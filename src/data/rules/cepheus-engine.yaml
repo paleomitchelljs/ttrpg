@@ -1,0 +1,51 @@
+# Cepheus Engine (2d6 sci-fi; Traveller SRD-compatible) — reference descriptor only.
+#
+# An open 2d6 science-fiction ruleset by Samardan Press, built from the Open Game
+# Content of the Traveller System Reference Document and published under the OGL.
+# Covers the same ground as the Mongoose Traveller SRD it derives from. This is a
+# reference summary; the portal does not resolve play in Cepheus/Traveller.
+# Schema matches eq-rpg.yaml: chassis + books[] + sections[] (entries[]).
+
+id: cepheus-engine
+name: "Cepheus Engine (Traveller-compatible)"
+publisher: Samardan Press
+license: OGL 1.0a (from the Traveller SRD)
+year: 2016
+edition: Cepheus Engine
+dice_system: 2d6 + characteristic mod vs difficulty (roll high)
+ability_scores: [STR, DEX, END, INT, EDU, SOC]
+saving_throws: [Characteristic checks (opposed or vs difficulty)]
+setting: Hard-ish science fiction (system-neutral)
+summary: |
+  The open 2d6 sci-fi engine of the Traveller lineage. Six characteristics
+  (Strength, Dexterity, Endurance, Intelligence, Education, Social Standing), task
+  resolution by 2d6 + a skill + a characteristic modifier against a difficulty
+  (8+ is the standard target), lifepath career generation, and gritty, lethal
+  combat. A clean genre pivot away from fantasy, and a way to stat science-fiction
+  foes against our tag taxonomy.
+
+books:
+  - id: cepheus-srd
+    name: Cepheus Engine SRD
+    year: 2016
+    summary: "Open (OGL) 2d6 rules: characteristics, skills, careers, task system, combat, vehicles, and creatures."
+
+sections:
+  - id: core
+    name: Core resolution
+    source_book: cepheus-srd
+    description: "How the Cepheus/Traveller engine resolves tasks and combat."
+    entries:
+      - id: tasks
+        name: Task checks
+        summary: "Roll 2d6 + skill + characteristic modifier vs a difficulty number (Average is 8+). Degree of success matters for many tasks."
+      - id: combat
+        name: Combat
+        summary: "2d6 + skill + modifiers to hit; weapons deal dice of damage applied to physical characteristics. Armor subtracts from damage. Fights are quick and dangerous."
+  - id: conversion
+    name: Conversion notes
+    description: "How our (threat, role) tags map onto the 2d6 engine."
+    entries:
+      - id: stat-mapping
+        name: Stat mapping
+        summary: "Tier maps to a creature's hits (characteristic pool) and weapon damage; role shapes tactics and range. Fantasy creatures become 'animals'/threats with characteristics and a couple of skills. Magic does not convert; it becomes psionics or tech, or is dropped."

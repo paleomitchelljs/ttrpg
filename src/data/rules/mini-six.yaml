@@ -1,0 +1,50 @@
+# Mini Six (OpenD6) — reference descriptor only.
+#
+# A free, compact game by AntiPaladin Games built on the OpenD6 system, whose core
+# mechanics were released under the Open Game License. This is a reference summary;
+# the portal does not resolve play in Mini Six.
+# Schema matches eq-rpg.yaml: chassis + books[] + sections[] (entries[]).
+
+id: mini-six
+name: Mini Six (OpenD6)
+publisher: AntiPaladin Games
+license: OGL (OpenD6); Mini Six is free
+year: 2010
+edition: Mini Six Bare Bones Edition
+dice_system: roll a pool of d6 (XD + pips) vs a difficulty
+ability_scores: [Might, Agility, Wit, Charm]
+saving_throws: [Attribute/skill rolls vs difficulty]
+setting: System-neutral, genre-agnostic
+summary: |
+  A tiny, fast multi-genre game. Attributes and skills are rated in dice (for
+  example 3D, or 3D+2 "pips"); to act you roll that many d6, add the pips, and
+  compare to a difficulty or an opposed roll. One die is the "wild die" that can
+  explode or backfire. Character creation is point-buy in dice, advancement spends
+  Character Points, and the whole thing fits in a few pages. A loose, improvisational
+  contrast to the portal's d20 precision.
+
+books:
+  - id: mini-six-core
+    name: Mini Six Bare Bones Edition
+    year: 2010
+    summary: "Free OpenD6 rules: dice-rated attributes and skills, the wild die, combat, perks/complications, and quick foe stats."
+
+sections:
+  - id: core
+    name: Core resolution
+    source_book: mini-six-core
+    description: "How Mini Six resolves action with d6 pools."
+    entries:
+      - id: dice-pools
+        name: Dice pools & the wild die
+        summary: "Roll the dice of the relevant attribute/skill (e.g. 4D) plus pips vs a difficulty (Easy 5, Moderate 10, and up). One die is wild: a 6 explodes and rerolls; a 1 may signal a complication."
+      - id: combat
+        name: Combat
+        summary: "Roll to hit vs the target's dodge/difficulty; damage is a dice pool resisted by the target's Strength/armor pool, with results from stunned to mortally wounded."
+  - id: conversion
+    name: Conversion notes
+    description: "How our (threat, role) tags map onto Mini Six."
+    entries:
+      - id: stat-mapping
+        name: Stat mapping
+        summary: "Tier sets the size of attribute/skill and damage dice pools (tier-1 ~2D-3D, tier-3 ~5D+); role shapes which pool is biggest. Our flat d20 modifiers become dice: roughly one die per +3 to +4. AC becomes a dodge pool or armor dice."

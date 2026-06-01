@@ -1,0 +1,55 @@
+# Fate Core / Fate Accelerated — reference descriptor only.
+#
+# Evil Hat's narrative engine, released under both the OGL and a Creative Commons
+# Attribution license. This is a reference summary; the portal does not resolve
+# play in Fate. It is here for its social-conflict subsystem, which treats talking
+# as a full conflict with stakes, the way the portal wants parley to feel.
+# Schema matches eq-rpg.yaml: chassis + books[] + sections[] (entries[]).
+
+id: fate-core
+name: Fate Core / Accelerated
+publisher: Evil Hat Productions
+license: CC BY 3.0 (and OGL)
+year: 2013
+edition: Fate Core / Fate Accelerated Edition
+dice_system: 4dF (four Fudge dice) + skill or approach
+ability_scores: [Approaches: Careful, Clever, Flashy, Forceful, Quick, Sneaky]
+saving_throws: [Defend action (opposed roll)]
+setting: System-neutral, genre-agnostic
+summary: |
+  A narrative engine driven by aspects: short descriptive phrases (about characters,
+  scenes, and the world) that you invoke by spending fate points for a bonus, or that
+  get compelled to complicate things. Rolls are 4dF (each die reads -, blank, or +)
+  plus a skill (Fate Core) or an approach (Fate Accelerated) against a difficulty or an
+  opponent. Conflicts can be physical, mental, or social, and a social conflict can
+  "take out" a foe with words: persuasion, leverage, and reputation are mechanics, not
+  flavor, which is why it sits alongside the portal's parley work.
+
+books:
+  - id: fate-core-srd
+    name: Fate Core System (SRD)
+    year: 2013
+    summary: "Open (CC BY) rules: aspects, skills/approaches, the 4dF ladder, conflicts (physical/mental/social), stress and consequences."
+
+sections:
+  - id: core
+    name: Core resolution
+    source_book: fate-core-srd
+    description: "How Fate resolves action and conflict."
+    entries:
+      - id: ladder
+        name: The 4dF ladder
+        summary: "Roll four Fudge dice (-, 0, +) and add a skill or approach, comparing to a difficulty or opposed roll on a named ladder (Mediocre to Legendary)."
+      - id: aspects
+        name: Aspects & fate points
+        summary: "Aspects are true phrases you can invoke (spend a fate point for +2 or a reroll) or have compelled against you for complications and points. They are the main lever of the game."
+      - id: social
+        name: Social conflict
+        summary: "Talking can be a full conflict: stress and consequences are social (reputation, composure), and you can take a foe out with argument or leverage instead of arms."
+  - id: conversion
+    name: Conversion notes
+    description: "How our (threat, role) tags map onto Fate."
+    entries:
+      - id: stat-mapping
+        name: Stat mapping
+        summary: "Foes convert to aspects plus a few skills and a stress track rather than HP/AC: tier sets skill rating and stress, role suggests the defining aspect. Our offering/info/faction parley bonuses map onto invoked aspects and advantages created before the social attack."

@@ -1,0 +1,49 @@
+# OSRIC (Old-School Reference and Index Compilation) — reference descriptor only.
+#
+# An open restatement of Advanced D&D 1st Edition by Stuart Marshall and Matthew
+# Finch, published under the OGL plus the OSRIC license. Free to reference and
+# build on. The portal does not resolve play in OSRIC; this is a reference summary.
+# Schema matches eq-rpg.yaml: chassis + books[] + sections[] (entries[]).
+
+id: osric
+name: OSRIC
+publisher: Stuart Marshall & Matthew Finch (Knights-n-Knaves)
+license: OGL 1.0a + OSRIC License (free)
+year: 2006
+edition: First Edition (AD&D 1e compatible)
+dice_system: d20 (descending AC / to-hit tables)
+ability_scores: [STR, DEX, CON, INT, WIS, CHA]
+saving_throws: [Paralyzation/Poison/Death, Rod/Staff/Wand, Petrification/Polymorph, Breath Weapon, Spell]
+setting: System-neutral classic high fantasy
+summary: |
+  A faithful reconstruction of first-edition AD&D so its huge library of classic
+  modules stays playable. Descending armor class and to-hit tables, the five AD&D
+  saving-throw categories, demihuman level limits, and the familiar fighter/cleric/
+  magic-user/thief lineup with subclasses. Heavier and more old-fashioned than the
+  portal's chassis, but a rich conversion target for module monsters.
+
+books:
+  - id: osric-core
+    name: OSRIC core rules
+    year: 2006
+    summary: "Free core rulebook: characters, classes, combat (descending AC), saves, spells, monsters."
+
+sections:
+  - id: core
+    name: Core resolution
+    source_book: osric-core
+    description: "How OSRIC handles combat and saves."
+    entries:
+      - id: combat
+        name: Combat
+        summary: "Roll d20 to hit against a descending armor class via class to-hit tables (lower AC is better). On a hit, roll weapon damage."
+      - id: saves
+        name: Saving throws
+        summary: "Five AD&D categories (Paralyzation/Poison/Death, Rod/Staff/Wand, Petrification/Polymorph, Breath Weapon, Spell); roll equal or over the class-and-level target."
+  - id: conversion
+    name: Conversion notes
+    description: "How our (threat, role) tags map onto OSRIC."
+    entries:
+      - id: stat-mapping
+        name: Stat mapping
+        summary: "Tier maps to Hit Dice and to a descending AC (our AC 18 becomes roughly AC 2). Role shapes attacks. Special abilities stay as authored notes; AD&D's quirks (level limits, percentile STR) do not auto-convert."

@@ -1,0 +1,51 @@
+# Pathfinder 2nd Edition — reference descriptor only.
+#
+# Paizo's current edition, with its open content now offered under the ORC
+# License (earlier releases used the OGL). This is a reference summary; the portal
+# does not resolve play in Pathfinder 2e.
+# Schema matches eq-rpg.yaml: chassis + books[] + sections[] (entries[]).
+
+id: pathfinder-2e
+name: Pathfinder (2nd Edition)
+publisher: Paizo
+license: ORC License (open)
+year: 2019
+edition: Second Edition
+dice_system: d20 (three-action economy; proficiency + level; four degrees of success)
+ability_scores: [STR, DEX, CON, INT, WIS, CHA]
+saving_throws: [Fortitude, Reflex, Will]
+setting: System-neutral (open content)
+summary: |
+  A tightly tuned d20 game built around a three-action turn, proficiency ranks that
+  add your level, and four degrees of success (crit success on beating a DC by 10,
+  crit failure on missing by 10). Six abilities, ascending AC, and Fortitude/Reflex/
+  Will saves. Highly balanced and tactical, with a large open monster library.
+
+books:
+  - id: pf2-srd
+    name: Pathfinder 2e core / open game content
+    year: 2019
+    summary: "Open core rules: ancestries, classes, the three-action economy, combat, spells, and an extensive open bestiary."
+
+sections:
+  - id: core
+    name: Core resolution
+    source_book: pf2-srd
+    description: "How PF2e handles checks, actions, and degrees of success."
+    entries:
+      - id: actions
+        name: Three-action economy
+        summary: "Each turn a creature has three actions to spend on strikes, movement, spells, and special abilities, plus reactions."
+      - id: degrees
+        name: Degrees of success
+        summary: "Beat a DC by 10+ for a critical success, miss by 10+ for a critical failure; a natural 20 or 1 shifts the result one step."
+      - id: combat
+        name: Combat & saves
+        summary: "Strike 1d20 + ability + proficiency + level vs AC; multiple attacks in a turn take an escalating penalty. Saves are Fortitude/Reflex/Will."
+  - id: conversion
+    name: Conversion notes
+    description: "How our (threat, role) tags map onto PF2e."
+    entries:
+      - id: stat-mapping
+        name: Stat mapping
+        summary: "Tier maps to creature Level (which drives the tight by-level math: HP, AC, attack, DCs). Role shapes how the three actions are spent. PF2e's balance means stats should be read off its monster-building table, not eyeballed."

@@ -1,0 +1,56 @@
+# Basic Fantasy RPG (BFRPG) — reference descriptor only.
+#
+# An open restatement of classic B/X Dungeons & Dragons by Chris Gonnerman and
+# the Basic Fantasy community. Fully free and openly licensed (CC BY-SA 4.0);
+# see basicfantasy.org. The portal already adapts its sample dungeon (The Chaotic
+# Caves). The engine does not resolve play in BFRPG; this is a reference summary.
+# Schema matches eq-rpg.yaml: chassis + books[] + sections[] (entries[]).
+
+id: basic-fantasy
+name: Basic Fantasy RPG
+publisher: Chris Gonnerman / Basic Fantasy Project
+license: CC BY-SA 4.0 (free)
+year: 2006
+edition: Fourth Edition
+dice_system: d20 (ascending AC)
+ability_scores: [STR, DEX, CON, INT, WIS, CHA]
+saving_throws: [Death Ray/Poison, Magic Wands, Paralysis/Petrify, Dragon Breath, Spells]
+setting: System-neutral classic dungeon fantasy
+summary: |
+  A clean, free reworking of B/X D&D: six ability scores, ascending armor class,
+  race and class as separate choices, and the five classic B/X saving-throw
+  categories. Money buys gear, dungeons reward exploration, and the math is gentle
+  enough for new and young players. Closest in spirit to the portal's own OSR-ish
+  Shadowdark chassis, which is why our Chaotic Caves conversion came from here.
+
+books:
+  - id: bfrpg-core
+    name: Basic Fantasy RPG Core Rules (4th ed.)
+    year: 2021
+    summary: "Free core rulebook: ability scores, races, classes, spells, combat, monsters, treasure."
+  - id: bfrpg-chaotic-caves
+    name: JN1 The Chaotic Caves
+    summary: "Open sample dungeon (the source of the portal's Chaotic Caves adventure)."
+
+sections:
+  - id: core
+    name: Core resolution
+    source_book: bfrpg-core
+    description: "How BFRPG handles checks, combat, and saves."
+    entries:
+      - id: combat
+        name: Combat
+        summary: "1d20 + attack bonus vs ascending AC; on a hit, roll weapon damage. Initiative each round, then act."
+      - id: saves
+        name: Saving throws
+        summary: "Five categorized saves (Death Ray/Poison, Magic Wands, Paralysis/Petrify, Dragon Breath, Spells), improving by class and level; roll equal or over the target."
+      - id: advancement
+        name: Race & class
+        summary: "Race (human, dwarf, elf, halfling) and class (fighter, cleric, magic-user, thief, plus combination classes) are chosen separately; XP buys levels."
+  - id: conversion
+    name: Conversion notes
+    description: "How our (threat, role) tags map onto BFRPG."
+    entries:
+      - id: stat-mapping
+        name: Stat mapping
+        summary: "Near 1:1 with the portal: tier sets HD/AC/damage, role shapes the stat line. Our ascending AC and d20-vs-target carry straight over; a BFRPG monster line (HD, AC, attacks) reads almost directly from a tagged monster."
