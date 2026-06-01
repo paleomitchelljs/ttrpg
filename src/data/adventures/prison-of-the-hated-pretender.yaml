@@ -1,0 +1,144 @@
+# Prison of the Hated Pretender — a scripted text adventure.
+#
+# An original, condensed conversion of the free OSR adventure "Prison of the
+# Hated Pretender" (Gus L). Prose is original; only the premise and structure
+# are carried over: a tomb-prison carved as a crowned head, holding a bound,
+# lying, undying usurper and the phantasms set to torment him. Plays on the
+# Shadowdark engine.
+# Schema: see src/data/adventures/sunless-citadel.yaml.
+
+id: prison-of-the-hated-pretender
+title: Prison of the Hated Pretender
+system: shadowdark
+synopsis: >-
+  A prison carved from a cliff in the shape of a crowned head, built by warrior-priests to hold
+  a usurper they made deathless so his punishment would never end. He is still in there, bound and
+  silver-tongued, and he will promise you anything to be let out. Put him to rest, or take his
+  bargain and the world inherits what you freed.
+recommended_party: "2–4 heroes, level 2–3"
+intro: >-
+  The cliff has a face. Generations ago, lawful priests carved this prison into the rock as a
+  giant crowned head, mouth for a door and windows for eyes, so that everyone would know what was
+  kept inside and why. The priests are long dust. The thing they jailed is not, and from somewhere
+  deep in the stone skull, something is still very much awake, and very glad you have come.
+start: php-approach
+
+rooms:
+  - id: php-approach
+    name: The Carved Face
+    description: "The prison stares down at you: a crowned stone head three storeys tall, weathered but unmistakable. Its mouth yawns open as a doorway at the base. High up, the eye-sockets are windows, and a leaning tree could carry a careful climber to them. The crown above is lost in scrub."
+    safe: true
+    features:
+      - { keywords: [face, head, crown, roof, mouth, eyes, tree], text: "Three ways in present themselves: walk straight into the open mouth, climb the tree to the eye-windows, or scramble over the crown to a roof you cannot quite see. The priests built choices into the stone on purpose. They wanted intruders to think." }
+    exits:
+      - { dir: in, to: php-maw, label: "Walk in through the mouth" }
+      - { dir: up, to: php-eyes, label: "Climb the tree to the eye-windows" }
+
+  - id: php-maw
+    name: The Mouth
+    description: "The entry hall behind the stone lips, throat-shaped and dim. A blank-faced stone figure stands in an alcove halfway down, and the floor between you and it has a wrongness to it, the flagstones a touch too even."
+    search_text: "Sounding the floor, you find a slab on a pivot over a spike-pit, a courtesy the priests left for anyone the Warden missed. Now that you see it, you can step the long way around the edge."
+    encounter:
+      id: php-maw-warden
+      monsters: [php-warden]
+      intro: "The blank stone figure grinds out of its alcove. The Bound Warden has one task left, and you are interrupting it."
+      victory_text: "The Warden topples and shatters. The throat-passage drops away into the head."
+      flag: php-maw-cleared
+    features:
+      - { keywords: [warden, statue, figure, stone], text: "The Warden is no statue: a stone jailer shaped to keep the prisoner in and visitors out. It does not speak, threaten, or bargain. It simply moves to stop you." }
+    exits:
+      - { dir: out, to: php-approach, label: "Back out the mouth" }
+      - { dir: down, to: php-gullet, label: "Down into the head" }
+
+  - id: php-eyes
+    name: The Eye-Gallery
+    description: "A narrow gallery behind the two window-eyes, looking out over the valley you climbed from. The air is freezing, and it moves, though there is no wind this high. The cold is paying attention to you."
+    encounter:
+      id: php-eyes-phantasms
+      monsters: [php-phantasm, php-phantasm]
+      intro: "Two phantasms peel out of the cold air, faces twisted with a rage that has nothing to do with you and will burn you anyway!"
+      victory_text: "The phantasms gutter out. A stair winds down into the head."
+      flag: php-eyes-cleared
+    exits:
+      - { dir: out, to: php-approach, label: "Back out to the climb" }
+      - { dir: down, to: php-gullet, label: "Down into the head" }
+
+  - id: php-gullet
+    name: The Hollow of the Head
+    description: "The hollow heart of the carved skull, where the two ways in meet. Inscriptions cover every surface, the priests' record of a trial and a sentence. Passages lead off to a sealed vault, a row of cells, a flooded undercroft, and down into the deepest dark."
+    features:
+      - { keywords: [inscription, inscriptions, wall, record, writing, trial], text: "The carvings tell it plainly: the prisoner was a king who took a throne by murder and held it by more. The priests could not kill him without making a martyr, so they made him deathless instead, and walled his torment up where it could harm no one. The last line is a warning against mercy." }
+    exits:
+      - { dir: up, to: php-maw, label: "Up toward the mouth" }
+      - { dir: e, to: php-reliquary, label: "East, to a sealed vault" }
+      - { dir: w, to: php-torment, label: "West, to the cells" }
+      - { dir: s, to: php-undercroft, label: "South, down to the undercroft" }
+      - { dir: down, to: php-cell, label: "Down, into the deepest dark" }
+
+  - id: php-reliquary
+    name: The Priests' Vault
+    description: "A sealed vault where the warrior-priests left the tools of their order. Two of them still keep watch here, fleshless and faithful, unwilling to let their holy things walk out the door."
+    encounter:
+      id: php-reliquary-guards
+      monsters: [skeleton, skeleton]
+      intro: "Two priest-skeletons rise in rusted vestments, raising maces to defend the vault!"
+      victory_text: "The faithful dead lie still. On the altar rests the order's last and best work."
+      flag: php-reliquary-cleared
+      loot:
+        - { name: "Priests' binding seal", description: "A heavy disc of blessed lead, graven with the sentence that holds the Pretender. Press it to him and he can be unmade for good. It is also, of course, the one thing he would most like to get his hands on." }
+        - { name: "Reliquary silver", description: "Censers, chalices, and cold coin from the priests' vault.", gold: 60 }
+    exits:
+      - { dir: w, to: php-gullet, label: "Back to the hollow" }
+
+  - id: php-torment
+    name: The Torment Cells
+    description: "A row of empty cells where, the inscriptions said, the priests once kept living witnesses to feed the prisoner's guilt. The witnesses are long dead. What is left of them still paces."
+    encounter:
+      id: php-torment-fight
+      monsters: [php-phantasm, php-phantasm, zombie]
+      intro: "The dead of the cells stir: shambling and shrieking, grief turned to teeth and cold!"
+      victory_text: "The cells fall quiet for the first time in centuries. Something valuable is wedged in a straw pallet."
+      flag: php-torment-cleared
+      loot:
+        - { name: "Witness's hidden cache", description: "Coin and a gemmed ring, hidden by a prisoner who never got to spend it.", gold: 50 }
+    exits:
+      - { dir: e, to: php-gullet, label: "Back to the hollow" }
+
+  - id: php-undercroft
+    name: The Flooded Undercroft
+    description: "A drowned basement under the head, black water to the knee and rising where the cliff has cracked. Lidless coffins drift against the walls, and their tenants have not all stayed put."
+    encounter:
+      id: php-undercroft-fight
+      monsters: [zombie, ghoul]
+      intro: "A ghoul comes wading fast through the black water, a waterlogged zombie lurching in its wake!"
+      victory_text: "The water stills around the fallen dead. A strongbox has floated loose."
+      flag: php-undercroft-cleared
+      loot:
+        - { name: "Floodwater strongbox", description: "A warped iron box, its lock long rotted, still half full of a forgotten jailer's pay.", gold: 55 }
+    exits:
+      - { dir: n, to: php-gullet, label: "Back up to the hollow" }
+
+  - id: php-cell
+    name: The Crowned Cell
+    description: "The deepest cell, at the base of the skull, ringed with cold iron and broken sigils. The Hated Pretender sits within on a throne that is also a shackle, a withered king in a rusted crown, and he smiles at you like a host who has waited a very long time for guests. 'At last,' he says, voice smooth as oil. 'Someone reasonable. Let us discuss your reward.'"
+    objective: true
+    win_text: >-
+      However it ends in the crowned cell, you climb back out through the stone skull into clean
+      air. Maybe you pressed the priests' seal to him and felt the centuries of him finally let
+      go, and you leave the prison empty and quiet at last. Maybe you took his bargain, pocketed
+      a dead king's gold, and left a smiling thing loose behind you in the world. The carving over
+      the mouth warned against exactly that. You will find out, in time, whether you should have
+      listened.
+    encounter:
+      id: php-pretender-fight
+      monsters: [php-hated-pretender]
+      intro: "The Pretender rises against his shackles, withered hands spread, still certain he can talk or claw his way free of you."
+      victory_text: "The deathless king comes apart on his shackle-throne, and the long sentence is finally, mercifully served."
+      flag: php-pretender-resolved
+      parley:
+        dc: 15
+        cost_item: "Priests' binding seal"
+        success_text: "He fixes on the lead disc in your hand and his smooth voice turns honey-desperate. 'That ugly thing? Give it here and the matter ends. The crown's true hoard is yours, every coin, and I ask only to be let out of the dark.' You hand him the seal. He crushes it to powder, laughs like a man who has won, tells you truly where the gold is hidden, and walks up out of the prison past you into the light, free for the first time in an age."
+        failure_text: "Your words bounce off a liar far older and better at this than you, and the smiling thing decides talk is over."
+    exits:
+      - { dir: up, to: php-gullet, label: "Back up to the hollow" }

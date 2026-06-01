@@ -2812,3 +2812,316 @@ monsters:
     system: tes-gurps
     source_book: tesg-site
 
+  # ═══════════════════════════════════════════
+  # Red Dragon's Tale (a LEGO D&D one-shot). Original Shadowdark conversions
+  # of the cast; the climax dragon is an unkillable apex placated by returning
+  # her egg, not a corpse to be claimed.
+  # ═══════════════════════════════════════════
+  - id: rdt-mimic
+    name: Mimic
+    hp_max: 10
+    ac: 13
+    move: near
+    level: 2
+    tags: [tier-2, aberration, ambush, faerun, red-dragons-tale]
+    icon: icons/game-icons/delapouite/mimic-chest.svg
+    attacks:
+      - { name: Pseudopod, bonus: 3, damage: 1d8, note: "On a hit: glued fast (DC 12 STR to pull free)." }
+    notes: "A shapeshifter that sits perfectly still as a chest, a chair, a door — until you touch it. Found furnishing the inn's guest rooms."
+    system: shadowdark-core
+    source_book: red-dragons-tale
+  - id: rdt-owlbear
+    name: Owlbear
+    hp_max: 18
+    ac: 13
+    move: near
+    level: 3
+    tags: [tier-2, beast, brute, faerun, red-dragons-tale]
+    icon: icons/game-icons/lorc/owl.svg
+    attacks:
+      - { name: Beak & Claws, bonus: 3, damage: 1d8 }
+    notes: "A bear's body, an owl's head, and the temper of both. It nests where it pleases and shreds what disturbs it."
+    system: shadowdark-core
+    source_book: red-dragons-tale
+  - id: rdt-gelatinous-cube
+    name: Gelatinous Cube
+    hp_max: 16
+    ac: 10
+    move: near
+    level: 3
+    tags: [tier-2, ooze, brute, red-dragons-tale]
+    icon: icons/game-icons/delapouite/slime.svg
+    attacks:
+      - { name: Engulf, bonus: 2, damage: 1d8, note: "Acid. Things it has dissolved float inside it, half-digested." }
+    notes: "A transparent ten-foot cube that slides down corridors scouring them clean. Nearly invisible until you walk into it. Mindless."
+    system: shadowdark-core
+    source_book: red-dragons-tale
+  - id: rdt-black-pudding
+    name: Black Pudding
+    hp_max: 14
+    ac: 11
+    move: "near (climb)"
+    level: 3
+    tags: [tier-2, ooze, red-dragons-tale]
+    icon: icons/game-icons/delapouite/slime.svg
+    attacks:
+      - { name: Corrosive Slam, bonus: 2, damage: 1d6, note: "Splits into two smaller puddings when struck by a slashing weapon." }
+    notes: "A heap of black ooze that eats metal and flesh alike. Strangely fixated on anything spicy. Mindless."
+    system: shadowdark-core
+    source_book: red-dragons-tale
+  - id: rdt-displacer-beast
+    name: Displacer Beast
+    hp_max: 14
+    ac: 15
+    move: double-near
+    level: 3
+    tags: [tier-2, beast, skirmisher, red-dragons-tale]
+    icon: icons/game-icons/lorc/wolf-head.svg
+    attacks:
+      - { name: Tentacle Lash, bonus: 3, damage: 1d6, note: "Displacement: the first attack against it each round misses automatically." }
+    notes: "A great panther with two barbed tentacles, and it never appears quite where it stands. This one, 'Pouncy,' was polymorphed to look like a beholder by the sorcerer; calm it and the magic fades."
+    system: shadowdark-core
+    source_book: red-dragons-tale
+  - id: rdt-ervan-soulfallen
+    name: Ervan Soulfallen
+    hp_max: 24
+    ac: 14
+    move: near
+    level: 5
+    tags: [tier-2, humanoid, caster, boss, named-character, faerun, red-dragons-tale]
+    icon: icons/game-icons/lorc/skull-mask.svg
+    attacks:
+      - { name: Chaos Bolt, bonus: 4, damage: 1d10 }
+    notes: "A sorcerer who stole a dragon's egg and seized an inn, posing as the host 'Merry Rumwell.' Vain, clever, and in well over his head."
+    system: shadowdark-core
+    source_book: red-dragons-tale
+  - id: rdt-cinderhowl
+    name: Cinderhowl
+    hp_max: 60
+    ac: 18
+    move: "near (fly far)"
+    level: 8
+    tags: [boss, dragon, named-character, faerun, red-dragons-tale]
+    icon: icons/game-icons/lorc/dragon-head.svg
+    attacks:
+      - { name: Bite & Claws, bonus: 6, damage: 2d6, note: "Fire breath (recharge): a cone for 2d6, DC 15 DEX save for half." }
+    notes: "An adult red dragon, and a grieving mother: a sorcerer stole her egg. No young party kills an adult red dragon. Give her egg back and her wrath has nowhere to go."
+    system: shadowdark-core
+    source_book: red-dragons-tale
+
+  # ═══════════════════════════════════════════
+  # Tomb of the Serpent Kings (a free teaching dungeon). Original conversion;
+  # a tomb that lies, growing more dangerous the deeper you trust it.
+  # ═══════════════════════════════════════════
+  - id: tsk-serpent-zombie
+    name: Serpent-Man Zombie
+    hp_max: 10
+    ac: 11
+    move: near
+    level: 2
+    tags: [tier-2, undead, reptilian, brute, tomb-of-the-serpent-kings]
+    icon: icons/game-icons/delapouite/shambling-zombie.svg
+    attacks:
+      - { name: Clawing Lurch, bonus: 2, damage: 1d6 }
+    notes: "A serpent-man servant dead so long it forgot how to stop serving. Slow, scaled, and mindless."
+    system: shadowdark-core
+    source_book: tomb-of-the-serpent-kings
+  - id: tsk-giant-cobra
+    name: Giant Cobra
+    hp_max: 8
+    ac: 13
+    move: "near (climb)"
+    level: 2
+    tags: [tier-1, beast, reptilian, skirmisher, tomb-of-the-serpent-kings]
+    icon: icons/game-icons/lorc/worm-mouth.svg
+    attacks:
+      - { name: Venomous Bite, bonus: 2, damage: 1d6, note: "On hit: DC 12 CON save or be poisoned (-1 attacks)." }
+    notes: "A black cobra the length of a spear, coiled among the burial urns. The serpent-folk kept them as guards and as pets."
+    system: shadowdark-core
+    source_book: tomb-of-the-serpent-kings
+  - id: tsk-serpent-warrior
+    name: Serpent-Man Warrior
+    hp_max: 14
+    ac: 14
+    move: near
+    level: 3
+    tags: [tier-2, humanoid, reptilian, soldier, tomb-of-the-serpent-kings]
+    icon: icons/game-icons/delapouite/orc-head.svg
+    attacks:
+      - { name: Bronze Khopesh, bonus: 3, damage: 1d8 }
+    notes: "A living serpent-man of the old empire, scaled and cold-eyed, still guarding a tomb the world forgot. They do not love trespassers."
+    system: shadowdark-core
+    source_book: tomb-of-the-serpent-kings
+  - id: tsk-serpent-sorcerer
+    name: Ssarraketh, the Last Serpent-King
+    hp_max: 40
+    ac: 15
+    move: near
+    level: 6
+    tags: [tier-3, humanoid, reptilian, caster, boss, named-character, tomb-of-the-serpent-kings]
+    icon: icons/game-icons/lorc/crowned-skull.svg
+    attacks:
+      - { name: Venom Bolt, bonus: 4, damage: 1d10, note: "On hit: DC 13 CON save or take +1d6 poison." }
+    notes: "The last sorcerer-king of the serpent-folk, withered to a coil of scale and will at the tomb's heart. Ancient, proud, and bored enough to talk before he kills, but a deadly fight if it comes to it."
+    system: shadowdark-core
+    source_book: tomb-of-the-serpent-kings
+
+  # ═══════════════════════════════════════════
+  # The Black Wyrm of Brandonsford (free/PWYW, Chance Dudinack). Original
+  # conversion; a village under a dragon that was once a greed-mad dwarf.
+  # ═══════════════════════════════════════════
+  - id: bwb-hogboon
+    name: Hogboon, Goblin King
+    hp_max: 16
+    ac: 14
+    move: near
+    level: 4
+    tags: [tier-3, humanoid, goblinoid, leader, boss, named-character, black-wyrm-of-brandonsford]
+    icon: icons/game-icons/lorc/crowned-skull.svg
+    attacks:
+      - { name: Rusty Cleaver, bonus: 3, damage: 1d8 }
+    notes: "Self-crowned king of the forest goblins, now that the people have fled the dragon. Greedy and grandiose, but he can count, and he would rather deal than die."
+    system: shadowdark-core
+    source_book: black-wyrm-of-brandonsford
+  - id: bwb-barrow-wight
+    name: The Barrow Guardian
+    hp_max: 20
+    ac: 13
+    move: near
+    level: 4
+    tags: [tier-3, undead, reptilian, soldier, black-wyrm-of-brandonsford]
+    icon: icons/game-icons/lorc/grave-flowers.svg
+    attacks:
+      - { name: Grave-Chill Blade, bonus: 4, damage: 1d8, note: "On hit: DC 12 CON save or weakened (-1 attacks) for the fight." }
+    notes: "The dead thing that keeps the dragonslayer's barrow. It does not parley, bargain, or rest. It only guards."
+    system: shadowdark-core
+    source_book: black-wyrm-of-brandonsford
+  - id: bwb-forest-giant
+    name: Grull the Hungry
+    hp_max: 28
+    ac: 13
+    move: near
+    level: 5
+    tags: [tier-3, giant, brute, black-wyrm-of-brandonsford]
+    icon: icons/game-icons/delapouite/ogre.svg
+    attacks:
+      - { name: Uprooted Tree, bonus: 5, damage: 1d10 }
+    notes: "A lonely man-eating giant who would honestly rather have company and a hot meal than a fight, if anyone ever offered."
+    system: shadowdark-core
+    source_book: black-wyrm-of-brandonsford
+  - id: bwb-black-wyrm
+    name: The Black Wyrm
+    hp_max: 45
+    ac: 16
+    move: "near (fly far)"
+    level: 7
+    tags: [tier-3, dragon, boss, named-character, black-wyrm-of-brandonsford]
+    icon: icons/game-icons/lorc/dragon-head.svg
+    attacks:
+      - { name: Bite & Claws, bonus: 5, damage: 2d6, note: "Acid spit (recharge): a line for 2d6, DC 14 DEX save for half." }
+    notes: "Once the dwarf Durgan, who murdered his own kin over a hoard and was cursed into a dragon for it. Grief sits under the greed. A hard fight, but not an impossible one, and there may be another way."
+    system: shadowdark-core
+    source_book: black-wyrm-of-brandonsford
+
+  # ═══════════════════════════════════════════
+  # Prison of the Hated Pretender (free, Gus L). Original conversion; a tomb-
+  # prison carved as a crowned head, holding a bound, lying undead usurper.
+  # ═══════════════════════════════════════════
+  - id: php-phantasm
+    name: Phantasm of Vengeance
+    hp_max: 12
+    ac: 13
+    move: "near (fly)"
+    level: 3
+    tags: [tier-2, undead, spirit, skirmisher, prison-of-the-hated-pretender]
+    icon: icons/game-icons/lorc/spectre.svg
+    attacks:
+      - { name: Wrathful Touch, bonus: 3, damage: 1d6 }
+    notes: "The distilled rage of someone the Pretender wronged, bound here to torment him forever. It knows only revenge and will not hear words."
+    system: shadowdark-core
+    source_book: prison-of-the-hated-pretender
+  - id: php-warden
+    name: The Bound Warden
+    hp_max: 22
+    ac: 15
+    move: slow
+    level: 4
+    tags: [tier-3, construct, soldier, prison-of-the-hated-pretender]
+    icon: icons/game-icons/delapouite/stone-bust.svg
+    attacks:
+      - { name: Stone Maul, bonus: 4, damage: 1d10 }
+    notes: "A stone jailer shaped by the warrior-priests to keep the Pretender in and the world out. It cannot be reasoned with, only stopped or slipped past."
+    system: shadowdark-core
+    source_book: prison-of-the-hated-pretender
+  - id: php-hated-pretender
+    name: The Hated Pretender
+    hp_max: 34
+    ac: 14
+    move: near
+    level: 5
+    tags: [tier-3, undead, leader, boss, named-character, prison-of-the-hated-pretender]
+    icon: icons/game-icons/lorc/crowned-skull.svg
+    attacks:
+      - { name: Withered Grasp, bonus: 4, damage: 1d8, note: "On hit: DC 13 CON save or chilled (-1 attacks) for the fight." }
+    notes: "A usurper king the priests made deathless so his torment would never end. Silver-tongued and desperate to be freed, he will promise anything. Bound and weakened, he can be put to rest, if you are not talked out of it first."
+    system: shadowdark-core
+    source_book: prison-of-the-hated-pretender
+
+  # ═══════════════════════════════════════════
+  # The Chaotic Caves (Basic Fantasy RPG, CC-BY-SA). A ravine of warring
+  # monster factions and a chaos cult at the bottom of it.
+  # ═══════════════════════════════════════════
+  - id: cc-hobgoblin
+    name: Hobgoblin
+    hp_max: 12
+    ac: 15
+    move: near
+    level: 3
+    tags: [tier-2, humanoid, goblinoid, soldier, chaotic-caves]
+    icon: icons/game-icons/delapouite/orc-head.svg
+    attacks:
+      - { name: Longsword, bonus: 3, damage: 1d8 }
+    notes: "Disciplined where goblins are not. Hobgoblins drill, hold ranks, and despise the other cave-tribes almost as much as they despise you."
+    system: shadowdark-core
+    source_book: chaotic-caves
+  - id: cc-hobgoblin-chief
+    name: Grosh, Hobgoblin Chief
+    hp_max: 18
+    ac: 16
+    move: near
+    level: 4
+    tags: [tier-3, humanoid, goblinoid, leader, boss, named-character, chaotic-caves]
+    icon: icons/game-icons/lorc/crowned-skull.svg
+    attacks:
+      - { name: Greatsword, bonus: 4, damage: 1d10 }
+    notes: "Chief of the hobgoblin warband. A cold strategist who hates the goblins next door and would happily watch you fight them for him."
+    system: shadowdark-core
+    source_book: chaotic-caves
+  - id: cc-acolyte
+    name: Chaos Acolyte
+    hp_max: 7
+    ac: 12
+    move: near
+    level: 2
+    tags: [tier-1, humanoid, cultist, caster, minion, chaotic-caves]
+    icon: icons/game-icons/lorc/hooded-figure.svg
+    attacks:
+      - { name: Sickle, bonus: 1, damage: 1d4 }
+      - { name: Dark Bolt, bonus: 2, damage: 1d6 }
+    notes: "A frightened villager the cult swept up. Show one a moment's kindness and the conviction tends to crack."
+    system: shadowdark-core
+    source_book: chaotic-caves
+  - id: cc-chaos-priest
+    name: The Chaos Priest
+    hp_max: 30
+    ac: 14
+    move: near
+    level: 5
+    tags: [tier-3, humanoid, cultist, caster, boss, named-character, chaotic-caves]
+    icon: icons/game-icons/lorc/skull-mask.svg
+    attacks:
+      - { name: Chaos Mace, bonus: 4, damage: 1d8, note: "Curse (recharge): one hero rolls attacks at -2 for the fight unless they pass a DC 13 WIS save." }
+    notes: "The cult that set the caves at each other's throats answers to this one. A true believer, hard to sway, and the head you must take to quiet the ravine."
+    system: shadowdark-core
+    source_book: chaotic-caves
+

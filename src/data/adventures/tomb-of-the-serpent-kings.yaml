@@ -1,0 +1,163 @@
+# Tomb of the Serpent Kings — a scripted text adventure.
+#
+# An original, condensed conversion of the free teaching dungeon "Tomb of the
+# Serpent Kings" (Skerples / Coins and Scrolls). Prose is original; only the
+# premise and its teaching spirit are carried over: a tomb that lies, growing
+# more dangerous the deeper you trust it. Plays on the Shadowdark engine.
+# Schema: see src/data/adventures/sunless-citadel.yaml.
+
+id: tomb-of-the-serpent-kings
+title: Tomb of the Serpent Kings
+system: shadowdark
+synopsis: >-
+  A tomb of the long-dead serpent-folk, built by people who expected to be robbed and laid
+  every lie they could into the stone: false doors, false dead, false treasure. The deeper
+  you go and the more you trust it, the truer and deadlier it gets, down to the last
+  serpent-king still coiled at its heart. A fine place to learn that tombs lie.
+recommended_party: "1–4 heroes, level 1"
+intro: >-
+  A cleft in a dry hillside opens on worked stone older than any kingdom you know: the burial
+  place of the serpent-folk, who ruled before men and hid their dead behind a thousand tricks.
+  The first lesson is carved over the entrance in a script no one living reads. The rest you
+  will have to learn the hard way.
+start: tsk-false-door
+
+rooms:
+  - id: tsk-false-door
+    name: The False Door
+    description: "A grand stone door at the tunnel's end, carved with coiled serpents and sealed tight. It looks like the way in. It is not. It is a slab of solid rock meant to waste a robber's whole day."
+    safe: true
+    search_text: "Heaving at the 'door' gets you nowhere, but the floor beside it sounds hollow. A real passage drops away under a loose flagstone. The tomb's first lie, and a free lesson: it lies."
+    features:
+      - { keywords: [door, doors, serpent, carving, seal], text: "The carved door will never open, because it was never a door. The serpent-folk built it to be pried at uselessly while the real entrance waited, hidden, a step away." }
+    exits:
+      - { dir: in, to: tsk-entry-hall, label: "Down through the hidden floor passage" }
+
+  - id: tsk-entry-hall
+    name: The Entry Hall
+    description: "A low hall beyond the trick door, lined with empty niches. The dust here is undisturbed for a very long time. A stair descends into the dark."
+    features:
+      - { keywords: [niche, niches, dust, wall], text: "The niches once held offerings. Robbers cleaned them out centuries ago, or the serpent-folk never filled them, one more disappointment for thieves." }
+    exits:
+      - { dir: out, to: tsk-false-door, label: "Back to the false door" }
+      - { dir: down, to: tsk-skeleton-crypt, label: "Down the stair" }
+
+  - id: tsk-skeleton-crypt
+    name: The First Crypt
+    description: "A burial chamber with a single open sarcophagus and a single dry skeleton lying in it, hands folded. A heap of gleaming coins is piled at its feet. It all looks very safe and very dead."
+    encounter:
+      id: tsk-skeleton
+      monsters: [skeleton]
+      intro: "The 'dead' skeleton sits up, then stands, then comes for you. Lesson two: in a tomb, dead is not the same as harmless."
+      victory_text: "The skeleton falls apart for good. The coins at its feet, you notice now, are lead under a thin wash of gold paint."
+      flag: tsk-crypt-cleared
+    features:
+      - { keywords: [coins, treasure, gold, pile, hoard], text: "The 'gold' is painted lead, bait to make a thief linger by the coffin until its occupant woke. Lesson three: a tomb's treasure lies too." }
+    exits:
+      - { dir: up, to: tsk-entry-hall, label: "Back up the stair" }
+      - { dir: n, to: tsk-the-fork, label: "North, to a branching hall" }
+
+  - id: tsk-the-fork
+    name: The Branching Hall
+    description: "A junction where the tomb opens into several passages. The air grows warmer and wetter as it goes down, and faint hissing carries from somewhere deep."
+    exits:
+      - { dir: s, to: tsk-skeleton-crypt, label: "Back to the first crypt" }
+      - { dir: w, to: tsk-statue-room, label: "West, to a chamber of statues" }
+      - { dir: e, to: tsk-cobra-pit, label: "East, where something hisses" }
+      - { dir: n, to: tsk-mirror-hall, label: "North, into a glimmering hall" }
+
+  - id: tsk-statue-room
+    name: The Hall of Kings
+    description: "A long gallery of serpent-folk statues, each a coiled king with a real bronze weapon in its stone hands. One holds a slim sword that hums, very faintly, a single held note."
+    items:
+      - { name: "Singing sword", description: "A slim serpent-folk blade that hums one low note without end. Old, valuable, and clearly prized by whatever still rules this tomb." }
+    features:
+      - { keywords: [statue, statues, king, kings, sword, humming], text: "The statues are the serpent-kings of old. Most hold ordinary bronze; one cradles a humming sword that is plainly more than metal. Taking it feels like the kind of thing a tomb might notice." }
+    exits:
+      - { dir: e, to: tsk-the-fork, label: "Back to the branching hall" }
+
+  - id: tsk-cobra-pit
+    name: The Cobra Pit
+    description: "A sunken chamber of broken urns where the serpent-folk kept their living guardians. The urns are cracked, and not all of them are empty."
+    encounter:
+      id: tsk-cobras
+      monsters: [tsk-giant-cobra, tsk-giant-cobra]
+      intro: "Two giant cobras pour out of the broken urns, hoods flared!"
+      victory_text: "The cobras go still among the shards. A burial-offering survived in an unbroken urn."
+      flag: tsk-cobra-cleared
+      loot:
+        - { name: "Serpent-folk jade", description: "A carved jade offering, cool and green and older than your language.", gold: 50 }
+    exits:
+      - { dir: w, to: tsk-the-fork, label: "Back to the branching hall" }
+
+  - id: tsk-mirror-hall
+    name: The Glimmering Hall
+    description: "A hall whose far wall is a single sheet of silver mirror, unblemished by the ages. Your reflection waits in it, and it does not always do what you do."
+    search_text: "Watching closely, you catch your reflection move a half-beat late, reaching for a latch you aren't touching. The mirror is a trap and a door both; step past it along the wall, not through it, and it lets you by."
+    encounter:
+      id: tsk-mirror-zombies
+      monsters: [tsk-serpent-zombie, tsk-serpent-zombie]
+      intro: "Two scaled corpses shamble from behind the mirror, drawn by the living warmth!"
+      victory_text: "The serpent-zombies fold up on the floor. The mirror shows only you again, this time in time."
+      flag: tsk-mirror-cleared
+    features:
+      - { keywords: [mirror, silver, reflection, glass], text: "The mirror lags. Whatever you do, the figure in it does a moment later, or not at all. The serpent-folk loved this kind of patient cruelty." }
+    exits:
+      - { dir: s, to: tsk-the-fork, label: "Back to the branching hall" }
+      - { dir: n, to: tsk-serpent-barracks, label: "North, past the mirror" }
+
+  - id: tsk-serpent-barracks
+    name: The Guardroom
+    description: "A barracks where living serpent-men still stand their watch, scaled and bronze-armed, after an age of waiting. They were not expecting the dead to walk in past their mirror, and they were not expecting you."
+    encounter:
+      id: tsk-guards
+      monsters: [tsk-serpent-warrior, tsk-serpent-warrior]
+      intro: "Two serpent-man warriors level bronze khopeshes, tongues flickering. 'Sssoft things,' one hisses. 'Thievesss.'"
+      victory_text: "The guards fall in a clatter of scale and bronze. The way to the inner sanctum lies open."
+      flag: tsk-guards-cleared
+      parley:
+        dc: 12
+        success_text: "You hold your hands open and swear you have come to pay respect, not to rob, and you let them see you have not stripped their kings. The warriors confer in hissing whispers, then draw aside. 'Passss, then. The King will judge you himself.'"
+        failure_text: "'Liesss,' the warrior hisses. 'All ssoft things lie.' The khopeshes come up."
+    exits:
+      - { dir: s, to: tsk-mirror-hall, label: "Back to the glimmering hall" }
+      - { dir: e, to: tsk-flooded-crypt, label: "East, to a flooded crypt" }
+      - { dir: in, to: tsk-inner-sanctum, label: "Onward, to the inner sanctum" }
+
+  - id: tsk-flooded-crypt
+    name: The Flooded Crypt
+    description: "A side-crypt half-filled with black water, lidless sarcophagi breaking the surface like teeth. Things move under the water that have not breathed in a very long time."
+    encounter:
+      id: tsk-flooded
+      monsters: [tsk-serpent-zombie, tsk-giant-cobra]
+      intro: "A serpent-zombie heaves up out of the black water, a cobra coiling off its shoulders!"
+      victory_text: "The water stills. A funerary hoard glints in a dry sarcophagus."
+      flag: tsk-flooded-cleared
+      loot:
+        - { name: "Serpent-king's circlet", description: "A bronze circlet set with a single green stone, from a king the tomb did not lie about.", gold: 70 }
+    exits:
+      - { dir: w, to: tsk-serpent-barracks, label: "Back to the guardroom" }
+
+  - id: tsk-inner-sanctum
+    name: The Heart of the Tomb
+    description: "The deepest chamber, warm and wet and lit by no fire you can find. At its center, coiled on a dais of black stone, is the last thing the tomb was not lying about: Ssarraketh, a withered serpent-king who never finished dying. His eyes open. 'Ssso,' he breathes. 'The tomb taught you well, to reach me. Few do.'"
+    objective: true
+    win_text: >-
+      However it ends in the heart of the tomb, by the humming sword set at his coils as
+      tribute, by a bargain of words, or by a hard and bloody fight, Ssarraketh subsides at
+      last, and the warm wet hush of the place finally feels like rest rather than waiting.
+      You climb back up through the lies, past the mirror, the painted gold, the door that
+      was never a door, and out into clean dry air, carrying what was real.
+    encounter:
+      id: tsk-ssarraketh
+      monsters: [tsk-serpent-sorcerer, tsk-serpent-zombie]
+      intro: "Ssarraketh uncoils to his full height, venom-light gathering at his claws, curious and ancient and entirely without mercy."
+      victory_text: "The last serpent-king comes apart into dust and old scale, and the tomb is finally, truly empty."
+      flag: tsk-ssarraketh-resolved
+      parley:
+        dc: 14
+        cost_item: "Singing sword"
+        success_text: "You set the humming sword at the edge of his dais, the blade of his own line, brought home. Ssarraketh regards it for a long, cold moment, then inclines his withered head. 'A courtesy. How rare, from soft things. Take the lesser dead's gold and go, and leave my rest to me.' The venom-light fades."
+        failure_text: "Ssarraketh tilts his head, almost amused. 'You bring me nothing, and yet you stay. Then stay.' The venom-light flares."
+    exits:
+      - { dir: out, to: tsk-serpent-barracks, label: "Back to the guardroom" }

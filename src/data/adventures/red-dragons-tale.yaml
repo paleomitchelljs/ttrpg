@@ -1,0 +1,216 @@
+# Red Dragon's Tale — a scripted text adventure.
+#
+# An original, condensed conversion of the free LEGO D&D one-shot "A Red Dragon's
+# Tale" (Wizards of the Coast): an inn with a dark secret, a sorcerer who stole a
+# dragon's egg, and the grieving mother who wants it back. Prose is original; only
+# the premise, structure, and names are carried over. Plays on the Shadowdark engine.
+# Schema: see src/data/adventures/sunless-citadel.yaml.
+
+id: red-dragons-tale
+title: Red Dragon's Tale
+system: shadowdark
+synopsis: >-
+  A roadside inn has gone wrong: the furniture bites, the host is not who he says, and a
+  sorcerer named Ervan Soulfallen has stolen something a red dragon will burn the world to
+  get back. Clear the inn, descend the tower and the dungeon beneath it, and recover what
+  was taken, then face Cinderhowl, who is far too large to fight.
+recommended_party: "2–4 heroes, level 3–5"
+intro: >-
+  The Dragon's Tale inn should be busy at this hour. Instead the common room is silent, the
+  fire is cold, and the smiling host pours drinks that no one drinks. Something here is very
+  wrong, and far below the floorboards, something enormous is very, very angry.
+start: rdt-tavern
+
+rooms:
+  - id: rdt-tavern
+    name: The Common Room
+    description: "A cozy inn that has the shape of welcome but none of the warmth. The host beams from behind the bar and never quite blinks. Doors lead up to the guest rooms and out to the garden."
+    safe: true
+    features:
+      - { keywords: [host, bartender, merry, rumwell], text: "The host calls himself Merry Rumwell. He smiles too long, refills cups no one emptied, and steers you away from the cellar stairs. He is not the innkeeper. He is something wearing the job." }
+    items:
+      - { name: "Bottle of dragon's-breath hot sauce", description: "A corked bottle from the bar, labeled with a little drawn flame. Eye-wateringly, painfully spicy." }
+    exits:
+      - { dir: up, to: rdt-guest-rooms, label: "Up to the guest rooms" }
+      - { dir: out, to: rdt-garden, label: "Out to the garden" }
+
+  - id: rdt-guest-rooms
+    name: The Guest Rooms
+    description: "A hall of small rented rooms, each furnished with a bed, a chest, and a wardrobe. The furniture sits very still. Too still. One chest is breathing."
+    encounter:
+      id: rdt-mimics
+      monsters: [rdt-mimic, rdt-mimic]
+      intro: "Two 'chests' split open into toothy maws and lunge! The furniture was hungry all along."
+      victory_text: "The mimics slump into puddles of false wood-grain. The real luggage is yours to rifle."
+      flag: rdt-rooms-cleared
+      loot:
+        - { name: "Travelers' left-behind coin", description: "Coin from guests who checked in and never out.", gold: 40 }
+    exits:
+      - { dir: down, to: rdt-tavern, label: "Back down to the common room" }
+
+  - id: rdt-garden
+    name: The Walled Garden
+    description: "A overgrown garden behind the inn. A gnarled apple tree creaks without wind, and pale mushroom-folk cluster in the shade, watching with calm spore-lit eyes. A cellar trapdoor lies half-hidden under the ivy."
+    npcs:
+      - name: "The Awakened Tree"
+        keywords: [tree, apple, awakened]
+        sets_flag: rdt-tree-clue
+        text: "Creaaak. The smiling one... is not the host. He keeps the true keeper, Alax, chained below, and he stole the egg. The egg! The red one above the clouds will come for it. The way down is under my roots."
+      - name: "The Myconids"
+        keywords: [myconid, mushroom, mushrooms, folk, spore]
+        text: "The mushroom-folk do not speak so much as share a warm, drifting calm. They mean no harm, and they nudge you gently toward the trapdoor and the tower beyond it."
+    encounter:
+      id: rdt-garden-fight
+      monsters: [giant-spider, giant-spider, giant-spider]
+      intro: "Giant spiders drop from the apple tree on threads of silk, fangs glinting!"
+      victory_text: "The spiders curl up among the roots. The myconids pulse, unbothered."
+      flag: rdt-garden-cleared
+    exits:
+      - { dir: in, to: rdt-tavern, label: "Back into the inn" }
+      - { dir: e, to: rdt-owlbear-nest, label: "East, to a torn-open shed" }
+      - { dir: down, to: rdt-tower-base, label: "Down the trapdoor, toward the tower" }
+
+  - id: rdt-owlbear-nest
+    name: The Ravaged Shed
+    description: "A garden shed with its roof peeled back like a tin can. A nest of splintered wood and bone fills the corner, and the thing that made it is still home."
+    encounter:
+      id: rdt-owlbear
+      monsters: [rdt-owlbear]
+      intro: "An owlbear rears up out of its nest with a screeching roar!"
+      victory_text: "The owlbear slumps. In its nest, among the bones, something glints."
+      flag: rdt-owlbear-cleared
+      loot:
+        - { name: "Half-digested signet", description: "A gold signet ring from someone the owlbear ate. Still worth a good deal.", gold: 60 }
+    exits:
+      - { dir: w, to: rdt-garden, label: "Back to the garden" }
+
+  - id: rdt-tower-base
+    name: The Tower Foot
+    description: "The trapdoor lets you down beside the base of an old stone tower that the inn was built to hide. Webs choke the stair that spirals up; another stair drops into darkness below."
+    encounter:
+      id: rdt-tower-spider
+      monsters: [giant-spider]
+      intro: "A giant wolf spider scuttles down the tower wall, mandibles wide!"
+      victory_text: "The spider drops and curls. Both stairs lie open."
+      flag: rdt-tower-cleared
+    exits:
+      - { dir: up, to: rdt-tower-top, label: "Up the webbed stair" }
+      - { dir: out, to: rdt-garden, label: "Back up to the garden" }
+      - { dir: down, to: rdt-dungeon-hall, label: "Down into the dungeon" }
+
+  - id: rdt-tower-top
+    name: The Tower Top
+    description: "The tower's top room, open to the sky through a broken roof. Three armored skeletons sit slumped against the walls, an adventuring party that came this way and never left."
+    encounter:
+      id: rdt-skeletons
+      monsters: [skeleton, skeleton, skeleton]
+      intro: "The three skeletons rattle to their feet, rusted blades rising. 'The Hard Way' learns nothing, even in death."
+      victory_text: "The party-that-was falls still again. Their gear is yours; they have no more use for it."
+      flag: rdt-towertop-cleared
+      loot:
+        - { name: "The Hard Way's coin & blade", description: "A dead adventurer's purse and a serviceable sword. They'd want it used.", gold: 50 }
+    exits:
+      - { dir: down, to: rdt-tower-base, label: "Back down the tower" }
+
+  - id: rdt-dungeon-hall
+    name: The Scoured Hall
+    description: "A long dungeon corridor, oddly spotless: no dust, no cobwebs, the walls licked clean. The air ahead shimmers faintly, like heat, though it is cold."
+    search_text: "You toss a coin down the hall. It stops in mid-air, suspended in something clear and quivering. A gelatinous cube fills the corridor end to end. Now you can edge around it."
+    encounter:
+      id: rdt-cube
+      monsters: [rdt-gelatinous-cube]
+      intro: "The shimmer surges forward, a transparent cube of acid with a half-dissolved skull floating at its heart!"
+      victory_text: "The cube collapses into reeking slime, and the skull (poor Estus) clatters free."
+      flag: rdt-hall-cleared
+    features:
+      - { keywords: [shimmer, air, heat, cube, clear], text: "The 'clean' is a warning. Something transparent has been sliding up and down this hall, eating everything it touches. Look before you walk." }
+    exits:
+      - { dir: up, to: rdt-tower-base, label: "Back up to the tower foot" }
+      - { dir: n, to: rdt-pudding-cellar, label: "North, into a dripping cellar" }
+
+  - id: rdt-pudding-cellar
+    name: The Dripping Cellar
+    description: "A storeroom where black ooze drips from the ceiling and pools on the floor. Several heaps of it ripple toward you, hungry for metal and meat."
+    search_text: "The puddings recoil from anything spicy. That bottle of dragon's-breath hot sauce from the bar would drive them right off."
+    encounter:
+      id: rdt-puddings
+      monsters: [rdt-black-pudding, rdt-black-pudding]
+      intro: "Two black puddings flow off the walls, hissing where they touch your gear!"
+      victory_text: "The puddings stop moving (or flee the hot sauce, retching). The cellar floor clears."
+      flag: rdt-cellar-cleared
+    features:
+      - { keywords: [ooze, pudding, sauce, spice, hot], text: "Black puddings eat metal and flesh but cannot abide spice. A faceful of dragon's-breath sauce would send them sliding away fast." }
+    exits:
+      - { dir: s, to: rdt-dungeon-hall, label: "Back to the scoured hall" }
+      - { dir: e, to: rdt-fake-beholder, label: "East, toward a floating shape" }
+      - { dir: down, to: rdt-workshop, label: "Down, to a glow of arcane light" }
+
+  - id: rdt-fake-beholder
+    name: The Round Cell
+    description: "A round cell where something bobs in the air: a lumpy floating ball with one big eye and waving stalks. It hisses at you, then sneezes, and for a heartbeat looks oddly like a frightened housecat."
+    npcs:
+      - name: "Pouncy"
+        keywords: [pouncy, beholder, eye, cat, beast]
+        sets_flag: rdt-calmed-pouncy
+        text: "It is not a beholder. It is the inn's old guard-beast, a displacer beast the sorcerer warped into this shape for a laugh. Speak to it kindly, scratch the spot behind where its ears should be, and the cruel magic shivers loose. 'Pouncy' lands on four paws, restored, and pads along at your heel."
+    encounter:
+      id: rdt-pouncy
+      monsters: [rdt-displacer-beast]
+      intro: "The floating 'beholder' shrieks and lashes out with hidden tentacles, terrified, lashing at anything that moves!"
+      victory_text: "The beast is subdued. The false-beholder illusion sloughs off a panting, ordinary displacer beast."
+      flag: rdt-pouncy-cleared
+      parley:
+        dc: 11
+        success_text: "You lower your weapons and speak gently to the frightened thing. It stops thrashing, sniffs, and the sorcerer's cruel polymorph shudders off it. A displacer beast lands on four paws, restored and grateful, and follows you in."
+        failure_text: "Too panicked to hear you, it lashes out again."
+    exits:
+      - { dir: w, to: rdt-pudding-cellar, label: "Back to the cellar" }
+
+  - id: rdt-workshop
+    name: The Arcane Workshop
+    description: "A sorcerer's workroom, all chalk circles and bubbling glass. Ervan Soulfallen turns from his bench, chaos crackling between his fingers. In a cage behind him sits a real, frightened innkeeper, and on a velvet stand, a single enormous red-scaled egg."
+    npcs:
+      - name: "Alax Jadescales"
+        keywords: [alax, innkeeper, keeper, prisoner, cage]
+        sets_flag: rdt-freed-alax
+        text: "Bless you! Alax Jadescales, the true keeper of this inn. That madman Ervan stole a red dragon's EGG, and she knows. Cinderhowl is circling above the clouds right now. You cannot fight her. Take the egg, climb to the roost, and GIVE IT BACK. It's the only thing that cools a mother's fire."
+    encounter:
+      id: rdt-ervan
+      monsters: [rdt-ervan-soulfallen]
+      intro: "'Guests,' Ervan sneers, chaos-light gathering. 'The Tale always ends the same way for guests.'"
+      victory_text: "Ervan crumples amid his broken circles. You free Alax and lift the great red egg from its stand. It is warm, and faintly, you can feel the heartbeat inside."
+      flag: rdt-ervan-resolved
+      parley:
+        dc: 13
+        success_text: "You ask Ervan, quietly, what he thinks an adult red dragon does to the man who took her egg. The chaos-light dies in his hands. 'I... had a plan,' he says, and then he runs, leaving the egg, the inn, and his nerve behind."
+        failure_text: "'I am not afraid of HER,' Ervan lies, badly, and flings a bolt of raw chaos at you."
+      loot:
+        - { name: "Cinderhowl's egg", description: "An enormous red-scaled dragon egg, warm as a hearthstone. Something stirs inside. The only thing that will cool the dragon's wrath." }
+        - { name: "Ervan's coin-pouch", description: "The sorcerer's ill-gotten purse.", gold: 70 }
+    exits:
+      - { dir: up, to: rdt-pudding-cellar, label: "Back up to the cellar" }
+      - { dir: in, to: rdt-dragon-lair, label: "Up the back stair, toward a roar of wind and wings" }
+
+  - id: rdt-dragon-lair
+    name: The Cloudtop Roost
+    description: "The tower's true summit, open to a sky full of ash and beating wings. Cinderhowl lands before you, an adult red dragon the size of the inn itself, smoke curling from her teeth. Her eyes go straight to what you carry. 'My egg,' she says, in a voice like a forge. 'You have my egg.'"
+    objective: true
+    win_text: >-
+      However it ends on the roost, the fire does not fall on you. If you set the warm red egg
+      down before Cinderhowl, the rage goes out of her like a snuffed coal; she curls around it,
+      and lets you climb down alive, which is more than almost anyone can say of meeting a red
+      dragon. The inn is Alax's again, the false host is gone, and a restored displacer beast
+      dozes by the rebuilt hearth.
+    encounter:
+      id: rdt-cinderhowl
+      monsters: [rdt-cinderhowl]
+      intro: "Cinderhowl's chest glows furnace-bright, ready to turn the roost to glass."
+      victory_text: "By a feat the bards will not believe, the great red dragon is brought down. You will be famous, and haunted."
+      flag: rdt-cinderhowl-resolved
+      parley:
+        dc: 16
+        cost_item: "Cinderhowl's egg"
+        success_text: "You kneel and set the great warm egg on the stone before her. The furnace-glow gutters. Cinderhowl gathers her egg against her breast with terrible gentleness, and looks at you with something that is not quite mercy but will do. 'Go,' she says. 'Before I remember to be angry.'"
+        failure_text: "Empty-handed before a grieving dragon, words are nothing but kindling. Her chest blazes white."
+    exits:
+      - { dir: out, to: rdt-workshop, label: "Back down to the workshop" }

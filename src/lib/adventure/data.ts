@@ -12,6 +12,11 @@ import cityOfMistRaw from '../../data/adventures/city-of-mist.yaml';
 import dalnirRaw from '../../data/adventures/dalnir.yaml';
 import cazicThuleRaw from '../../data/adventures/cazic-thule.yaml';
 import najenaRaw from '../../data/adventures/najena.yaml';
+import redDragonsTaleRaw from '../../data/adventures/red-dragons-tale.yaml';
+import tombOfTheSerpentKingsRaw from '../../data/adventures/tomb-of-the-serpent-kings.yaml';
+import blackWyrmRaw from '../../data/adventures/black-wyrm-of-brandonsford.yaml';
+import hatedPretenderRaw from '../../data/adventures/prison-of-the-hated-pretender.yaml';
+import chaoticCavesRaw from '../../data/adventures/chaotic-caves.yaml';
 import { SCENES } from '../shadowdark/scenes';
 import type {
   Adventure,
@@ -180,6 +185,11 @@ export const ADVENTURES: Adventure[] = [
   normAdventure(dalnirRaw as RawAdventure),
   normAdventure(cazicThuleRaw as RawAdventure),
   normAdventure(najenaRaw as RawAdventure),
+  normAdventure(redDragonsTaleRaw as RawAdventure),
+  normAdventure(tombOfTheSerpentKingsRaw as RawAdventure),
+  normAdventure(blackWyrmRaw as RawAdventure),
+  normAdventure(hatedPretenderRaw as RawAdventure),
+  normAdventure(chaoticCavesRaw as RawAdventure),
 ];
 
 export function getAdventure(id: string): Adventure | undefined {

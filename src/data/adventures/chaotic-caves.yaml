@@ -1,0 +1,202 @@
+# The Chaotic Caves — a scripted text adventure.
+#
+# A condensed conversion of "The Chaotic Caves," the sample dungeon from the
+# Basic Fantasy Role-Playing Game (open content, CC-BY-SA), itself an homage to
+# B2's Caves of Chaos. A ravine of warring monster lairs, an abandoned manor,
+# and a chaos cult at the bottom of it all. Prose is original. Plays on the
+# Shadowdark engine.
+# Schema: see src/data/adventures/sunless-citadel.yaml.
+
+id: chaotic-caves
+title: The Chaotic Caves
+system: shadowdark
+synopsis: >-
+  A ravine pocked with cave-mouths, each the lair of a different monster tribe, all of them at
+  one another's throats and all of them stirred up by a chaos cult hidden at the bottom. The
+  tribes hate each other almost more than they hate you, which is a door, if you are clever enough
+  to walk through it instead of fighting everything in the dark.
+recommended_party: "2–4 heroes, level 2–3"
+intro: >-
+  The ravine is a wall of staring black cave-mouths, and from each one drifts a different stink:
+  kobold, goblin, orc, hobgoblin, old death, and under it all a thread of incense that does not
+  belong. The tribes here raid the roads and each other in equal measure, and lately they have
+  grown bold and organized in a way that tribes never do on their own. Someone is conducting them.
+start: cc-ravine
+
+rooms:
+  - id: cc-ravine
+    name: The Ravine
+    description: "A steep-sided gully of loose scree and staring cave-mouths. Bones and broken weapons litter the floor between the lairs, the leavings of tribes that fight each other as often as anyone else. Paths climb to a ruined manor above, and a darker way leads down."
+    safe: true
+    features:
+      - { keywords: [caves, tribes, ravine, bones, war], text: "The lairs ring the gully: kobolds north, goblins east, orcs south, and a hobgoblin warband to the west that lords it over the rest. The tribes despise each other. A party that understood that could set them at each other's throats instead of taking them all on at once." }
+    exits:
+      - { dir: n, to: cc-kobold-cave, label: "North, to the kobold cave" }
+      - { dir: e, to: cc-goblin-cave, label: "East, to the goblin cave" }
+      - { dir: s, to: cc-orc-den, label: "South, to the orc den" }
+      - { dir: w, to: cc-hobgoblin-barracks, label: "West, to the hobgoblin barracks" }
+      - { dir: up, to: cc-manor, label: "Up the slope, to the ruined manor" }
+      - { dir: down, to: cc-bear-den, label: "Down, into a low den" }
+
+  - id: cc-kobold-cave
+    name: The Kobold Warren
+    description: "A cramped, trap-strung warren that smells of wet dog and fear. The kobolds here are the smallest tribe and they know it, jumpy and quick to scatter, more bullied than bullying."
+    encounter:
+      id: cc-kobolds
+      monsters: [kobold, kobold, kobold]
+      intro: "Kobolds boil out of the tunnels, yipping, more frightened than fierce but armed all the same!"
+      victory_text: "The surviving kobolds flee deeper into their holes. Their meager hoard is left behind."
+      flag: cc-kobolds-cleared
+      parley:
+        dc: 11
+        grants_flag: cc-kobolds-spared
+        success_text: "You lower your weapons and speak softly, and the little creatures stop shaking long enough to listen. They have no love for the cult that has been driving the whole ravine to ruin. They will not fight for you, but they will not fight you, and they whisper which cave the incense-smell comes from."
+        failure_text: "Cornered and terrified, the kobolds attack rather than trust you."
+      loot:
+        - { name: "Kobold trinket-hoard", description: "A magpie pile of stolen buttons, coins, and one surprisingly good gem.", gold: 40 }
+    exits:
+      - { dir: out, to: cc-ravine, label: "Back to the ravine" }
+
+  - id: cc-goblin-cave
+    name: The Goblin Cave
+    description: "A smoky cave loud with squabbling, where a goblin warband nurses old grudges against every other tribe in the ravine, the hobgoblins most of all. Their boss glowers from a heap of stolen blankets."
+    encounter:
+      id: cc-goblins
+      monsters: [goblin, goblin, goblin-boss]
+      intro: "The goblin boss bares his teeth. 'More road-meat? Or are you the hobgoblins' dogs come sniffing? Either way, GET THEM!'"
+      victory_text: "The goblins break and bolt down their bolt-holes. Their plunder is yours."
+      flag: cc-goblins-cleared
+      parley:
+        dc: 12
+        grants_flag: cc-goblins-allied
+        success_text: "You convince the boss you hate the hobgoblin chief at least as much as he does, which is not hard, because by now you nearly do. The goblins cackle and agree to stay out of your way, even to make noise to the west and draw the hobgoblins off, if you promise to leave their cave be."
+        failure_text: "The goblin boss decides you are lying or worthless, probably both, and gives the order."
+      loot:
+        - { name: "Goblin plunder", description: "Coin and oddments stripped from the ravine's victims.", gold: 45 }
+    exits:
+      - { dir: out, to: cc-ravine, label: "Back to the ravine" }
+
+  - id: cc-orc-den
+    name: The Orc Den
+    description: "A brutal, reeking den hung with crude trophies. The orcs here are raiders who take what they want, and at the back, lashed to a post, a half-starved villager prisoner watches you with desperate hope."
+    npcs:
+      - name: "The Captive"
+        keywords: [captive, prisoner, villager, post]
+        sets_flag: cc-knows-cult
+        text: "Cut me loose, please. They took me off the road weeks back. I have seen the one behind all this, the priest in the deepest cave below the manor crypt. He has the tribes spellbound, idol in his hands. Smash the idol and the spell over the ravine breaks. Just please, do not leave me here."
+    encounter:
+      id: cc-orcs
+      monsters: [orc, orc, orc]
+      intro: "Three orcs heave up from their trophies, axes already swinging. They do not bother with threats."
+      victory_text: "The orcs fall among their grisly trophies. The captive at the back strains against the post, free for the cutting."
+      flag: cc-orcs-cleared
+      loot:
+        - { name: "Orc raid-loot", description: "Heavy coin and a fine dagger, taken off the orcs' victims.", gold: 55 }
+    exits:
+      - { dir: out, to: cc-ravine, label: "Back to the ravine" }
+
+  - id: cc-hobgoblin-barracks
+    name: The Hobgoblin Barracks
+    description: "A disciplined, swept-stone barracks, ranks of bedrolls, weapons racked and gleaming. The hobgoblins are the ravine's bullies, and their chief Grosh has done something none of these tribes should manage: he has organized. A strange stone idol sits on a shelf behind him, plainly looted from somewhere lower."
+    encounter:
+      id: cc-hobgoblins
+      monsters: [cc-hobgoblin, cc-hobgoblin, cc-hobgoblin-chief]
+      intro: "Grosh signals and his soldiers form a line in one smooth motion. 'You walked into a barracks, not a cave. That was your mistake. Hold the line!'"
+      victory_text: "Grosh falls and his disciplined line dissolves into a rout. The looted idol sits unguarded on its shelf."
+      flag: cc-hobgoblins-cleared
+      parley:
+        dc: 13
+        grants_flag: cc-hobgoblins-dealt
+        success_text: "You speak Grosh's language: leverage. He has no love for the cult that stirred this ravine up, nor for the priest who keeps demanding tribute. He will stand his soldiers down and let you pass to the temple below, and he will even let you carry off the cult's idol, on the sole condition that you are the ones who go and break the priest, not him."
+        failure_text: "'Talk is what the weak do instead of fighting,' Grosh says, and orders the line forward."
+      loot:
+        - { name: "Chaos idol", description: "A squat, ugly idol of black stone that the hobgoblins looted from the temple below. The chaos priest wants it back badly enough to bargain for it." }
+        - { name: "Hobgoblin war-chest", description: "The warband's disciplined savings: good coin, well kept.", gold: 65 }
+    exits:
+      - { dir: out, to: cc-ravine, label: "Back to the ravine" }
+      - { dir: in, to: cc-temple-approach, label: "Deeper in, toward an incense-reek" }
+
+  - id: cc-bear-den
+    name: The Beast Den
+    description: "A low, foul-smelling den off the ravine floor, its mouth ringed with cracked bones. Whatever lairs here is bigger than anything else in the gully, and it does not share."
+    encounter:
+      id: cc-owlbear
+      monsters: [owlbear]
+      intro: "An owlbear erupts from the dark of the den with a deafening screech-roar!"
+      victory_text: "The owlbear slumps in its bone-nest. Something its last meal carried glints among the gnawed remains."
+      flag: cc-bear-cleared
+      loot:
+        - { name: "Half-gnawed satchel", description: "A merchant's satchel its owner did not get to keep, still heavy with coin.", gold: 50 }
+    exits:
+      - { dir: out, to: cc-ravine, label: "Back up to the ravine" }
+
+  - id: cc-manor
+    name: The Abandoned Manor
+    description: "A burned-out manor house on the slope above the ravine, roof fallen, hall open to the sky. It is far too quiet, and the quiet has the held-breath quality of a place that has noticed you come in."
+    encounter:
+      id: cc-manor-dead
+      monsters: [skeleton, skeleton, zombie]
+      intro: "The dead of the manor lurch up from under fallen beams and rotted drapes, roused by the warmth of the living!"
+      victory_text: "The manor's dead lie down again. A trapdoor under the rotted rug drops toward a crypt."
+      flag: cc-manor-cleared
+    exits:
+      - { dir: out, to: cc-ravine, label: "Back down to the ravine" }
+      - { dir: down, to: cc-crypt, label: "Down through the trapdoor, into a crypt" }
+
+  - id: cc-crypt
+    name: The Manor Crypt
+    description: "The old family crypt beneath the manor, and someone has broken through its back wall into the cave-system below. A ghoul crouches over a fresh kill among the older dead."
+    encounter:
+      id: cc-crypt-fight
+      monsters: [ghoul, skeleton, skeleton]
+      intro: "A ghoul whirls from its meal with a hiss, the crypt-skeletons clattering up around it!"
+      victory_text: "The crypt falls still. The broken back wall opens on an incense-thick passage."
+      flag: cc-crypt-cleared
+      loot:
+        - { name: "Grave-goods", description: "Funeral silver and a signet ring from the crypt's rightful, undisturbed dead.", gold: 55 }
+    exits:
+      - { dir: out, to: cc-manor, label: "Back up to the manor" }
+      - { dir: down, to: cc-temple-approach, label: "Through the broken wall, toward the incense" }
+
+  - id: cc-temple-approach
+    name: The Temple Threshold
+    description: "A worked-stone antechamber where the cave-stink gives way to incense and candle-smoke. Two robed acolytes tend the threshold of the shrine beyond, and they flinch when they see you, more frightened than fervent."
+    encounter:
+      id: cc-acolytes
+      monsters: [cc-acolyte, cc-acolyte]
+      intro: "Two chaos acolytes raise sickles in shaking hands. 'N-none may pass to the Voice of Chaos! Turn back!'"
+      victory_text: "The acolytes go down, or throw their sickles aside and bolt. The shrine doors stand open."
+      flag: cc-threshold-cleared
+      parley:
+        dc: 11
+        success_text: "You see past the robes to the frightened village faces under them, swept up by the cult and in over their heads. A few kind words and a clear way out, and they drop their sickles and flee for home, leaving the shrine doors unguarded behind them."
+        failure_text: "Too deep in fear of their priest to fear you, the acolytes attack."
+    exits:
+      - { dir: w, to: cc-hobgoblin-barracks, label: "Back toward the barracks" }
+      - { dir: up, to: cc-crypt, label: "Back up toward the crypt" }
+      - { dir: in, to: cc-temple-sanctum, label: "Into the shrine of chaos" }
+
+  - id: cc-temple-sanctum
+    name: The Shrine of Chaos
+    description: "A vaulted shrine lit by guttering green candles, every wall scrawled with the same mad sigil. At its altar stands the Chaos Priest, the patient hand that set the whole ravine at war, and he turns to you with the calm certainty of a man who believes the dark is on his side. 'You have killed your way to me,' he says, pleased. 'Chaos sends me strong servants, whether they know it yet or not.'"
+    objective: true
+    win_text: >-
+      However it ends at the altar, the thread that bound the ravine together is cut. Maybe you
+      put the Chaos Priest down and smashed his black idol on the flagstones, and felt the whole
+      hillside of caves go slack and ordinary, just tribes again, squabbling and small. Maybe you
+      handed him back his idol and bought your way out, and left the cult its heart to grow again.
+      Either way you walk out of the ravine into daylight, and the roads below are a little safer
+      than they were this morning.
+    encounter:
+      id: cc-priest-fight
+      monsters: [cc-chaos-priest, cc-acolyte]
+      intro: "The Chaos Priest raises his mace and his voice together, calling the dark down on you with serene, terrible confidence."
+      victory_text: "The Chaos Priest crumples at his own altar. You grind the black idol to gravel under your heel, and the spell over the ravine breaks like a held note finally released."
+      flag: cc-priest-resolved
+      parley:
+        dc: 16
+        cost_item: "Chaos idol"
+        success_text: "You hold up the looted idol, and for the first time the priest's calm cracks into naked want. 'You have it. Give it back to me and walk out alive, with a tithe of the offerings for your trouble. Chaos rewards the practical.' You set the idol in his hands. He cradles it like a child, waves you and your purse out, and goes back to his patient, dangerous work as though you were never here."
+        failure_text: "The priest only smiles wider at your words. 'Chaos does not bargain. It consumes.' He brings the mace up."
+    exits:
+      - { dir: out, to: cc-temple-approach, label: "Back to the threshold" }

@@ -1,0 +1,187 @@
+# The Black Wyrm of Brandonsford — a scripted text adventure.
+#
+# An original, condensed conversion of the free/pay-what-you-want adventure
+# "The Black Wyrm of Brandonsford" (Chance Dudinack). Prose is original; only
+# the premise, structure, and a few names are carried over: a village under a
+# dragon that was once a greed-mad dwarf, a goblin king, a witch, a dragonslayer's
+# barrow. Plays on the Shadowdark engine.
+# Schema: see src/data/adventures/sunless-citadel.yaml.
+
+id: black-wyrm-of-brandonsford
+title: The Black Wyrm of Brandonsford
+system: shadowdark
+synopsis: >-
+  A dragon has been burning the village of Brandonsford, and the reeve is offering everything
+  the village has left to be rid of it. But the wyrm was once a dwarf who murdered his own kin
+  over a hoard, and there is grief under the greed. Slay it, drive it off, or reach the man
+  still buried inside the monster.
+recommended_party: "2–4 heroes, level 3–4"
+intro: >-
+  Brandonsford still smells of smoke. Half its roofs are ash, the bridge is down, and the
+  forest beyond has gone strange and fairy-thick since the people fled it. Somewhere past the
+  trees a black dragon sleeps on a stolen hoard, and the village has scraped together a bounty
+  for anyone fool enough or brave enough to end it.
+start: bwb-brandonsford
+
+rooms:
+  - id: bwb-brandonsford
+    name: Brandonsford Green
+    description: "What is left of the village green. Frightened folk peer from doorways, and the reeve, a tired woman with soot in her hair, hurries out to meet anyone armed enough to help."
+    safe: true
+    npcs:
+      - name: "The Reeve"
+        keywords: [reeve, woman, villager, host]
+        sets_flag: bwb-knows-job
+        text: "Thank the saints. The dragon takes a beast and a barn every few nights, and we have not many left of either. The witch in the deep woods knows more of it than any of us, if you can stand her tongue. And the old dragonslayer's barrow is out there too, if his blade still lies in it. The forest road is the only way west. The bridge is down, so you will have to ford."
+    features:
+      - { keywords: [bounty, reward, gold, notice], text: "A bounty is chalked on the well: every coin and cup the village has left, to whoever ends the wyrm. It is not much. It is everything they have." }
+    exits:
+      - { dir: w, to: bwb-old-road, label: "West, down the forest road" }
+
+  - id: bwb-old-road
+    name: The Forded Road
+    description: "The road west, where the broken bridge forces you down into a cold ford. The trees lean close here, and the undergrowth rustles with things that have grown bold since the people left."
+    encounter:
+      id: bwb-road-goblins
+      monsters: [goblin, goblin]
+      intro: "Two goblins spring out of the ferns mid-ford, hoping to rob whoever the dragon hasn't eaten!"
+      victory_text: "The goblins splash off into the trees. The way west opens into deep forest."
+      flag: bwb-road-cleared
+    exits:
+      - { dir: out, to: bwb-brandonsford, label: "Back to the village" }
+      - { dir: in, to: bwb-deep-forest, label: "On into the deep forest" }
+
+  - id: bwb-deep-forest
+    name: The Deep Forest
+    description: "The old wood, gone wild and fey. Toadstool rings glow faintly, the light comes through green and wrong, and paths wind off in every direction: a witch's smoke to the north, drum-noise east, a barrow-mound south, a giant's reek west, and a grove uphill where the trees seem to weep red."
+    encounter:
+      id: bwb-forest-spiders
+      monsters: [giant-spider, giant-spider]
+      intro: "Giant spiders drop on silk from the fey canopy, too big and too bold by half!"
+      victory_text: "The spiders curl up among the toadstools. The forest paths lie open."
+      flag: bwb-forest-cleared
+    exits:
+      - { dir: out, to: bwb-old-road, label: "Back to the road" }
+      - { dir: n, to: bwb-witch-hut, label: "North, toward the witch's smoke" }
+      - { dir: e, to: bwb-goblin-camp, label: "East, toward the drums" }
+      - { dir: w, to: bwb-giant-dell, label: "West, toward the giant's reek" }
+      - { dir: s, to: bwb-barrow-mouth, label: "South, to the barrow-mound" }
+      - { dir: up, to: bwb-wine-grove, label: "Uphill, to the weeping grove" }
+      - { dir: in, to: bwb-wyrm-cave, label: "Deep in, toward the dragon's cave" }
+
+  - id: bwb-witch-hut
+    name: The Witch's Hut
+    description: "A leaning hut on chicken-thin stilts, hung with bones and drying herbs. The Old Witch sits on the step, peeling something, and does not look up. She is not evil. She is just very old and very done with being polite."
+    safe: true
+    npcs:
+      - name: "The Old Witch"
+        keywords: [witch, woman, hag, crone, old]
+        sets_flag: bwb-knows-truth
+        text: "Mind your manners and I will tell you what the village won't. That dragon was a dwarf once. Durgan, his name. Struck a fortune mining out here, then struck down his own brothers for the whole of it, and the doing of that twisted him into the worm he is. Greed all the way down, aye, but grief too, under the gold. His brother's locket lies in the dragonslayer's barrow. A thing like that might reach what's left of the man. Or you can just go and die on his teeth. Your feet, your road."
+    features:
+      - { keywords: [bones, herbs, charm, hut], text: "The charms are wards against the wyrm's smoke. The witch keeps to herself and to her hut, and asks only that you do not track mud in." }
+    exits:
+      - { dir: out, to: bwb-deep-forest, label: "Back to the forest" }
+
+  - id: bwb-goblin-camp
+    name: The Goblin Camp
+    description: "A stockade of stolen fenceposts, loud with drums. With the people gone, the goblins have crowned themselves lords of the wood, and their king Hogboon holds court on a chair of antlers."
+    encounter:
+      id: bwb-hogboon-fight
+      monsters: [bwb-hogboon, goblin, goblin]
+      intro: "Hogboon levels a rusty cleaver from his antler-throne. 'The forest is MINE now, soft-foots. Pay the toll or be the toll!'"
+      victory_text: "Hogboon's court scatters into the ferns. Their loot-pile is yours."
+      flag: bwb-goblins-cleared
+      parley:
+        dc: 13
+        grants_flag: bwb-goblins-allied
+        success_text: "You tell Hogboon you have no quarrel with goblin kings, only with the dragon that would just as soon eat his court as your party. You swear the deep wood is his once the wyrm is gone. Greed and sense war in him, and sense wins. 'Ha! A king honors a bargain. Go kill the worm, and the forest is MINE.' He waves you through and even points the way to the cave."
+        failure_text: "'A toll it is, then,' Hogboon snarls, and the drums become a war-beat."
+      loot:
+        - { name: "Goblin king's tribute", description: "The pile Hogboon's goblins have stolen from the empty village: coin, cups, a silver candlestick.", gold: 60 }
+    exits:
+      - { dir: out, to: bwb-deep-forest, label: "Back to the forest" }
+
+  - id: bwb-giant-dell
+    name: The Giant's Dell
+    description: "A reeking hollow scattered with cracked bones and a fire long gone cold. Grull the giant sits among them, hugging his knees, enormous and alone. He brightens, alarmingly, when he sees you have arrived."
+    encounter:
+      id: bwb-giant-fight
+      monsters: [bwb-forest-giant]
+      intro: "Grull lurches up, an uprooted tree in one fist. 'STAY,' he booms, half a threat and half a plea. 'Nobody stays. Everybody runs. STAY.'"
+      victory_text: "Grull sits heavily back down among his bones, beaten, and watches you go with great wet eyes."
+      flag: bwb-giant-cleared
+      parley:
+        dc: 12
+        success_text: "You realize he is not hunting you so much as begging you not to leave. You sit, you share a little food, you let the lonely giant talk. By the end he is almost gentle. 'You are kind,' Grull rumbles. 'Kind ones may pass. Grull will not eat the kind ones.' He even presses a treasure on you, something a meal of his left behind."
+        failure_text: "Grull does not understand the words, only that you are backing away like all the rest, and that makes him swing."
+      loot:
+        - { name: "Swallowed knight's purse", description: "A heavy purse from someone Grull was less kind to. Better in your pocket than his.", gold: 70 }
+    exits:
+      - { dir: out, to: bwb-deep-forest, label: "Back to the forest" }
+
+  - id: bwb-wine-grove
+    name: The Weeping Grove
+    description: "A ring of old trees that bleed dark red sap, sweet and strong as wine, where it pools in the roots. A small green man in a tall hat lounges on a branch, swinging his feet, grinning like he already knows how this ends."
+    safe: true
+    npcs:
+      - name: "The Leprechaun"
+        keywords: [leprechaun, man, green, fellow, hat]
+        text: "Lost, are we, or thirsty, or greedy? The trees weep good wine, free to any with the wit to drink it. My gold is another matter. A riddle for a coin, a coin for a clue: the wyrm hoards, aye, but a hoarder fears nothing so much as losing what he's got. Remember that on his doorstep, and the wine's on me."
+    items:
+      - { name: "Skin of tree-wine", description: "A skin filled from the weeping trees. Sweet, strong, and worth a fair bit to the right buyer.", gold: 25 }
+    exits:
+      - { dir: down, to: bwb-deep-forest, label: "Back downhill to the forest" }
+
+  - id: bwb-barrow-mouth
+    name: The Barrow Mouth
+    description: "A green mound with a stone-lipped doorway, the tomb of the dragonslayer who founded Brandonsford an age ago. Two old guardians stand watch at the threshold, and they have not been relieved in a very long time."
+    encounter:
+      id: bwb-barrow-guards
+      monsters: [skeleton, skeleton]
+      intro: "Two barrow-skeletons grind off their plinths, raising pitted blades to keep the tomb as they were set to!"
+      victory_text: "The guardians clatter into pieces. The barrow opens before you."
+      flag: bwb-barrow-mouth-cleared
+    exits:
+      - { dir: out, to: bwb-deep-forest, label: "Back to the forest" }
+      - { dir: in, to: bwb-barrow-crypt, label: "Into the barrow" }
+
+  - id: bwb-barrow-crypt
+    name: The Dragonslayer's Crypt
+    description: "The heart of the barrow, where the old dragonslayer lies in state with his spear across his chest. A grave-cold thing rises from the shadows to keep him company, and to keep you from his gear."
+    encounter:
+      id: bwb-barrow-wight-fight
+      monsters: [bwb-barrow-wight]
+      intro: "The Barrow Guardian unfolds from the dark, its blade rimed white with grave-frost!"
+      victory_text: "The guardian sinks back into stillness. The dragonslayer's spear is free to take, and beside it, tucked in the old hero's hand, a tarnished locket he must have carried here on purpose."
+      flag: bwb-barrow-crypt-cleared
+      loot:
+        - { name: "Branton's dragon-lance", description: "The founding dragonslayer's spear, light and cruelly sharp. The kind of blade that has killed a wyrm before and could again.", gold: 80 }
+        - { name: "Durgan's brother's locket", description: "A tarnished dwarf-make locket, holding two tiny portraits: Durgan, before, and the brother he murdered. The one thing that might reach the man inside the monster." }
+    exits:
+      - { dir: out, to: bwb-barrow-mouth, label: "Back to the barrow mouth" }
+
+  - id: bwb-wyrm-cave
+    name: The Wyrm's Cave
+    description: "A scorched cavern heaped with melted coin and blackened silver, the whole stolen wealth of a dead mine and a burned village. On the hoard coils the Black Wyrm, vast and bitter, and when his eye opens it is, for just a moment, a dwarf's eye. 'Mine,' he breathes, smoke curling. 'All of it is mine. I paid for it.'"
+    objective: true
+    win_text: >-
+      However it ends in the cave, Brandonsford gets to live. Maybe you put the dragonslayer's
+      lance through the wyrm and drag a share of the hoard back to the grateful, weeping village.
+      Maybe you set a tarnished locket on the coins and watch the monster shrink, just a little,
+      around the man he buried, and let you leave. Either way the smoke clears off the rooftops,
+      and the village green is loud again with people who get to grow old.
+    encounter:
+      id: bwb-wyrm-fight
+      monsters: [bwb-black-wyrm]
+      intro: "The Black Wyrm rears off his coins, acid hissing between his teeth, every inch of him daring you to try and take what is his."
+      victory_text: "The great black wyrm crashes down across his hoard at last, and the long fear over Brandonsford ends with him."
+      flag: bwb-wyrm-resolved
+      parley:
+        dc: 16
+        requires_flag: bwb-knows-truth
+        cost_item: "Durgan's brother's locket"
+        success_text: "You do not raise a weapon. You set the locket on the coins where he can see it, and you say the name the witch gave you: Durgan. The smoke falters. For a long, terrible moment the wyrm stares at the two tiny faces, the brother he was and the brother he killed, and something that is almost the dwarf again folds down over the hoard. 'Go,' he rasps. 'Take a tithe and GO, before I remember what I am.'"
+        failure_text: "He does not know that name, his eye says, he does not, and the denial comes out as fire."
+    exits:
+      - { dir: out, to: bwb-deep-forest, label: "Back to the forest" }
