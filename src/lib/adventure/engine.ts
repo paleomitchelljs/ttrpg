@@ -6,7 +6,7 @@
 // damage, HP tracked per combatant. Every die roll goes through `rollAndLog`
 // so it also shows up in the shared Dice log.
 
-import { formatMod, pick, statMod } from '../dice';
+import { formatMod, pick, statMod, type RollMode } from '../dice';
 import { rollAndLog } from '../rollLog';
 import { getMonster } from '../shadowdark/monsters';
 import { characterCombatProfile } from '../shadowdark/combat';
@@ -24,12 +24,141 @@ import type {
   GameState,
   MessageKind,
   PartyMemberState,
+  RollPart,
+  RollPayload,
+  TurnRef,
 } from './types';
 
 // ───────── small helpers ─────────
 
-function push(s: GameState, kind: MessageKind, text: string) {
-  s.transcript.push({ id: s.messageSeq++, kind, text });
+function push(s: GameState, kind: MessageKind, text: string, roll?: RollPayload) {
+  s.transcript.push({ id: s.messageSeq++, kind, text, roll });
+}
+
+// ───────── cinematic rolls ─────────
+//
+// Every dramatic die roll goes through `checkRoll`/`damageRoll` so it (a) hits
+// the shared Dice log and (b) carries a RollPayload the play UI replays as a
+// BG3-style animated roll before revealing the message text.
+
+interface CheckOpts {
+  kind: RollPayload['kind'];
+  side: 'hero' | 'enemy';
+  title: string;
+  mode?: RollMode;
+  /** Labeled modifier breakdown; the sum is the flat bonus on the d20. */
+  parts: RollPart[];
+  /** Number to beat (AC or DC). Omit for uncontested rolls. */
+  target?: number;
+  targetLabel?: string;
+}
+
+function checkRoll(opts: CheckOpts): RollPayload {
+  const mode = opts.mode ?? 'normal';
+  const bonus = opts.parts.reduce((a, p) => a + p.value, 0);
+  const expr = `1d20${bonus !== 0 ? formatMod(bonus) : ''}`;
+  const r = rollAndLog(expr, mode, opts.title);
+  let outcome: RollPayload['outcome'] = 'plain';
+  const win = opts.kind === 'attack' ? 'hit' : 'success';
+  const lose = opts.kind === 'attack' ? 'miss' : 'failure';
+  if (r.isCrit) outcome = 'crit';
+  else if (r.isFumble) outcome = 'fumble';
+  else if (opts.target !== undefined) outcome = r.total >= opts.target ? win : lose;
+  return {
+    kind: opts.kind,
+    side: opts.side,
+    title: opts.title,
+    expression: expr,
+    mode,
+    sides: 20,
+    rolls: r.dice.map((d) => Math.abs(d.value)),
+    dropped: r.dice[0]?.dropped,
+    parts: opts.parts.filter((p) => p.value !== 0),
+    total: r.total,
+    target: opts.target,
+    targetLabel: opts.targetLabel,
+    outcome,
+  };
+}
+
+/** A payload-check succeeded (crits always do, fumbles never). */
+function checkPassed(p: RollPayload): boolean {
+  return p.outcome === 'crit' || p.outcome === 'hit' || p.outcome === 'success';
+}
+
+interface DamageOpts {
+  side: 'hero' | 'enemy';
+  title: string;
+  /** "2d6+1" or a flat number; dice are doubled on a crit. */
+  damage: string;
+  crit?: boolean;
+  kind?: 'damage' | 'heal';
+}
+
+/** Roll damage/healing with a payload. Returns the payload; total is min 1. */
+function damageRoll(opts: DamageOpts): RollPayload {
+  const kind = opts.kind ?? 'damage';
+  const m = opts.damage.match(/^(\d+)d(\d+)([+-]\d+)?$/i);
+  if (m) {
+    const count = parseInt(m[1], 10) * (opts.crit ? 2 : 1);
+    const sides = parseInt(m[2], 10);
+    const mod = m[3] ? parseInt(m[3], 10) : 0;
+    const expr = `${count}d${sides}${mod !== 0 ? formatMod(mod) : ''}`;
+    const r = rollAndLog(expr, 'normal', opts.title);
+    return {
+      kind,
+      side: opts.side,
+      title: opts.title,
+      expression: expr,
+      mode: 'normal',
+      sides,
+      rolls: r.dice.map((d) => Math.abs(d.value)),
+      parts: mod !== 0 ? [{ label: 'bonus', value: mod }] : [],
+      total: Math.max(1, r.total),
+      outcome: 'plain',
+    };
+  }
+  const flat = Math.max(1, (parseInt(opts.damage, 10) || 1) * (opts.crit ? 2 : 1));
+  return {
+    kind,
+    side: opts.side,
+    title: opts.title,
+    expression: String(flat),
+    mode: 'normal',
+    sides: 0,
+    rolls: [],
+    parts: [{ label: 'flat', value: flat }],
+    total: flat,
+    outcome: 'plain',
+  };
+}
+
+// ───────── torchlight ─────────
+//
+// Shadowdark's clock, turned crawl-shaped: a torch holds TORCH_LIFE ticks and
+// loses one per room entered and one per combat round. At zero the dungeon goes
+// dark — hero attacks at disadvantage, enemy attacks at advantage, no searching.
+
+export const TORCH_LIFE = 24;
+
+export function inDarkness(s: GameState): boolean {
+  return s.light.lit <= 0;
+}
+
+function tickLight(s: GameState) {
+  if (s.light.lit <= 0) return;
+  s.light.lit -= 1;
+  if (s.light.lit === 0) {
+    push(
+      s,
+      'system',
+      s.light.spares > 0
+        ? 'Your torch gutters out! Darkness swallows the party — quick, "light torch"!'
+        : 'Your last torch gutters out! Darkness swallows the party. Blades swing blind and every shadow has teeth.',
+    );
+  } else if (s.light.lit === 4) {
+    push(s, 'system', 'Your torch burns low, the flame guttering blue at its heart…');
+  }
 }
 
 function itemKey(roomId: string, name: string): string {
@@ -125,6 +254,10 @@ export function activeMember(state: GameState): PartyMemberState | undefined {
 
 function describeRoom(s: GameState, adv: Adventure, firstTime: boolean) {
   const room = currentRoom(s, adv);
+  if (inDarkness(s)) {
+    push(s, 'room', `${room.name}\nIt is pitch dark. Shapes loom half-guessed at the edge of your night-blind eyes.`);
+    return;
+  }
   push(s, 'room', `${room.name}\n${room.description}`);
   if (firstTime && room.firstVisit) push(s, 'room', room.firstVisit);
   const items = roomItems(s, room);
@@ -156,6 +289,7 @@ function buildEnemies(enc: AdvEncounter, powerLevel: number): EnemyState[] {
       hp: { current: sc.hpMax, max: sc.hpMax },
       attacks: sc.attacks,
       tags: m.tags ?? [],
+      icon: m.icon,
     };
   });
 }
@@ -182,6 +316,23 @@ function firstConsciousIndex(s: GameState): number {
   return idx >= 0 ? idx : 0;
 }
 
+/** Roll initiative for everyone and build the interleaved turn order. Heroes
+ *  roll 1d20+DEX; monsters roll a flat 1d20. Heroes win ties. */
+function rollInitiative(s: GameState, enemies: EnemyState[]): TurnRef[] {
+  const order: TurnRef[] = [];
+  for (const m of s.party) {
+    if (m.hp.current <= 0) continue;
+    const r = rollAndLog(`1d20${m.dexMod !== 0 ? formatMod(m.dexMod) : ''}`, 'normal', `${m.name} initiative`);
+    order.push({ side: 'hero', refId: m.id, name: m.name, init: r.total });
+  }
+  for (const e of enemies) {
+    const r = rollAndLog('1d20', 'normal', `${e.name} initiative`);
+    order.push({ side: 'enemy', refId: e.id, name: e.name, init: r.total });
+  }
+  order.sort((a, b) => b.init - a.init || (a.side === 'hero' ? -1 : 1) - (b.side === 'hero' ? -1 : 1));
+  return order;
+}
+
 function maybeStartCombat(s: GameState, adv: Adventure) {
   const room = currentRoom(s, adv);
   const enc = room.encounter;
@@ -189,7 +340,8 @@ function maybeStartCombat(s: GameState, adv: Adventure) {
   if (enc.flag && s.flags.includes(enc.flag)) return;
   const enemies = buildEnemies(enc, s.powerLevel);
   if (!enemies.length) return;
-  s.combat = { encounterId: enc.id, enemies, round: 1 };
+  const order = rollInitiative(s, enemies);
+  s.combat = { encounterId: enc.id, enemies, round: 1, order, turnIndex: -1, moraleChecked: false };
   s.mode = 'combat';
   for (const m of s.party) {
     m.acted = false;
@@ -202,12 +354,108 @@ function maybeStartCombat(s: GameState, adv: Adventure) {
   if (enc.intro) push(s, 'combat', enc.intro);
   push(s, 'combat', `Foes: ${enemies.map((e) => `${e.name} (AC ${e.ac}, HP ${e.hp.max})`).join(', ')}.`);
   if (enc.parley?.prompt) push(s, 'combat', enc.parley.prompt);
+  push(s, 'combat', `Initiative: ${order.map((t) => `${t.name} (${t.init})`).join(' → ')}.`);
   const canTalk = !!enc.parley || enemies.some(canReason);
+  push(s, 'system', `Battle begins! You can attack, "flee"${canTalk ? ', or "negotiate"' : ''}.`);
+  advanceTurn(s, adv);
+}
+
+/** March the initiative order forward: auto-resolve enemy turns as they come
+ *  up, stop when a hero's turn arrives (or the fight ends). */
+function advanceTurn(s: GameState, _adv: Adventure) {
+  const c = s.combat;
+  if (!c) return;
+  let guard = 0;
+  while (s.mode === 'combat' && s.combat && guard++ < 200) {
+    c.turnIndex += 1;
+    if (c.turnIndex >= c.order.length) {
+      c.turnIndex = 0;
+      c.round += 1;
+      tickLight(s);
+      push(s, 'system', `— Round ${c.round} —`);
+    }
+    const t = c.order[c.turnIndex];
+    if (t.side === 'hero') {
+      const idx = s.party.findIndex((m) => m.id === t.refId);
+      const member = s.party[idx];
+      if (!member || member.hp.current <= 0) continue;
+      s.activeIndex = idx;
+      push(s, 'system', `${member.name}'s turn.`);
+      return;
+    }
+    const enemy = c.enemies.find((e) => e.id === t.refId);
+    if (!enemy || enemy.hp.current <= 0) continue;
+    enemyAct(s, enemy);
+  }
+}
+
+/** One enemy takes its turn: pick a random attack and a random conscious hero.
+ *  Darkness gives the foe advantage. */
+function enemyAct(s: GameState, enemy: EnemyState) {
+  const targets = consciousParty(s);
+  if (!targets.length) {
+    resolveDefeat(s);
+    return;
+  }
+  const target = pick(targets);
+  const attack = pick(enemy.attacks.length ? enemy.attacks : [{ name: 'Strike', bonus: 0, damage: '1d4' }]);
+  const effAc = target.ac + target.acBonus;
+  const dark = inDarkness(s);
+  const atk = checkRoll({
+    kind: 'attack',
+    side: 'enemy',
+    title: `${enemy.name} — ${attack.name} vs ${target.name}`,
+    mode: dark ? 'advantage' : 'normal',
+    parts: [{ label: 'attack', value: attack.bonus }],
+    target: effAc,
+    targetLabel: `AC ${effAc}`,
+  });
+  if (!checkPassed(atk)) {
+    push(s, 'combat', `${enemy.name} lunges at ${target.name} and misses. (${atk.total} vs AC ${effAc})`, atk);
+    return;
+  }
+  const crit = atk.outcome === 'crit';
+  const dmg = damageRoll({ side: 'enemy', title: `${enemy.name} — ${attack.name} damage`, damage: attack.damage, crit });
+  push(s, 'combat', `${enemy.name} hits ${target.name}${crit ? ' — critical!' : ''}.`, atk);
+  target.hp.current = Math.max(0, target.hp.current - dmg.total);
+  push(s, 'combat', `${target.name} takes ${dmg.total} damage. (${target.hp.current}/${target.hp.max} HP)`, dmg);
+  if (target.hp.current <= 0) push(s, 'combat', `${target.name} is knocked out!`);
+  if (consciousParty(s).length === 0) resolveDefeat(s);
+}
+
+// Foes that never lose heart: the mindless, the deathless, and anything with a
+// name worth putting on a tombstone.
+const FEARLESS_TAGS = new Set(['undead', 'construct', 'ooze', 'boss', 'named-character', 'solo']);
+
+/** Once per fight, when half or more of the foes are down, the survivors test
+ *  their nerve. Failing the check, they scatter — a bloodless victory. */
+function maybeMorale(s: GameState, adv: Adventure) {
+  const c = s.combat;
+  if (!c || c.moraleChecked) return;
+  const living = livingEnemies(s);
+  if (!living.length || living.length > c.enemies.length / 2) return;
+  c.moraleChecked = true;
+  if (living.some((e) => e.tags.some((t) => FEARLESS_TAGS.has(t)))) return;
+  const morale = checkRoll({
+    kind: 'check',
+    side: 'enemy',
+    title: 'Morale check — will the foes hold?',
+    parts: [],
+    target: 12,
+    targetLabel: 'DC 12',
+  });
+  if (checkPassed(morale)) {
+    push(s, 'combat', 'The remaining foes snarl and hold their ground.', morale);
+    return;
+  }
   push(
     s,
-    'system',
-    `Round 1 — ${activeMember(s)?.name ?? 'the party'}'s move. You can attack, "flee"${canTalk ? ', or "negotiate"' : ''}.`,
+    'combat',
+    `The survivors' nerve breaks! ${living.map((e) => e.name).join(', ')} scatter shrieking into the dark.`,
+    morale,
   );
+  for (const e of living) e.hp.current = 0;
+  resolveVictory(s, adv, true);
 }
 
 function enterRoom(s: GameState, adv: Adventure, roomId: string) {
@@ -215,13 +463,14 @@ function enterRoom(s: GameState, adv: Adventure, roomId: string) {
     push(s, 'error', 'That passage leads nowhere (missing room).');
     return;
   }
+  tickLight(s);
   s.prevRoomId = s.currentRoomId;
   s.currentRoomId = roomId;
   const firstTime = !s.visited.includes(roomId);
   if (firstTime) s.visited.push(roomId);
   describeRoom(s, adv, firstTime);
   maybeStartCombat(s, adv);
-  if (s.mode !== 'combat') {
+  if (s.mode === 'explore') {
     const room = currentRoom(s, adv);
     if (room.objective) winGame(s, room);
   }
@@ -243,11 +492,11 @@ function resolveDefeat(s: GameState) {
   push(s, 'lose', 'The whole party has fallen. Darkness takes the dungeon... (Your saved heroes are unharmed — return to the portal to try again.)');
 }
 
-function resolveVictory(s: GameState, adv: Adventure) {
+function resolveVictory(s: GameState, adv: Adventure, fled = false) {
   const room = currentRoom(s, adv);
   const enc = room.encounter;
   if (enc?.flag && !s.flags.includes(enc.flag)) s.flags.push(enc.flag);
-  push(s, 'result', enc?.victoryText ?? 'The enemies are defeated!');
+  push(s, 'result', fled ? 'The field is yours — the foes have fled!' : enc?.victoryText ?? 'The enemies are defeated!');
   if (enc?.loot?.length) {
     for (const it of enc.loot) s.extraItems.push({ roomId: room.id, item: it });
     push(s, 'system', `Left behind: ${enc.loot.map((i) => i.name).join(', ')}.`);
@@ -278,54 +527,6 @@ function resolvePeace(s: GameState, adv: Adventure, grantsFlag?: string) {
   }
   const exits = visibleExits(s, room);
   push(s, 'system', `Exits: ${exits.map((e) => normalizeDir(e.dir) ?? e.dir).join(', ')}.`);
-}
-
-function enemyTurn(s: GameState) {
-  const enemies = livingEnemies(s);
-  for (const enemy of enemies) {
-    const targets = consciousParty(s);
-    if (!targets.length) break;
-    const target = pick(targets);
-    const attack = enemy.attacks[0] ?? { name: 'Strike', bonus: 0, damage: '1d4' };
-    const atk = rollAndLog(`1d20${formatMod(attack.bonus)}`, 'normal', `${enemy.name} attacks ${target.name}`);
-    if (atk.isFumble) {
-      push(s, 'combat', `${enemy.name} lunges at ${target.name} and misses.`);
-      continue;
-    }
-    const effAc = target.ac + target.acBonus;
-    if (atk.isCrit || atk.total >= effAc) {
-      const crit = atk.isCrit;
-      const dealt = rollDamageTotal(attack.damage, crit, `${enemy.name} ${attack.name}`);
-      target.hp.current = Math.max(0, target.hp.current - dealt);
-      push(
-        s,
-        'combat',
-        `${enemy.name} hits ${target.name}${crit ? ' — critical!' : ''} for ${dealt}. (${target.name}: ${target.hp.current}/${target.hp.max} HP)`,
-      );
-      if (target.hp.current <= 0) push(s, 'combat', `${target.name} is knocked out!`);
-    } else {
-      push(s, 'combat', `${enemy.name} attacks ${target.name} but misses. (rolled ${atk.total} vs AC ${effAc})`);
-    }
-  }
-  if (consciousParty(s).length === 0) {
-    resolveDefeat(s);
-    return;
-  }
-  // New round.
-  for (const m of s.party) m.acted = false;
-  if (s.combat) s.combat.round += 1;
-  s.activeIndex = firstConsciousIndex(s);
-  push(s, 'system', `Round ${s.combat?.round ?? '?'} — ${activeMember(s)?.name ?? 'the party'}'s move.`);
-}
-
-function advanceActive(s: GameState) {
-  const next = s.party.findIndex((m) => m.hp.current > 0 && !m.acted);
-  if (next >= 0) {
-    s.activeIndex = next;
-    push(s, 'system', `${s.party[next].name}'s move.`);
-  } else {
-    enemyTurn(s);
-  }
 }
 
 function findEnemy(s: GameState, token: string): EnemyState | undefined {
@@ -405,6 +606,10 @@ function doExamine(s: GameState, adv: Adventure, target: string) {
 }
 
 function doSearch(s: GameState, adv: Adventure) {
+  if (inDarkness(s)) {
+    push(s, 'result', 'You grope blindly in the dark and find nothing but cold stone. You need light to search.');
+    return;
+  }
   const room = currentRoom(s, adv);
   const already = s.searched.includes(room.id);
   if (!already) s.searched.push(room.id);
@@ -495,39 +700,52 @@ function doAttack(s: GameState, adv: Adventure, target: string) {
     push(s, 'system', "There's nothing to fight here.");
     return;
   }
-  let member = activeMember(s);
+  const member = activeMember(s);
   if (!member || member.hp.current <= 0) {
-    advanceActive(s);
-    member = activeMember(s);
-    if (!member || member.hp.current <= 0) return;
+    advanceTurn(s, adv);
+    return;
   }
   const enemy = findEnemy(s, target);
   if (!enemy) {
     push(s, 'system', target ? `There's no "${target}" to attack.` : 'No foes remain.');
     return;
   }
-  const atk = rollAndLog(`1d20${formatMod(member.attackMod + member.atkBonus)}`, 'normal', `${member.name} attacks ${enemy.name}`);
-  if (atk.isFumble) {
-    push(s, 'combat', `${member.name} swings at ${enemy.name} and fumbles! (rolled ${atk.total})`);
-  } else if (atk.isCrit || atk.total >= enemy.ac) {
-    const crit = atk.isCrit;
-    const dealt = rollDamageTotal(`1${member.damageDie}${formatMod(member.damageMod + member.dmgBonus)}`, crit, `${member.name} damage`);
-    enemy.hp.current = Math.max(0, enemy.hp.current - dealt);
-    push(
-      s,
-      'combat',
-      `${member.name} hits ${enemy.name}${crit ? ' — critical hit!' : ''} for ${dealt}. (attack ${atk.total} vs AC ${enemy.ac})`,
-    );
+  const dark = inDarkness(s);
+  const parts: RollPart[] = [{ label: member.weaponName, value: member.attackMod }];
+  if (member.atkBonus) parts.push({ label: 'blessed', value: member.atkBonus });
+  const atk = checkRoll({
+    kind: 'attack',
+    side: 'hero',
+    title: `${member.name} attacks ${enemy.name}`,
+    mode: dark ? 'disadvantage' : 'normal',
+    parts,
+    target: enemy.ac,
+    targetLabel: `AC ${enemy.ac}`,
+  });
+  if (atk.outcome === 'fumble') {
+    push(s, 'combat', `${member.name} swings at ${enemy.name} and fumbles!${dark ? ' (blind in the dark)' : ''}`, atk);
+  } else if (checkPassed(atk)) {
+    const crit = atk.outcome === 'crit';
+    push(s, 'combat', `${member.name} hits ${enemy.name}${crit ? ' — CRITICAL HIT!' : ''} (${atk.total} vs AC ${enemy.ac})`, atk);
+    const dmg = damageRoll({
+      side: 'hero',
+      title: `${member.name} — ${member.weaponName} damage`,
+      damage: `1${member.damageDie}${formatMod(member.damageMod + member.dmgBonus)}`,
+      crit,
+    });
+    enemy.hp.current = Math.max(0, enemy.hp.current - dmg.total);
+    push(s, 'combat', `${enemy.name} takes ${dmg.total} damage. (${enemy.hp.current}/${enemy.hp.max} HP)`, dmg);
     if (enemy.hp.current <= 0) push(s, 'combat', `${enemy.name} is defeated!`);
   } else {
-    push(s, 'combat', `${member.name} attacks ${enemy.name} but misses. (rolled ${atk.total} vs AC ${enemy.ac})`);
+    push(s, 'combat', `${member.name} attacks ${enemy.name} but misses. (${atk.total} vs AC ${enemy.ac})`, atk);
   }
   member.acted = true;
   if (livingEnemies(s).length === 0) {
     resolveVictory(s, adv);
     return;
   }
-  advanceActive(s);
+  maybeMorale(s, adv);
+  if (s.mode === 'combat') advanceTurn(s, adv);
 }
 
 function doFlee(s: GameState, adv: Adventure) {
@@ -634,13 +852,20 @@ function doParley(s: GameState, adv: Adventure) {
       push(s, 'result', 'These are not foes you can reason with. There is no talking your way out of this one.');
       return;
     }
-    const r = rollAndLog(`1d20${formatMod(cha)}`, 'normal', 'Party negotiates');
-    if (r.isCrit || r.total >= 13) {
-      push(s, 'result', 'You talk fast and well. The foes weigh the fight, decide you are not worth dying for, and withdraw into the dark.');
+    const r = checkRoll({
+      kind: 'parley',
+      side: 'hero',
+      title: 'The party negotiates',
+      parts: [{ label: 'CHA', value: cha }],
+      target: 13,
+      targetLabel: 'DC 13',
+    });
+    if (checkPassed(r)) {
+      push(s, 'result', 'You talk fast and well. The foes weigh the fight, decide you are not worth dying for, and withdraw into the dark.', r);
       resolvePeace(s, adv);
     } else {
-      push(s, 'result', 'They are in no mood to talk. The fight goes on.');
-      enemyTurn(s);
+      push(s, 'result', 'They are in no mood to talk. The fight goes on.', r);
+      advanceTurn(s, adv);
     }
     return;
   }
@@ -654,16 +879,23 @@ function doParley(s: GameState, adv: Adventure) {
   // Everything else is one CHA speech check, lifted by whatever legwork you did:
   // offerings in hand, secrets learned, factions won, a costly gesture offered.
   const active = activeParleyMods(s, parley);
-  const bonus = active.reduce((a, m) => a + m.bonus, 0);
   if (active.length) {
     push(s, 'result', `Weighing in your favor: ${active.map((m) => `${m.label} (+${m.bonus})`).join(', ')}.`);
   }
-  const r = rollAndLog(`1d20${formatMod(cha + bonus)}`, 'normal', 'Party negotiates');
-  if (!r.isCrit && r.total < parley.dc) {
-    push(s, 'result', parley.failureText ?? 'The bargain falls flat. The fight goes on.');
-    enemyTurn(s);
+  const r = checkRoll({
+    kind: 'parley',
+    side: 'hero',
+    title: 'The party negotiates',
+    parts: [{ label: 'CHA', value: cha }, ...active.map((m) => ({ label: m.label, value: m.bonus }))],
+    target: parley.dc,
+    targetLabel: `DC ${parley.dc}`,
+  });
+  if (!checkPassed(r)) {
+    push(s, 'result', parley.failureText ?? 'The bargain falls flat. The fight goes on.', r);
+    advanceTurn(s, adv);
     return;
   }
+  push(s, 'result', 'Your words find their mark.', r);
 
   // Success: surrender offered items and pay any toll, then make peace.
   for (const m of active) {
@@ -712,7 +944,7 @@ function doCast(s: GameState, adv: Adventure, spellArg: string, targetToken: str
   const combat = s.combat;
   const member = activeMember(s);
   if (!member || member.hp.current <= 0) {
-    push(s, 'system', 'No conscious caster is ready. Tap a hero to make them active.');
+    push(s, 'system', 'No conscious caster is ready.');
     return;
   }
   if (!member.spells.length) {
@@ -740,14 +972,22 @@ function doCast(s: GameState, adv: Adventure, spellArg: string, targetToken: str
   }
 
   const dc = 10 + (spell?.tier ?? 1);
-  const check = rollAndLog(`1d20${formatMod(member.spellMod)}`, 'normal', `${member.name} casts ${known}`);
-  if (check.isFumble || check.total < dc) {
-    push(s, 'combat', `${member.name}'s ${known} sputters and slips away. (rolled ${check.total} vs DC ${dc}) Lost until they rest.`);
+  const check = checkRoll({
+    kind: 'cast',
+    side: 'hero',
+    title: `${member.name} casts ${known}`,
+    parts: [{ label: 'spellcasting', value: member.spellMod }],
+    target: dc,
+    targetLabel: `DC ${dc}`,
+  });
+  if (!checkPassed(check)) {
+    push(s, 'combat', `${member.name}'s ${known} sputters and slips away. (${check.total} vs DC ${dc}) Lost until they rest.`, check);
     member.spentSpells.push(known);
     member.acted = true;
-    advanceActive(s);
+    advanceTurn(s, adv);
     return;
   }
+  push(s, 'combat', `${member.name}'s ${known} takes hold!${check.outcome === 'crit' ? ' A perfect casting!' : ''}`, check);
 
   switch (fx.kind) {
     case 'damage': {
@@ -756,18 +996,18 @@ function doCast(s: GameState, adv: Adventure, spellArg: string, targetToken: str
         push(s, 'combat', 'There is no foe left to strike.');
         break;
       }
-      const dmg = rollDamageTotal(fx.dice ?? '1d6', false, `${known} damage`);
-      enemy.hp.current = Math.max(0, enemy.hp.current - dmg);
-      push(s, 'combat', `${member.name}'s ${known} strikes ${enemy.name} for ${dmg}!`);
+      const dmg = damageRoll({ side: 'hero', title: `${known} damage`, damage: fx.dice ?? '1d6', crit: check.outcome === 'crit' });
+      enemy.hp.current = Math.max(0, enemy.hp.current - dmg.total);
+      push(s, 'combat', `${member.name}'s ${known} strikes ${enemy.name} for ${dmg.total}!`, dmg);
       if (enemy.hp.current <= 0) push(s, 'combat', `${enemy.name} is destroyed!`);
       break;
     }
     case 'heal': {
       const target = findMember(s, targetToken) ?? mostHurt(s) ?? member;
-      const heal = rollDamageTotal(fx.dice ?? '1d6', false, `${known} healing`);
+      const heal = damageRoll({ side: 'hero', title: `${known} healing`, damage: fx.dice ?? '1d6', kind: 'heal', crit: check.outcome === 'crit' });
       const before = target.hp.current;
-      target.hp.current = Math.min(target.hp.max, target.hp.current + heal);
-      push(s, 'combat', `${member.name}'s ${known} mends ${target.name} for ${target.hp.current - before} HP. (${target.hp.current}/${target.hp.max})`);
+      target.hp.current = Math.min(target.hp.max, target.hp.current + heal.total);
+      push(s, 'combat', `${member.name}'s ${known} mends ${target.name} for ${target.hp.current - before} HP. (${target.hp.current}/${target.hp.max})`, heal);
       break;
     }
     case 'turn': {
@@ -836,7 +1076,8 @@ function doCast(s: GameState, adv: Adventure, spellArg: string, targetToken: str
     resolveVictory(s, adv);
     return;
   }
-  advanceActive(s);
+  maybeMorale(s, adv);
+  if (s.mode === 'combat') advanceTurn(s, adv);
 }
 
 function doWho(s: GameState) {
@@ -849,6 +1090,11 @@ function doWho(s: GameState) {
 }
 
 function doSelect(s: GameState, target: string) {
+  if (s.mode === 'combat') {
+    const now = activeMember(s);
+    push(s, 'system', `No swapping mid-battle — initiative rules the field. It's ${now?.name ?? 'someone'}'s turn.`);
+    return;
+  }
   if (!target) {
     push(s, 'system', 'Select whom? Try: select <name>.');
     return;
@@ -894,6 +1140,27 @@ function doRest(s: GameState, adv: Adventure) {
   }
 }
 
+function doLightTorch(s: GameState, adv: Adventure) {
+  if (s.light.spares <= 0) {
+    push(s, 'error', 'You have no torches left to light. The dark is yours to brave.');
+    return;
+  }
+  if (s.light.lit > TORCH_LIFE / 2) {
+    push(s, 'system', 'Your torch still burns bright — no need to waste a fresh one.');
+    return;
+  }
+  const wasDark = inDarkness(s);
+  s.light.spares -= 1;
+  s.light.lit = TORCH_LIFE;
+  push(
+    s,
+    'result',
+    `You strike a fresh torch alight. ${wasDark ? 'The darkness leaps back and the dungeon returns in flickering orange.' : 'The flame steadies, tall and bright.'} (${s.light.spares} spare${s.light.spares === 1 ? '' : 's'} left)`,
+  );
+  // Fumbling with flint mid-battle costs your moment to act.
+  if (s.mode === 'combat') advanceTurn(s, adv);
+}
+
 function doMap(s: GameState, adv: Adventure) {
   push(s, 'system', `You have explored ${s.visited.length} of ${adv.rooms.length} chambers. (Tap "Map" to see the dungeon plan.)`);
 }
@@ -908,7 +1175,8 @@ function doHelp(s: GameState) {
       '  Look: look · examine <thing> · search',
       '  Items: take <item> · drop <item> · inventory',
       '  People: talk to <name>',
-      '  Combat: attack <foe> · cast <spell> · negotiate · flee · who · select <name>',
+      '  Combat: attack <foe> · cast <spell> · negotiate · flee · who',
+      '  Light: light torch (torches burn down as you explore and fight!)',
       '  Other: rest (in safe rooms) · map · help',
     ].join('\n'),
   );
@@ -936,6 +1204,7 @@ export function createGame(adv: Adventure, characters: Character[], powerLevel?:
       damageMod: p.damageMod,
       ac: p.ac,
       chaMod: statMod(c.stats.CHA),
+      dexMod: statMod(c.stats.DEX),
       weaponName: p.weaponName,
       spells: c.spells ?? [],
       spellMod:
@@ -966,6 +1235,7 @@ export function createGame(adv: Adventure, characters: Character[], powerLevel?:
     extraItems: [],
     searched: [],
     rested: [],
+    light: { lit: TORCH_LIFE, spares: 2 },
     mode: 'explore',
     transcript: [],
     messageSeq: 1,
@@ -973,11 +1243,34 @@ export function createGame(adv: Adventure, characters: Character[], powerLevel?:
 
   if (adv.intro) push(s, 'system', adv.intro);
   push(s, 'system', `Party: ${party.map((m) => `${m.name} (${m.hp.current}/${m.hp.max} HP)`).join(', ')}.`);
+  push(s, 'system', 'A fresh torch crackles to life at the head of the column — with two spares in the packs. Torches burn as you explore; keep an eye on the flame.');
   s.visited.push(adv.start);
   describeRoom(s, adv, true);
   maybeStartCombat(s, adv);
-  if (s.mode !== 'combat' && currentRoom(s, adv).objective) winGame(s, currentRoom(s, adv));
+  if (s.mode === 'explore' && currentRoom(s, adv).objective) winGame(s, currentRoom(s, adv));
   push(s, 'system', 'Type "help" for commands, or tap an action below.');
+  return s;
+}
+
+/** Patch a saved GameState from before the dungeon-crawler overhaul so old
+ *  autosaves resume cleanly (adds torchlight, DEX mods, and initiative order). */
+export function migrateGameState(state: GameState): GameState {
+  const s = structuredClone(state);
+  if (!s.light) s.light = { lit: TORCH_LIFE, spares: 2 };
+  for (const m of s.party) {
+    if (typeof m.dexMod !== 'number') m.dexMod = 0;
+  }
+  if (s.combat && !s.combat.order) {
+    // A mid-fight save from the old engine: synthesize an order (heroes first)
+    // without rolling dice or writing transcript lines.
+    const order: TurnRef[] = [];
+    for (const m of s.party) if (m.hp.current > 0) order.push({ side: 'hero', refId: m.id, name: m.name, init: 10 + m.dexMod });
+    for (const e of s.combat.enemies) if (e.hp.current > 0) order.push({ side: 'enemy', refId: e.id, name: e.name, init: 9 });
+    s.combat.order = order;
+    s.combat.turnIndex = 0;
+    s.combat.moraleChecked = true;
+    s.activeIndex = firstConsciousIndex(s);
+  }
   return s;
 }
 
@@ -1062,6 +1355,9 @@ export function step(prev: GameState, adv: Adventure, raw: string): GameState {
       break;
     case 'rest': case 'camp': case 'sleep': case 'recover':
       doRest(s, adv);
+      break;
+    case 'light': case 'torch': case 'relight':
+      doLightTorch(s, adv);
       break;
     case 'map':
       doMap(s, adv);

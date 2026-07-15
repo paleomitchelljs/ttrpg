@@ -8,7 +8,7 @@ import { getAncestry } from '../lib/shadowdark/ancestries';
 import { getClass } from '../lib/shadowdark/classes';
 import type { Character } from '../lib/shadowdark/types';
 import { ADVENTURES, getAdventure } from '../lib/adventure/data';
-import { createGame, step } from '../lib/adventure/engine';
+import { createGame, migrateGameState, step } from '../lib/adventure/engine';
 import type { GameState } from '../lib/adventure/types';
 import {
   clearAdventureSave,
@@ -17,6 +17,7 @@ import {
   type AdventureSave,
 } from '../lib/storage';
 import { AdventurePlayer } from '../components/Adventure/AdventurePlayer';
+import { QuestGenerator } from '../components/Adventure/QuestGenerator';
 import { QuickTools } from '../components/Adventure/QuickTools';
 
 const MAX_PARTY = 4;
@@ -60,6 +61,10 @@ export function AdventureTab() {
 
   function embark() {
     if (!adventure) return;
+    // One autosave slot: don't let a new embark silently eat a game in progress.
+    if (save && !save.state.outcome && !confirm('Starting a new adventure will overwrite your saved game. Continue?')) {
+      return;
+    }
     const party = selectedIds
       .map((id) => characters.find((c) => c.id === id))
       .filter((c): c is Character => !!c);
@@ -72,7 +77,8 @@ export function AdventureTab() {
 
   function resume() {
     if (!save) return;
-    setGame(save.state);
+    // Old autosaves predate the crawler overhaul; patch in torchlight/initiative.
+    setGame(migrateGameState(save.state));
     setPartyIds(save.partyIds);
   }
 
@@ -235,6 +241,8 @@ export function AdventureTab() {
           {effectiveLevel > 1 ? ` · level ${effectiveLevel}` : ''}
         </button>
       </div>
+
+      <QuestGenerator />
 
       <div className="col" style={{ gap: '0.5rem' }}>
         <button className="ghost" onClick={() => setShowTools((s) => !s)} style={{ alignSelf: 'flex-start' }}>

@@ -146,10 +146,54 @@ export type MessageKind =
   | 'win'
   | 'lose';
 
+/** How a resolved roll turned out, used to pick the verdict banner. */
+export type RollOutcome =
+  | 'crit'
+  | 'hit'
+  | 'miss'
+  | 'fumble'
+  | 'success'
+  | 'failure'
+  | 'plain';
+
+/** One labeled slice of a roll's flat bonus, e.g. { label: "STR", value: 3 }. */
+export interface RollPart {
+  label: string;
+  value: number;
+}
+
+/** A die roll rendered cinematically (BG3-style) before its message is shown.
+ *  Serializable snapshot of everything the dice overlay needs to replay it. */
+export interface RollPayload {
+  kind: 'attack' | 'damage' | 'heal' | 'cast' | 'parley' | 'check';
+  /** Hero rolls get the full-screen treatment; enemy rolls play as toasts. */
+  side: 'hero' | 'enemy';
+  /** Headline, e.g. "Thorn attacks Goblin 2". */
+  title: string;
+  expression: string;
+  mode: 'normal' | 'advantage' | 'disadvantage';
+  /** Die size of the rolled dice (20 for checks; 6/8/… for damage). */
+  sides: number;
+  /** Kept die values, in roll order. */
+  rolls: number[];
+  /** The die dropped by advantage/disadvantage, if any. */
+  dropped?: number;
+  /** Modifier breakdown chips. */
+  parts: RollPart[];
+  total: number;
+  /** Number to beat (AC or DC), when this is a contested roll. */
+  target?: number;
+  /** Plate label, e.g. "AC 13" or "DC 12". */
+  targetLabel?: string;
+  outcome: RollOutcome;
+}
+
 export interface GameMessage {
   id: number;
   kind: MessageKind;
   text: string;
+  /** When set, the UI plays this roll before revealing the message text. */
+  roll?: RollPayload;
 }
 
 export interface PartyMemberState {
@@ -165,6 +209,8 @@ export interface PartyMemberState {
   ac: number;
   /** Charisma modifier, used for parley reaction rolls. */
   chaMod: number;
+  /** Dexterity modifier, used for initiative. */
+  dexMod: number;
   weaponName: string;
   /** Known spell names (empty for non-casters). */
   spells: string[];
@@ -191,12 +237,39 @@ export interface EnemyState {
   attacks: { name: string; bonus: number; damage: string }[];
   /** Monster tags, used to decide whether a foe can be reasoned with. */
   tags: string[];
+  /** Icon path relative to /public/, for the combat HUD card. */
+  icon?: string;
+}
+
+/** One slot in the initiative order: a hero (by character id) or an enemy
+ *  instance (by its fight-local id). */
+export interface TurnRef {
+  side: 'hero' | 'enemy';
+  refId: string;
+  name: string;
+  /** The initiative roll, shown on the tracker. */
+  init: number;
 }
 
 export interface CombatState {
   encounterId: string;
   enemies: EnemyState[];
   round: number;
+  /** Full initiative order (heroes and enemies interleaved), high roll first. */
+  order: TurnRef[];
+  /** Index into `order` of whoever is acting now. */
+  turnIndex: number;
+  /** Set once the surviving foes have tested their nerve (one check per fight). */
+  moraleChecked?: boolean;
+}
+
+/** Party light source. `lit` is the burn left on the current torch, measured in
+ *  "ticks" (one per room entered, one per combat round). 0 means darkness:
+ *  heroes attack with disadvantage, foes with advantage, and searching fails. */
+export interface LightState {
+  lit: number;
+  /** Spare torches carried. */
+  spares: number;
 }
 
 export interface GameState {
@@ -219,6 +292,8 @@ export interface GameState {
   searched: string[];
   /** Room ids where the party has already rested (one short rest per room). */
   rested: string[];
+  /** Torchlight tracking (Shadowdark's clock). */
+  light: LightState;
   mode: 'explore' | 'combat' | 'over';
   outcome?: 'win' | 'lose';
   combat?: CombatState;

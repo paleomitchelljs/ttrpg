@@ -1,19 +1,35 @@
-// The play view for an active text adventure: party HUD, scrolling transcript,
-// tappable action chips, and a typed command line. All game logic lives in the
-// engine; this component only renders state and forwards commands.
+// The play view for an active dungeon crawl: party HUD, initiative tracker,
+// enemy target cards, torch meter, scrolling transcript, tappable action chips,
+// and a typed command line. All game logic lives in the engine; this component
+// renders state, forwards commands, and — the showpiece — replays each recorded
+// die roll as a BG3-style cinematic before revealing what happened.
+//
+// Reveal queue: engine messages arrive in a batch after each command. Text
+// messages reveal immediately, but a message carrying a RollPayload pauses the
+// queue while the dice play (full-screen for hero rolls, corner toast for
+// enemies). "Fast dice" skips all theatrics.
 
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useArtUrl } from '../../lib/hooks';
 import { getSpell } from '../../lib/shadowdark/spells';
 import {
   activeMember,
   currentRoom,
   exitLabel,
+  inDarkness,
   livingEnemies,
   parleyOdds,
   roomItems,
+  TORCH_LIFE,
 } from '../../lib/adventure/engine';
-import type { Adventure, GameState, PartyMemberState } from '../../lib/adventure/types';
+import type {
+  Adventure,
+  EnemyState,
+  GameMessage,
+  GameState,
+  PartyMemberState,
+} from '../../lib/adventure/types';
+import { DiceCinematic, RollToast } from './DiceOverlay';
 
 interface Props {
   adventure: Adventure;
@@ -23,18 +39,66 @@ interface Props {
   onFinish: () => void;
 }
 
+const FAST_DICE_KEY = 'adv-fast-dice';
+
 export function AdventurePlayer({ adventure, state, onCommand, onExit, onFinish }: Props) {
   const [input, setInput] = useState('');
   const [showMap, setShowMap] = useState(false);
   const [spell, setSpell] = useState('');
+  const [fastDice, setFastDice] = useState(() => localStorage.getItem(FAST_DICE_KEY) === '1');
   const endRef = useRef<HTMLDivElement>(null);
 
-  const room = currentRoom(state, adventure);
-  const inCombat = state.mode === 'combat';
-  const over = state.mode === 'over';
-  const enemies = livingEnemies(state);
-  const items = roomItems(state, room);
-  const active = activeMember(state);
+  // ── reveal queue ──
+  const lastId = state.transcript.length ? state.transcript[state.transcript.length - 1].id : 0;
+  const [revealSeq, setRevealSeq] = useState(lastId); // resume shows history instantly
+  const [pendingRoll, setPendingRoll] = useState<GameMessage | null>(null);
+
+  useEffect(() => {
+    if (pendingRoll) return;
+    const queued = state.transcript.filter((m) => m.id > revealSeq);
+    if (!queued.length) return;
+    if (fastDice) {
+      setRevealSeq(lastId);
+      return;
+    }
+    const rollIdx = queued.findIndex((m) => m.roll);
+    if (rollIdx === -1) {
+      setRevealSeq(queued[queued.length - 1].id);
+    } else if (rollIdx > 0) {
+      setRevealSeq(queued[rollIdx - 1].id);
+    } else {
+      setPendingRoll(queued[0]);
+    }
+  }, [state.transcript, revealSeq, pendingRoll, fastDice, lastId]);
+
+  const onRollDone = useCallback(() => {
+    setPendingRoll((msg) => {
+      if (msg) setRevealSeq(msg.id);
+      return null;
+    });
+  }, []);
+
+  const visible = useMemo(
+    () => state.transcript.filter((m) => m.id <= revealSeq),
+    [state.transcript, revealSeq],
+  );
+  const busy = pendingRoll !== null || revealSeq < lastId;
+
+  // While dice are still playing, the HUD keeps showing the world as it was
+  // before the command — otherwise a foe's card would vanish (or the victory
+  // banner appear) before the die that did it even lands.
+  const hudRef = useRef(state);
+  if (!busy) hudRef.current = state;
+  const hud = hudRef.current;
+
+  const room = currentRoom(hud, adventure);
+  const inCombat = hud.mode === 'combat';
+  const over = hud.mode === 'over';
+  const enemies = livingEnemies(hud);
+  const items = roomItems(hud, room);
+  const active = activeMember(hud);
+  const light = hud.light ?? { lit: 0, spares: 0 };
+  const dark = inDarkness(hud);
 
   // The active caster's still-castable spells, grouped by level for the dropdown.
   const castable = active ? active.spells.filter((sp) => !active.spentSpells.includes(sp)) : [];
@@ -48,11 +112,11 @@ export function AdventurePlayer({ adventure, state, onCommand, onExit, onFinish 
     return [...m.entries()].sort((a, b) => a[0] - b[0]);
   })();
   // Live parley forecast: whether anyone will talk, and the roll the legwork buys.
-  const odds = inCombat ? parleyOdds(state, adventure) : null;
+  const odds = inCombat ? parleyOdds(hud, adventure) : null;
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
-  }, [state.transcript.length]);
+  }, [visible.length]);
 
   useEffect(() => {
     if (!showMap) return;
@@ -66,22 +130,36 @@ export function AdventurePlayer({ adventure, state, onCommand, onExit, onFinish 
   // Clear the spell selection when the active caster changes or combat ends.
   useEffect(() => {
     setSpell('');
-  }, [state.activeIndex, state.mode]);
+  }, [hud.activeIndex, hud.mode]);
+
+  function toggleFastDice() {
+    setFastDice((f) => {
+      localStorage.setItem(FAST_DICE_KEY, f ? '0' : '1');
+      return !f;
+    });
+  }
+
+  function run(cmd: string) {
+    if (busy) return;
+    onCommand(cmd);
+  }
 
   function submit() {
     const cmd = input.trim();
-    if (!cmd) return;
+    if (!cmd || busy) return;
     onCommand(cmd);
     setInput('');
   }
 
   function chip(label: string, cmd: string, extraClass = '') {
     return (
-      <button key={`${label}:${cmd}`} className={`adv-chip ${extraClass}`} onClick={() => onCommand(cmd)}>
+      <button key={`${label}:${cmd}`} className={`adv-chip ${extraClass}`} disabled={busy} onClick={() => run(cmd)}>
         {label}
       </button>
     );
   }
+
+  const showLightChip = light.spares > 0 && light.lit <= TORCH_LIFE / 2;
 
   return (
     <div className="col adv-play" style={{ gap: '0.9rem' }}>
@@ -89,10 +167,18 @@ export function AdventurePlayer({ adventure, state, onCommand, onExit, onFinish 
         <div className="col grow" style={{ gap: 0 }}>
           <div className="big-label">{room.name}</div>
           <div className="muted" style={{ fontSize: '0.8rem' }}>
-            {adventure.title} · {inCombat ? `Combat — round ${state.combat?.round ?? 1}` : over ? 'Finished' : 'Exploring'}
-            {state.powerLevel > 1 ? ` · scaled to L${state.powerLevel}` : ''}
+            {adventure.title} · {inCombat ? `Combat — round ${hud.combat?.round ?? 1}` : over ? 'Finished' : 'Exploring'}
+            {hud.powerLevel > 1 ? ` · scaled to L${hud.powerLevel}` : ""}
           </div>
         </div>
+        <TorchMeter lit={light.lit} spares={light.spares} />
+        <button
+          className={`ghost adv-dice-toggle ${fastDice ? '' : 'on'}`}
+          onClick={toggleFastDice}
+          title={fastDice ? 'Dice animations are off' : 'Dice animations are on'}
+        >
+          {fastDice ? '🎲 fast' : '🎲 cinematic'}
+        </button>
         {adventure.mapImage && (
           <button className="ghost" onClick={() => setShowMap(true)}>Map</button>
         )}
@@ -100,18 +186,30 @@ export function AdventurePlayer({ adventure, state, onCommand, onExit, onFinish 
       </div>
 
       <div className="adv-party-hud">
-        {state.party.map((m, i) => (
+        {hud.party.map((m, i) => (
           <MemberChip
             key={m.id}
             member={m}
-            active={inCombat && i === state.activeIndex}
-            onClick={() => onCommand(`select ${m.name}`)}
+            active={inCombat && i === hud.activeIndex}
+            onClick={() => run(`select ${m.name}`)}
           />
         ))}
       </div>
 
-      <div className="adv-transcript">
-        {state.transcript.map((msg) => (
+      {inCombat && hud.combat?.order?.length ? (
+        <InitiativeTracker state={hud} />
+      ) : null}
+
+      {inCombat && enemies.length > 0 && (
+        <div className="adv-foe-grid">
+          {enemies.map((e) => (
+            <FoeCard key={e.id} enemy={e} disabled={busy} onClick={() => run(`attack ${e.name}`)} />
+          ))}
+        </div>
+      )}
+
+      <div className={`adv-transcript ${dark ? 'dark' : ''}`}>
+        {visible.map((msg) => (
           <p key={msg.id} className={`adv-line adv-${msg.kind}`}>
             {msg.text}
           </p>
@@ -124,11 +222,8 @@ export function AdventurePlayer({ adventure, state, onCommand, onExit, onFinish 
           {inCombat ? (
             <>
               <span className="adv-action-label">
-                {active ? `${active.name}: attack` : 'Attack'}
+                {active ? `${active.name}'s turn` : 'Attack'}
               </span>
-              {enemies.map((e) =>
-                chip(`${e.name} (${e.hp.current}/${e.hp.max})`, `attack ${e.name}`, 'adv-chip-foe'),
-              )}
               {castable.length > 0 && (
                 <span className="adv-spellcast">
                   <select aria-label="Choose a spell to cast" value={spell} onChange={(e) => setSpell(e.target.value)}>
@@ -143,10 +238,10 @@ export function AdventurePlayer({ adventure, state, onCommand, onExit, onFinish 
                   </select>
                   <button
                     className="adv-chip adv-chip-spell"
-                    disabled={!spell}
+                    disabled={!spell || busy}
                     onClick={() => {
                       if (!spell) return;
-                      onCommand(`cast ${spell}`);
+                      run(`cast ${spell}`);
                       setSpell('');
                     }}
                   >
@@ -170,21 +265,22 @@ export function AdventurePlayer({ adventure, state, onCommand, onExit, onFinish 
                   </span>
                 </span>
               )}
+              {showLightChip && chip(`Light torch (${light.spares})`, 'light torch', 'adv-chip-torch')}
               {chip('Flee', 'flee', 'adv-chip-warn')}
               {chip('Look', 'look')}
-              {chip('Who', 'who')}
             </>
           ) : (
             <>
               {room.exits.map((ex) => chip(exitLabel(ex), `go ${ex.dir}`, 'adv-chip-exit'))}
               {items.map((it) => chip(`Take ${it.name}`, `take ${it.name}`))}
               {room.npcs.map((n) => chip(`Talk to ${n.name}`, `talk ${n.keywords[0] ?? n.name}`))}
+              {showLightChip && chip(`Light torch (${light.spares})`, 'light torch', 'adv-chip-torch')}
               {chip('Look', 'look')}
               {chip('Search', 'search')}
               {chip('Inventory', 'inventory')}
               {chip('Who', 'who')}
-              {(room.safe || (room.encounter?.flag ? state.flags.includes(room.encounter.flag) : !room.encounter)) &&
-                !state.rested.includes(room.id) &&
+              {(room.safe || (room.encounter?.flag ? hud.flags.includes(room.encounter.flag) : !room.encounter)) &&
+                !hud.rested.includes(room.id) &&
                 chip('Rest', 'rest', 'adv-chip-rest')}
             </>
           )}
@@ -192,11 +288,11 @@ export function AdventurePlayer({ adventure, state, onCommand, onExit, onFinish 
       )}
 
       {over ? (
-        <div className={`card adv-end adv-end-${state.outcome}`}>
-          <div className="big-label">{state.outcome === 'win' ? 'Victory!' : 'Defeated'}</div>
+        <div className={`card adv-end adv-end-${hud.outcome}`}>
+          <div className="big-label">{hud.outcome === "win" ? "Victory!" : "Defeated"}</div>
           <p className="muted" style={{ margin: '0.4rem 0' }}>
-            {state.outcome === 'win'
-              ? 'Your party conquered the adventure.'
+            {hud.outcome === "win"
+              ? 'Quest complete! Your heroes march out with the loot and the glory.'
               : 'Your party fell — but your saved heroes are unharmed.'}
           </p>
           <button className="primary" onClick={onFinish}>Return to portal</button>
@@ -211,8 +307,16 @@ export function AdventurePlayer({ adventure, state, onCommand, onExit, onFinish 
             aria-label="Command"
             autoFocus
           />
-          <button className="primary" onClick={submit}>Send</button>
+          <button className="primary" onClick={submit} disabled={busy}>Send</button>
         </div>
+      )}
+
+      {pendingRoll?.roll && (
+        pendingRoll.roll.side === 'hero' ? (
+          <DiceCinematic payload={pendingRoll.roll} onDone={onRollDone} />
+        ) : (
+          <RollToast payload={pendingRoll.roll} onDone={onRollDone} />
+        )
       )}
 
       {showMap && adventure.mapImage && (
@@ -237,6 +341,71 @@ export function AdventurePlayer({ adventure, state, onCommand, onExit, onFinish 
         </div>
       )}
     </div>
+  );
+}
+
+// ───────── HUD pieces ─────────
+
+function TorchMeter({ lit, spares }: { lit: number; spares: number }) {
+  const pct = Math.max(0, Math.min(100, Math.round((lit / TORCH_LIFE) * 100)));
+  const dark = lit <= 0;
+  const low = !dark && lit <= 4;
+  return (
+    <div className={`torch-meter ${dark ? 'dark' : low ? 'low' : ''}`} title={dark ? 'Darkness!' : `Torch: ${lit}/${TORCH_LIFE}`}>
+      <span className="torch-flame">{dark ? '🌑' : '🔥'}</span>
+      <span className="torch-bar">
+        <span className="torch-fill" style={{ width: `${pct}%` }} />
+      </span>
+      <span className="torch-spares">{dark ? 'DARK' : `×${spares}`}</span>
+    </div>
+  );
+}
+
+function InitiativeTracker({ state }: { state: GameState }) {
+  const combat = state.combat!;
+  const heroById = new Map(state.party.map((m) => [m.id, m]));
+  const foeById = new Map(combat.enemies.map((e) => [e.id, e]));
+  return (
+    <div className="init-tracker" aria-label="Initiative order">
+      <span className="init-label">Round {combat.round}</span>
+      {combat.order.map((t, i) => {
+        const hp =
+          t.side === 'hero' ? heroById.get(t.refId)?.hp : foeById.get(t.refId)?.hp;
+        const dead = (hp?.current ?? 0) <= 0;
+        const now = i === combat.turnIndex;
+        return (
+          <span
+            key={`${t.side}:${t.refId}`}
+            className={`init-chip ${t.side} ${now ? 'now' : ''} ${dead ? 'dead' : ''}`}
+          >
+            <span className="init-num">{t.init}</span>
+            {t.name}
+          </span>
+        );
+      })}
+    </div>
+  );
+}
+
+function FoeCard({ enemy, disabled, onClick }: { enemy: EnemyState; disabled: boolean; onClick: () => void }) {
+  const pct = Math.max(0, Math.round((enemy.hp.current / Math.max(1, enemy.hp.max)) * 100));
+  return (
+    <button className="foe-card" disabled={disabled} onClick={onClick} title={`Attack ${enemy.name}`}>
+      {enemy.icon ? (
+        <img className="foe-icon" src={`${import.meta.env.BASE_URL}${enemy.icon}`} alt="" />
+      ) : (
+        <span className="foe-icon placeholder">{enemy.name.slice(0, 1).toUpperCase()}</span>
+      )}
+      <span className="foe-body">
+        <span className="foe-name">{enemy.name}</span>
+        <span className="foe-hpbar">
+          <span className="foe-hpfill" style={{ width: `${pct}%` }} />
+        </span>
+        <span className="foe-hp">{enemy.hp.current}/{enemy.hp.max} HP</span>
+      </span>
+      <span className="foe-ac" title={`Armor class ${enemy.ac}`}>🛡 {enemy.ac}</span>
+      <span className="foe-attack-hint">⚔</span>
+    </button>
   );
 }
 
