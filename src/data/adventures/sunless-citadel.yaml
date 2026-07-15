@@ -33,6 +33,21 @@ synopsis: >-
   took them.
 recommended_party: "1–4 heroes, level 1"
 map_image: maps/sunless-citadel/fortress-level.png
+# Normalized 0-1 map geometry: pin = party marker spot, region = fog reveal.
+# Author with the in-app tool: Map -> Reference -> Calibrate (dev build).
+# The rift rooms (compost/grove/shrine) live below the fortress level, so they
+# have no spot on this map and reveal nothing - the Explored view covers them.
+map_calibration:
+  sc-dark-ravine: { pin: [0.88, 0.42], region: [0.80, 0.34, 0.19, 0.30] }
+  sc-crumbled-courtyard: { pin: [0.78, 0.70], region: [0.71, 0.60, 0.14, 0.22] }
+  sc-tower-shell: { pin: [0.68, 0.72], region: [0.60, 0.62, 0.15, 0.20] }
+  sc-gallery-of-forlorn-notes: { pin: [0.53, 0.86], region: [0.44, 0.76, 0.18, 0.18] }
+  sc-dragons-riddle: { pin: [0.36, 0.84], region: [0.24, 0.75, 0.20, 0.18] }
+  sc-tomb-of-the-failed-dragonpriest: { pin: [0.17, 0.80], region: [0.11, 0.71, 0.15, 0.20] }
+  sc-hall-of-dragons: { pin: [0.20, 0.25], region: [0.12, 0.15, 0.19, 0.19] }
+  sc-dragon-pen: { pin: [0.115, 0.16], region: [0.04, 0.06, 0.14, 0.18] }
+  sc-goblinville: { pin: [0.31, 0.50], region: [0.21, 0.40, 0.22, 0.19] }
+  sc-hall-of-the-goblin-chief: { pin: [0.49, 0.46], region: [0.40, 0.33, 0.18, 0.24] }
 intro: >-
   The Old Road runs east from Oakhurst to a rocky cleft where broken pillars lean over
   a dark ravine. A knotted rope dangles into the gloom. Somewhere below, the brother

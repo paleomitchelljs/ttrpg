@@ -83,7 +83,7 @@ const DIR_ALIASES: Record<string, string> = {
   out: 'out', outside: 'out', exit: 'out',
 };
 
-function normalizeDir(token: string | undefined): string | undefined {
+export function normalizeDir(token: string | undefined): string | undefined {
   if (!token) return undefined;
   return DIR_ALIASES[token] ?? token;
 }

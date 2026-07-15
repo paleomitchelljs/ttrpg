@@ -31,6 +31,7 @@ import type {
   TurnRef,
 } from '../../lib/adventure/types';
 import { DiceCinematic, RollToast } from '../Dice/DiceOverlay';
+import { MapOverlay } from './MapOverlay';
 
 interface Props {
   adventure: Adventure;
@@ -180,9 +181,7 @@ export function AdventurePlayer({ adventure, state, onCommand, onExit, onFinish 
         >
           {fastDice ? '🎲 fast' : '🎲 cinematic'}
         </button>
-        {adventure.mapImage && (
-          <button className="ghost" onClick={() => setShowMap(true)}>Map</button>
-        )}
+        <button className="ghost" onClick={() => setShowMap(true)}>Map</button>
         <button className="ghost" onClick={onExit}>Save &amp; exit</button>
       </div>
 
@@ -320,26 +319,8 @@ export function AdventurePlayer({ adventure, state, onCommand, onExit, onFinish 
         )
       )}
 
-      {showMap && adventure.mapImage && (
-        <div
-          className="map-overlay"
-          onClick={() => setShowMap(false)}
-          role="dialog"
-          aria-modal="true"
-          aria-label={`${adventure.title} map`}
-        >
-          <div className="map-overlay-inner" onClick={(e) => e.stopPropagation()}>
-            <div className="map-overlay-header">
-              <div className="big-label">{adventure.title} — map</div>
-              <button onClick={() => setShowMap(false)} aria-label="Close map">✕</button>
-            </div>
-            <img
-              className="map-overlay-img"
-              src={`${import.meta.env.BASE_URL}${adventure.mapImage}`}
-              alt={`${adventure.title} map`}
-            />
-          </div>
-        </div>
+      {showMap && (
+        <MapOverlay adventure={adventure} state={hud} onClose={() => setShowMap(false)} />
       )}
     </div>
   );

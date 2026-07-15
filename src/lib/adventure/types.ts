@@ -102,10 +102,29 @@ export interface AdvEncounter {
   parley?: AdvParley;
 }
 
+/** A point on the reference map, in normalized 0–1 image coordinates. */
+export interface MapPoint {
+  x: number;
+  y: number;
+}
+
+/** A rectangle on the reference map, normalized 0–1 (x/y = top-left). */
+export interface MapRect {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
+}
+
 export interface AdvRoom {
   id: string;
   name: string;
   description: string;
+  /** Where the party marker sits on the reference map (normalized coords).
+   *  Authored via the adventure-level `map_calibration` YAML block. */
+  mapPin?: MapPoint;
+  /** The patch of reference map this room reveals through the fog. */
+  mapRegion?: MapRect;
   /** Extra text shown only on first entry. */
   firstVisit?: string;
   /** Text revealed by `search`. */

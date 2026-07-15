@@ -90,6 +90,14 @@ interface RawRoom {
   win_text?: string;
 }
 
+/** Per-room map geometry: `pin: [x, y]` and/or `region: [x, y, w, h]`, all in
+ *  normalized 0–1 image coordinates. Authored (or pasted from the in-app
+ *  calibration tool) as one adventure-level block so room bodies stay clean. */
+interface RawCalibration {
+  pin?: [number, number];
+  region?: [number, number, number, number];
+}
+
 interface RawAdventure {
   id: string;
   title: string;
@@ -97,6 +105,7 @@ interface RawAdventure {
   synopsis: string;
   recommended_party?: string;
   map_image?: string;
+  map_calibration?: Record<string, RawCalibration>;
   intro?: string;
   start: string;
   rooms: RawRoom[];
@@ -176,6 +185,12 @@ function normRoom(r: RawRoom): AdvRoom {
 
 function normAdventure(raw: RawAdventure): Adventure {
   const rooms = raw.rooms.map(normRoom);
+  for (const room of rooms) {
+    const cal = raw.map_calibration?.[room.id];
+    if (!cal) continue;
+    if (cal.pin) room.mapPin = { x: cal.pin[0], y: cal.pin[1] };
+    if (cal.region) room.mapRegion = { x: cal.region[0], y: cal.region[1], w: cal.region[2], h: cal.region[3] };
+  }
   const roomsById: Record<string, AdvRoom> = {};
   for (const room of rooms) roomsById[room.id] = room;
   return {
