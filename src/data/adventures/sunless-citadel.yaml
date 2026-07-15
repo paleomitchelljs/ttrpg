@@ -69,6 +69,7 @@ rooms:
       - { keywords: [runes, draconic, ashardalon, wall], text: "The old Draconic runes spell 'Ashardalon.' A name said with dread." }
       - { keywords: [goblin, goblins, corpse, body, spear, bodies], text: "Four long-dead goblins sprawl in the dust. One is pinned to the wall by the spear that killed him. The kobolds and goblins have been at war down here a long time." }
     items:
+      - { name: "Adventurer's torch bundle", description: "A previous delver's torches, dropped in flight and still serviceable.", torches: 2 }
       - { name: "Pinning spear", description: "A serviceable, if grim, spear pried from a dead goblin." }
     exits:
       - { dir: out, to: sc-crumbled-courtyard, label: "Back out to the courtyard" }

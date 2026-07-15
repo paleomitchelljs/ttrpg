@@ -20,7 +20,11 @@ function verdictText(p: RollPayload): string {
     case 'success': return 'SUCCESS!';
     case 'failure': return 'FAILED';
     case 'plain':
-      return p.kind === 'heal' ? `+${p.total} HP` : `${p.total} DAMAGE`;
+      // Damage/healing announce their total; an uncontested d20 (a character-
+      // sheet check with no DC) just lets the number speak.
+      if (p.kind === 'heal') return `+${p.total} HP`;
+      if (p.kind === 'damage') return `${p.total} DAMAGE`;
+      return '';
   }
 }
 

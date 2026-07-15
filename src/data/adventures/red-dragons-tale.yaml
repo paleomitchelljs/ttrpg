@@ -35,6 +35,8 @@ rooms:
       - { dir: out, to: rdt-garden, label: "Out to the garden" }
 
   - id: rdt-guest-rooms
+    items:
+      - { name: "Innkeep's torches", description: "Spare torches from the guest-room sconces.", torches: 2 }
     name: The Guest Rooms
     description: "A hall of small rented rooms, each furnished with a bed, a chest, and a wardrobe. The furniture sits very still. Too still. One chest is breathing."
     encounter:

@@ -6,8 +6,9 @@
 // damage, HP tracked per combatant. Every die roll goes through `rollAndLog`
 // so it also shows up in the shared Dice log.
 
-import { formatMod, pick, statMod, type RollMode } from '../dice';
+import { formatMod, pick, statMod } from '../dice';
 import { rollAndLog } from '../rollLog';
+import { checkPassed, checkRoll, damageRoll } from '../cinematicRoll';
 import { getMonster } from '../shadowdark/monsters';
 import { characterCombatProfile } from '../shadowdark/combat';
 import { getSpell } from '../shadowdark/spells';
@@ -35,103 +36,9 @@ function push(s: GameState, kind: MessageKind, text: string, roll?: RollPayload)
   s.transcript.push({ id: s.messageSeq++, kind, text, roll });
 }
 
-// ───────── cinematic rolls ─────────
-//
-// Every dramatic die roll goes through `checkRoll`/`damageRoll` so it (a) hits
-// the shared Dice log and (b) carries a RollPayload the play UI replays as a
-// BG3-style animated roll before revealing the message text.
-
-interface CheckOpts {
-  kind: RollPayload['kind'];
-  side: 'hero' | 'enemy';
-  title: string;
-  mode?: RollMode;
-  /** Labeled modifier breakdown; the sum is the flat bonus on the d20. */
-  parts: RollPart[];
-  /** Number to beat (AC or DC). Omit for uncontested rolls. */
-  target?: number;
-  targetLabel?: string;
-}
-
-function checkRoll(opts: CheckOpts): RollPayload {
-  const mode = opts.mode ?? 'normal';
-  const bonus = opts.parts.reduce((a, p) => a + p.value, 0);
-  const expr = `1d20${bonus !== 0 ? formatMod(bonus) : ''}`;
-  const r = rollAndLog(expr, mode, opts.title);
-  let outcome: RollPayload['outcome'] = 'plain';
-  const win = opts.kind === 'attack' ? 'hit' : 'success';
-  const lose = opts.kind === 'attack' ? 'miss' : 'failure';
-  if (r.isCrit) outcome = 'crit';
-  else if (r.isFumble) outcome = 'fumble';
-  else if (opts.target !== undefined) outcome = r.total >= opts.target ? win : lose;
-  return {
-    kind: opts.kind,
-    side: opts.side,
-    title: opts.title,
-    expression: expr,
-    mode,
-    sides: 20,
-    rolls: r.dice.map((d) => Math.abs(d.value)),
-    dropped: r.dice[0]?.dropped,
-    parts: opts.parts.filter((p) => p.value !== 0),
-    total: r.total,
-    target: opts.target,
-    targetLabel: opts.targetLabel,
-    outcome,
-  };
-}
-
-/** A payload-check succeeded (crits always do, fumbles never). */
-function checkPassed(p: RollPayload): boolean {
-  return p.outcome === 'crit' || p.outcome === 'hit' || p.outcome === 'success';
-}
-
-interface DamageOpts {
-  side: 'hero' | 'enemy';
-  title: string;
-  /** "2d6+1" or a flat number; dice are doubled on a crit. */
-  damage: string;
-  crit?: boolean;
-  kind?: 'damage' | 'heal';
-}
-
-/** Roll damage/healing with a payload. Returns the payload; total is min 1. */
-function damageRoll(opts: DamageOpts): RollPayload {
-  const kind = opts.kind ?? 'damage';
-  const m = opts.damage.match(/^(\d+)d(\d+)([+-]\d+)?$/i);
-  if (m) {
-    const count = parseInt(m[1], 10) * (opts.crit ? 2 : 1);
-    const sides = parseInt(m[2], 10);
-    const mod = m[3] ? parseInt(m[3], 10) : 0;
-    const expr = `${count}d${sides}${mod !== 0 ? formatMod(mod) : ''}`;
-    const r = rollAndLog(expr, 'normal', opts.title);
-    return {
-      kind,
-      side: opts.side,
-      title: opts.title,
-      expression: expr,
-      mode: 'normal',
-      sides,
-      rolls: r.dice.map((d) => Math.abs(d.value)),
-      parts: mod !== 0 ? [{ label: 'bonus', value: mod }] : [],
-      total: Math.max(1, r.total),
-      outcome: 'plain',
-    };
-  }
-  const flat = Math.max(1, (parseInt(opts.damage, 10) || 1) * (opts.crit ? 2 : 1));
-  return {
-    kind,
-    side: opts.side,
-    title: opts.title,
-    expression: String(flat),
-    mode: 'normal',
-    sides: 0,
-    rolls: [],
-    parts: [{ label: 'flat', value: flat }],
-    total: flat,
-    outcome: 'plain',
-  };
-}
+// Every dramatic die roll goes through the shared `checkRoll`/`damageRoll`
+// builders (lib/cinematicRoll.ts) so it (a) hits the shared Dice log and
+// (b) carries a RollPayload the play UI replays as a BG3-style animated roll.
 
 // ───────── torchlight ─────────
 //
@@ -643,6 +550,16 @@ function doTake(s: GameState, adv: Adventure, target: string) {
     return;
   }
   s.takenItems.push(itemKey(room.id, item.name));
+  // Torch caches become spare torches, not pack loot.
+  if (item.torches) {
+    s.light.spares += item.torches;
+    push(
+      s,
+      'result',
+      `Taken: ${item.name}. +${item.torches} torch${item.torches === 1 ? '' : 'es'} for the packs (${s.light.spares} spare${s.light.spares === 1 ? '' : 's'} now).`,
+    );
+    return;
+  }
   s.inventory.push(item);
   push(s, 'result', `Taken: ${item.name}.`);
 }

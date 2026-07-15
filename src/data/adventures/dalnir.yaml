@@ -64,6 +64,8 @@ rooms:
       - { dir: e, to: dalnir-offering-hall, label: "East, to a hall of offerings" }
 
   - id: dalnir-thieves-end
+    items:
+      - { name: "Thieves' torch stash", description: "The dead thieves packed spare torches. They won't be needing them.", torches: 2 }
     name: The Thieves' End
     description: "A dead-end chamber where the criminals met their fate, their gear and bones scattered, a smoldering goo creeping over the remains. One faint ghost lingers, clutching a stolen idol."
     npcs:

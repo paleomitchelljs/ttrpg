@@ -64,6 +64,8 @@ rooms:
       - { dir: down, to: php-gullet, label: "Down into the head" }
 
   - id: php-gullet
+    items:
+      - { name: "Pilgrim's torches", description: "Votive torches left by pilgrims who once tended the prison-shrine.", torches: 2 }
     name: The Hollow of the Head
     description: "The hollow heart of the carved skull, where the two ways in meet. Inscriptions cover every surface, the priests' record of a trial and a sentence. Passages lead off to a sealed vault, a row of cells, a flooded undercroft, and down into the deepest dark."
     features:

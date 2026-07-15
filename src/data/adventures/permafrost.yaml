@@ -81,6 +81,7 @@ rooms:
       victory_text: "The ghoul shatters like an icicle. Brannon lets out a shaky breath."
       flag: pf-jail-cleared
     items:
+      - { name: "Jailer's torch bundle", description: "Frost-rimed but dry torches from the jailer's alcove.", torches: 2 }
       - { name: "Cell keyring", description: "A ring of crude iron keys taken from the ghoul. They fit the cells, and maybe other locks." }
     exits:
       - { dir: w, to: permafrost-flag-room, label: "Back to the Flag Room" }

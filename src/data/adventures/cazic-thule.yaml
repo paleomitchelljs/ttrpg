@@ -65,6 +65,8 @@ rooms:
       - { dir: w, to: cazic-thule-courtyard, label: "Back to the courtyard" }
 
   - id: cazic-thule-sewers
+    items:
+      - { name: "Oil-soaked torches", description: "A waxed satchel of torches, kept dry above the waterline by some earlier explorer.", torches: 2 }
     name: The Sewers
     description: "Low, flooded tunnels run beneath the temple, a foul confusing warren the lizards use to move unseen. An escape this way would be slow and grim."
     encounter:

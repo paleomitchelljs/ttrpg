@@ -51,6 +51,8 @@ rooms:
       - { dir: down, to: kaesora-library-descent, label: "Down a dark stair into the library" }
 
   - id: kaesora-collapsed-hall
+    items:
+      - { name: "Fallen explorer's torches", description: "A split pack beneath the rubble still holds good torches.", torches: 2 }
     name: Collapsed Hall
     description: "A long hall with its roof fallen in, strung floor to ceiling with pale webs. This is the spiders' half of Kaesora, and they do not share it."
     encounter:

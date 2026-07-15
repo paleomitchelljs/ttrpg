@@ -62,6 +62,8 @@ rooms:
       - { dir: n, to: citymist-dead-legion, label: "North, toward marching echoes" }
 
   - id: citymist-merchant-stalls
+    items:
+      - { name: "Lamplighter's torches", description: "A market stall's stock of torches, untouched since the city fell.", torches: 2 }
     name: The Merchant Stalls
     description: "A row of collapsed trade-stalls, their goods long rotted. The ghostly merchants still clutch their finest stock: gems, in dead grey hands."
     encounter:

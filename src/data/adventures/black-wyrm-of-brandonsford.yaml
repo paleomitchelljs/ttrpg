@@ -84,6 +84,8 @@ rooms:
       - { dir: out, to: bwb-deep-forest, label: "Back to the forest" }
 
   - id: bwb-goblin-camp
+    items:
+      - { name: "Goblin torch bundle", description: "Pitch-dipped torches the goblins kept for night raids.", torches: 2 }
     name: The Goblin Camp
     description: "A stockade of stolen fenceposts, loud with drums. With the people gone, the goblins have crowned themselves lords of the wood, and their king Hogboon holds court on a chair of antlers."
     encounter:

@@ -1721,3 +1721,26 @@ details.card[open] > summary::before { content: '▾ '; }
   .dice-verdict { font-size: 1.5rem; }
   .roll-toast { top: auto; bottom: 5.5rem; right: 0.5rem; min-width: 12rem; }
 }
+
+/* Initiative chip faces (hero portraits / monster icons) */
+.init-face {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: var(--bg-3);
+  flex-shrink: 0;
+}
+img.init-face { border: 1px solid var(--border-strong); }
+.init-chip.enemy img.init-face { border-color: rgba(194, 84, 80, 0.6); padding: 2px; object-fit: contain; }
+.init-face-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-size: 0.7rem;
+  color: var(--ink-dim);
+  border: 1px solid var(--border);
+}
+.init-chip.now img.init-face, .init-chip.now .init-face-fallback { border-color: var(--accent); }
+.init-chip.dead .init-face { filter: grayscale(1); opacity: 0.5; }

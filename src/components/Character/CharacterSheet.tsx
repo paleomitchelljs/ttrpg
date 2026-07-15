@@ -18,7 +18,10 @@ import { STAT_IDS, STAT_NAMES } from '../../lib/shadowdark/types';
 import type { Character, Equipment, StatId } from '../../lib/shadowdark/types';
 import { useArtUrl, emitCharactersChanged } from '../../lib/hooks';
 import { saveCharacter } from '../../lib/storage';
-import { rollAndLog, useLatestRoll } from '../../lib/rollLog';
+import { useLatestRoll } from '../../lib/rollLog';
+import { checkRoll, damageRoll } from '../../lib/cinematicRoll';
+import type { RollPayload } from '../../lib/adventure/types';
+import { DiceCinematic } from '../Dice/DiceOverlay';
 
 type SheetTab = 'stats' | 'gear' | 'spells' | 'about';
 
@@ -35,6 +38,16 @@ export function CharacterSheet({ character, onEdit, onClose, onDelete }: Props) 
   const portraitUrl = useArtUrl(character.portraitArtId);
   const [tab, setTab] = useState<SheetTab>('stats');
   const latestRoll = useLatestRoll();
+  // Cinematic queue for tapped rolls; each entry plays as a full-screen die.
+  // `cineSeq` keys the overlay so consecutive payloads remount (reset phases).
+  const [cine, setCine] = useState<RollPayload[]>([]);
+  const [cineSeq, setCineSeq] = useState(0);
+
+  function playRolls(payloads: RollPayload[]) {
+    // Same preference as the adventure crawl: fast dice = numbers only.
+    if (localStorage.getItem('adv-fast-dice') === '1') return;
+    setCine((q) => [...q, ...payloads]);
+  }
 
   const equipment: Equipment = character.equipment ?? {};
   const mainHand = findWeapon(equipment.mainHand);
@@ -60,20 +73,32 @@ export function CharacterSheet({ character, onEdit, onClose, onDelete }: Props) 
   }
 
   function rollAttack() {
-    const mod = attackMod;
-    const expr = `1d20${mod >= 0 ? '+' : ''}${mod}`;
-    const label = `${character.name}: Attack${mainHand ? ` (${mainHand.name})` : ''}`;
-    const attack = rollAndLog(expr, 'normal', label);
-    // Always roll damage too so kid sees the number to subtract.
-    const dmgExpr = `1${damageDie}${damageMod >= 0 ? '+' : ''}${damageMod}`;
-    rollAndLog(dmgExpr, 'normal', `${character.name}: Damage`);
-    return attack;
+    const attack = checkRoll({
+      kind: 'attack',
+      side: 'hero',
+      title: `${character.name}: Attack${mainHand ? ` (${mainHand.name})` : ''}`,
+      parts: [{ label: mainHand?.name ?? 'Unarmed', value: attackMod }],
+    });
+    // Always roll damage too so kid sees the number to subtract; a natural 20
+    // doubles the dice, just like in the dungeon crawl.
+    const dmg = damageRoll({
+      side: 'hero',
+      title: `${character.name}: Damage`,
+      damage: `1${damageDie}${damageMod >= 0 ? '+' : ''}${damageMod}`,
+      crit: attack.outcome === 'crit',
+    });
+    playRolls([attack, dmg]);
   }
 
   function rollStat(stat: StatId) {
     const mod = statMod(character.stats[stat]);
-    const expr = `1d20${mod >= 0 ? '+' : ''}${mod}`;
-    rollAndLog(expr, 'normal', `${character.name}: ${STAT_NAMES[stat]} check`);
+    const check = checkRoll({
+      kind: 'check',
+      side: 'hero',
+      title: `${character.name}: ${STAT_NAMES[stat]} check`,
+      parts: [{ label: stat, value: mod }],
+    });
+    playRolls([check]);
   }
 
   // One-handed melee weapons that can sit in an off-hand.
@@ -236,6 +261,17 @@ export function CharacterSheet({ character, onEdit, onClose, onDelete }: Props) 
             );
           })}
         </div>
+      )}
+
+      {cine.length > 0 && (
+        <DiceCinematic
+          key={cineSeq}
+          payload={cine[0]}
+          onDone={() => {
+            setCine((q) => q.slice(1));
+            setCineSeq((n) => n + 1);
+          }}
+        />
       )}
 
       {tab === 'about' && (

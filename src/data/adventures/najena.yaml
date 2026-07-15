@@ -62,6 +62,8 @@ rooms:
       - { dir: down, to: najena-drelzna-chamber, label: "Down, to a sealed inner stair" }
 
   - id: najena-torture-rooms
+    items:
+      - { name: "Brazier torches", description: "Torches stacked beside the cold brazier, meant for crueler work.", torches: 2 }
     name: The Torture Rooms
     description: "Cramped chambers of rusted iron and cold chains, where Najena's apprentices keep their unwilling 'guests.' A dark elf necromancer looks up from his grim work."
     encounter:

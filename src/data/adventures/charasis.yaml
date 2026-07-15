@@ -63,6 +63,8 @@ rooms:
       - { dir: w, to: charasis-west-wing, label: "West, through the sealed wing-doors", locked_by: ch-keeper-cleared, locked_text: "The wing-doors hold fast and their key-sockets sit empty. The Crypt Keeper keeps the keys in his vault to the east. Take them from him first." }
 
   - id: charasis-keepers-vault
+    items:
+      - { name: "Keeper's torch bundle", description: "Ancient but sound torches, sealed in oilcloth by the tomb's keepers.", torches: 2 }
     name: The Crypt Keeper's Vault
     description: "A low vault stacked with the tomb's keys, ledgers, and grave-goods. The Crypt Keeper looks up from his counting, a necromancer-warden annoyed at the interruption."
     encounter:

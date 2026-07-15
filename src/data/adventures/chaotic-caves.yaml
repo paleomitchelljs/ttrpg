@@ -96,6 +96,8 @@ rooms:
       - { dir: out, to: cc-ravine, label: "Back to the ravine" }
 
   - id: cc-hobgoblin-barracks
+    items:
+      - { name: "Barracks torch rack", description: "Regulation hobgoblin torches, cut to a uniform length.", torches: 2 }
     name: The Hobgoblin Barracks
     description: "A disciplined, swept-stone barracks, ranks of bedrolls, weapons racked and gleaming. The hobgoblins are the ravine's bullies, and their chief Grosh has done something none of these tribes should manage: he has organized. A strange stone idol sits on a shelf behind him, plainly looted from somewhere lower."
     encounter:

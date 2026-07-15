@@ -28,8 +28,9 @@ import type {
   GameMessage,
   GameState,
   PartyMemberState,
+  TurnRef,
 } from '../../lib/adventure/types';
-import { DiceCinematic, RollToast } from './DiceOverlay';
+import { DiceCinematic, RollToast } from '../Dice/DiceOverlay';
 
 interface Props {
   adventure: Adventure;
@@ -369,21 +370,50 @@ function InitiativeTracker({ state }: { state: GameState }) {
     <div className="init-tracker" aria-label="Initiative order">
       <span className="init-label">Round {combat.round}</span>
       {combat.order.map((t, i) => {
-        const hp =
-          t.side === 'hero' ? heroById.get(t.refId)?.hp : foeById.get(t.refId)?.hp;
-        const dead = (hp?.current ?? 0) <= 0;
-        const now = i === combat.turnIndex;
+        const hero = t.side === 'hero' ? heroById.get(t.refId) : undefined;
+        const foe = t.side === 'enemy' ? foeById.get(t.refId) : undefined;
+        const hp = hero?.hp ?? foe?.hp;
         return (
-          <span
+          <InitChip
             key={`${t.side}:${t.refId}`}
-            className={`init-chip ${t.side} ${now ? 'now' : ''} ${dead ? 'dead' : ''}`}
-          >
-            <span className="init-num">{t.init}</span>
-            {t.name}
-          </span>
+            turn={t}
+            hero={hero}
+            foe={foe}
+            now={i === combat.turnIndex}
+            dead={(hp?.current ?? 0) <= 0}
+          />
         );
       })}
     </div>
+  );
+}
+
+function InitChip({
+  turn,
+  hero,
+  foe,
+  now,
+  dead,
+}: {
+  turn: TurnRef;
+  hero?: PartyMemberState;
+  foe?: EnemyState;
+  now: boolean;
+  dead: boolean;
+}) {
+  const portraitUrl = useArtUrl(hero?.portraitArtId);
+  const iconUrl = foe?.icon ? `${import.meta.env.BASE_URL}${foe.icon}` : undefined;
+  const faceUrl = portraitUrl ?? iconUrl;
+  return (
+    <span className={`init-chip ${turn.side} ${now ? 'now' : ''} ${dead ? 'dead' : ''}`}>
+      {faceUrl ? (
+        <img className="init-face" src={faceUrl} alt="" />
+      ) : (
+        <span className="init-face init-face-fallback">{turn.name.slice(0, 1).toUpperCase()}</span>
+      )}
+      <span className="init-num">{turn.init}</span>
+      {turn.name}
+    </span>
   );
 }
 

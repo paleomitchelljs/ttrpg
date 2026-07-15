@@ -25,6 +25,9 @@ export interface AdvItem {
   description?: string;
   /** Optional flavour gold value, surfaced in the end summary. */
   gold?: number;
+  /** Torch fuel: taking this item adds N spare torches instead of going into
+   *  the pack (it can't be dropped, offered, or lost — it's light, not loot). */
+  torches?: number;
 }
 
 export interface AdvFeature {

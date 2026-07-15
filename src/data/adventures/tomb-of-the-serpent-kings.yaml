@@ -34,6 +34,8 @@ rooms:
       - { dir: in, to: tsk-entry-hall, label: "Down through the hidden floor passage" }
 
   - id: tsk-entry-hall
+    items:
+      - { name: "Grave-offering torches", description: "Ceremonial torches left as offerings. The dead see fine without them.", torches: 2 }
     name: The Entry Hall
     description: "A low hall beyond the trick door, lined with empty niches. The dust here is undisturbed for a very long time. A stair descends into the dark."
     features:
