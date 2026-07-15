@@ -70,7 +70,7 @@ rooms:
       - name: "Sythik's Ghost"
         keywords: [sythik, ghost, thief, criminal, spirit]
         sets_flag: dl-met-sythik
-        text: "We only wanted gold. We never should have touched his idol. The Kly woke, and he's no tomb-haunt. He's a sarnak wizard, and he'll burn you to ash if you fight him. But he only wants the crypt put right. Take the idol back to him in the burial chamber. Give it over. Maybe then he lets you live."
+        text: "We only wanted gold. We never should have touched his idol. The Kly woke, and he's no tomb-haunt. He's a sarnak wizard, and he'll burn you to ash if you fight him. But he only wants the crypt put right. Take the idol down to his sanctum, the burial chamber at the bottom of the crypt. Give it over. Maybe then he lets you live."
     encounter:
       id: dl-thieves-fight
       monsters: [eq-dalnir-smoldering-goo, eq-dalnir-coerced-thrall]

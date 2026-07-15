@@ -195,7 +195,7 @@ export function CharacterSheet({ character, onEdit, onClose, onDelete }: Props) 
                 <div className="stat-tile-name">{id}</div>
                 <div className="stat-tile-score">{character.stats[id]}</div>
                 <div className="stat-tile-mod">{formatMod(mod)}</div>
-                <div className="stat-tile-tap">tap to roll</div>
+                <div className="stat-tile-tap">Tap to roll</div>
               </button>
             );
           })}

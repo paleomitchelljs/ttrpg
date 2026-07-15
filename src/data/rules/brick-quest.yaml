@@ -1,0 +1,196 @@
+# Brick Quest — the house kid ruleset. Playable entirely out loud: paper (or
+# memory) for the hero, Legos for the table, and the Dice tab as the only roller.
+#
+# Design intent: seven stats a young kid can hold in their head, paired so each
+# attack stat has a matching defense stat. No classes — heroes are stat points
+# plus feats, so a knight who learns Healing Light is just as legal as a wizard
+# with a big shield. One die (d20), three difficulty numbers, hearts instead of
+# hit points, and nobody ever dies — heroes get knocked out and wake up after.
+# Schema matches eq-rpg.yaml: chassis + sections[] (entries[]).
+
+id: brick-quest
+name: Brick Quest
+# Not the engine, but not reference-only either: played out loud at the table.
+house: true
+publisher: Homebrew (this app)
+license: House rules — free
+year: 2026
+edition: First Edition
+dice_system: One d20 for everything (use the Dice tab)
+ability_scores: [Sword, Shield, Spark, Ward, Wisdom, Dexterity, Charisma]
+saving_throws: [Shield (vs hits), Ward (vs magic), Wisdom (vs tricks)]
+setting: Any — whatever is on the table
+summary: |
+  The portal's own kid-sized ruleset, made to be played out loud with toys as the
+  heroes and monsters and a phone as the only dice roller. Seven stats in three
+  pairs-and-a-trio: Sword and Shield for fighting, Spark and Ward for magic, and
+  Wisdom, Dexterity, and Charisma for tricks — seeing through them, handling them,
+  and telling them. Roll a d20, add one stat, try to beat 10 (13 if it's hard,
+  16 if it's very hard). Heroes have hearts instead of hit points, get knocked
+  out instead of dying, and grow by picking feats instead of classes.
+
+sections:
+  - id: how-to-play
+    name: How to play
+    description: "The whole game: one die, one stat, one target number."
+    entries:
+      - id: the-roll
+        name: The roll
+        summary: "Want to do something tricky? Roll a d20 and add one stat. Beat 10 and you do it. The GM can say a thing is hard (beat 13) or very hard (beat 16). A natural 20 is always amazing; a natural 1 always goes funny-wrong."
+      - id: which-stat
+        name: Which stat?
+        summary: "Hitting things is Sword. Blasting with magic is Spark. Spotting a lie, an illusion, or a hidden danger is Wisdom. Dodging, sneaking, climbing, and grabbing is Dexterity. Talking a monster around is Charisma. Shield and Ward are not rolled — they are what monsters have to beat to hurt you."
+      - id: helping
+        name: Helping a friend
+        summary: "If you can explain how you help (and it makes sense), your friend adds +2 to their roll. Only one helper per roll."
+      - id: fighting
+        name: Fighting
+        summary: "On your turn, do one thing: attack (roll Sword or Spark against the monster's beat number — a hit knocks off 1 heart, a natural 20 knocks off 2), or cast a trick, or help, or talk. Then the monsters go: the GM rolls a d20 for each — claws and weapons must beat your Block (10 + Shield), magic must beat your Warding (10 + Ward). If it beats you, you lose 1 heart."
+      - id: hearts
+        name: Hearts
+        summary: "Heroes start with 3 hearts. At 0 hearts you are knocked out — you can't act, but you are NOT dead. When the fight ends, knocked-out heroes wake up with 1 heart. Once per adventure the whole party can take a snack break and get all their hearts back."
+      - id: talking
+        name: Talking instead of fighting
+        summary: "Any monster that can talk can be talked to. Roll Charisma: beat 10 if it's friendly-ish, 13 if it's angry, 16 if it's a boss. Offering it something it wants adds +2. Mindless things — oozes, skeletons, robots — can't be talked to, only tricked (Dexterity) or out-thought (Wisdom)."
+
+  - id: stats
+    name: The seven stats
+    description: "Three pairs and a trio. Attack stats are rolled; defense stats are targets monsters must beat."
+    entries:
+      - id: sword
+        name: Sword (physical offense)
+        summary: "Hitting, smashing, shooting, and throwing. Roll it to attack with any weapon — or your fists."
+      - id: shield
+        name: Shield (physical defense)
+        summary: "Not rolled. Your Block is 10 + Shield; claws, swords, and arrows must beat it to hurt you."
+      - id: spark
+        name: Spark (magic offense)
+        summary: "Zaps, fireballs, freeze rays — magic that hurts. Roll it to attack with a spell."
+      - id: ward
+        name: Ward (magic defense)
+        summary: "Not rolled. Your Warding is 10 + Ward; curses, breath weapons, and evil spells must beat it to hurt you."
+      - id: wisdom
+        name: Wisdom (see through tricks)
+        summary: "Roll it to spot lies, hidden doors, illusions, and traps before they happen — and to know things."
+      - id: dexterity
+        name: Dexterity (handle tricks)
+        summary: "Roll it to dodge a trap that springs, sneak past a guard, climb a wall, or snatch the key off the hook."
+      - id: charisma
+        name: Charisma (speak trickily)
+        summary: "Roll it to make friends, strike bargains, bluff a guard, or convince the dragon you are far too bony to eat."
+
+  - id: hero-creation
+    name: Making a hero
+    description: "Five minutes, no classes. Pick a toy, spend points, pick feats."
+    entries:
+      - id: step-1
+        name: "1. Pick your hero"
+        summary: "Choose a minifig or toy. That's what your hero looks like — name them."
+      - id: step-2
+        name: "2. Spend 5 points"
+        summary: "All seven stats start at +0. Spread 5 points among them, no more than +3 in any one stat."
+      - id: step-3
+        name: "3. Pick 2 feats"
+        summary: "Feats are your special moves — pick any two from the list. They are what your hero IS, instead of a class."
+      - id: step-4
+        name: "4. Hearts and stuff"
+        summary: "You have 3 hearts and whatever gear your toy is holding. Gear is story, not math — the stats already cover it."
+      - id: leveling
+        name: Growing up
+        summary: "After each finished adventure, choose one: learn a new feat, or add +1 to a stat (no stat above +4)."
+
+  - id: feats
+    name: Feats
+    description: "Special moves. Pick 2 to start; learn more by finishing adventures. Each is one sentence — no fine print."
+    entries:
+      - id: mighty-blow
+        name: Mighty Blow
+        summary: "Once per fight, a hit with Sword knocks off 2 hearts instead of 1."
+      - id: fire-heart
+        name: Fire Heart
+        summary: "Once per fight, a hit with Spark knocks off 2 hearts instead of 1."
+      - id: shield-wall
+        name: Shield Wall
+        summary: "Friends standing next to you add +1 to their Block."
+      - id: spell-shield
+        name: Spell Shield
+        summary: "Once per fight, when magic hits you or a friend next to you, it bounces off harmlessly instead."
+      - id: healing-light
+        name: Healing Light
+        summary: "Once per fight, touch a friend: they get 1 heart back (this can wake a knocked-out friend)."
+      - id: brave-song
+        name: Brave Song
+        summary: "Once per fight, sing or shout something heroic: every friend adds +1 to their rolls until your next turn."
+      - id: sneaky
+        name: Sneaky
+        summary: "When you sneak or hide, roll two d20s and keep the better one."
+      - id: trap-sense
+        name: Trap Sense
+        summary: "The GM must always warn you there is a trap before it springs on you."
+      - id: silver-tongue
+        name: Silver Tongue
+        summary: "Add +2 to Charisma when trying to make a monster your friend instead of fighting it."
+      - id: eagle-eye
+        name: Eagle Eye
+        summary: "Add +2 to Wisdom to spot lies, illusions, and hidden things."
+      - id: animal-friend
+        name: Animal Friend
+        summary: "Beasts will not attack you unless you attack them first, and simple animals do what you politely ask."
+      - id: night-eyes
+        name: Night Eyes
+        summary: "You see perfectly in the dark. Darkness is never a problem for you."
+      - id: marksman
+        name: Marksman
+        summary: "You can attack with Sword from far away (bow, throwing axe, slingshot — your choice)."
+      - id: strong-back
+        name: Strong Back
+        summary: "You can carry anything, and smashing down doors or walls is never hard for you (always beat 10)."
+      - id: lucky-charm
+        name: Lucky Charm
+        summary: "Once per adventure, reroll any roll — yours or a monster's — and keep the new result."
+      - id: big-hearts
+        name: Big Hearts
+        summary: "You have 1 extra heart (4 total). You may take this feat twice."
+      - id: beast-shape
+        name: Beast Shape
+        summary: "Once per adventure, turn into an animal of about your size until the end of the scene."
+      - id: tinker
+        name: Tinker
+        summary: "Given a minute and some junk, you can build a simple gadget that solves one problem (GM decides how well)."
+
+  - id: monsters
+    name: Monsters (GM side)
+    description: "Any toy on the table can be a monster. Pick a size; that's its whole stat block."
+    entries:
+      - id: small-monster
+        name: Small monster
+        summary: "1 heart · beat 8 to hit it · its attacks are claws/weapons (vs Block). Rats, bats, goblins, one skeleton."
+      - id: medium-monster
+        name: Medium monster
+        summary: "2 hearts · beat 10 · claws or simple magic. Wolves, guards, big spiders, a gang leader."
+      - id: big-monster
+        name: Big monster
+        summary: "3 hearts · beat 12 · hits like a truck (still 1 heart, but scary). Ogres, trolls, small dragons."
+      - id: boss-monster
+        name: Boss
+        summary: "5 hearts · beat 13 · acts TWICE each round. There is always another way past a boss: a bargain, a trade, a trick. Beating one ends the adventure."
+      - id: magic-monster
+        name: Magic monsters
+        summary: "Any size can be magic: its attacks target Warding (10 + Ward) instead of Block. Say so when it appears — 'its eyes glow' — so the kids know."
+      - id: app-conversion
+        name: Using this app's monsters
+        summary: "Any monster from the Monsters tab converts on sight: tier-1 = Small, tier-2 = Medium, tier-3 = Big, boss tag = Boss; the 'caster' tag makes it a magic monster. The quest generator on the Adventure tab does this for you."
+
+  - id: gm-tips
+    name: Running it out loud
+    description: "The table is the dungeon. The phone is just the dice."
+    entries:
+      - id: scenes-not-maps
+        name: Scenes, not maps
+        summary: "Build (or imagine) one room at a time. Describe it in two sentences, ask 'what do you do?', and let the Legos do the rest."
+      - id: always-an-out
+        name: There is always another way
+        summary: "Every fight can be talked through, snuck past, or fled. Reward clever tricks at least as well as good rolls."
+      - id: fail-forward
+        name: Failing is funny, not fatal
+        summary: "A failed roll never just stops the story — it goes wrong in an interesting way. The rope holds, but now the goblins heard you."

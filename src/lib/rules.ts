@@ -6,6 +6,7 @@
 // here plus one import line below — same pattern as adventures.
 
 import shadowdarkRaw from '../data/rules/shadowdark.yaml';
+import brickQuestRaw from '../data/rules/brick-quest.yaml';
 import eqRaw from '../data/rules/eq-rpg.yaml';
 import gurpsRaw from '../data/rules/gurps.yaml';
 import tesGurpsRaw from '../data/rules/tes-gurps.yaml';
@@ -60,6 +61,8 @@ export interface Ruleset {
   edition?: string;
   /** True for the system the app actually resolves play with (Shadowdark). */
   native?: boolean;
+  /** True for house rules played out loud at the table (not reference-only). */
+  house?: boolean;
   dice_system?: string;
   ability_scores?: string[];
   saving_throws?: string[];
@@ -72,6 +75,8 @@ export interface Ruleset {
 // Native engine first, then reference-only systems, grouped by family.
 export const RULESETS: Ruleset[] = [
   shadowdarkRaw as Ruleset,
+  // House kid rules — played out loud at the table, not in the engine.
+  brickQuestRaw as Ruleset,
   // d20 family (the EverQuest RPG sits here too)
   dnd5eRaw as Ruleset,
   d20Raw as Ruleset,

@@ -143,9 +143,9 @@ export function EnemyTab() {
     <div className="col" style={{ gap: '1.25rem' }}>
       <div className="row" style={{ flexWrap: 'wrap', gap: '0.5rem' }}>
         <h1 style={{ margin: 0 }} className="grow">Monsters</h1>
-        <button className="ghost" onClick={() => rollEncounter(1)}>Tier 1</button>
-        <button className="ghost" onClick={() => rollEncounter(2)}>Tier 2</button>
-        <button className="ghost" onClick={() => rollEncounter(3)}>Boss</button>
+        <button className="ghost" onClick={() => rollEncounter(1)}>Roll Tier 1</button>
+        <button className="ghost" onClick={() => rollEncounter(2)}>Roll Tier 2</button>
+        <button className="ghost" onClick={() => rollEncounter(3)}>Roll Boss</button>
         <button className="primary" onClick={createEncounter}>+ New encounter</button>
       </div>
 

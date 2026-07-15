@@ -47,7 +47,9 @@ export function RulesTab() {
           {[ruleset.publisher, ruleset.edition, ruleset.year, ruleset.license].filter(Boolean).join(' · ')}
         </div>
         {!ruleset.native && (
-          <div className="mini-tag" style={{ alignSelf: 'flex-start' }}>reference only — play resolves in Shadowdark</div>
+          <div className="mini-tag" style={{ alignSelf: 'flex-start' }}>
+            {ruleset.house ? 'house rules — played out loud at the table' : 'reference only — play resolves in Shadowdark'}
+          </div>
         )}
         {meta
           .filter(([, v]) => v)
@@ -86,7 +88,7 @@ export function RulesTab() {
         <details key={sec.id} className="card">
           <summary className="big-label">
             {sec.name}
-            {sec.entries ? ` (${sec.entries.length})` : ''}
+            {sec.entries ? (sec.entries.length > 0 ? ` (${sec.entries.length})` : ' — not yet written up') : ''}
           </summary>
           {sec.description && (
             <p className="muted" style={{ fontSize: '0.85rem', margin: '0.5rem 0' }}>{sec.description}</p>
@@ -110,8 +112,9 @@ export function RulesTab() {
       <details className="card">
         <summary className="big-label">Content tags (taxonomy)</summary>
         <p className="muted" style={{ fontSize: '0.85rem', margin: '0.5rem 0' }}>
-          The controlled vocabulary used to tag monsters and content. Threat and role are the
-          axes a future cross-system converter would read.
+          Every monster, treasure, and scene carries these tags. Threat says how dangerous
+          something is, role says how it fights, and the active pool uses them to decide what
+          random rolls can serve up.
         </p>
         <TagGroup title="Threat — how dangerous" tags={THREAT_TAGS} />
         <TagGroup title="Role — how it fights" tags={ROLE_TAGS} />

@@ -63,7 +63,7 @@ rooms:
 
   - id: najena-torture-rooms
     name: The Torture Rooms
-    description: "Cramped chambers of rusted iron and old stains, where Najena's apprentices 'study' the living. A dark elf necromancer looks up from his grim work."
+    description: "Cramped chambers of rusted iron and cold chains, where Najena's apprentices keep their unwilling 'guests.' A dark elf necromancer looks up from his grim work."
     encounter:
       id: nj-torture-fight
       monsters: [eq-najena-dark-elf-necromancer, eq-najena-darkbone-skeleton]

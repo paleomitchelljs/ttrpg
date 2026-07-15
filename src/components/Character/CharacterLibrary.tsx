@@ -98,14 +98,14 @@ export function CharacterLibrary({ onSelect, onCreateNew }: Props) {
   return (
     <div className="col" style={{ gap: '1.25rem' }}>
       <div className="row" style={{ flexWrap: 'wrap', gap: '0.5rem' }}>
-        <h1 style={{ margin: 0 }} className="grow">Characters</h1>
+        <h1 style={{ margin: 0 }} className="grow">Heroes</h1>
         <button className="ghost" onClick={uploadHeroes} title="Load heroes from one or more files">
           Upload heroes
         </button>
         <button className="ghost" onClick={downloadAll} disabled={characters.length === 0} title="Download all heroes as one file">
           Download all
         </button>
-        <button className="primary" onClick={onCreateNew}>+ New Character</button>
+        <button className="primary" onClick={onCreateNew}>+ New Hero</button>
       </div>
 
       {status && (
@@ -118,9 +118,9 @@ export function CharacterLibrary({ onSelect, onCreateNew }: Props) {
         <div className="placeholder">Loading…</div>
       ) : characters.length === 0 ? (
         <div className="card placeholder">
-          No characters yet.<br />
+          No heroes yet.<br />
           <button className="primary" onClick={onCreateNew} style={{ marginTop: '1rem' }}>
-            Roll your first character
+            Roll your first hero
           </button>
           <div className="muted" style={{ marginTop: '0.75rem', fontSize: '0.85rem' }}>
             …or <button className="ghost" style={{ fontSize: '0.8rem' }} onClick={uploadHeroes}>upload heroes</button> you saved earlier.

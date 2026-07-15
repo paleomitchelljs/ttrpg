@@ -146,7 +146,7 @@ export function CharacterCreator({ initial, onSaved, onCancel }: Props) {
     <div className="col" style={{ gap: '1.25rem' }}>
       <div className="row">
         <h1 style={{ margin: 0 }} className="grow">
-          {initial ? 'Edit Character' : 'New Character'}
+          {initial ? 'Edit Hero' : 'New Hero'}
         </h1>
         <button onClick={rerollEverything}>↻ Roll everything</button>
         <button className="ghost" onClick={onCancel}>

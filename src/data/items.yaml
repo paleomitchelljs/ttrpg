@@ -567,7 +567,7 @@ items:
     damage_one: d6
     damage_two: d6
     tags: [magic, eq-rpg, era-classic, lore-item, no-drop, melee]
-    notes: "An example of a “hard nerf” by Verant. Not only was the item re- moved from loot tables, the ones that had been looted were retroactively changed. [Zone: Lesser Faydark ]"
+    notes: "An example of a “hard nerf” by Verant. Not only was the item removed from loot tables, the ones that had been looted were retroactively changed. [Zone: Lesser Faydark ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -640,7 +640,7 @@ items:
     damage_one: d6
     damage_two: d6
     tags: [magic, eq-rpg, era-kunark, lore-item, melee]
-    notes: "There were many low dmg/low dly weapons in the Kunark expan- sion that were eventually banished by Verant. Other than, “the item was just too good” we never got much of an explanation from the devs. [Zone: Frontier Mountains ]"
+    notes: "There were many low dmg/low dly weapons in the Kunark expansion that were eventually banished by Verant. Other than, “the item was just too good” we never got much of an explanation from the devs. [Zone: Frontier Mountains ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -669,7 +669,7 @@ items:
     damage_one: d12
     damage_two: d12
     tags: [magic, eq-rpg, era-classic, lore-item, melee, two-handed]
-    notes: "This item, which resembled a huge scythe, may have been re- moved since Iksars couldn’t use it and thus had no real reason to go to Plane of Hate- which was a real point of contention at times in the early days of Kunark. However, no true reason was ever gi... [Zone: Plane of Hate ]"
+    notes: "This item, which resembled a huge scythe, may have been removed since Iksars couldn’t use it and thus had no real reason to go to Plane of Hate — which was a real point of contention at times in the early days of Kunark. However, no true reason was ever gi... [Zone: Plane of Hate ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -746,7 +746,7 @@ items:
     damage_one: d10
     damage_two: d10
     tags: [magic, eq-rpg, era-kunark, lore-item, melee]
-    notes: "None, other than to say it really sucked when this thing was re- moved. [Zone: Old Sebilis ]"
+    notes: "None, other than to say it really sucked when this thing was removed. [Zone: Old Sebilis ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -766,7 +766,7 @@ items:
     category: gear
     slots: 1
     tags: [magic, eq-rpg, era-classic, no-drop]
-    notes: "The name of the game is EverQuest. The quest being the most en- tertaining part of the game. [Zone: Lesser Faydark ]"
+    notes: "The name of the game is EverQuest. The quest being the most entertaining part of the game. [Zone: Lesser Faydark ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -775,7 +775,7 @@ items:
     category: gear
     slots: 1
     tags: [magic, eq-rpg, era-classic, no-drop]
-    notes: "Items like this may provide components for you to use to add cus- tom content and quests to EQC if you were ever so inclined. [Zone: Lesser Faydark ]"
+    notes: "Items like this may provide components for you to use to add custom content and quests to EQC if you were ever so inclined. [Zone: Lesser Faydark ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -827,7 +827,7 @@ items:
     slots: 1
     ac_bonus: 1
     tags: [magic, eq-rpg, era-kunark, lore-item]
-    notes: "This item is so famous I hesitated to even include it, but in the in- terests of thoroughness I must. [Zone: Temple of Droga ]"
+    notes: "This item is so famous I hesitated to even include it, but in the interests of thoroughness I must. [Zone: Temple of Droga ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -849,7 +849,7 @@ items:
     ac_base: 13
     ac_dex: true
     tags: [magic, eq-rpg, era-kunark, lore-item]
-    notes: "Practically all items that cast some form of invisibility were even- tually nerfed. It makes me wonder how so many made it out of beta. [Zone: Chardok ]"
+    notes: "Practically all items that cast some form of invisibility were eventually nerfed. It makes me wonder how so many made it out of beta. [Zone: Chardok ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -887,7 +887,7 @@ items:
     category: gear
     slots: 1
     tags: [magic, eq-rpg, era-classic]
-    notes: "At one time swarm-kiting was thought to be an efficient means of soloing mobs for bards. However, spending an hour and a half killing 40 mobs by run- ning in circles never seemed efficient to me. [Zone: Various ]"
+    notes: "At one time swarm-kiting was thought to be an efficient means of soloing mobs for bards. However, spending an hour and a half killing 40 mobs by running in circles never seemed efficient to me. [Zone: Various ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -918,7 +918,7 @@ items:
     damage_one: d12
     damage_two: d12
     tags: [magic, eq-rpg, era-kunark, lore-item, melee, two-handed]
-    notes: "This item was intensely fun before it was nerfed, but it was indeed overpowered in certain, limited situations. It was not, however, any good in raid situa- tions since it generated way too much agro and agroed to many mobs for the raid to deal with. [Zone: The Hole ]"
+    notes: "This item was intensely fun before it was nerfed, but it was indeed overpowered in certain, limited situations. It was not, however, any good in raid situations since it generated way too much agro and agroed to many mobs for the raid to deal with. [Zone: The Hole ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -1042,7 +1042,7 @@ items:
     category: gear
     slots: 1
     tags: [magic, eq-rpg, era-classic]
-    notes: "Some reports state that this spell summoned the enchanted bar or sil- ver without the silver bar regent. I’m inclined to believe that report since the eye comes with only one charge. [Zone: North Qeynos (the Queens), Nagafen’s Lair (lava beetle) ]"
+    notes: "Some reports state that this spell summoned the enchanted bar or silver without the silver bar regent. I’m inclined to believe that report since the eye comes with only one charge. [Zone: North Qeynos (the Queens), Nagafen’s Lair (lava beetle) ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -1091,7 +1091,7 @@ items:
     damage_one: d12
     damage_two: d12
     tags: [magic, eq-rpg, era-kunark, lore-item, melee, two-handed]
-    notes: "The reason for the targeting changes was that on PvP servers, play- ers would target other PCs with the staff and snare them. That proved too powerful for the Zek servers, and the items were changed on all servers as a result. [Zone: Old Sebilis ]"
+    notes: "The reason for the targeting changes was that on PvP servers, players would target other PCs with the staff and snare them. That proved too powerful for the Zek servers, and the items were changed on all servers as a result. [Zone: Old Sebilis ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -1110,7 +1110,7 @@ items:
     slots: 1
     ac_bonus: 1
     tags: [magic, eq-rpg, era-kunark, lore-item]
-    notes: "This item may still be in the game, but there has been no account of it in over six years. If it was removed, it was taken out right around the time of Lu- clin- perhaps just before or just after. [Zone: Frontier Mountains ]"
+    notes: "This item may still be in the game, but there has been no account of it in over six years. If it was removed, it was taken out right around the time of Luclin — perhaps just before or just after. [Zone: Frontier Mountains ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -1170,7 +1170,7 @@ items:
     category: gear
     slots: 1
     tags: [magic, eq-rpg, era-classic]
-    notes: "This is another item that is almost worthless in a PvE environment but is devastating on PvP. If the Zek servers didn’t exist, this item probably would have stayed in the game even when both those mobs disappeared in the Befallen and CT re- vamps. [Zone: Befallen/The Accursed Temple of Cazic Thule ]"
+    notes: "This is another item that is almost worthless in a PvE environment but is devastating on PvP. If the Zek servers didn’t exist, this item probably would have stayed in the game even when both those mobs disappeared in the Befallen and CT revamps. [Zone: Befallen/The Accursed Temple of Cazic Thule ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -1346,7 +1346,7 @@ items:
     ac_base: 15
     ac_dex: true
     tags: [magic, eq-rpg, era-classic, no-drop]
-    notes: "There are only 2 reasons I can guess at as to why this was re- moved: 1) best BP in the game during Classic, 2) caused way too many arguments dur- ing a raid heh heh. Actually, the latter is probably more likely. [Zone: Plane of Fear ]"
+    notes: "There are only 2 reasons I can guess at as to why this was removed: 1) best BP in the game during Classic, 2) caused way too many arguments during a raid heh heh. Actually, the latter is probably more likely. [Zone: Plane of Fear ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -1398,7 +1398,7 @@ items:
     category: gear
     slots: 1
     tags: [magic, eq-rpg, era-classic]
-    notes: "When people think of nerfed or removed items, there is one singu- lar loot that instantly comes to mind. It is the essence of myth and legend not just in Everquest but in all of the MMORPG kingdoms."
+    notes: "When people think of nerfed or removed items, there is one singular loot that instantly comes to mind. It is the essence of myth and legend not just in Everquest but in all of the MMORPG kingdoms."
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -1429,7 +1429,7 @@ items:
     damage_one: d4
     damage_two: d4
     tags: [magic, eq-rpg, era-kunark, lore-item, melee]
-    notes: "Once it was removed, it was almost never sold in EC or in the Ba- zaar. It was handed down from character to character. [Zone: Frontier Mountains ]"
+    notes: "Once it was removed, it was almost never sold in EC or in the Bazaar. It was handed down from character to character. [Zone: Frontier Mountains ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -1469,7 +1469,7 @@ items:
     category: gear
     slots: 1
     tags: [magic, eq-rpg, era-velious, lore-item]
-    notes: "These items were obviously to be used to aid in complete the ar- mor mould quests on Velious. When this item started doing that, it got nerfed. [Zone: Icewell Keep ]"
+    notes: "These items were obviously to be used to aid in completing the armor mould quests on Velious. When this item started doing that, it got nerfed. [Zone: Icewell Keep ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -1649,11 +1649,11 @@ items:
     source_book: item-guide-revised
 
   - id: eq-rubicite-armor-boots-bracer-gauntlets-greaves-helm-vem-brace
-    name: "Rubicite Armor (Boots, Bracer, Gauntlets, Greaves, Helm, Vem- braces)"
+    name: "Rubicite Armor (Boots, Bracer, Gauntlets, Greaves, Helm, Vembraces)"
     category: gear
     slots: 1
     tags: [magic, eq-rpg, era-classic]
-    notes: "Okay, I’m calmed down now. All rubicite armor was removed be- cause very early in EQ’s history twinking was seen as a cardinal sin in the game. [Zone: The Accursed Temple of Cazic Thule ]"
+    notes: "Okay, I’m calmed down now. All rubicite armor was removed because very early in EQ’s history twinking was seen as a cardinal sin in the game. [Zone: The Accursed Temple of Cazic Thule ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -1664,7 +1664,7 @@ items:
     ac_base: 15
     ac_dex: true
     tags: [magic, eq-rpg, era-classic, lore-item]
-    notes: "This is the item that caused ALL the trouble. This breastplate re- generated characters at a measly 3 hit points per tick. [Zone: The Accursed Temple of Cazic Thule ]"
+    notes: "This is the item that caused ALL the trouble. This breastplate regenerated characters at a measly 3 hit points per tick. [Zone: The Accursed Temple of Cazic Thule ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -1755,7 +1755,7 @@ items:
     ac_base: 12
     ac_dex: true
     tags: [magic, eq-rpg, era-kunark, lore-item, no-drop]
-    notes: "No reason was ever given, though I honestly don’t remember any- one talking about this when it happened. It’s possible this item never existed or perhaps it was only in the beta test. [Zone: Numerous Kunark Zones ]"
+    notes: "No reason was ever given, though I honestly don’t remember anyone talking about this when it happened. It’s possible this item never existed or perhaps it was only in the beta test. [Zone: Numerous Kunark Zones ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -1764,7 +1764,7 @@ items:
     category: gear
     slots: 1
     tags: [magic, eq-rpg, era-classic, lore-item]
-    notes: "This was the PoF version of the Basson Gauntlets. The only dif- ference was this thing was droppable for some reason."
+    notes: "This was the PoF version of the Basson Gauntlets. The only difference was this thing was droppable for some reason."
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -1786,7 +1786,7 @@ items:
     damage_one: d12
     damage_two: d12
     tags: [magic, eq-rpg, era-kunark, melee]
-    notes: "Verant offered an apology in their patch notes about changing this item, but I think few would argue that a 30/5 weapon that proced at level 1 was appro- priate for the game. Given the massive numbers of items, especially those from Kunark, that were nerfed... [Zone: Field of Bone ]"
+    notes: "Verant offered an apology in their patch notes about changing this item, but I think few would argue that a 30/5 weapon that proced at level 1 was appropriate for the game. Given the massive numbers of items, especially those from Kunark, that were nerfed... [Zone: Field of Bone ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -1865,7 +1865,7 @@ items:
     category: gear
     slots: 1
     tags: [magic, eq-rpg, era-classic, lore-item, no-drop]
-    notes: "This mob was related to several others I have mentioned previous- ly. [Zone: Befallen ]"
+    notes: "This mob was related to several others I have mentioned previously. [Zone: Befallen ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -1937,7 +1937,7 @@ items:
     category: gear
     slots: 1
     tags: [magic, eq-rpg, era-kunark, lore-item]
-    notes: "Yeah…to prevent twinking…cause they drop in a low level dun- geon. Okay. [Zone: Kurn’s Tower ]"
+    notes: "Yeah…to prevent twinking…cause they drop in a low level dungeon. Okay. [Zone: Kurn’s Tower ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -2075,7 +2075,7 @@ items:
     category: gear
     slots: 1
     tags: [magic, eq-rpg, era-classic, lore-item, no-drop]
-    notes: "The fact that this could be activated from your inventory made it especially good. While it’s not as broken as some of the items on this list, it is still pret- ty darn good. [Zone: Paineel ]"
+    notes: "The fact that this could be activated from your inventory made it especially good. While it’s not as broken as some of the items on this list, it is still pretty darn good. [Zone: Paineel ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -2084,7 +2084,7 @@ items:
     category: gear
     slots: 1
     tags: [magic, eq-rpg, era-classic, lore-item, no-drop]
-    notes: "There were so many problems leading up to Luclin. Zones were crashing, mobs were spawning at a higher level than they should have. [Zone: Be- fallen ]"
+    notes: "There were so many problems leading up to Luclin. Zones were crashing, mobs were spawning at a higher level than they should have. [Zone: Befallen ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -2155,7 +2155,7 @@ items:
     category: gear
     slots: 1
     tags: [magic, eq-rpg, era-classic, lore-item, no-drop]
-    notes: "This was one of the items that made Mistmoore as legendary as it was. And contrary to urban myth, this was never part of Mayong Mistmoore’s loot ta- ble. [Zone: Castle Mistmoore ]"
+    notes: "This was one of the items that made Mistmoore as legendary as it was. And contrary to urban myth, this was never part of Mayong Mistmoore’s loot table. [Zone: Castle Mistmoore ]"
     system: eq-rpg
     source_book: item-guide-revised
 
@@ -2175,7 +2175,7 @@ items:
     damage_one: d6
     damage_two: d6
     tags: [magic, eq-rpg, era-classic, melee]
-    notes: "Supposedly, according to one source, Writhing Lashes were retro- actively changed to Tentacle Whips. I have no idea if this is accurate or not. [Zone: Najena, The Estate of Unrest ]"
+    notes: "Supposedly, according to one source, Writhing Lashes were retroactively changed to Tentacle Whips. I have no idea if this is accurate or not. [Zone: Najena, The Estate of Unrest ]"
     system: eq-rpg
     source_book: item-guide-revised
 
