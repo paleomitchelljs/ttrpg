@@ -10,7 +10,8 @@
   <div id="app">
 
     <section id="screen-title" class="screen title-screen">
-      <h1><span class="title-dragon">🐉</span><br>Red Dragon Labyrinth</h1>
+      <img class="title-dragon-img" src="./assets/dragon-fire.png" alt="A red dragon breathing fire">
+      <h1>Red Dragon Labyrinth</h1>
       <p class="tagline">Raid the maze. Grow the hoard.</p>
       <div class="menu">
         <button id="btn-new" class="btn btn-big">🔥 New Game</button>
@@ -42,7 +43,6 @@
       <div id="combat-overlay" class="overlay" hidden>
         <div class="combat-box">
           <div id="combat-enemies" class="combat-row"></div>
-          <div id="combat-die" class="big-die">🎲</div>
           <div id="combat-player" class="combat-row"></div>
           <div id="combat-log" class="log combat-log"></div>
           <div id="combat-actions" class="combat-actions"></div>
@@ -60,6 +60,8 @@
     </section>
 
   </div>
+  <div id="dice-cinematic" class="dice-overlay" hidden></div>
+  <div id="roll-toast" class="roll-toast" hidden></div>
   <script type="module" src="./src/main.js"></script>
 </body>
 </html>

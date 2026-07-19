@@ -1,10 +1,11 @@
 // Wiring: subscribes the views to gameState and translates DOM input into
-// state intents. No game logic here.
+// state intents. Combat event batches replay through combatView's dramatic
+// queue; world refreshes and end-of-combat overlays wait for the replay.
 
 import * as game from './state/gameState.js';
 import { renderMap, bindMapClicks } from './render/mapView.js';
 import { drawHoard } from './render/hoardView.js';
-import { renderCombat, narrateCombatEvents, clearCombatLog } from './render/combatView.js';
+import { presentCombat } from './render/combatView.js';
 import * as ui from './render/ui.js';
 import { DRAGON_TIERS } from '../data/dragonProgression.js';
 
@@ -13,8 +14,53 @@ const combatEls = {
   player: ui.el('combat-player'),
   actions: ui.el('combat-actions'),
   log: ui.el('combat-log'),
-  die: ui.el('combat-die'),
+  overlay: ui.el('combat-overlay'),
 };
+
+const COMBAT_EVENTS = new Set([
+  'combat-start', 'initiative', 'round', 'attack', 'breath', 'morale',
+  'flee', 'recharge', 'death', 'victory', 'defeat', 'retreat',
+]);
+
+function refreshWorld(state) {
+  ui.updateHud(state);
+  renderMap(ui.el('map'), state);
+  const tierIndex = Math.max(0, DRAGON_TIERS.findIndex((t) => t.tier === state.meta.tier));
+  drawHoard(ui.el('hoard-canvas'), state.meta.hoardGold, tierIndex);
+}
+
+function showBankedOverlay(ev, events) {
+  const tierUp = events.find((e) => e.type === 'tier-up');
+  ui.showResult({
+    title: tierUp ? '🐲 You have GROWN!' : '🏆 Treasure banked!',
+    growth: tierUp
+      ? {
+          emoji: '🐉',
+          text: `Your hoard's warmth changes you… you are now a ${tierUp.to.label.toUpperCase()}! ` +
+            `${tierUp.to.hpMax} HP, armor ${tierUp.to.ac}, bite ${tierUp.to.attacks[0].damage}, breath ${tierUp.to.breath.damage}.`,
+        }
+      : null,
+    body: `You escaped depth ${ev.depth} with ${ev.banked} gold (${ev.bonus} bonus for reaching the exit). Your hoard is now ${ev.hoard.toLocaleString()} gold.`,
+    actions: [
+      { label: '⛏️ Delve deeper', onClick: () => { ui.showOverlay('result-overlay', false); game.nextLabyrinth(); } },
+      { label: '🏠 Rest at your lair', onClick: () => { ui.showOverlay('result-overlay', false); game.quitToTitle(); } },
+    ],
+  });
+}
+
+function showRetreatOverlay(ev) {
+  ui.showResult({
+    title: '🩹 You flee to your lair!',
+    body:
+      ev.lost > 0
+        ? `You dropped ${ev.lost} unbanked gold as you fled… but your hoard of ${ev.hoard.toLocaleString()} gold is safe.`
+        : `Your hoard of ${ev.hoard.toLocaleString()} gold is safe. Rest up and try again!`,
+    actions: [
+      { label: '🐉 Hunt again', onClick: () => { ui.showOverlay('result-overlay', false); game.nextLabyrinth(); } },
+      { label: '🏠 Back to title', onClick: () => { ui.showOverlay('result-overlay', false); game.quitToTitle(); } },
+    ],
+  });
+}
 
 // ------------------------------------------------------------------ render
 game.subscribe((state, events) => {
@@ -25,13 +71,7 @@ game.subscribe((state, events) => {
     return;
   }
 
-  ui.updateHud(state);
-  renderMap(ui.el('map'), state);
-  const tierIndex = Math.max(0, DRAGON_TIERS.findIndex((t) => t.tier === state.meta.tier));
-  drawHoard(ui.el('hoard-canvas'), state.meta.hoardGold, tierIndex);
-
-  const phase = state.run?.phase;
-  ui.showOverlay('combat-overlay', phase === 'combat');
+  const combatBatch = events.some((e) => COMBAT_EVENTS.has(e.type));
 
   for (const ev of events) {
     if (ev.type === 'entered') {
@@ -40,51 +80,29 @@ game.subscribe((state, events) => {
     }
     if (ev.type === 'resumed') ui.logExplore(`Back to the hunt at depth ${ev.depth}.`);
     if (ev.type === 'loot') ui.logExplore(`${ev.icon} You found ${ev.label} — ${ev.gold} gold!`, 'log-hit');
-    if (ev.type === 'combat-start') clearCombatLog(combatEls);
-    if (ev.type === 'banked') {
-      const tierUp = events.find((e) => e.type === 'tier-up');
-      const bankLine = `You escaped depth ${ev.depth} with ${ev.banked} gold (${ev.bonus} bonus for reaching the exit). Your hoard is now ${ev.hoard.toLocaleString()} gold.`;
-      ui.showResult({
-        title: tierUp ? '🐲 You have GROWN!' : '🏆 Treasure banked!',
-        growth: tierUp
-          ? {
-              emoji: '🐉',
-              text: `Your hoard's warmth changes you… you are now a ${tierUp.to.label.toUpperCase()}! ` +
-                `${tierUp.to.hpMax} HP, armor ${tierUp.to.ac}, bite ${tierUp.to.attacks[0].damage}, breath ${tierUp.to.breath.damage}.`,
-            }
-          : null,
-        body: bankLine,
-        actions: [
-          { label: '⛏️ Delve deeper', onClick: () => { ui.showOverlay('result-overlay', false); game.nextLabyrinth(); } },
-          { label: '🏠 Rest at your lair', onClick: () => { ui.showOverlay('result-overlay', false); game.quitToTitle(); } },
-        ],
-      });
-    }
-    if (ev.type === 'retreat') {
-      ui.showResult({
-        title: '🩹 You flee to your lair!',
-        body:
-          ev.lost > 0
-            ? `You dropped ${ev.lost} unbanked gold as you fled… but your hoard of ${ev.hoard.toLocaleString()} gold is safe.`
-            : `Your hoard of ${ev.hoard.toLocaleString()} gold is safe. Rest up and try again!`,
-        actions: [
-          { label: '🐉 Hunt again', onClick: () => { ui.showOverlay('result-overlay', false); game.nextLabyrinth(); } },
-          { label: '🏠 Back to title', onClick: () => { ui.showOverlay('result-overlay', false); game.quitToTitle(); } },
-        ],
-      });
-    }
+    if (ev.type === 'banked') showBankedOverlay(ev, events);
   }
 
-  if (phase === 'combat') {
-    narrateCombatEvents(combatEls, events);
-    renderCombat(combatEls, state, {
-      onAttack: (targetId) => game.attack(targetId),
-      onBreath: () => game.breath(),
-    });
-  } else if (events.some((e) => e.type === 'victory')) {
-    // final combat events (victory line) still land in the combat log
-    narrateCombatEvents(combatEls, events);
+  if (!combatBatch) {
+    refreshWorld(state);
+    return;
   }
+
+  // Combat: replay dramatically; refresh the world and any end-of-combat
+  // overlay only after the dice have finished.
+  presentCombat(combatEls, state, events, {
+    onAttack: (targetId) => game.attack(targetId),
+    onBreath: () => game.breath(),
+    onBatchDone: (evts) => {
+      const retreat = evts.find((e) => e.type === 'retreat');
+      if (evts.some((e) => e.type === 'victory')) combatEls.overlay.hidden = true;
+      if (retreat) {
+        combatEls.overlay.hidden = true;
+        showRetreatOverlay(retreat);
+      }
+      refreshWorld(state);
+    },
+  });
 });
 
 // ------------------------------------------------------------------ input

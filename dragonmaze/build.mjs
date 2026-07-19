@@ -21,12 +21,19 @@ const css = await readFile(join(root, 'styles.css'), 'utf8');
 let html = await readFile(join(root, 'index.html'), 'utf8');
 
 const withCss = html.replace(/<link rel="stylesheet"[^>]*>/, () => `<style>\n${css}\n</style>`);
-const withJs = withCss.replace(
+let withJs = withCss.replace(
   /<script type="module" src="\.\/src\/main\.js"><\/script>/,
   () => `<script>\n${js}\n</script>`
 );
 if (withCss === html || withJs === withCss) {
   throw new Error('Inline markers not found in index.html — build aborted.');
+}
+
+// Inline image assets as data URIs so the single file needs nothing else.
+for (const rel of ['assets/dragon-side.png', 'assets/dragon-fire.png']) {
+  const data = await readFile(join(root, rel));
+  const uri = `data:image/png;base64,${data.toString('base64')}`;
+  withJs = withJs.replaceAll(`./${rel}`, uri);
 }
 
 await mkdir(join(root, 'dist'), { recursive: true });

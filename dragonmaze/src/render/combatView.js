@@ -1,16 +1,336 @@
-// Combat overlay: enemy cards with HP bars, the dragon's HP bar, a big d20
-// readout, a plain-language scrolling log, and one big button per living
-// target plus the fire-breath button. Reads combat state; raises intents
-// through the onAttack/onBreath callbacks.
+// Combat presentation. Combat logic resolves instantly in the engine; this
+// module replays each event batch dramatically, in order: the dragon's d20s
+// get a full-screen BG3-style cinematic (tumbling die, modifier chips, AC
+// plate, verdict banner — matching the main portal's DiceOverlay), monster
+// rolls play as a compact corner toast, and everything lands in the log.
+// While a batch is replaying, the action buttons are locked.
 
 import { livingMonsters, dragonOf, isPlayerTurn } from '../engine/combat.js';
 
-export function renderCombat(els, state, { onAttack, onBreath }) {
+const DRAGON_FIRE_IMG = './assets/dragon-fire.png';
+
+const delay = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// ---------------------------------------------------------------- queue
+const batches = [];
+let processing = false;
+
+/** Enqueue an event batch for dramatic replay. Safe to call every emit. */
+export function presentCombat(els, state, events, handlers) {
+  batches.push({ state, events, handlers });
+  if (!processing) void processBatches(els);
+}
+
+async function processBatches(els) {
+  processing = true;
+  while (batches.length) {
+    const { state, events, handlers } = batches.shift();
+    lockActions(els);
+    for (const ev of events) await presentEvent(els, ev);
+    const combat = state.run?.combat?.combat;
+    if (combat && !combat.over) renderCombat(els, state, handlers);
+    handlers.onBatchDone?.(events);
+  }
+  processing = false;
+}
+
+function lockActions(els) {
+  const note = document.createElement('div');
+  note.className = 'turn-note';
+  note.textContent = '…';
+  els.actions.replaceChildren(note);
+}
+
+// ---------------------------------------------------------------- events
+async function presentEvent(els, ev) {
+  switch (ev.type) {
+    case 'combat-start': {
+      els.log.replaceChildren();
+      els.overlay.hidden = false;
+      const names = ev.monsters.map((m) => `${m.emoji} ${m.name}`).join(', ');
+      appendLog(els.log, `Danger! ${names} block${ev.monsters.length === 1 ? 's' : ''} your path!`, 'log-start');
+      return delay(400);
+    }
+    case 'initiative':
+      appendLog(els.log, `Initiative: ${ev.order.map((o) => `${o.name} ${o.initiative}`).join(' · ')}`, 'log-dim');
+      return delay(300);
+    case 'round':
+      appendLog(els.log, `— Round ${ev.round} —`, 'log-dim');
+      return delay(200);
+    case 'attack': {
+      if (ev.attackerKind === 'dragon') await playCinematic(bitePayload(ev));
+      else await playToast(ev);
+      const line = attackLine(ev);
+      appendLog(els.log, line.text, line.cls);
+      return delay(150);
+    }
+    case 'breath': {
+      await playCinematic(breathPayload(ev));
+      appendLog(els.log, `You unleash a torrent of flame! (${ev.total} fire damage, save DC ${ev.dc})`, 'log-start');
+      for (const r of ev.results) {
+        appendLog(
+          els.log,
+          r.saved
+            ? `The ${r.name} dives aside — only ${r.damage}! (save ${r.total} vs ${r.dc})`
+            : `The ${r.name} is engulfed for ${r.damage}! (save ${r.total} vs ${r.dc})`,
+          r.saved ? 'log-miss' : 'log-hit'
+        );
+        await delay(180);
+      }
+      return;
+    }
+    case 'morale':
+      appendLog(
+        els.log,
+        ev.pass
+          ? `The ${ev.who} grits its teeth and stands firm. (${ev.total} vs ${ev.dc})`
+          : `The ${ev.who} panics! 😱 (${ev.total} vs ${ev.dc})`,
+        ev.pass ? 'log-dim' : 'log-start'
+      );
+      return delay(350);
+    case 'flee':
+      appendLog(els.log, `The ${ev.who} flees into the dark! 💨`, 'log-miss');
+      return delay(350);
+    case 'recharge':
+      appendLog(
+        els.log,
+        ev.ready ? `🔥 Your fire roils back to life!` : `Your flames sputter… (recharge ${ev.roll}, needs 5+)`,
+        ev.ready ? 'log-start' : 'log-dim'
+      );
+      return delay(250);
+    case 'death':
+      appendLog(els.log, `The ${ev.who} is defeated! (worth ${ev.goldValue} gold)`, 'log-hit');
+      return delay(350);
+    case 'victory':
+      appendLog(
+        els.log,
+        `Victory! You snatch up ${ev.gold} gold. 💰${ev.fled ? ' The cowards that fled kept theirs!' : ''}`,
+        'log-start'
+      );
+      return delay(700);
+    case 'defeat':
+      appendLog(els.log, `You have no strength left…`, 'log-hurt');
+      return delay(600);
+    default:
+      return;
+  }
+}
+
+function attackLine(ev) {
+  const you = ev.attackerKind === 'dragon';
+  if (ev.crit) {
+    return {
+      text: you
+        ? `CRITICAL! Your bite crunches the ${ev.target} for ${ev.damage}!`
+        : `CRITICAL! The ${ev.attacker}'s ${ev.attackName} hits you for ${ev.damage}!`,
+      cls: you ? 'log-hit' : 'log-hurt',
+    };
+  }
+  if (!ev.hit) {
+    return {
+      text: you ? `Your bite misses the ${ev.target}.` : `The ${ev.attacker}'s ${ev.attackName} misses you.`,
+      cls: 'log-miss',
+    };
+  }
+  return {
+    text: you
+      ? `Your bite hits the ${ev.target} for ${ev.damage}!`
+      : `The ${ev.attacker}'s ${ev.attackName} hits you for ${ev.damage}.`,
+    cls: you ? 'log-hit' : 'log-hurt',
+  };
+}
+
+// ---------------------------------------------------------------- payloads
+function verdictFor(ev) {
+  if (ev.crit) return { text: `CRITICAL HIT! ${ev.damage} damage!`, cls: 'crit' };
+  if (ev.fumble) return { text: 'FUMBLE!', cls: 'fumble' };
+  if (ev.hit) return { text: `HIT! ${ev.damage} damage!`, cls: 'good' };
+  return { text: 'MISS', cls: 'bad' };
+}
+
+function bitePayload(ev) {
+  const verdict = verdictFor(ev);
+  return {
+    title: `Bite the ${ev.target}!`,
+    sides: 20,
+    rolls: ev.dieRolls,
+    kept: ev.natural,
+    mode: ev.mode,
+    parts: [{ label: 'bite', value: ev.toHit }],
+    total: ev.total,
+    targetLabel: `AC ${ev.targetAc}`,
+    verdict: verdict.text,
+    vclass: verdict.cls,
+    nat: ev.crit ? 20 : ev.fumble ? 1 : 0,
+  };
+}
+
+function breathPayload(ev) {
+  return {
+    title: 'Fire Breath!',
+    sides: 6,
+    rolls: ev.rolls,
+    kept: null,
+    mode: 'straight',
+    parts: [],
+    total: ev.total,
+    targetLabel: `save DC ${ev.dc}`,
+    verdict: `${ev.total} FIRE DAMAGE!`,
+    vclass: 'crit',
+    nat: 0,
+  };
+}
+
+// ---------------------------------------------------------------- cinematic
+function dieHtml(sides, small) {
+  return `<div class="dice-die${small ? ' small' : ''} spinning">
+    <span class="dice-die-num">?</span>
+    <span class="dice-die-sides">d${sides}</span>
+  </div>`;
+}
+
+function playCinematic(p) {
+  return new Promise((resolve) => {
+    const root = document.getElementById('dice-cinematic');
+    const small = p.rolls.length > 2;
+    root.className = 'dice-overlay';
+    root.innerHTML = `
+      <div class="dice-stage">
+        <div class="dice-title">${p.title}</div>
+        ${p.targetLabel ? `<div class="dice-target">vs ${p.targetLabel}</div>` : ''}
+        <div class="dice-tray">${p.rolls.map(() => dieHtml(p.sides, small)).join('')}</div>
+        ${p.mode === 'advantage' ? '<div class="dice-mode">▲ advantage — keep the best</div>' : ''}
+        ${p.mode === 'disadvantage' ? '<div class="dice-mode">▼ disadvantage — keep the worst</div>' : ''}
+        <div class="dice-parts">${p.parts
+          .filter((x) => x.value !== 0)
+          .map((x) => `<span class="dice-part${x.value < 0 ? ' neg' : ''}">${x.value >= 0 ? '+' : '−'}${Math.abs(x.value)} <em>${x.label}</em></span>`)
+          .join('')}</div>
+        <div class="dice-total">${p.total}</div>
+        <div class="dice-verdict ${p.vclass}">${p.verdict}</div>
+        <div class="dice-hint">tap to skip</div>
+      </div>`;
+    root.hidden = false;
+
+    const dice = [...root.querySelectorAll('.dice-die')];
+    const spin = setInterval(() => {
+      for (const d of dice) {
+        d.querySelector('.dice-die-num').textContent = 1 + Math.floor(Math.random() * p.sides);
+      }
+    }, 70);
+
+    const settle = () => {
+      clearInterval(spin);
+      dice.forEach((d, i) => {
+        d.classList.remove('spinning');
+        d.classList.add('settled');
+        d.querySelector('.dice-die-num').textContent = p.rolls[i];
+        if (p.kept != null && p.rolls.length > 1 && p.rolls[i] !== p.kept) d.classList.add('dropped');
+        if (p.nat === 20 && p.rolls[i] === 20) d.classList.add('nat20');
+        if (p.nat === 1 && p.rolls[i] === 1) d.classList.add('nat1');
+      });
+      // advantage keeps only one die of a pair marked dropped
+      if (p.kept != null && p.rolls.length > 1 && p.rolls[0] === p.rolls[1]) {
+        dice[1].classList.add('dropped');
+        dice[0].classList.remove('dropped');
+      }
+    };
+    const reveal = () => {
+      root.querySelector('.dice-parts').classList.add('shown');
+      root.querySelector('.dice-total').classList.add('shown');
+    };
+    const verdict = () => {
+      root.querySelector('.dice-verdict').classList.add('shown');
+      root.classList.add(p.vclass);
+    };
+
+    const steps = [
+      { at: 800, fn: settle },
+      { at: 1250, fn: reveal },
+      { at: 1700, fn: verdict },
+      { at: 2750, fn: null }, // done
+    ];
+    let idx = 0;
+    let timer = null;
+    let finished = false;
+    const finish = () => {
+      if (finished) return;
+      finished = true;
+      clearInterval(spin);
+      clearTimeout(timer);
+      root.hidden = true;
+      root.onclick = null;
+      resolve();
+    };
+    const schedule = (prevAt) => {
+      if (idx >= steps.length) return finish();
+      const step = steps[idx++];
+      timer = setTimeout(() => {
+        if (step.fn) step.fn();
+        schedule(step.at);
+        if (!step.fn) finish();
+      }, step.at - prevAt);
+    };
+    schedule(0);
+    root.onclick = () => {
+      // fast-forward: settle everything, show verdict, then close on next tap
+      if (!root.querySelector('.dice-verdict').classList.contains('shown')) {
+        clearTimeout(timer);
+        settle();
+        reveal();
+        verdict();
+        idx = steps.length;
+        timer = setTimeout(finish, 900);
+      } else {
+        finish();
+      }
+    };
+  });
+}
+
+// ---------------------------------------------------------------- toast
+function playToast(ev) {
+  return new Promise((resolve) => {
+    const root = document.getElementById('roll-toast');
+    const verdict = verdictFor(ev);
+    root.className = 'roll-toast';
+    root.innerHTML = `
+      <div class="roll-toast-title">${ev.attacker} — ${ev.attackName}!</div>
+      <div class="roll-toast-body">
+        <div class="dice-die small spinning"><span class="dice-die-num">?</span><span class="dice-die-sides">d20</span></div>
+        <div class="roll-toast-math"></div>
+      </div>`;
+    root.hidden = false;
+    const die = root.querySelector('.dice-die');
+    const num = die.querySelector('.dice-die-num');
+    const spin = setInterval(() => {
+      num.textContent = 1 + Math.floor(Math.random() * 20);
+    }, 65);
+    setTimeout(() => {
+      clearInterval(spin);
+      num.textContent = ev.natural;
+      die.classList.remove('spinning');
+      die.classList.add('settled');
+      if (ev.crit) die.classList.add('nat20');
+      if (ev.fumble) die.classList.add('nat1');
+      root.classList.add(verdict.cls);
+      root.querySelector('.roll-toast-math').innerHTML =
+        `<span class="roll-toast-total">${ev.total}</span>
+         <span class="roll-toast-target">vs AC ${ev.targetAc}</span>
+         <span class="roll-toast-verdict ${verdict.cls}">${verdict.text}</span>`;
+    }, 450);
+    setTimeout(() => {
+      root.hidden = true;
+      resolve();
+    }, 1500);
+  });
+}
+
+// ---------------------------------------------------------------- panel
+export function renderCombat(els, state, handlers) {
   const combat = state.run?.combat?.combat;
   if (!combat) return;
   const dragon = dragonOf(combat);
 
-  // enemy cards
   els.enemies.replaceChildren(
     ...combat.order
       .filter((c) => c.kind !== 'dragon')
@@ -27,13 +347,11 @@ export function renderCombat(els, state, { onAttack, onBreath }) {
       })
   );
 
-  // dragon status
   els.player.innerHTML = `
-    <div class="player-face">🐉</div>
+    <img class="player-face-img" src="${DRAGON_FIRE_IMG}" alt="Your dragon">
     <div class="player-name">Your Dragon</div>
     ${hpBar(dragon)}`;
 
-  // action buttons
   const buttons = [];
   if (!combat.over && isPlayerTurn(combat)) {
     for (const m of livingMonsters(combat)) {
@@ -41,7 +359,7 @@ export function renderCombat(els, state, { onAttack, onBreath }) {
       btn.className = 'btn attack-btn';
       btn.textContent = `🦷 Bite the ${m.name}!${m.panicked ? ' ⭐' : ''}`;
       if (m.panicked) btn.title = 'Panicked prey — you attack with advantage!';
-      btn.addEventListener('click', () => onAttack(m.id));
+      btn.addEventListener('click', () => handlers.onAttack(m.id));
       buttons.push(btn);
     }
     if (dragon.breath) {
@@ -50,7 +368,7 @@ export function renderCombat(els, state, { onAttack, onBreath }) {
       if (combat.breathReady) {
         btn.textContent = '🔥 Fire Breath!';
         btn.title = `${dragon.breath.damage} fire damage to every enemy — they save vs DC ${dragon.breath.dc} for half`;
-        btn.addEventListener('click', () => onBreath());
+        btn.addEventListener('click', () => handlers.onBreath());
       } else {
         btn.textContent = '🔥 Recharging…';
         btn.disabled = true;
@@ -73,111 +391,11 @@ function hpBar(c) {
     <div class="hp-num">${c.hp.current} / ${c.hp.max} HP</div>`;
 }
 
-/** Append narrated combat events to the log and update the big die. */
-export function narrateCombatEvents(els, events) {
-  for (const ev of events) {
-    if (ev.type === 'breath') {
-      appendLog(els.log, `You unleash a torrent of flame! (${ev.total} fire damage, save DC ${ev.dc})`, 'log-start');
-      for (const r of ev.results) {
-        appendLog(
-          els.log,
-          r.saved
-            ? `The ${r.name} dives aside — only ${r.damage}! (save ${r.total} vs ${r.dc})`
-            : `The ${r.name} is engulfed for ${r.damage}! (save ${r.total} vs ${r.dc})`,
-          r.saved ? 'log-miss' : 'log-hit'
-        );
-      }
-      els.die.textContent = `🔥 ${ev.total}`;
-      els.die.className = 'big-die crit';
-      continue;
-    }
-    const line = eventLine(ev);
-    if (line) appendLog(els.log, line.text, line.cls);
-    if (ev.type === 'attack') {
-      els.die.textContent = `🎲 ${ev.natural}`;
-      els.die.className = 'big-die' + (ev.crit ? ' crit' : ev.fumble ? ' fumble' : '');
-    }
-  }
-  els.log.scrollTop = els.log.scrollHeight;
-}
-
-function diceNote(ev) {
-  const bonus = `${ev.toHit >= 0 ? '+' : ''}${ev.toHit}`;
-  if (ev.mode === 'advantage') return `(${ev.dieRolls.join('|')} keep ${ev.natural}, ${bonus} vs AC ${ev.targetAc} — advantage!)`;
-  if (ev.mode === 'disadvantage') return `(${ev.dieRolls.join('|')} keep ${ev.natural}, ${bonus} vs AC ${ev.targetAc} — disadvantage)`;
-  return `(${ev.natural}${bonus} vs AC ${ev.targetAc})`;
-}
-
-function eventLine(ev) {
-  switch (ev.type) {
-    case 'combat-start': {
-      const names = ev.monsters.map((m) => `${m.emoji} ${m.name}`).join(', ');
-      return { text: `Danger! ${names} block${ev.monsters.length === 1 ? 's' : ''} your path!`, cls: 'log-start' };
-    }
-    case 'initiative':
-      return { text: `Initiative: ${ev.order.map((o) => `${o.name} ${o.initiative}`).join(' · ')}`, cls: 'log-dim' };
-    case 'round':
-      return { text: `— Round ${ev.round} —`, cls: 'log-dim' };
-    case 'attack': {
-      const you = ev.attackerKind === 'dragon';
-      const dice = diceNote(ev);
-      if (ev.crit) {
-        return {
-          text: you
-            ? `CRITICAL! Your bite crunches the ${ev.target} for ${ev.damage}! ${dice}`
-            : `CRITICAL! The ${ev.attacker}'s ${ev.attackName} hits you for ${ev.damage}! ${dice}`,
-          cls: you ? 'log-hit' : 'log-hurt',
-        };
-      }
-      if (!ev.hit) {
-        return {
-          text: you
-            ? `Your bite misses the ${ev.target}. ${dice}`
-            : `The ${ev.attacker}'s ${ev.attackName} misses you. ${dice}`,
-          cls: 'log-miss',
-        };
-      }
-      return {
-        text: you
-          ? `Your bite hits the ${ev.target} for ${ev.damage}! ${dice}`
-          : `The ${ev.attacker}'s ${ev.attackName} hits you for ${ev.damage}. ${dice}`,
-        cls: you ? 'log-hit' : 'log-hurt',
-      };
-    }
-    case 'morale':
-      return ev.pass
-        ? { text: `The ${ev.who} grits its teeth and stands firm. (${ev.total} vs ${ev.dc})`, cls: 'log-dim' }
-        : { text: `The ${ev.who} panics! 😱 (${ev.total} vs ${ev.dc})`, cls: 'log-start' };
-    case 'flee':
-      return { text: `The ${ev.who} flees into the dark! 💨`, cls: 'log-miss' };
-    case 'recharge':
-      return ev.ready
-        ? { text: `🔥 Your fire roils back to life!`, cls: 'log-start' }
-        : { text: `Your flames sputter… (recharge ${ev.roll}, needs 5+)`, cls: 'log-dim' };
-    case 'death':
-      return { text: `The ${ev.who} is defeated! (worth ${ev.goldValue} gold)`, cls: 'log-hit' };
-    case 'victory':
-      return {
-        text: `Victory! You snatch up ${ev.gold} gold. 💰${ev.fled ? ' The cowards that fled kept theirs!' : ''}`,
-        cls: 'log-start',
-      };
-    case 'defeat':
-      return { text: `You have no strength left…`, cls: 'log-hurt' };
-    default:
-      return null;
-  }
-}
-
 function appendLog(logEl, text, cls = '') {
   const p = document.createElement('p');
   p.textContent = text;
   if (cls) p.className = cls;
   logEl.appendChild(p);
   while (logEl.children.length > 60) logEl.removeChild(logEl.firstChild);
-}
-
-export function clearCombatLog(els) {
-  els.log.replaceChildren();
-  els.die.textContent = '🎲';
-  els.die.className = 'big-die';
+  logEl.scrollTop = logEl.scrollHeight;
 }

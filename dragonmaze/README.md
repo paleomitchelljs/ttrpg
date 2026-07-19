@@ -37,6 +37,10 @@ Append `?seed=anything` to the URL to force a specific labyrinth seed.
 - `src/state/` — game state transitions, localStorage save/migrate
 - `src/render/` — map grid, hoard canvas, combat overlay, HUD/screens
 - `data/` — monsters, treasure table, dragon progression (data only, no logic)
+- `assets/` — runtime sprites cropped from `art/` (the build inlines them as
+  data URIs); `tools/dekey.py` strips the baked-in transparency checkerboard
+  from new crops (`sips --cropOffset Y X -c H W sheet.png --out crop.png`,
+  then `python3 tools/dekey.py crop.png`)
 - `docs/implementation-plan.md` — full phased plan (Phase 0 scope, later phases)
 - `art/` — generated sprite sheets (red dragon player, froglok + lizardfolk
   warriors, dragonkin knight, blue kobold animation sheet); not yet wired into

@@ -1,6 +1,6 @@
-// DOM CSS-grid map with fog of war. Visible = current tile + orthogonal
-// neighbors; explored tiles stay dimly visible. Reads state only; clicks
-// raise intents via the onTileClick callback wired in main.js.
+// DOM CSS-grid map with fog of war. Anywhere the dragon has been stays fully
+// lit — only the unexplored dark remains. Reads state only; clicks raise
+// intents via the onTileClick callback wired in main.js.
 
 import { monsterById } from '../../data/monsters.js';
 
@@ -21,18 +21,21 @@ export function renderMap(container, state) {
       tile.className = 'tile';
       tile.dataset.x = x;
       tile.dataset.y = y;
-      const explored = run.explored[`${x},${y}`];
-      const visible = Math.abs(x - px) + Math.abs(y - py) <= 1;
-      if (!explored) {
+      if (!run.explored[`${x},${y}`]) {
         tile.classList.add('fog');
+      } else if (d.tiles[y][x] !== 1) {
+        tile.classList.add('wall');
       } else {
-        tile.classList.add(d.tiles[y][x] === 1 ? 'floor' : 'wall');
-        if (!visible) tile.classList.add('dim');
-        if (d.tiles[y][x] === 1) {
+        tile.classList.add('floor');
+        if (px === x && py === y) {
+          const token = document.createElement('div');
+          token.className = 'dragon-token';
+          tile.appendChild(token);
+        } else {
           tile.textContent = tileGlyph(run, x, y);
-          if (Math.abs(x - px) + Math.abs(y - py) === 1 && d.tiles[y][x] === 1) {
-            tile.classList.add('steppable');
-          }
+        }
+        if (Math.abs(x - px) + Math.abs(y - py) === 1) {
+          tile.classList.add('steppable');
         }
       }
       frag.appendChild(tile);
@@ -43,7 +46,6 @@ export function renderMap(container, state) {
 
 function tileGlyph(run, x, y) {
   const d = run.dungeon;
-  if (run.playerPos.x === x && run.playerPos.y === y) return '🐉';
   const enc = d.encounters.find((e) => e.x === x && e.y === y);
   if (enc) return monsterById(enc.monsterIds[0])?.emoji ?? '❓';
   if (d.loot.some((l) => l.x === x && l.y === y)) return '💰';

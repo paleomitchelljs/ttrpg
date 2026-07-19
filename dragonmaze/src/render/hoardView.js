@@ -6,7 +6,16 @@
 import { makeSeededRNG } from '../engine/rng.js';
 import { HOARD_PILE_TIERS } from '../engine/rules.js';
 
+// The dragon that curls up on the pile. Redraw once the image arrives.
+const dragonImg = new Image();
+dragonImg.src = './assets/dragon-side.png';
+let lastDraw = null;
+dragonImg.onload = () => {
+  if (lastDraw) drawHoard(...lastDraw);
+};
+
 export function drawHoard(canvas, gold, dragonTierIndex = 0) {
+  lastDraw = [canvas, gold, dragonTierIndex];
   const ctx = canvas.getContext('2d');
   const W = canvas.width;
   const H = canvas.height;
@@ -56,10 +65,10 @@ export function drawHoard(canvas, gold, dragonTierIndex = 0) {
     ctx.fillText('✨', cx + spread * 0.4, baseY - peak * 0.8);
   }
 
-  // the dragon curls up on its hoard, drawn bigger at each age tier
-  const dragonSize = 22 + dragonTierIndex * 12;
-  ctx.font = `${dragonSize}px serif`;
-  ctx.textAlign = 'center';
-  ctx.fillText('🐉', cx, baseY - peak - 6);
-  ctx.textAlign = 'start';
+  // the dragon perches on its hoard, drawn bigger at each age tier
+  if (dragonImg.complete && dragonImg.naturalWidth) {
+    const size = 44 + dragonTierIndex * 20;
+    ctx.imageSmoothingEnabled = false;
+    ctx.drawImage(dragonImg, cx - size / 2, baseY - peak - size + 8, size, size);
+  }
 }
