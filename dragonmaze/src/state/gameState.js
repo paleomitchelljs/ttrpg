@@ -5,13 +5,16 @@
 import { generateDungeon } from '../world/maze.js';
 import { tierByName } from '../../data/dragonProgression.js';
 import { monsterById } from '../../data/monsters.js';
+import { companionById } from '../../data/party.js';
 import { makeCombatant, makeDragonCombatant } from '../engine/entities.js';
 import {
   createCombat,
   runMonsterTurns,
   playerAttack,
   playerBreath,
+  playerSpell,
   isPlayerTurn,
+  heroesOf,
 } from '../engine/combat.js';
 import { endOfRunBonus, tierAfterBanking } from '../engine/rules.js';
 import { liveRNG } from '../engine/rng.js';
@@ -22,6 +25,7 @@ function freshMeta() {
     hoardGold: 0,
     tier: 'wyrmling',
     runsCompleted: 0,
+    party: ['dragonkin-knight', 'dragonkin-swashbuckler'],
     customCharacters: [],
     settings: { hardcore: false, sound: false },
   };
@@ -65,8 +69,14 @@ function reveal(run) {
 export function init() {
   const save = loadSave();
   state.hasSave = save != null;
-  if (save) state.meta = save.meta;
+  if (save) state.meta = normalizeMeta(save.meta);
   emit([{ type: 'booted' }]);
+}
+
+/** Fill fields that predate this save's version of the game. */
+function normalizeMeta(meta) {
+  meta.party ??= ['dragonkin-knight', 'dragonkin-swashbuckler'];
+  return meta;
 }
 
 export function newGame(seed = null) {
@@ -81,7 +91,7 @@ export function continueGame() {
     newGame();
     return;
   }
-  state.meta = save.meta;
+  state.meta = normalizeMeta(save.meta);
   if (save.run) {
     state.run = save.run;
     state.run.combat = null;
@@ -92,13 +102,24 @@ export function continueGame() {
   }
 }
 
+/** Choose which companions join the next labyrinth. */
+export function setParty(companionIds) {
+  state.meta.party = companionIds.filter((id) => companionById(id));
+  persist(state);
+  emit([{ type: 'party-changed' }]);
+}
+
 export function enterLabyrinth(seed) {
   const depth = state.meta.runsCompleted + 1;
   const tier = tierByName(state.meta.tier);
-  const dungeon = generateDungeon(seed, depth);
+  const partyIds = (state.meta.party ?? []).filter((id) => companionById(id));
+  const dungeon = generateDungeon(seed, depth, 1 + partyIds.length);
   state.run = {
     dragon: { tier: tier.tier, hp: { current: tier.hpMax, max: tier.hpMax } },
-    party: [],
+    party: partyIds.map((id) => {
+      const c = companionById(id);
+      return { id, hp: { current: c.hpMax, max: c.hpMax } };
+    }),
     unbankedGold: 0,
     dungeon,
     playerPos: { ...dungeon.start },
@@ -195,8 +216,14 @@ function beginCombat(encounter) {
   const run = state.run;
   const tier = tierByName(run.dragon.tier);
   const dragon = makeDragonCombatant(tier, run.dragon.hp.current);
+  // Downed companions come along at 0 HP — a Healing Word can revive them.
+  const companions = run.party.map((slot) => {
+    const c = makeCombatant(companionById(slot.id));
+    c.hp.current = slot.hp.current;
+    return c;
+  });
   const monsters = encounter.monsterIds.map((id) => makeCombatant(monsterById(id)));
-  const { combat, events } = createCombat(dragon, monsters, liveRNG);
+  const { combat, events } = createCombat([dragon, ...companions], monsters, liveRNG);
   run.phase = 'combat';
   run.combat = { combat, encounterId: encounter.id };
   const followUp = runMonsterTurns(combat, liveRNG);
@@ -215,6 +242,10 @@ export function attack(targetId) {
 
 export function breath() {
   resolvePlayerAction((combat) => playerBreath(combat, liveRNG));
+}
+
+export function cast(spellId, targetId = null) {
+  resolvePlayerAction((combat) => playerSpell(combat, spellId, targetId, liveRNG));
 }
 
 function resolvePlayerAction(act) {
@@ -236,14 +267,22 @@ function resolvePlayerAction(act) {
 
 function syncDragonHp() {
   const run = state.run;
-  const dragon = run.combat?.combat.order.find((c) => c.kind === 'dragon');
-  if (dragon) run.dragon.hp.current = dragon.hp.current;
+  const combat = run.combat?.combat;
+  if (!combat) return;
+  for (const hero of heroesOf(combat)) {
+    if (hero.kind === 'dragon') {
+      run.dragon.hp.current = hero.hp.current;
+    } else {
+      const slot = run.party.find((p) => p.id === hero.templateId);
+      if (slot) slot.hp.current = hero.hp.current;
+    }
+  }
 }
 
 function finishCombat(events) {
   const run = state.run;
   const combat = run.combat.combat;
-  if (combat.winner === 'dragon') {
+  if (combat.winner === 'heroes') {
     // Only defeated monsters drop gold; ones that fled keep theirs.
     const gold = combat.order
       .filter((c) => c.kind !== 'dragon' && c.hp.current <= 0)

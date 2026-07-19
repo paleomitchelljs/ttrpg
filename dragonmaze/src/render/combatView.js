@@ -1,13 +1,22 @@
 // Combat presentation. Combat logic resolves instantly in the engine; this
-// module replays each event batch dramatically, in order: the dragon's d20s
-// get a full-screen BG3-style cinematic (tumbling die, modifier chips, AC
-// plate, verdict banner — matching the main portal's DiceOverlay), monster
-// rolls play as a compact corner toast, and everything lands in the log.
-// While a batch is replaying, the action buttons are locked.
+// module replays each event batch dramatically, in order: hero d20s get a
+// full-screen BG3-style cinematic (matching the portal's DiceOverlay),
+// monster rolls play as a compact corner toast, and every beat lands
+// physically on the battle stage — heroes lined up on the left facing the
+// monsters on the right, attackers lunging across the gap. While a batch is
+// replaying, the action buttons are locked.
 
-import { livingMonsters, dragonOf, isPlayerTurn } from '../engine/combat.js';
+import {
+  livingMonsters,
+  livingHeroes,
+  heroesOf,
+  dragonOf,
+  isPlayerTurn,
+  currentCombatant,
+} from '../engine/combat.js';
 import { spritePath } from './mapView.js';
 import { SPRITES } from '../assets-manifest.js';
+import { SPELLS, spellById } from '../../data/spells.js';
 
 const DRAGON_FIRE_IMG = './assets/dragon-fire.png';
 const DRAGON_FLY_STRIP = SPRITES['dragon-fly'];
@@ -50,8 +59,8 @@ async function presentEvent(els, ev) {
     case 'combat-start': {
       els.log.replaceChildren();
       els.overlay.hidden = false;
-      const names = ev.monsters.map((m) => `${m.emoji} ${m.name}`).join(', ');
-      appendLog(els.log, `Danger! ${names} block${ev.monsters.length === 1 ? 's' : ''} your path!`, 'log-start');
+      const names = ev.monsters.map((m) => m.name);
+      appendLog(els.log, `Danger! ${listNames(names)} block${names.length === 1 ? 's' : ''} your path!`, 'log-start');
       return delay(400);
     }
     case 'initiative':
@@ -61,7 +70,7 @@ async function presentEvent(els, ev) {
       appendLog(els.log, `— Round ${ev.round} —`, 'log-dim');
       return delay(200);
     case 'attack': {
-      if (ev.attackerKind === 'dragon') await playCinematic(bitePayload(ev));
+      if (ev.attackerKind !== 'monster') await playCinematic(strikePayload(ev));
       else await playToast(ev);
       await attackBeat(els, ev);
       const line = attackLine(ev);
@@ -70,7 +79,7 @@ async function presentEvent(els, ev) {
     }
     case 'breath': {
       await playCinematic(breathPayload(ev));
-      appendLog(els.log, `You unleash a torrent of flame! (${ev.total} fire damage, save DC ${ev.dc})`, 'log-start');
+      appendLog(els.log, `The dragon unleashes a torrent of flame! (${ev.total} fire damage, save DC ${ev.dc})`, 'log-start');
       await breathBeat(els, ev);
       for (const r of ev.results) {
         appendLog(
@@ -84,25 +93,84 @@ async function presentEvent(els, ev) {
       }
       return;
     }
+    case 'spell-cast': {
+      await playCinematic(spellPayload(ev));
+      appendLog(
+        els.log,
+        ev.success
+          ? `${ev.caster} casts ${ev.name}! (${ev.total} vs DC ${ev.dc})`
+          : `${ev.caster}'s ${ev.name} fizzles… the spell is spent for this fight. (${ev.total} vs DC ${ev.dc})`,
+        ev.success ? 'log-start' : 'log-miss'
+      );
+      return delay(200);
+    }
+    case 'spell-hit': {
+      const card = cardOf(els, ev.targetId);
+      if (card) {
+        card.classList.add('hit-flash');
+        updateCardHp(card, ev.hpAfter);
+      }
+      appendLog(els.log, `The bolt sears the ${ev.target} for ${ev.damage}!`, 'log-hit');
+      await delay(450);
+      card?.classList.remove('hit-flash');
+      return;
+    }
+    case 'spell-heal': {
+      const card = cardOf(els, ev.targetId);
+      if (card) {
+        card.classList.add('heal-flash');
+        card.classList.remove('down');
+        updateCardHp(card, ev.hpAfter);
+      }
+      appendLog(
+        els.log,
+        ev.revived
+          ? `${ev.target} staggers back up with ${ev.amount} HP!`
+          : `${ev.target} is healed for ${ev.amount}!`,
+        'log-hit'
+      );
+      await delay(500);
+      card?.classList.remove('heal-flash');
+      return;
+    }
+    case 'spell-wave': {
+      appendLog(els.log, `A wave of flame rolls over the enemies! (${ev.total} damage, save DC ${ev.dc})`, 'log-start');
+      for (const r of ev.results) {
+        const card = cardOf(els, r.id);
+        if (card) {
+          card.classList.add('hit-flash');
+          updateCardHp(card, r.hpAfter);
+        }
+        appendLog(
+          els.log,
+          r.saved ? `The ${r.name} ducks — ${r.damage}!` : `The ${r.name} burns for ${r.damage}!`,
+          r.saved ? 'log-miss' : 'log-hit'
+        );
+        await delay(160);
+      }
+      await delay(300);
+      for (const card of els.enemies.querySelectorAll('.hit-flash')) card.classList.remove('hit-flash');
+      return;
+    }
     case 'morale':
       appendLog(
         els.log,
         ev.pass
           ? `The ${ev.who} grits its teeth and stands firm. (${ev.total} vs ${ev.dc})`
-          : `The ${ev.who} panics! 😱 (${ev.total} vs ${ev.dc})`,
+          : `The ${ev.who} panics! (${ev.total} vs ${ev.dc})`,
         ev.pass ? 'log-dim' : 'log-start'
       );
       return delay(350);
     case 'flee': {
       const card = cardOf(els, ev.id);
       if (card) card.classList.add('fleeing');
-      appendLog(els.log, `The ${ev.who} flees into the dark! 💨`, 'log-miss');
+      appendLog(els.log, `The ${ev.who} flees into the dark!`, 'log-miss');
       return delay(450);
     }
     case 'recharge':
       appendLog(
         els.log,
-        ev.ready ? `🔥 Your fire roils back to life!` : `Your flames sputter… (recharge ${ev.roll}, needs 5+)`,
+        ev.ready ? `The dragon's fire roils back to life!` : `The dragon's flames sputter… (recharge ${ev.roll}, needs 5+)`,
         ev.ready ? 'log-start' : 'log-dim'
       );
       return delay(250);
@@ -112,27 +180,65 @@ async function presentEvent(els, ev) {
       appendLog(els.log, `The ${ev.who} is defeated! (worth ${ev.goldValue} gold)`, 'log-hit');
       return delay(500);
     }
+    case 'hero-down': {
+      const card = cardOf(els, ev.id);
+      if (card) card.classList.add('down');
+      appendLog(els.log, `${ev.who} falls!`, 'log-hurt');
+      return delay(500);
+    }
     case 'victory':
       appendLog(
         els.log,
-        `Victory! You snatch up ${ev.gold} gold. 💰${ev.fled ? ' The cowards that fled kept theirs!' : ''}`,
+        `Victory! You snatch up ${ev.gold} gold.${ev.fled ? ' The cowards that fled kept theirs!' : ''}`,
         'log-start'
       );
       return delay(700);
     case 'defeat':
-      appendLog(els.log, `You have no strength left…`, 'log-hurt');
+      appendLog(els.log, `The dragon has no strength left…`, 'log-hurt');
       return delay(600);
     default:
       return;
   }
 }
 
-// ---------------------------------------------------------------- beats
-// Physical stage business after the dice: the attacker lunges (swapping to
-// its attack frames), the victim flashes and its HP bar drops.
+function listNames(names) {
+  const counts = new Map();
+  for (const n of names) counts.set(n, (counts.get(n) ?? 0) + 1);
+  return [...counts.entries()]
+    .map(([n, c]) => (c > 1 ? `${c} ${n}s` : `a ${n}`))
+    .join(' and ');
+}
 
+function attackLine(ev) {
+  const heroSide = ev.attackerKind !== 'monster';
+  const verb = ev.attackerKind === 'dragon' ? 'bite' : ev.attackName;
+  if (ev.crit) {
+    return {
+      text: heroSide
+        ? `CRITICAL! ${ev.attacker}'s ${verb} crunches the ${ev.target} for ${ev.damage}!`
+        : `CRITICAL! The ${ev.attacker}'s ${ev.attackName} hits ${ev.target} for ${ev.damage}!`,
+      cls: heroSide ? 'log-hit' : 'log-hurt',
+    };
+  }
+  if (!ev.hit) {
+    return {
+      text: heroSide
+        ? `${ev.attacker}'s ${verb} misses the ${ev.target}.`
+        : `The ${ev.attacker}'s ${ev.attackName} misses ${ev.target}.`,
+      cls: 'log-miss',
+    };
+  }
+  return {
+    text: heroSide
+      ? `${ev.attacker}'s ${verb} hits the ${ev.target} for ${ev.damage}!`
+      : `The ${ev.attacker}'s ${ev.attackName} hits ${ev.target} for ${ev.damage}.`,
+    cls: heroSide ? 'log-hit' : 'log-hurt',
+  };
+}
+
+// ---------------------------------------------------------------- beats
 function cardOf(els, id) {
-  return els.enemies.querySelector(`[data-id="${CSS.escape(id)}"]`);
+  return els.overlay.querySelector(`[data-id="${CSS.escape(id)}"]`);
 }
 
 function setStrip(cardEl, mode) {
@@ -156,12 +262,11 @@ function updateCardHp(cardEl, hp) {
 }
 
 async function attackBeat(els, ev) {
-  const dragonAttacks = ev.attackerKind === 'dragon';
-  const attacker = dragonAttacks ? els.player : cardOf(els, ev.attackerId);
-  const victim = dragonAttacks ? cardOf(els, ev.targetId) : els.player;
+  const attacker = cardOf(els, ev.attackerId);
+  const victim = cardOf(els, ev.targetId);
   if (attacker) {
     setStrip(attacker, 'attack');
-    attacker.classList.add(dragonAttacks ? 'lunge-up' : 'lunge-down');
+    attacker.classList.add('lunging');
   }
   await delay(280);
   if (ev.hit && victim) {
@@ -170,21 +275,22 @@ async function attackBeat(els, ev) {
   }
   await delay(320);
   if (attacker) {
-    attacker.classList.remove('lunge-up', 'lunge-down');
+    attacker.classList.remove('lunging');
     setStrip(attacker, 'idle');
   }
   victim?.classList.remove('hit-flash');
 }
 
 async function breathBeat(els, ev) {
-  const img = els.player.querySelector('.combat-sprite img');
-  const spriteBox = els.player.querySelector('.combat-sprite');
+  const dragonCard = els.player.querySelector('.unit.dragon');
+  const img = dragonCard?.querySelector('.combat-sprite img');
+  const spriteBox = dragonCard?.querySelector('.combat-sprite');
   if (img) {
     img.src = DRAGON_FIRE_IMG;
     spriteBox.classList.remove('f4');
     spriteBox.classList.add('static');
   }
-  els.player.classList.add('breathing');
+  dragonCard?.classList.add('breathing');
   els.enemies.classList.add('scorched');
   await delay(500);
   for (const r of ev.results) {
@@ -197,37 +303,13 @@ async function breathBeat(els, ev) {
   }
   await delay(400);
   els.enemies.classList.remove('scorched');
-  els.player.classList.remove('breathing');
+  dragonCard?.classList.remove('breathing');
   for (const card of els.enemies.querySelectorAll('.hit-flash')) card.classList.remove('hit-flash');
   if (img) {
     img.src = DRAGON_FLY_STRIP;
     spriteBox.classList.add('f4');
     spriteBox.classList.remove('static');
   }
-}
-
-function attackLine(ev) {
-  const you = ev.attackerKind === 'dragon';
-  if (ev.crit) {
-    return {
-      text: you
-        ? `CRITICAL! Your bite crunches the ${ev.target} for ${ev.damage}!`
-        : `CRITICAL! The ${ev.attacker}'s ${ev.attackName} hits you for ${ev.damage}!`,
-      cls: you ? 'log-hit' : 'log-hurt',
-    };
-  }
-  if (!ev.hit) {
-    return {
-      text: you ? `Your bite misses the ${ev.target}.` : `The ${ev.attacker}'s ${ev.attackName} misses you.`,
-      cls: 'log-miss',
-    };
-  }
-  return {
-    text: you
-      ? `Your bite hits the ${ev.target} for ${ev.damage}!`
-      : `The ${ev.attacker}'s ${ev.attackName} hits you for ${ev.damage}.`,
-    cls: you ? 'log-hit' : 'log-hurt',
-  };
 }
 
 // ---------------------------------------------------------------- payloads
@@ -238,15 +320,16 @@ function verdictFor(ev) {
   return { text: 'MISS', cls: 'bad' };
 }
 
-function bitePayload(ev) {
+function strikePayload(ev) {
   const verdict = verdictFor(ev);
+  const verb = ev.attackerKind === 'dragon' ? 'Bite' : cap(ev.attackName);
   return {
-    title: `Bite the ${ev.target}!`,
+    title: `${ev.attacker} — ${verb} the ${ev.target}!`,
     sides: 20,
     rolls: ev.dieRolls,
     kept: ev.natural,
     mode: ev.mode,
-    parts: [{ label: 'bite', value: ev.toHit }],
+    parts: [{ label: 'attack', value: ev.toHit }],
     total: ev.total,
     targetLabel: `AC ${ev.targetAc}`,
     verdict: verdict.text,
@@ -268,6 +351,22 @@ function breathPayload(ev) {
     verdict: `${ev.total} FIRE DAMAGE!`,
     vclass: 'crit',
     nat: 0,
+  };
+}
+
+function spellPayload(ev) {
+  return {
+    title: `${ev.caster} casts ${ev.name}!`,
+    sides: 20,
+    rolls: [ev.natural],
+    kept: ev.natural,
+    mode: 'straight',
+    parts: ev.bonus ? [{ label: 'magic', value: ev.bonus }] : [],
+    total: ev.total,
+    targetLabel: `DC ${ev.dc}`,
+    verdict: ev.success ? 'CAST!' : 'FIZZLE…',
+    vclass: ev.success ? 'good' : 'fumble',
+    nat: ev.natural === 20 ? 20 : ev.natural === 1 ? 1 : 0,
   };
 }
 
@@ -318,7 +417,6 @@ function playCinematic(p) {
         if (p.nat === 20 && p.rolls[i] === 20) d.classList.add('nat20');
         if (p.nat === 1 && p.rolls[i] === 1) d.classList.add('nat1');
       });
-      // advantage keeps only one die of a pair marked dropped
       if (p.kept != null && p.rolls.length > 1 && p.rolls[0] === p.rolls[1]) {
         dice[1].classList.add('dropped');
         dice[0].classList.remove('dropped');
@@ -337,7 +435,7 @@ function playCinematic(p) {
       { at: 800, fn: settle },
       { at: 1250, fn: reveal },
       { at: 1700, fn: verdict },
-      { at: 2750, fn: null }, // done
+      { at: 2750, fn: null },
     ];
     let idx = 0;
     let timer = null;
@@ -362,7 +460,6 @@ function playCinematic(p) {
     };
     schedule(0);
     root.onclick = () => {
-      // fast-forward: settle everything, show verdict, then close on next tap
       if (!root.querySelector('.dice-verdict').classList.contains('shown')) {
         clearTimeout(timer);
         settle();
@@ -384,7 +481,7 @@ function playToast(ev) {
     const verdict = verdictFor(ev);
     root.className = 'roll-toast';
     root.innerHTML = `
-      <div class="roll-toast-title">${ev.attacker} — ${ev.attackName}!</div>
+      <div class="roll-toast-title">${ev.attacker} → ${ev.target}!</div>
       <div class="roll-toast-body">
         <div class="dice-die small spinning"><span class="dice-die-num">?</span><span class="dice-die-sides">d20</span></div>
         <div class="roll-toast-math"></div>
@@ -415,79 +512,71 @@ function playToast(ev) {
   });
 }
 
-// ---------------------------------------------------------------- panel
+// ---------------------------------------------------------------- stage
+const ICONS = {
+  fang: '<svg class="btn-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M5 1c1.5 2 1.6 5 3 12 1.4-7 1.5-10 3-12-1.2 1.1-4.8 1.1-6 0Z" fill="#fff"/></svg>',
+  flame: '<svg class="btn-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1c1 3-3 4.5-3 8a3 3 0 0 0 6 .2C11 7 12.4 6.6 11.4 4 13.5 6 15 7.8 15 10A7 7 0 1 1 1 10C1 6.2 6 4.6 8 1Z" fill="#ffb03b"/></svg>',
+  spark: '<svg class="btn-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1l1.8 5.2L15 8l-5.2 1.8L8 15l-1.8-5.2L1 8l5.2-1.8Z" fill="#cbb3ff"/></svg>',
+};
+
 export function renderCombat(els, state, handlers) {
   const combat = state.run?.combat?.combat;
   if (!combat) return;
-  const dragon = dragonOf(combat);
+  const activeId = isPlayerTurn(combat) ? currentCombatant(combat).id : null;
 
   els.enemies.replaceChildren(
     ...combat.order
-      .filter((c) => c.kind !== 'dragon')
-      .map((m) => {
-        const dead = m.hp.current <= 0;
-        const card = document.createElement('div');
-        card.className = 'enemy-card' + (dead ? ' dead' : '') + (m.fled ? ' fled' : '');
-        card.dataset.id = m.id;
-        card.dataset.hpmax = m.hp.max;
-        if (m.anim) {
-          card.dataset.idle = spritePath(m.anim.idle);
-          card.dataset.attack = spritePath(m.anim.attack);
-        }
-        card.innerHTML = `
-          ${faceHtml(m, dead)}
-          <div class="enemy-name">${m.name}</div>
-          ${m.fled ? '<div class="badge-flee">fled!</div>' : hpBar(m)}
-          ${!dead && !m.fled && m.panicked ? '<div class="badge-panic">😱 panicked!</div>' : ''}`;
-        return card;
-      })
+      .filter((c) => c.kind === 'monster')
+      .map((m) => unitEl(m, 'enemy', activeId))
   );
+  els.player.replaceChildren(...heroesOf(combat).map((h) => unitEl(h, 'hero', activeId)));
 
-  els.player.dataset.hpmax = dragon.hp.max;
-  els.player.dataset.idle = DRAGON_FLY_STRIP;
-  els.player.dataset.attack = DRAGON_FLY_STRIP;
-  els.player.innerHTML = `
-    <div class="combat-sprite sprite f4 player-sprite flip"><img src="${DRAGON_FLY_STRIP}" alt="Your dragon"></div>
-    <div class="player-name">Your Dragon</div>
-    ${hpBar(dragon)}`;
-
-  const buttons = [];
-  if (!combat.over && isPlayerTurn(combat)) {
-    for (const m of livingMonsters(combat)) {
-      const btn = document.createElement('button');
-      btn.className = 'btn attack-btn';
-      btn.textContent = `🦷 Bite the ${m.name}!${m.panicked ? ' ⭐' : ''}`;
-      if (m.panicked) btn.title = 'Panicked prey — you attack with advantage!';
-      btn.addEventListener('click', () => handlers.onAttack(m.id));
-      buttons.push(btn);
-    }
-    if (dragon.breath) {
-      const btn = document.createElement('button');
-      btn.className = 'btn attack-btn breath-btn';
-      if (combat.breathReady) {
-        btn.textContent = '🔥 Fire Breath!';
-        btn.title = `${dragon.breath.damage} fire damage to every enemy — they save vs DC ${dragon.breath.dc} for half`;
-        btn.addEventListener('click', () => handlers.onBreath());
-      } else {
-        btn.textContent = '🔥 Recharging…';
-        btn.disabled = true;
-      }
-      buttons.push(btn);
-    }
-  } else if (!combat.over) {
-    const wait = document.createElement('div');
-    wait.className = 'turn-note';
-    wait.textContent = 'The monsters act…';
-    buttons.push(wait);
-  }
-  els.actions.replaceChildren(...buttons);
+  renderActions(els, combat, handlers, null);
 }
 
-function faceHtml(m, dead) {
-  if (m.anim?.idle) {
-    return `<div class="combat-sprite sprite f2"><img src="${spritePath(m.anim.idle)}" alt="${m.name}"></div>`;
+function unitEl(c, side, activeId) {
+  const dead = c.hp.current <= 0;
+  const unit = document.createElement('div');
+  unit.className = [
+    'unit',
+    side,
+    c.kind === 'dragon' ? 'dragon' : '',
+    side === 'enemy' && dead ? 'dead' : '',
+    side === 'hero' && dead ? 'down' : '',
+    c.fled ? 'fled' : '',
+    c.id === activeId ? 'active' : '',
+  ].filter(Boolean).join(' ');
+  unit.dataset.id = c.id;
+  unit.dataset.hpmax = c.hp.max;
+  if (c.kind === 'dragon') {
+    unit.dataset.idle = DRAGON_FLY_STRIP;
+    unit.dataset.attack = DRAGON_FLY_STRIP;
+  } else if (c.anim) {
+    unit.dataset.idle = spritePath(c.anim.idle);
+    unit.dataset.attack = spritePath(c.anim.attack);
   }
-  return `<div class="enemy-face">${dead ? '☠️' : m.fled ? '💨' : m.emoji}</div>`;
+  const plate = `
+    <div class="plate">
+      <div class="unit-name">${c.name}</div>
+      ${c.fled ? '<div class="badge-flee">fled!</div>' : hpBar(c)}
+      ${!dead && !c.fled && c.panicked ? '<div class="badge-panic">panicked!</div>' : ''}
+    </div>`;
+  const face = faceHtml(c, dead);
+  // heroes: sprite then plate; enemies: plate then sprite (mirrored layout)
+  unit.innerHTML = side === 'hero' ? face + plate : plate + face;
+  return unit;
+}
+
+function faceHtml(c, dead) {
+  if (c.kind === 'dragon') {
+    return `<div class="combat-sprite sprite f4 flip"><img src="${DRAGON_FLY_STRIP}" alt="${c.name}"></div>`;
+  }
+  if (c.anim?.idle) {
+    // hero side art faces left natively; flip heroes to face the enemy column
+    const flip = c.kind === 'hero' ? ' flip' : '';
+    return `<div class="combat-sprite sprite f2${flip}"><img src="${spritePath(c.anim.idle)}" alt="${c.name}"></div>`;
+  }
+  return `<div class="enemy-face">${dead ? '☠' : c.emoji}</div>`;
 }
 
 function hpBar(c) {
@@ -497,6 +586,88 @@ function hpBar(c) {
     <div class="hp-num">${c.hp.current} / ${c.hp.max} HP</div>`;
 }
 
+// ---------------------------------------------------------------- actions
+function renderActions(els, combat, handlers, targetSpell) {
+  if (combat.over || !isPlayerTurn(combat)) {
+    const wait = document.createElement('div');
+    wait.className = 'turn-note';
+    wait.textContent = combat.over ? '' : 'The monsters act…';
+    els.actions.replaceChildren(wait);
+    return;
+  }
+  const actor = currentCombatant(combat);
+
+  // Second step of casting: pick the spell's target.
+  if (targetSpell) {
+    const buttons = [];
+    const targets =
+      targetSpell.target === 'enemy' ? livingMonsters(combat) : heroesOf(combat);
+    for (const t of targets) {
+      const btn = document.createElement('button');
+      btn.className = 'btn attack-btn spell-btn';
+      btn.innerHTML = `${ICONS.spark}<span>${targetSpell.name} → ${t.name}</span>`;
+      btn.addEventListener('click', () => handlers.onCast(targetSpell.id, t.id));
+      buttons.push(btn);
+    }
+    const cancel = document.createElement('button');
+    cancel.className = 'btn btn-small';
+    cancel.textContent = 'Cancel';
+    cancel.addEventListener('click', () => renderActions(els, combat, handlers, null));
+    buttons.push(cancel);
+    els.actions.replaceChildren(...buttons);
+    return;
+  }
+
+  const buttons = [];
+  const verb = actor.kind === 'dragon' ? 'Bite' : 'Strike';
+  for (const m of livingMonsters(combat)) {
+    const btn = document.createElement('button');
+    btn.className = 'btn attack-btn';
+    btn.innerHTML = `${ICONS.fang}<span>${verb} the ${m.name}!${m.panicked ? ' (advantage!)' : ''}</span>`;
+    btn.addEventListener('click', () => handlers.onAttack(m.id));
+    buttons.push(btn);
+  }
+  if (actor.kind === 'dragon' && actor.breath) {
+    const btn = document.createElement('button');
+    btn.className = 'btn attack-btn breath-btn';
+    if (combat.breathReady) {
+      btn.innerHTML = `${ICONS.flame}<span>Fire Breath!</span>`;
+      btn.title = `${actor.breath.damage} fire damage to every enemy — they save vs DC ${actor.breath.dc} for half`;
+      btn.addEventListener('click', () => handlers.onBreath());
+    } else {
+      btn.innerHTML = `${ICONS.flame}<span>Recharging…</span>`;
+      btn.disabled = true;
+    }
+    buttons.push(btn);
+  }
+  if (actor.spells.length) {
+    const sel = document.createElement('select');
+    sel.className = 'spell-select';
+    sel.innerHTML =
+      `<option value="">Cast a spell…</option>` +
+      actor.spells
+        .map((id) => {
+          const s = spellById(id);
+          const burned = actor.burned.includes(id);
+          return `<option value="${id}" ${burned ? 'disabled' : ''}>${s.name} — ${s.blurb}${burned ? ' (spent)' : ''}</option>`;
+        })
+        .join('');
+    sel.addEventListener('change', () => {
+      const spell = spellById(sel.value);
+      if (!spell) return;
+      sel.value = '';
+      const targets = spell.target === 'enemy' ? livingMonsters(combat) : heroesOf(combat);
+      if (spell.target === 'all-enemies' || targets.length <= 1) {
+        handlers.onCast(spell.id, targets[0]?.id ?? null);
+      } else {
+        renderActions(els, combat, handlers, spell);
+      }
+    });
+    buttons.push(sel);
+  }
+  els.actions.replaceChildren(...buttons);
+}
+
 function appendLog(logEl, text, cls = '') {
   const p = document.createElement('p');
   p.textContent = text;
@@ -504,4 +675,8 @@ function appendLog(logEl, text, cls = '') {
   logEl.appendChild(p);
   while (logEl.children.length > 60) logEl.removeChild(logEl.firstChild);
   logEl.scrollTop = logEl.scrollHeight;
+}
+
+function cap(s) {
+  return s.charAt(0).toUpperCase() + s.slice(1);
 }

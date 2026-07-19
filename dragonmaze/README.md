@@ -6,11 +6,15 @@ turn-based d20 combat, carry loot to the exit, and bank it into a persistent
 hoard that visibly grows. No frameworks, no runtime dependencies — vanilla
 HTML/CSS/JS ES modules.
 
-Current status: **Phase 1 — growth & depth** (see `docs/implementation-plan.md`):
-hoard-gated tier-ups (wyrmling→young→adult→ancient), fire breath with a d6
-recharge (area save-for-half), advantage vs panicked prey, a 13-monster roster,
-depth-scaled encounters and loot, and monster morale (failed courage checks
-mean fleeing monsters — and fled monsters keep their gold).
+Current status: **Phase 2 — party & spells** (see `docs/implementation-plan.md`):
+everything from Phase 1 (hoard-gated tier-ups, fire breath with a d6 recharge,
+advantage vs panicked prey, depth-scaled encounters/loot, monster morale) plus
+a JRPG-style battle stage (party lined up on the left facing the monsters on
+the right), recruitable dragonkin companions chosen on the title screen
+(encounter packs scale with party size), and a spell system: casters pick from
+a dropdown, roll d20+CHA vs the spell's DC, and a fizzle burns the spell for
+that combat. Healing Word can revive fallen companions; if the dragon falls,
+the run ends however many companions still stand.
 
 ## Run it
 

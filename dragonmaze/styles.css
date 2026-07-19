@@ -285,40 +285,77 @@ button { font: inherit; }
 .result-box { border-color: var(--gold); text-align: center; }
 .result-box h2 { margin: 0; color: var(--gold); }
 
-.combat-row { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
+/* ------------------------------------------------------------- battle stage
+   Heroes lined up on the left facing the monsters on the right. */
 
-.enemy-card, #combat-player {
-  background: var(--panel-2);
+.battle-stage {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  min-height: 240px;
+  padding: 0.8rem 1rem;
   border-radius: 12px;
-  padding: 0.5rem 0.9rem;
-  text-align: center;
-  min-width: 8.5rem;
+  background:
+    radial-gradient(ellipse at 20% 95%, #3a2d2444 0%, transparent 55%),
+    radial-gradient(ellipse at 80% 95%, #3a2d2444 0%, transparent 55%),
+    linear-gradient(180deg, #17111c 0%, #241a2c 70%, #2c2138 100%);
+  border: 2px solid #00000066;
 }
 
-.enemy-card.dead { opacity: 0.45; filter: grayscale(0.8); }
-
-.enemy-face { font-size: 2.3rem; line-height: 1.1; }
-.enemy-name, .player-name { font-weight: bold; margin: 0.15rem 0; }
-
-.combat-sprite {
-  width: 76px;
-  margin: 0 auto;
-  filter: drop-shadow(0 3px 5px #000a);
+.battle-heroes, .battle-enemies {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 }
 
-.player-sprite { width: 88px; }
+.battle-heroes { align-items: flex-start; }
+.battle-enemies { align-items: flex-end; }
 
-/* ---- battle beats (driven by combatView during event replay) ---- */
-
-.enemy-card, #combat-player {
+.unit {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
   transition: transform 0.22s ease, opacity 0.3s, filter 0.3s;
 }
 
-.enemy-card.lunge-down { transform: translateY(16px) scale(1.07); }
-#combat-player.lunge-up { transform: translateY(-14px) scale(1.05); }
+.plate {
+  background: #221a2cee;
+  border: 1px solid #00000066;
+  border-radius: 8px;
+  padding: 0.2rem 0.6rem;
+  min-width: 7.5rem;
+  font-size: 0.85rem;
+}
+
+.unit-name { font-weight: bold; font-size: 0.9rem; }
+
+.unit.active { filter: drop-shadow(0 0 9px #e8b93c66); }
+.unit.active .plate { border-color: var(--gold); }
+.unit.active .unit-name::before { content: '▶ '; color: var(--gold); }
+
+.combat-sprite {
+  width: 64px;
+  flex: none;
+  filter: drop-shadow(0 3px 5px #000a);
+}
+
+.unit.hero .combat-sprite { width: 76px; }
+.unit.dragon .combat-sprite { width: 104px; }
+/* monsters stand on the right and face left; mirror right-facing art */
+.unit.enemy .combat-sprite { transform: scaleX(-1); }
+
+.enemy-face { font-size: 2.1rem; line-height: 1.1; width: 64px; text-align: center; flex: none; }
+
+/* ---- battle beats (driven by combatView during event replay) ---- */
+
+.unit.hero.lunging { transform: translateX(26px) scale(1.06); }
+.unit.enemy.lunging { transform: translateX(-26px) scale(1.06); }
 
 .hit-flash { animation: hit-shake 0.34s ease; }
 .hit-flash .combat-sprite, .hit-flash .enemy-face { filter: brightness(2.1) sepia(0.7) hue-rotate(-45deg); }
+
+.heal-flash .combat-sprite { filter: brightness(1.9) hue-rotate(70deg) drop-shadow(0 0 12px #6fce7e); }
 
 @keyframes hit-shake {
   0%, 100% { translate: 0 0; }
@@ -328,24 +365,32 @@ button { font: inherit; }
   80% { translate: 4px 0; }
 }
 
-.enemy-card.dying { opacity: 0.5; }
-.enemy-card.dying .combat-sprite, .enemy-card.dead .combat-sprite {
+.unit.dying { opacity: 0.5; }
+.unit.dying .combat-sprite, .unit.enemy.dead .combat-sprite {
   filter: grayscale(1) brightness(0.55);
-  transform: rotate(90deg) translateX(12px);
+  transform: scaleX(-1) rotate(-90deg);
   transition: transform 0.4s ease, filter 0.4s;
 }
-.enemy-card.dead .combat-sprite img, .enemy-card.fled .combat-sprite img { animation: none; }
+.unit.dead .combat-sprite img, .unit.fled .combat-sprite img { animation: none; }
 
-.enemy-card.fleeing { transform: translateX(60px); opacity: 0.2; }
-.enemy-card.fled .combat-sprite { filter: grayscale(0.8) opacity(0.6); transform: scaleX(-1); }
+.unit.hero.down { opacity: 0.5; }
+.unit.hero.down .combat-sprite {
+  filter: grayscale(1) brightness(0.55);
+  transform: rotate(90deg);
+}
+.unit.hero.down .combat-sprite img { animation: none; }
 
-#combat-player.breathing .player-sprite { filter: drop-shadow(0 0 18px #ff8c2b) drop-shadow(0 3px 5px #000a); }
+.unit.fleeing { transform: translateX(70px); opacity: 0.2; }
+.unit.fled { opacity: 0.45; }
+.unit.fled .combat-sprite { filter: grayscale(0.8); }
+
+.unit.breathing .combat-sprite { filter: drop-shadow(0 0 18px #ff8c2b) drop-shadow(0 3px 5px #000a); }
 
 #combat-enemies.scorched { animation: scorch 0.9s ease; }
 
 @keyframes scorch {
   0% { background: transparent; }
-  30% { background: radial-gradient(ellipse at 50% 100%, #ff7b2b55 0%, transparent 70%); }
+  30% { background: radial-gradient(ellipse at 0% 50%, #ff7b2b55 0%, transparent 70%); }
   100% { background: transparent; }
 }
 
@@ -394,7 +439,49 @@ button { font: inherit; }
   align-items: center;
 }
 
-.attack-btn { font-size: 1.15rem; }
+.attack-btn {
+  font-size: 1.15rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45em;
+}
+
+.btn-icon { width: 1em; height: 1em; flex: none; }
+
+.spell-select {
+  font: inherit;
+  font-size: 1.05rem;
+  background: var(--panel-2);
+  color: var(--ink);
+  border: 2px solid #00000088;
+  border-radius: 10px;
+  padding: 0.5em 0.8em;
+  cursor: pointer;
+}
+
+.party-select {
+  margin-top: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  align-items: center;
+}
+
+.party-label { color: var(--ink-dim); margin: 0; font-size: 0.95rem; }
+
+.party-opt {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  background: var(--panel);
+  border-radius: 10px;
+  padding: 0.3rem 0.9rem;
+}
+
+.party-opt input { accent-color: var(--ember); width: 1.1em; height: 1.1em; }
+
+.party-thumb { width: 2em; height: 2em; }
 
 .turn-note { color: var(--ink-dim); font-style: italic; }
 

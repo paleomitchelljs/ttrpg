@@ -18,6 +18,18 @@ import {
 } from '../src/engine/rules.js';
 import { MONSTERS, monsterById } from '../data/monsters.js';
 import { SPRITES } from '../src/assets-manifest.js';
+import { SPELLS, spellById } from '../data/spells.js';
+import { COMPANIONS, companionById } from '../data/party.js';
+import { resolveSpellCast } from '../src/engine/rules.js';
+import { makeCombatant, makeDragonCombatant } from '../src/engine/entities.js';
+import { tierByName } from '../data/dragonProgression.js';
+import {
+  createCombat,
+  runMonsterTurns,
+  playerSpell,
+  isPlayerTurn,
+  livingMonsters,
+} from '../src/engine/combat.js';
 
 const N = 10_000;
 let passed = 0;
@@ -252,6 +264,51 @@ check('roster is Phase-1 sized with sane stats', () => {
     assert.ok(m.goldValue > 0, `${m.id} gold`);
     roll(m.attacks[0].damage); // throws if the dice expression is malformed
   }
+});
+
+// ---- spells & party
+check('spellbook is well-formed and companion spells exist', () => {
+  for (const s of SPELLS) {
+    roll(s.dice); // throws on a malformed expression
+    assert.ok(['enemy', 'ally', 'all-enemies'].includes(s.target), `${s.id} target`);
+    assert.ok(s.castDC >= 10 && s.castDC <= 15, `${s.id} castDC`);
+  }
+  for (const c of COMPANIONS) {
+    for (const id of c.spells) assert.ok(spellById(id), `${c.id} knows unknown spell ${id}`);
+    assert.ok(SPRITES[c.anim.idle] && SPRITES[c.anim.attack], `${c.id} strips in manifest`);
+  }
+});
+
+check('spell casting: nat 20 works, nat 1 fizzles', () => {
+  const caster = { abilities: { cha: 2 } };
+  const spell = spellById('ember-bolt');
+  assert.equal(resolveSpellCast(caster, spell, () => 0.99).success, true);
+  assert.equal(resolveSpellCast(caster, spell, () => 0).success, false);
+});
+
+check('party combat: monsters fight heroes, heals can revive', () => {
+  const dragon = makeDragonCombatant(tierByName('wyrmling'));
+  const knight = makeCombatant(companionById('dragonkin-knight'));
+  const swash = makeCombatant(companionById('dragonkin-swashbuckler'));
+  const troll = makeCombatant(monsterById('cave-troll'));
+  const seq = [0.5, 0.6, 0.4, 0.3]; // initiative rolls, then combat dice
+  let i = 0;
+  const rng = () => (i < seq.length ? seq[i++] : 0.99);
+  const { combat } = createCombat([dragon, knight, swash], [troll], rng);
+  assert.equal(combat.order.length, 4);
+  runMonsterTurns(combat, rng);
+  assert.ok(isPlayerTurn(combat), 'a hero should be up after monster turns');
+
+  // knock the knight down, then Healing Word him back up mid-fight
+  knight.hp.current = 0;
+  swash.burned = [];
+  while (combat.order[combat.turnIndex].id !== swash.id) combat.turnIndex++;
+  const events = playerSpell(combat, 'healing-word', knight.id, () => 0.99);
+  const heal = events.find((e) => e.type === 'spell-heal');
+  assert.ok(heal, 'heal event emitted');
+  assert.equal(heal.revived, true);
+  assert.ok(knight.hp.current > 0, 'knight revived');
+  assert.equal(livingMonsters(combat).length, 1);
 });
 
 console.log(`\n${passed} checks passed.`);

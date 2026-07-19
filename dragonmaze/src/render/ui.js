@@ -36,6 +36,10 @@ export function updateTitle(state) {
   el('title-hoard').textContent = state.hasSave
     ? `Your hoard: ${state.meta.hoardGold.toLocaleString()} gold`
     : '';
+  const party = state.meta.party ?? [];
+  for (const box of document.querySelectorAll('.party-opt input')) {
+    box.checked = party.includes(box.dataset.cid);
+  }
 }
 
 export function logExplore(text, cls = '') {
@@ -58,7 +62,7 @@ export function showResult({ title, body, growth = null, actions }) {
   growthEl.hidden = !growth;
   if (growth) {
     growthEl.innerHTML = `
-      <div class="growth-dragon">${growth.emoji}</div>
+      <img class="growth-dragon" src="${growth.img}" alt="">
       <div class="growth-text">${growth.text}</div>`;
   }
   el('result-body').textContent = body;

@@ -104,6 +104,19 @@ export function rollBreathRecharge(rng = Math.random) {
   return { roll: die, ready: die >= 5 };
 }
 
+// ---------------------------------------------------------------- spells
+/**
+ * Casting check: d20 + CHA vs the spell's castDC. Natural 20 always works,
+ * natural 1 always fizzles. A fizzled spell burns out for the combat.
+ */
+export function resolveSpellCast(caster, spell, rng = Math.random) {
+  const die = d20({ rng });
+  const bonus = caster.abilities?.cha ?? 0;
+  const total = die.total + bonus;
+  const success = die.total !== 1 && (die.total === 20 || total >= spell.castDC);
+  return { natural: die.total, bonus, total, dc: spell.castDC, success };
+}
+
 // ---------------------------------------------------------------- morale
 export const MORALE_DC = 12;
 

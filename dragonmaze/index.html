@@ -14,8 +14,21 @@
       <h1>Red Dragon Labyrinth</h1>
       <p class="tagline">Raid the maze. Grow the hoard.</p>
       <div class="menu">
-        <button id="btn-new" class="btn btn-big">🔥 New Game</button>
-        <button id="btn-continue" class="btn btn-big" hidden>📜 Continue</button>
+        <button id="btn-new" class="btn btn-big">New Game</button>
+        <button id="btn-continue" class="btn btn-big" hidden>Continue</button>
+      </div>
+      <div class="party-select">
+        <p class="party-label">Companions for the delve:</p>
+        <label class="party-opt">
+          <input type="checkbox" data-cid="dragonkin-knight">
+          <span class="party-thumb sprite f2"><img src="./assets/sprites/knight-idle.png" alt=""></span>
+          Dragonkin Knight
+        </label>
+        <label class="party-opt">
+          <input type="checkbox" data-cid="dragonkin-swashbuckler">
+          <span class="party-thumb sprite f2"><img src="./assets/sprites/swash-idle.png" alt=""></span>
+          Dragonkin Swashbuckler
+        </label>
       </div>
       <p id="title-hoard" class="title-hoard"></p>
     </section>
@@ -62,8 +75,10 @@
 
       <div id="combat-overlay" class="overlay" hidden>
         <div class="combat-box">
-          <div id="combat-enemies" class="combat-row"></div>
-          <div id="combat-player" class="combat-row"></div>
+          <div class="battle-stage">
+            <div id="combat-player" class="battle-heroes"></div>
+            <div id="combat-enemies" class="battle-enemies"></div>
+          </div>
           <div id="combat-log" class="log combat-log"></div>
           <div id="combat-actions" class="combat-actions"></div>
         </div>

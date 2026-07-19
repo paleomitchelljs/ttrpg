@@ -21,6 +21,8 @@ export function makeCombatant(data) {
     sprite: data.sprite ?? null,
     emoji: data.emoji ?? '❓',
     anim: data.anim ?? null,
+    spells: [...(data.spells ?? [])],
+    burned: [],
     goldValue: data.goldValue ?? 0,
     morale: data.morale ?? null,
     moraleChecked: false,

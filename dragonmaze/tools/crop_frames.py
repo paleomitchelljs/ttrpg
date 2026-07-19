@@ -21,6 +21,11 @@ OUT = ROOT / "assets" / "sprites"
 CELL_W = 768 / 5
 CELL_H = 1392 / 9
 
+# Sheets that deviate from the standard 768x1392 grid: sheet -> (cell_w, cell_h)
+SHEET_CELLS = {
+    "skeleton-warrior-sheet.png": (113, 1024 / 9),
+}
+
 # Background keying tolerance per sheet: how close to a corner color a pixel
 # must be to count as background. Keep tight where the figure shares hues
 # with the backdrop (gray maces on gray, pale undead flesh on lavender).
@@ -50,6 +55,36 @@ STRIPS = {
         "sheet": "red-dragon-sheet.png",
         "cells": [(1, 1), (2, 1)],
         "box": (4, 4, 146, 146),
+    },
+    # party companions, side views (battle stage lines heroes up facing right)
+    "knight-idle": {
+        "sheet": "dragonkin-knight-sheet.png",
+        "cells": [(1, 2), (2, 2)],
+        "box": (4, 4, 146, 146),
+    },
+    "knight-attack": {
+        "sheet": "dragonkin-knight-sheet.png",
+        "cells": [(3, 3), (4, 3)],
+        "box": (4, 4, 146, 146),
+    },
+    "swash-idle": {
+        "sheet": "dragonkin-swashbuckler-sheet.png",
+        "cells": [(1, 3), (2, 3)],
+        "box": (14, 52, 124, 94),
+    },
+    "swash-attack": {
+        "sheet": "dragonkin-swashbuckler-sheet.png",
+        "cells": [(2, 1), (3, 1)],
+        "box": (14, 52, 124, 94),
+    },
+    # this sheet's grid is irregular; use absolute (x, y, w, h) frame boxes
+    "skeleton-idle": {
+        "sheet": "skeleton-warrior-sheet.png",
+        "abs": [(438, 151, 100, 100), (28, 267, 100, 100)],
+    },
+    "skeleton-attack": {
+        "sheet": "skeleton-warrior-sheet.png",
+        "abs": [(28, 36, 100, 99), (233, 36, 100, 99)],
     },
     "goblin-idle": {
         "sheet": "goblin-fire-sheet.png",
@@ -148,10 +183,11 @@ def dekey(im, tolerance):
     return im
 
 
-def cell_box(box, col, row):
+def cell_box(box, col, row, sheet):
+    cw, ch = SHEET_CELLS.get(sheet, (CELL_W, CELL_H))
     dx, dy, w, h = box
-    x = round((col - 1) * CELL_W) + dx
-    y = round((row - 1) * CELL_H) + dy
+    x = round((col - 1) * cw) + dx
+    y = round((row - 1) * ch) + dy
     return (x, y, x + w, y + h)
 
 
@@ -167,7 +203,11 @@ def main():
         if sheet not in sheets:
             sheets[sheet] = Image.open(ART / sheet).convert("RGBA")
         tol = SHEET_TOLERANCE.get(sheet, DEFAULT_TOLERANCE)
-        frames = [dekey(sheets[sheet].crop(cell_box(spec["box"], c, r)), tol) for c, r in spec["cells"]]
+        if "abs" in spec:
+            boxes = [(x, y, x + bw, y + bh) for x, y, bw, bh in spec["abs"]]
+        else:
+            boxes = [cell_box(spec["box"], c, r, sheet) for c, r in spec["cells"]]
+        frames = [dekey(sheets[sheet].crop(b), tol) for b in boxes]
         # square frames, feet anchored at the bottom, so CSS strips are uniform
         side = max(max(f.size) for f in frames)
         strip = Image.new("RGBA", (side * len(frames), side), (0, 0, 0, 0))

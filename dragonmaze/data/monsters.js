@@ -54,6 +54,7 @@ export const MONSTERS = [
     attacks: [{ name: 'bone sword', toHit: 4, damage: '1d6+2', range: 'melee' }],
     sprite: 'monster_skeleton',
     emoji: '💀',
+    anim: { idle: 'skeleton-idle', attack: 'skeleton-attack' },
     goldValue: 10,
     minDepth: 1,
     packMax: 2,

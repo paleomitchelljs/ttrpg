@@ -19,7 +19,7 @@ const DIRS = [
   { dir: 'W', dx: -1, dy: 0, opp: 'E' },
 ];
 
-export function generateDungeon(seedString, depth = 1) {
+export function generateDungeon(seedString, depth = 1, partySize = 1) {
   const rng = makeSeededRNG(`dungeon:${seedString}:${depth}`);
   const cw = MAP.cellsWide;
   const ch = MAP.cellsHigh;
@@ -129,7 +129,7 @@ export function generateDungeon(seedString, depth = 1) {
     encounters: encounterCells.map((cell, i) => ({
       id: `enc-${i}`,
       ...toTile(cell),
-      monsterIds: rollEncounter(depth, rng),
+      monsterIds: rollEncounter(depth, rng, partySize),
     })),
     loot: lootCells.map((cell, i) => ({
       id: `loot-${i}`,

@@ -4,7 +4,7 @@
 import { MONSTERS } from '../../data/monsters.js';
 import { randInt } from '../engine/rng.js';
 
-export function rollEncounter(depth, rng) {
+export function rollEncounter(depth, rng, partySize = 1) {
   const pool = MONSTERS.filter(
     (m) => (m.minDepth ?? 1) <= depth && depth <= (m.maxDepth ?? Infinity)
   );
@@ -18,6 +18,9 @@ export function rollEncounter(depth, rng) {
       break;
     }
   }
-  const count = 1 + randInt(rng, chosen.packMax ?? 1);
-  return Array(count).fill(chosen.id);
+  let count = 1 + randInt(rng, chosen.packMax ?? 1);
+  // Bigger parties draw bigger packs (extra rolls only when partySize > 1
+  // keeps solo seeds bit-identical to older versions).
+  if (partySize > 1) count += randInt(rng, partySize);
+  return Array(Math.min(count, 4)).fill(chosen.id);
 }

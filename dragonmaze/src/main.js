@@ -19,7 +19,8 @@ const combatEls = {
 
 const COMBAT_EVENTS = new Set([
   'combat-start', 'initiative', 'round', 'attack', 'breath', 'morale',
-  'flee', 'recharge', 'death', 'victory', 'defeat', 'retreat',
+  'flee', 'recharge', 'death', 'hero-down', 'victory', 'defeat', 'retreat',
+  'spell-cast', 'spell-hit', 'spell-heal', 'spell-wave',
 ]);
 
 function refreshWorld(state) {
@@ -32,32 +33,32 @@ function refreshWorld(state) {
 function showBankedOverlay(ev, events) {
   const tierUp = events.find((e) => e.type === 'tier-up');
   ui.showResult({
-    title: tierUp ? '🐲 You have GROWN!' : '🏆 Treasure banked!',
+    title: tierUp ? 'You have GROWN!' : 'Treasure banked!',
     growth: tierUp
       ? {
-          emoji: '🐉',
+          img: './assets/dragon-fire.png',
           text: `Your hoard's warmth changes you… you are now a ${tierUp.to.label.toUpperCase()}! ` +
             `${tierUp.to.hpMax} HP, armor ${tierUp.to.ac}, bite ${tierUp.to.attacks[0].damage}, breath ${tierUp.to.breath.damage}.`,
         }
       : null,
     body: `You escaped depth ${ev.depth} with ${ev.banked} gold (${ev.bonus} bonus for reaching the exit). Your hoard is now ${ev.hoard.toLocaleString()} gold.`,
     actions: [
-      { label: '⛏️ Delve deeper', onClick: () => { ui.showOverlay('result-overlay', false); game.nextLabyrinth(); } },
-      { label: '🏠 Rest at your lair', onClick: () => { ui.showOverlay('result-overlay', false); game.quitToTitle(); } },
+      { label: 'Delve deeper', onClick: () => { ui.showOverlay('result-overlay', false); game.nextLabyrinth(); } },
+      { label: 'Rest at your lair', onClick: () => { ui.showOverlay('result-overlay', false); game.quitToTitle(); } },
     ],
   });
 }
 
 function showRetreatOverlay(ev) {
   ui.showResult({
-    title: '🩹 You flee to your lair!',
+    title: 'You flee to your lair!',
     body:
       ev.lost > 0
         ? `You dropped ${ev.lost} unbanked gold as you fled… but your hoard of ${ev.hoard.toLocaleString()} gold is safe.`
         : `Your hoard of ${ev.hoard.toLocaleString()} gold is safe. Rest up and try again!`,
     actions: [
-      { label: '🐉 Hunt again', onClick: () => { ui.showOverlay('result-overlay', false); game.nextLabyrinth(); } },
-      { label: '🏠 Back to title', onClick: () => { ui.showOverlay('result-overlay', false); game.quitToTitle(); } },
+      { label: 'Hunt again', onClick: () => { ui.showOverlay('result-overlay', false); game.nextLabyrinth(); } },
+      { label: 'Back to title', onClick: () => { ui.showOverlay('result-overlay', false); game.quitToTitle(); } },
     ],
   });
 }
@@ -76,10 +77,10 @@ game.subscribe((state, events) => {
   for (const ev of events) {
     if (ev.type === 'entered') {
       ui.clearExploreLog();
-      ui.logExplore(`You slink into labyrinth depth ${ev.depth}. Find the exit! 🚪`);
+      ui.logExplore(`You slink into labyrinth depth ${ev.depth}. Find the exit!`);
     }
     if (ev.type === 'resumed') ui.logExplore(`Back to the hunt at depth ${ev.depth}.`);
-    if (ev.type === 'loot') ui.logExplore(`${ev.icon} You found ${ev.label} — ${ev.gold} gold!`, 'log-hit');
+    if (ev.type === 'loot') ui.logExplore(`You found ${ev.label} — ${ev.gold} gold!`, 'log-hit');
     if (ev.type === 'banked') showBankedOverlay(ev, events);
   }
 
@@ -93,6 +94,7 @@ game.subscribe((state, events) => {
   presentCombat(combatEls, state, events, {
     onAttack: (targetId) => game.attack(targetId),
     onBreath: () => game.breath(),
+    onCast: (spellId, targetId) => game.cast(spellId, targetId),
     onBatchDone: (evts) => {
       const retreat = evts.find((e) => e.type === 'retreat');
       if (evts.some((e) => e.type === 'victory')) combatEls.overlay.hidden = true;
@@ -142,6 +144,14 @@ if ('ontouchstart' in window) document.body.classList.add('show-dpad');
 ui.el('btn-new').addEventListener('click', () => game.newGame(seedFromUrl()));
 ui.el('btn-continue').addEventListener('click', () => game.continueGame());
 ui.el('btn-quit').addEventListener('click', () => game.quitToTitle());
+
+// Party selection on the title screen.
+for (const box of document.querySelectorAll('.party-opt input')) {
+  box.addEventListener('change', () => {
+    const ids = [...document.querySelectorAll('.party-opt input:checked')].map((b) => b.dataset.cid);
+    game.setParty(ids);
+  });
+}
 
 function seedFromUrl() {
   try {
