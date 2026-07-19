@@ -32,6 +32,9 @@ export function App() {
               <span className="tab-label">{t.label}</span>
             </button>
           ))}
+          <a className="tab" href="/dragon.html" target="_blank" rel="noopener">
+            <span className="tab-label">🐉 Dragon Maze</span>
+          </a>
         </nav>
       </header>
       <main className="app-main">

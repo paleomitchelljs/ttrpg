@@ -1,0 +1,86 @@
+// Monster roster — pure data, no logic. Adding a monster here (and nothing
+// else) is enough to put it in the encounter pool once its minDepth is
+// reached. Stats follow plan §6; abilities are modifiers in roughly −4..+4.
+// packMax = most that can appear in one encounter.
+
+export const MONSTERS = [
+  {
+    id: 'goblin',
+    name: 'Goblin',
+    kind: 'monster',
+    ac: 12,
+    hpMax: 6,
+    abilities: { str: 0, dex: 1, con: 0, int: -1, wis: 0, cha: -1 },
+    attacks: [{ name: 'rusty blade', toHit: 3, damage: '1d6+1', range: 'melee' }],
+    sprite: 'monster_goblin',
+    emoji: '👺',
+    goldValue: 8,
+    minDepth: 1,
+    packMax: 2,
+    weight: 3,
+  },
+  {
+    id: 'giant-rat',
+    name: 'Giant Rat',
+    kind: 'monster',
+    ac: 11,
+    hpMax: 4,
+    abilities: { str: -1, dex: 2, con: 0, int: -3, wis: 0, cha: -3 },
+    attacks: [{ name: 'gnawing bite', toHit: 2, damage: '1d4+1', range: 'melee' }],
+    sprite: 'monster_rat',
+    emoji: '🐀',
+    goldValue: 3,
+    minDepth: 1,
+    packMax: 3,
+    weight: 3,
+  },
+  {
+    id: 'skeleton',
+    name: 'Skeleton',
+    kind: 'monster',
+    ac: 13,
+    hpMax: 9,
+    abilities: { str: 1, dex: 0, con: 0, int: -2, wis: 0, cha: -2 },
+    attacks: [{ name: 'bone sword', toHit: 4, damage: '1d6+2', range: 'melee' }],
+    sprite: 'monster_skeleton',
+    emoji: '💀',
+    goldValue: 10,
+    minDepth: 1,
+    packMax: 2,
+    weight: 2,
+  },
+  {
+    id: 'orc-raider',
+    name: 'Orc Raider',
+    kind: 'monster',
+    ac: 13,
+    hpMax: 12,
+    abilities: { str: 2, dex: 0, con: 1, int: -1, wis: 0, cha: -1 },
+    attacks: [{ name: 'jagged axe', toHit: 4, damage: '1d8+2', range: 'melee' }],
+    sprite: 'monster_orc',
+    emoji: '👹',
+    goldValue: 18,
+    minDepth: 2,
+    packMax: 2,
+    weight: 2,
+  },
+  {
+    id: 'cave-troll',
+    name: 'Cave Troll',
+    kind: 'monster',
+    ac: 14,
+    hpMax: 22,
+    abilities: { str: 3, dex: 0, con: 2, int: -2, wis: 0, cha: -1 },
+    attacks: [{ name: 'crushing claw', toHit: 5, damage: '1d8+3', range: 'melee' }],
+    sprite: 'monster_troll',
+    emoji: '🧌',
+    goldValue: 40,
+    minDepth: 3,
+    packMax: 1,
+    weight: 1,
+  },
+];
+
+export function monsterById(id) {
+  return MONSTERS.find((m) => m.id === id);
+}

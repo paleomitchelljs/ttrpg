@@ -1,0 +1,268 @@
+/* Red Dragon Labyrinth — dark cave theme, big readable type for a young
+   player, high contrast, no external fonts. */
+
+:root {
+  --tile: clamp(28px, 4.2vmin, 44px);
+  --bg: #14101a;
+  --panel: #221a2c;
+  --panel-2: #2c2138;
+  --ink: #f3ecdd;
+  --ink-dim: #b3a98f;
+  --gold: #e8b93c;
+  --ember: #e05038;
+  --good: #6fce7e;
+  --wall: #3b3247;
+  --floor: #57492f;
+  --floor-lit: #7a6640;
+}
+
+* { box-sizing: border-box; }
+
+/* display rules below would otherwise beat the UA's [hidden] style */
+[hidden] { display: none !important; }
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 18px;
+}
+
+button { font: inherit; }
+
+.screen { min-height: 100vh; }
+
+/* ------------------------------------------------------------- title */
+.title-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.6rem;
+  background:
+    radial-gradient(ellipse at 50% 90%, #33203a 0%, transparent 60%),
+    var(--bg);
+}
+
+.title-screen h1 {
+  font-size: clamp(2rem, 6vw, 3.4rem);
+  margin: 0;
+  color: var(--gold);
+  text-shadow: 0 3px 0 #00000088;
+  letter-spacing: 0.03em;
+}
+
+.title-dragon { font-size: clamp(3.5rem, 12vw, 6rem); }
+
+.tagline { color: var(--ink-dim); margin: 0 0 1.2rem; font-style: italic; }
+
+.title-hoard { color: var(--gold); margin-top: 1.4rem; }
+
+/* ------------------------------------------------------------- buttons */
+.btn {
+  background: var(--ember);
+  color: #fff;
+  border: 3px solid #00000055;
+  border-radius: 12px;
+  padding: 0.55em 1.2em;
+  font-size: 1.05rem;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #00000066;
+}
+
+.btn:hover { filter: brightness(1.12); }
+.btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #00000066; }
+
+.btn-big { font-size: 1.35rem; min-width: 12rem; }
+.btn-small { font-size: 0.85rem; background: var(--panel-2); }
+
+.menu { display: flex; flex-direction: column; gap: 0.8rem; align-items: center; }
+
+/* ------------------------------------------------------------- HUD */
+#hud {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  padding: 0.5rem 0.9rem;
+  background: var(--panel);
+  border-bottom: 2px solid #00000066;
+}
+
+.hud-chip {
+  background: var(--panel-2);
+  border-radius: 9px;
+  padding: 0.25em 0.7em;
+  font-size: 1.02rem;
+  white-space: nowrap;
+}
+
+.hud-chip.danger { background: #5c1f18; color: #ffb4a6; }
+
+#hud .btn-small { margin-left: auto; }
+
+/* ------------------------------------------------------------- playfield */
+#playfield {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+#map {
+  display: grid;
+  gap: 2px;
+  background: #000;
+  padding: 6px;
+  border-radius: 10px;
+  border: 2px solid #00000088;
+}
+
+.tile {
+  width: var(--tile);
+  height: var(--tile);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(var(--tile) * 0.68);
+  border-radius: 4px;
+  user-select: none;
+}
+
+.tile.fog { background: #050308; }
+.tile.wall { background: var(--wall); }
+.tile.floor { background: var(--floor-lit); }
+.tile.floor.dim { background: var(--floor); filter: brightness(0.55) saturate(0.6); }
+.tile.wall.dim { filter: brightness(0.55); }
+.tile.steppable { cursor: pointer; outline: 2px solid #ffffff22; outline-offset: -2px; }
+.tile.steppable:hover { outline-color: var(--gold); }
+
+#side {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 320px;
+  max-width: 92vw;
+}
+
+#hoard-canvas {
+  width: 100%;
+  border-radius: 10px;
+  border: 2px solid #00000088;
+  background: #17111c;
+}
+
+.hoard-label { text-align: center; color: var(--gold); font-size: 1.05rem; }
+
+.help-note { color: var(--ink-dim); font-size: 0.82rem; margin: 0; }
+
+/* ------------------------------------------------------------- logs */
+.log {
+  background: var(--panel);
+  border-radius: 10px;
+  border: 2px solid #00000066;
+  padding: 0.6rem 0.8rem;
+  height: 11rem;
+  overflow-y: auto;
+  font-size: 0.98rem;
+  line-height: 1.35;
+}
+
+.log p { margin: 0.15rem 0; }
+
+.log-hit { color: var(--good); }
+.log-hurt { color: #ff9d8a; }
+.log-miss { color: var(--ink-dim); }
+.log-dim { color: var(--ink-dim); font-size: 0.85rem; }
+.log-start { color: var(--gold); font-weight: bold; }
+
+/* ------------------------------------------------------------- overlays */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: #000000b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 10;
+}
+
+.combat-box, .result-box {
+  background: var(--panel);
+  border: 3px solid var(--ember);
+  border-radius: 16px;
+  padding: 1rem 1.2rem;
+  width: min(560px, 94vw);
+  max-height: 92vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.result-box { border-color: var(--gold); text-align: center; }
+.result-box h2 { margin: 0; color: var(--gold); }
+
+.combat-row { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
+
+.enemy-card, #combat-player {
+  background: var(--panel-2);
+  border-radius: 12px;
+  padding: 0.5rem 0.9rem;
+  text-align: center;
+  min-width: 8.5rem;
+}
+
+.enemy-card.dead { opacity: 0.45; filter: grayscale(0.8); }
+
+.enemy-face, .player-face { font-size: 2.3rem; line-height: 1.1; }
+.enemy-name, .player-name { font-weight: bold; margin: 0.15rem 0; }
+
+.hp-bar {
+  height: 12px;
+  background: #00000088;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 0.2rem 0;
+}
+
+.hp-fill { height: 100%; background: var(--good); transition: width 0.35s ease; }
+.hp-fill.low { background: var(--ember); }
+.hp-num { font-size: 0.85rem; color: var(--ink-dim); }
+
+.big-die {
+  text-align: center;
+  font-size: 2rem;
+  color: var(--ink);
+  text-shadow: 0 2px 0 #000;
+}
+
+.big-die.crit { color: var(--gold); animation: pop 0.4s ease; }
+.big-die.fumble { color: #8b8b8b; }
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.5); }
+  100% { transform: scale(1); }
+}
+
+.combat-log { height: 9rem; }
+
+.combat-actions {
+  display: flex;
+  gap: 0.7rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  min-height: 3rem;
+  align-items: center;
+}
+
+.attack-btn { font-size: 1.15rem; }
+
+.turn-note { color: var(--ink-dim); font-style: italic; }

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Red Dragon Labyrinth</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <div id="app">
+
+    <section id="screen-title" class="screen title-screen">
+      <h1><span class="title-dragon">🐉</span><br>Red Dragon Labyrinth</h1>
+      <p class="tagline">Raid the maze. Grow the hoard.</p>
+      <div class="menu">
+        <button id="btn-new" class="btn btn-big">🔥 New Game</button>
+        <button id="btn-continue" class="btn btn-big" hidden>📜 Continue</button>
+      </div>
+      <p id="title-hoard" class="title-hoard"></p>
+    </section>
+
+    <section id="screen-game" class="screen" hidden>
+      <header id="hud">
+        <span id="hud-hp" class="hud-chip"></span>
+        <span id="hud-tier" class="hud-chip"></span>
+        <span id="hud-depth" class="hud-chip"></span>
+        <span id="hud-carried" class="hud-chip" title="Gold carried (lost if you fall!)"></span>
+        <span id="hud-hoard" class="hud-chip" title="Banked hoard (always safe)"></span>
+        <button id="btn-quit" class="btn btn-small">Save &amp; Quit</button>
+      </header>
+
+      <div id="playfield">
+        <div id="map" aria-label="dungeon map"></div>
+        <aside id="side">
+          <canvas id="hoard-canvas" width="300" height="190"></canvas>
+          <div id="hoard-label" class="hoard-label"></div>
+          <div id="explore-log" class="log"></div>
+          <p class="help-note">Move: arrow keys / WASD, or click a tile beside the dragon.</p>
+        </aside>
+      </div>
+
+      <div id="combat-overlay" class="overlay" hidden>
+        <div class="combat-box">
+          <div id="combat-enemies" class="combat-row"></div>
+          <div id="combat-die" class="big-die">🎲</div>
+          <div id="combat-player" class="combat-row"></div>
+          <div id="combat-log" class="log combat-log"></div>
+          <div id="combat-actions" class="combat-actions"></div>
+        </div>
+      </div>
+
+      <div id="result-overlay" class="overlay" hidden>
+        <div class="result-box">
+          <h2 id="result-title"></h2>
+          <p id="result-body"></p>
+          <div id="result-actions" class="menu"></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+  <script type="module" src="./src/main.js"></script>
+</body>
+</html>

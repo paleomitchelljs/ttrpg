@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Red Dragon Labyrinth</title>
+  <style>
+/* Red Dragon Labyrinth — dark cave theme, big readable type for a young
+   player, high contrast, no external fonts. */
+
+:root {
+  --tile: clamp(28px, 4.2vmin, 44px);
+  --bg: #14101a;
+  --panel: #221a2c;
+  --panel-2: #2c2138;
+  --ink: #f3ecdd;
+  --ink-dim: #b3a98f;
+  --gold: #e8b93c;
+  --ember: #e05038;
+  --good: #6fce7e;
+  --wall: #3b3247;
+  --floor: #57492f;
+  --floor-lit: #7a6640;
+}
+
+* { box-sizing: border-box; }
+
+/* display rules below would otherwise beat the UA's [hidden] style */
+[hidden] { display: none !important; }
+
+html, body {
+  margin: 0;
+  min-height: 100%;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 18px;
+}
+
+button { font: inherit; }
+
+.screen { min-height: 100vh; }
+
+/* ------------------------------------------------------------- title */
+.title-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  gap: 0.6rem;
+  background:
+    radial-gradient(ellipse at 50% 90%, #33203a 0%, transparent 60%),
+    var(--bg);
+}
+
+.title-screen h1 {
+  font-size: clamp(2rem, 6vw, 3.4rem);
+  margin: 0;
+  color: var(--gold);
+  text-shadow: 0 3px 0 #00000088;
+  letter-spacing: 0.03em;
+}
+
+.title-dragon { font-size: clamp(3.5rem, 12vw, 6rem); }
+
+.tagline { color: var(--ink-dim); margin: 0 0 1.2rem; font-style: italic; }
+
+.title-hoard { color: var(--gold); margin-top: 1.4rem; }
+
+/* ------------------------------------------------------------- buttons */
+.btn {
+  background: var(--ember);
+  color: #fff;
+  border: 3px solid #00000055;
+  border-radius: 12px;
+  padding: 0.55em 1.2em;
+  font-size: 1.05rem;
+  cursor: pointer;
+  box-shadow: 0 3px 0 #00000066;
+}
+
+.btn:hover { filter: brightness(1.12); }
+.btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #00000066; }
+
+.btn-big { font-size: 1.35rem; min-width: 12rem; }
+.btn-small { font-size: 0.85rem; background: var(--panel-2); }
+
+.menu { display: flex; flex-direction: column; gap: 0.8rem; align-items: center; }
+
+/* ------------------------------------------------------------- HUD */
+#hud {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  padding: 0.5rem 0.9rem;
+  background: var(--panel);
+  border-bottom: 2px solid #00000066;
+}
+
+.hud-chip {
+  background: var(--panel-2);
+  border-radius: 9px;
+  padding: 0.25em 0.7em;
+  font-size: 1.02rem;
+  white-space: nowrap;
+}
+
+.hud-chip.danger { background: #5c1f18; color: #ffb4a6; }
+
+#hud .btn-small { margin-left: auto; }
+
+/* ------------------------------------------------------------- playfield */
+#playfield {
+  display: flex;
+  gap: 1rem;
+  padding: 1rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+#map {
+  display: grid;
+  gap: 2px;
+  background: #000;
+  padding: 6px;
+  border-radius: 10px;
+  border: 2px solid #00000088;
+}
+
+.tile {
+  width: var(--tile);
+  height: var(--tile);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(var(--tile) * 0.68);
+  border-radius: 4px;
+  user-select: none;
+}
+
+.tile.fog { background: #050308; }
+.tile.wall { background: var(--wall); }
+.tile.floor { background: var(--floor-lit); }
+.tile.floor.dim { background: var(--floor); filter: brightness(0.55) saturate(0.6); }
+.tile.wall.dim { filter: brightness(0.55); }
+.tile.steppable { cursor: pointer; outline: 2px solid #ffffff22; outline-offset: -2px; }
+.tile.steppable:hover { outline-color: var(--gold); }
+
+#side {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 320px;
+  max-width: 92vw;
+}
+
+#hoard-canvas {
+  width: 100%;
+  border-radius: 10px;
+  border: 2px solid #00000088;
+  background: #17111c;
+}
+
+.hoard-label { text-align: center; color: var(--gold); font-size: 1.05rem; }
+
+.help-note { color: var(--ink-dim); font-size: 0.82rem; margin: 0; }
+
+/* ------------------------------------------------------------- logs */
+.log {
+  background: var(--panel);
+  border-radius: 10px;
+  border: 2px solid #00000066;
+  padding: 0.6rem 0.8rem;
+  height: 11rem;
+  overflow-y: auto;
+  font-size: 0.98rem;
+  line-height: 1.35;
+}
+
+.log p { margin: 0.15rem 0; }
+
+.log-hit { color: var(--good); }
+.log-hurt { color: #ff9d8a; }
+.log-miss { color: var(--ink-dim); }
+.log-dim { color: var(--ink-dim); font-size: 0.85rem; }
+.log-start { color: var(--gold); font-weight: bold; }
+
+/* ------------------------------------------------------------- overlays */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: #000000b8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 10;
+}
+
+.combat-box, .result-box {
+  background: var(--panel);
+  border: 3px solid var(--ember);
+  border-radius: 16px;
+  padding: 1rem 1.2rem;
+  width: min(560px, 94vw);
+  max-height: 92vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+}
+
+.result-box { border-color: var(--gold); text-align: center; }
+.result-box h2 { margin: 0; color: var(--gold); }
+
+.combat-row { display: flex; gap: 0.8rem; justify-content: center; flex-wrap: wrap; }
+
+.enemy-card, #combat-player {
+  background: var(--panel-2);
+  border-radius: 12px;
+  padding: 0.5rem 0.9rem;
+  text-align: center;
+  min-width: 8.5rem;
+}
+
+.enemy-card.dead { opacity: 0.45; filter: grayscale(0.8); }
+
+.enemy-face, .player-face { font-size: 2.3rem; line-height: 1.1; }
+.enemy-name, .player-name { font-weight: bold; margin: 0.15rem 0; }
+
+.hp-bar {
+  height: 12px;
+  background: #00000088;
+  border-radius: 6px;
+  overflow: hidden;
+  margin: 0.2rem 0;
+}
+
+.hp-fill { height: 100%; background: var(--good); transition: width 0.35s ease; }
+.hp-fill.low { background: var(--ember); }
+.hp-num { font-size: 0.85rem; color: var(--ink-dim); }
+
+.big-die {
+  text-align: center;
+  font-size: 2rem;
+  color: var(--ink);
+  text-shadow: 0 2px 0 #000;
+}
+
+.big-die.crit { color: var(--gold); animation: pop 0.4s ease; }
+.big-die.fumble { color: #8b8b8b; }
+
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.5); }
+  100% { transform: scale(1); }
+}
+
+.combat-log { height: 9rem; }
+
+.combat-actions {
+  display: flex;
+  gap: 0.7rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  min-height: 3rem;
+  align-items: center;
+}
+
+.attack-btn { font-size: 1.15rem; }
+
+.turn-note { color: var(--ink-dim); font-style: italic; }
+
+</style>
+</head>
+<body>
+  <div id="app">
+
+    <section id="screen-title" class="screen title-screen">
+      <h1><span class="title-dragon">🐉</span><br>Red Dragon Labyrinth</h1>
+      <p class="tagline">Raid the maze. Grow the hoard.</p>
+      <div class="menu">
+        <button id="btn-new" class="btn btn-big">🔥 New Game</button>
+        <button id="btn-continue" class="btn btn-big" hidden>📜 Continue</button>
+      </div>
+      <p id="title-hoard" class="title-hoard"></p>
+    </section>
+
+    <section id="screen-game" class="screen" hidden>
+      <header id="hud">
+        <span id="hud-hp" class="hud-chip"></span>
+        <span id="hud-tier" class="hud-chip"></span>
+        <span id="hud-depth" class="hud-chip"></span>
+        <span id="hud-carried" class="hud-chip" title="Gold carried (lost if you fall!)"></span>
+        <span id="hud-hoard" class="hud-chip" title="Banked hoard (always safe)"></span>
+        <button id="btn-quit" class="btn btn-small">Save &amp; Quit</button>
+      </header>
+
+      <div id="playfield">
+        <div id="map" aria-label="dungeon map"></div>
+        <aside id="side">
+          <canvas id="hoard-canvas" width="300" height="190"></canvas>
+          <div id="hoard-label" class="hoard-label"></div>
+          <div id="explore-log" class="log"></div>
+          <p class="help-note">Move: arrow keys / WASD, or click a tile beside the dragon.</p>
+        </aside>
+      </div>
+
+      <div id="combat-overlay" class="overlay" hidden>
+        <div class="combat-box">
+          <div id="combat-enemies" class="combat-row"></div>
+          <div id="combat-die" class="big-die">🎲</div>
+          <div id="combat-player" class="combat-row"></div>
+          <div id="combat-log" class="log combat-log"></div>
+          <div id="combat-actions" class="combat-actions"></div>
+        </div>
+      </div>
+
+      <div id="result-overlay" class="overlay" hidden>
+        <div class="result-box">
+          <h2 id="result-title"></h2>
+          <p id="result-body"></p>
+          <div id="result-actions" class="menu"></div>
+        </div>
+      </div>
+    </section>
+
+  </div>
+  <script>
+(()=>{var Xt=Object.defineProperty;var Zt=(t,e)=>{for(var n in e)Xt(t,n,{get:e[n],enumerable:!0})};var gt={};Zt(gt,{attack:()=>ft,continueGame:()=>pt,enterLabyrinth:()=>F,init:()=>mt,move:()=>z,moveTo:()=>ht,newGame:()=>K,nextLabyrinth:()=>Q,quitToTitle:()=>R,state:()=>u,subscribe:()=>ct});function te(t){let e=1779033703^t.length;for(let n=0;n<t.length;n++)e=Math.imul(e^t.charCodeAt(n),3432918353),e=e<<13|e>>>19;return function(){return e=Math.imul(e^e>>>16,2246822507),e=Math.imul(e^e>>>13,3266489909),(e^=e>>>16)>>>0}}function ee(t){return function(){t|=0,t=t+1831565813|0;let e=Math.imul(t^t>>>15,1|t);return e=e+Math.imul(e^e>>>7,61|e)^e,((e^e>>>14)>>>0)/4294967296}}function _(t){return ee(te(String(t))())}var I=()=>Math.random();function k(t,e){return Math.floor(t()*e)}function V(t,e){for(let n=t.length-1;n>0;n--){let o=k(e,n+1);[t[n],t[o]]=[t[o],t[n]]}return t}var ne=/^\s*(\d*)d(\d+)\s*(?:([+-])\s*(\d+))?\s*$/i;function Y(t,e=Math.random){let n=ne.exec(t);if(!n)throw new Error(`Bad dice expression: ${t}`);let o=n[1]?parseInt(n[1],10):1,a=parseInt(n[2],10),r=n[4]?(n[3]==="-"?-1:1)*parseInt(n[4],10):0;if(o<1||a<2)throw new Error(`Bad dice expression: ${t}`);let l=[];for(let d=0;d<o;d++)l.push(1+Math.floor(e()*a));let i=l.reduce((d,m)=>d+m,0)+r;return{expr:t,count:o,sides:a,mod:r,rolls:l,total:i}}function et({advantage:t=!1,disadvantage:e=!1,rng:n=Math.random}={}){let o=1+Math.floor(n()*20);if(t===e)return{total:o,rolls:[o],mode:"straight"};let a=1+Math.floor(n()*20);return{total:t?Math.max(o,a):Math.min(o,a),rolls:[o,a],mode:t?"advantage":"disadvantage"}}var w={cellsWide:7,cellsHigh:5,braidChance:.45,encounterMin:3,encounterMax:5,minEncounterDistance:2,lootMax:4};function wt(t){return 50+t*25}var $t=[0,150,600,1500];function nt(t,e,n,o=Math.random){let r=et({rng:o}).total,l=r+e.toHit,i=r===20,d=r===1,m=!d&&(i||l>=n.ac),f=0,b=[];if(m){let h=Y(e.damage,o);f=i?h.total*2:h.total,f<1&&(f=1),b=h.rolls}return{natural:r,toHit:e.toHit,total:l,targetAc:n.ac,crit:i,fumble:d,hit:m,damage:f,damageRolls:b,attackName:e.name}}function Mt(t,e=Math.random){return et({rng:e}).total+(t.abilities?.dex??0)}var ot=[{id:"goblin",name:"Goblin",kind:"monster",ac:12,hpMax:6,abilities:{str:0,dex:1,con:0,int:-1,wis:0,cha:-1},attacks:[{name:"rusty blade",toHit:3,damage:"1d6+1",range:"melee"}],sprite:"monster_goblin",emoji:"\u{1F47A}",goldValue:8,minDepth:1,packMax:2,weight:3},{id:"giant-rat",name:"Giant Rat",kind:"monster",ac:11,hpMax:4,abilities:{str:-1,dex:2,con:0,int:-3,wis:0,cha:-3},attacks:[{name:"gnawing bite",toHit:2,damage:"1d4+1",range:"melee"}],sprite:"monster_rat",emoji:"\u{1F400}",goldValue:3,minDepth:1,packMax:3,weight:3},{id:"skeleton",name:"Skeleton",kind:"monster",ac:13,hpMax:9,abilities:{str:1,dex:0,con:0,int:-2,wis:0,cha:-2},attacks:[{name:"bone sword",toHit:4,damage:"1d6+2",range:"melee"}],sprite:"monster_skeleton",emoji:"\u{1F480}",goldValue:10,minDepth:1,packMax:2,weight:2},{id:"orc-raider",name:"Orc Raider",kind:"monster",ac:13,hpMax:12,abilities:{str:2,dex:0,con:1,int:-1,wis:0,cha:-1},attacks:[{name:"jagged axe",toHit:4,damage:"1d8+2",range:"melee"}],sprite:"monster_orc",emoji:"\u{1F479}",goldValue:18,minDepth:2,packMax:2,weight:2},{id:"cave-troll",name:"Cave Troll",kind:"monster",ac:14,hpMax:22,abilities:{str:3,dex:0,con:2,int:-2,wis:0,cha:-1},attacks:[{name:"crushing claw",toHit:5,damage:"1d8+3",range:"melee"}],sprite:"monster_troll",emoji:"\u{1F9CC}",goldValue:40,minDepth:3,packMax:1,weight:1}];function B(t){return ot.find(e=>e.id===t)}function vt(t,e){let n=ot.filter(i=>(i.minDepth??1)<=t),o=n.reduce((i,d)=>i+(d.weight??1),0),a=e()*o,r=n[n.length-1];for(let i of n)if(a-=i.weight??1,a<0){r=i;break}let l=1+k(e,r.packMax??1);return Array(l).fill(r.id)}var Ct=[{min:1,max:2,label:"a scatter of coins",dice:"2d10",icon:"\u{1FA99}"},{min:3,max:4,label:"a pouch of gems",dice:"3d10",icon:"\u{1F48E}"},{min:5,max:5,label:"a fine trinket",dice:"5d10",icon:"\u{1F3FA}"},{min:6,max:6,label:"a treasure chest",dice:"10d10",icon:"\u{1F9F0}"}];function St(t){let e=1+k(t,6),n=Ct.find(o=>e>=o.min&&e<=o.max);return{label:n.label,icon:n.icon,gold:Y(n.dice,t).total}}var W=[{dir:"N",dx:0,dy:-1,opp:"S"},{dir:"S",dx:0,dy:1,opp:"N"},{dir:"E",dx:1,dy:0,opp:"W"},{dir:"W",dx:-1,dy:0,opp:"E"}];function It(t,e=1){let n=_(`dungeon:${t}:${e}`),o=w.cellsWide,a=w.cellsHigh,r=Array.from({length:a},()=>Array.from({length:o},()=>({N:!1,S:!1,E:!1,W:!1}))),l=Array.from({length:a},()=>Array(o).fill(!1)),i=(s,c)=>s>=0&&s<o&&c>=0&&c<a,d=[[0,0]];for(l[0][0]=!0;d.length;){let[s,c]=d[d.length-1],g=W.filter(({dx:P,dy:j})=>i(s+P,c+j)&&!l[c+j][s+P]);if(!g.length){d.pop();continue}let{dir:M,dx:y,dy:T,opp:tt}=g[k(n,g.length)];r[c][s][M]=!0,r[c+T][s+y][tt]=!0,l[c+T][s+y]=!0,d.push([s+y,c+T])}let m=(s,c)=>W.filter(({dir:g})=>r[c][s][g]).length,f=[];for(let s=0;s<a;s++)for(let c=0;c<o;c++)f.push([c,s]);let b=V(f.filter(([s,c])=>m(s,c)===1),n);for(let[s,c]of b){if(n()>=w.braidChance)continue;let g=W.filter(({dir:P,dx:j,dy:Qt})=>!r[c][s][P]&&i(s+j,c+Qt));if(!g.length)continue;let{dir:M,dx:y,dy:T,opp:tt}=g[k(n,g.length)];r[c][s][M]=!0,r[c+T][s+y][tt]=!0}let h=Array.from({length:a},()=>Array(o).fill(-1));h[0][0]=0;let S=[[0,0]];for(;S.length;){let[s,c]=S.shift();for(let{dir:g,dx:M,dy:y}of W)r[c][s][g]&&h[c+y][s+M]===-1&&(h[c+y][s+M]=h[c][s]+1,S.push([s+M,c+y]))}let E=[0,0],$=[o-1,a-1];for(let[s,c]of f)h[c][s]>h[$[1]][$[0]]&&($=[s,c]);let N=(s,c)=>s===E[0]&&c===E[1]||s===$[0]&&c===$[1],H=V(f.filter(([s,c])=>m(s,c)===1&&!N(s,c)),n).slice(0,w.lootMax),G=new Set(H.map(([s,c])=>`${s},${c}`)),Kt=V(f.filter(([s,c])=>!N(s,c)&&!G.has(`${s},${c}`)&&h[c][s]>=w.minEncounterDistance),n),Ft=w.encounterMin+k(n,w.encounterMax-w.encounterMin+1),zt=Kt.slice(0,Ft),yt=o*2+1,kt=a*2+1,O=Array.from({length:kt},()=>Array(yt).fill(0));for(let[s,c]of f)O[c*2+1][s*2+1]=1,r[c][s].E&&(O[c*2+1][s*2+2]=1),r[c][s].S&&(O[c*2+2][s*2+1]=1);let D=([s,c])=>({x:s*2+1,y:c*2+1});return{seed:t,depth:e,width:yt,height:kt,tiles:O,start:D(E),exit:D($),encounters:zt.map((s,c)=>({id:`enc-${c}`,...D(s),monsterIds:vt(e,n)})),loot:H.map((s,c)=>({id:`loot-${c}`,...D(s),...St(n)}))}}var Et=[{tier:"wyrmling",label:"Wyrmling",hoardToNext:1e3,hpMax:18,ac:13,abilities:{str:2,dex:2,con:1,int:1,wis:0,cha:1},attacks:[{name:"bite",toHit:4,damage:"1d8+2",range:"melee"}],breath:{damage:"2d6",dc:11,recharge:"d6>=5"},sprite:"dragon_wyrmling",emoji:"\u{1F409}"},{tier:"young",label:"Young Dragon",hoardToNext:5e3,hpMax:30,ac:15,abilities:{str:4,dex:2,con:2,int:1,wis:1,cha:2},attacks:[{name:"bite",toHit:6,damage:"1d10+4",range:"melee"}],breath:{damage:"3d6",dc:13,recharge:"d6>=5"},sprite:"dragon_young",emoji:"\u{1F409}"},{tier:"adult",label:"Adult Dragon",hoardToNext:2e4,hpMax:52,ac:18,abilities:{str:6,dex:2,con:4,int:2,wis:2,cha:3},attacks:[{name:"bite",toHit:9,damage:"2d8+6",range:"melee"}],breath:{damage:"5d6",dc:16,recharge:"d6>=5"},sprite:"dragon_adult",emoji:"\u{1F409}"},{tier:"ancient",label:"Ancient Dragon",hoardToNext:null,hpMax:90,ac:20,abilities:{str:8,dex:2,con:6,int:4,wis:3,cha:5},attacks:[{name:"bite",toHit:13,damage:"2d10+8",range:"melee"}],breath:{damage:"8d6",dc:19,recharge:"d6>=5"},sprite:"dragon_ancient",emoji:"\u{1F409}"}];function rt(t){return Et.find(e=>e.tier===t)??Et[0]}var oe=0,re={str:0,dex:0,con:0,int:0,wis:0,cha:0};function at(t){return{id:`${t.id??t.name}-${++oe}`,templateId:t.id??null,name:t.name,kind:t.kind??"monster",ac:t.ac,hp:{current:t.hp?.current??t.hpMax??t.hp,max:t.hp?.max??t.hpMax??t.hp},abilities:{...re,...t.abilities??{}},attacks:(t.attacks??[]).map(e=>({...e})),special:[...t.special??[]],conditions:[],sprite:t.sprite??null,emoji:t.emoji??"\u2753",goldValue:t.goldValue??0}}function Tt(t,e=null){let n=at({id:`dragon-${t.tier}`,name:"Red Dragon",kind:"dragon",ac:t.ac,hpMax:t.hpMax,abilities:t.abilities,attacks:t.attacks,sprite:t.sprite,emoji:t.emoji});return e!=null&&(n.hp.current=Math.min(e,n.hp.max)),n}var q=t=>t.hp.current>0;function L(t){return t.order[t.turnIndex]}function U(t){return t.order.filter(e=>e.kind!=="dragon"&&q(e))}function it(t){return t.order.find(e=>e.kind==="dragon")}function A(t){return!t.over&&L(t).kind==="dragon"}function Lt(t,e,n=Math.random){let o=[t,...e];for(let i of o)i.initiative=Mt(i,n);let a=[...o].sort((i,d)=>d.initiative-i.initiative||(i.kind==="dragon"?-1:1)),r={combatants:o,order:a,turnIndex:0,round:1,over:!1,winner:null},l=[{type:"combat-start",monsters:e.map(i=>({name:i.name,emoji:i.emoji}))},{type:"initiative",order:a.map(i=>({id:i.id,name:i.name,initiative:i.initiative}))}];return{combat:r,events:l}}function At(t,e){do t.turnIndex++,t.turnIndex>=t.order.length&&(t.turnIndex=0,t.round++,e.push({type:"round",round:t.round}));while(!q(L(t)))}function lt(t,e=Math.random){let n=[];for(;!t.over&&L(t).kind!=="dragon";){let o=L(t),a=it(t),r=nt(o,o.attacks[0],a,e);if(r.hit&&(a.hp.current=Math.max(0,a.hp.current-r.damage)),n.push({type:"attack",attackerId:o.id,attacker:o.name,attackerKind:o.kind,targetId:a.id,target:a.name,targetHpAfter:a.hp.current,...r}),a.hp.current<=0)return t.over=!0,t.winner="monsters",n.push({type:"defeat"}),n;At(t,n)}return n}function Rt(t,e,n=Math.random){let o=[];if(!A(t))return o;let a=L(t),r=t.order.find(i=>i.id===e&&i.kind!=="dragon"&&q(i))??U(t)[0];if(!r)return o;let l=nt(a,a.attacks[0],r,n);if(l.hit&&(r.hp.current=Math.max(0,r.hp.current-l.damage)),o.push({type:"attack",attackerId:a.id,attacker:a.name,attackerKind:"dragon",targetId:r.id,target:r.name,targetHpAfter:r.hp.current,...l}),q(r)||o.push({type:"death",id:r.id,who:r.name,goldValue:r.goldValue}),U(t).length===0){t.over=!0,t.winner="dragon";let i=t.order.filter(d=>d.kind!=="dragon").reduce((d,m)=>d+(m.goldValue??0),0);o.push({type:"victory",gold:i})}else At(t,o);return o}var st="red-dragon-labyrinth";function ae(t){return!t||typeof t!="object"||typeof t.version!="number"?null:t.version===1?t:null}function J(){try{let t=localStorage.getItem(st);if(!t)return null;let e=ae(JSON.parse(t));return!e||!e.meta||typeof e.meta.hoardGold!="number"?null:e}catch{return null}}function v(t){try{localStorage.setItem(st,ie(t))}catch{}}function Nt(){try{localStorage.removeItem(st)}catch{}}function ie(t){let e=t.run&&t.run.phase==="explore"?t.run:null;return JSON.stringify({version:1,meta:t.meta,run:e&&{...e,combat:null}})}function Ht(){return{hoardGold:0,tier:"wyrmling",runsCompleted:0,customCharacters:[],settings:{hardcore:!1,sound:!1}}}var u={screen:"title",meta:Ht(),run:null,hasSave:!1},Gt=[];function ct(t){Gt.push(t)}function x(t=[]){for(let e of Gt)e(u,t)}function dt(){return Math.floor(I()*4294967295).toString(36)+Date.now().toString(36).slice(-4)}function le(t,e){return`${t},${e}`}function ut(t){let{x:e,y:n}=t.playerPos;for(let[o,a]of[[0,0],[0,-1],[0,1],[-1,0],[1,0]]){let r=e+o,l=n+a;r>=0&&r<t.dungeon.width&&l>=0&&l<t.dungeon.height&&(t.explored[le(r,l)]=!0)}}function mt(){let t=J();u.hasSave=t!=null,t&&(u.meta=t.meta),x([{type:"booted"}])}function K(t=null){Nt(),u.meta=Ht(),F(t??dt())}function pt(){let t=J();if(!t){K();return}u.meta=t.meta,t.run?(u.run=t.run,u.run.combat=null,u.screen="game",x([{type:"resumed",depth:u.run.dungeon.depth}])):F(dt())}function F(t){let e=u.meta.runsCompleted+1,n=rt(u.meta.tier),o=It(t,e);u.run={dragon:{tier:n.tier,hp:{current:n.hpMax,max:n.hpMax}},party:[],unbankedGold:0,dungeon:o,playerPos:{...o.start},explored:{},phase:"explore",combat:null,lastResult:null},ut(u.run),u.screen="game",u.hasSave=!0,v(u),x([{type:"entered",depth:e,seed:t}])}function R(){v(u),u.screen="title",u.hasSave=J()!=null,u.run&&u.run.phase!=="explore"&&(u.run=null),x([{type:"quit-to-title"}])}function z(t,e){let n=u.run;if(!n||n.phase!=="explore"||Math.abs(t)+Math.abs(e)!==1)return;let o=n.playerPos.x+t,a=n.playerPos.y+e,r=n.dungeon;if(o<0||o>=r.width||a<0||a>=r.height||r.tiles[a][o]!==1)return;let l=r.encounters.find(m=>m.x===o&&m.y===a);if(l){de(l);return}n.playerPos={x:o,y:a},ut(n);let i=[{type:"moved",x:o,y:a}],d=r.loot.findIndex(m=>m.x===o&&m.y===a);if(d>=0){let[m]=r.loot.splice(d,1);n.unbankedGold+=m.gold,i.push({type:"loot",label:m.label,icon:m.icon,gold:m.gold})}if(r.exit.x===o&&r.exit.y===a){se(i);return}v(u),x(i)}function ht(t,e){let n=t-u.run?.playerPos.x,o=e-u.run?.playerPos.y;Math.abs(n)+Math.abs(o)===1&&z(n,o)}function se(t){let e=u.run,n=wt(e.dungeon.depth),o=e.unbankedGold+n;u.meta.hoardGold+=o,u.meta.runsCompleted+=1,e.phase="won",e.lastResult={banked:o,bonus:n,hoard:u.meta.hoardGold,depth:e.dungeon.depth},ce(t),v(u),t.push({type:"banked",...e.lastResult}),x(t)}function ce(t){return null}function de(t){let e=u.run,n=rt(e.dragon.tier),o=Tt(n,e.dragon.hp.current),a=t.monsterIds.map(m=>at(B(m))),{combat:r,events:l}=Lt(o,a,I);e.phase="combat",e.combat={combat:r,encounterId:t.id};let i=lt(r,I);Ot();let d=[...l,...i];if(r.over){Dt(d);return}x(d)}function ft(t){let e=u.run;if(!e||e.phase!=="combat"||!e.combat)return;let n=e.combat.combat;if(!A(n))return;let o=Rt(n,t,I);if(n.over||o.push(...lt(n,I)),Ot(),n.over){Dt(o);return}x(o)}function Ot(){let t=u.run,e=t.combat?.combat.order.find(n=>n.kind==="dragon");e&&(t.dragon.hp.current=e.hp.current)}function Dt(t){let e=u.run,n=e.combat.combat;if(n.winner==="dragon"){let o=n.order.filter(r=>r.kind!=="dragon").reduce((r,l)=>r+(l.goldValue??0),0);e.unbankedGold+=o;let a=e.dungeon.encounters.findIndex(r=>r.id===e.combat.encounterId);if(a>=0){let r=e.dungeon.encounters[a];e.dungeon.encounters.splice(a,1),e.playerPos={x:r.x,y:r.y},ut(e)}e.phase="explore",e.combat=null,v(u),x(t)}else ue(t)}function ue(t){let e=u.run,n=e.unbankedGold;e.unbankedGold=0,e.phase="defeat",e.combat=null,e.lastResult={lost:n,hoard:u.meta.hoardGold},v(u),t.push({type:"retreat",lost:n,hoard:u.meta.hoardGold}),x(t)}function Q(){F(dt())}function Pt(t,e){let n=e.run;if(!n){t.innerHTML="";return}let o=n.dungeon,{x:a,y:r}=n.playerPos;t.style.gridTemplateColumns=`repeat(${o.width}, var(--tile))`;let l=document.createDocumentFragment();for(let i=0;i<o.height;i++)for(let d=0;d<o.width;d++){let m=document.createElement("div");m.className="tile",m.dataset.x=d,m.dataset.y=i;let f=n.explored[`${d},${i}`],b=Math.abs(d-a)+Math.abs(i-r)<=1;f?(m.classList.add(o.tiles[i][d]===1?"floor":"wall"),b||m.classList.add("dim"),o.tiles[i][d]===1&&(m.textContent=me(n,d,i),Math.abs(d-a)+Math.abs(i-r)===1&&o.tiles[i][d]===1&&m.classList.add("steppable"))):m.classList.add("fog"),l.appendChild(m)}t.replaceChildren(l)}function me(t,e,n){let o=t.dungeon;if(t.playerPos.x===e&&t.playerPos.y===n)return"\u{1F409}";let a=o.encounters.find(r=>r.x===e&&r.y===n);return a?B(a.monsterIds[0])?.emoji??"\u2753":o.loot.some(r=>r.x===e&&r.y===n)?"\u{1F4B0}":o.exit.x===e&&o.exit.y===n?"\u{1F6AA}":""}function jt(t,e){t.addEventListener("click",n=>{let o=n.target.closest(".tile");o&&e(Number(o.dataset.x),Number(o.dataset.y))})}function _t(t,e){let n=t.getContext("2d"),o=t.width,a=t.height;n.fillStyle="#17111c",n.fillRect(0,0,o,a),n.fillStyle="#241a2b",n.beginPath(),n.ellipse(o/2,a*.15,o*.7,a*.35,0,0,Math.PI*2),n.fill(),n.fillStyle="#3a2d24",n.fillRect(0,a-16,o,16);let r=$t.filter(h=>e>=h).length-1,l=Math.min(420,Math.floor(e/4)+(e>0?6:0));if(l<=0)return;let i=_("hoard-pile"),d=o/2,m=a-18,f=o*(.28+r*.09),b=a*(.18+r*.16);for(let h=0;h<l;h++){let S=i()+i()-1,E=d+S*f,$=b*(1-Math.abs(S)),N=m-i()*$,H=2.2+i()*1.8,G=h%23===22;n.beginPath(),n.arc(E,N,H,0,Math.PI*2),n.fillStyle=G?["#d64545","#4596d6","#45d68a"][h%3]:"#e8b93c",n.fill(),n.strokeStyle=G?"#ffffff55":"#a3781c",n.lineWidth=.6,n.stroke()}r>=2&&(n.fillStyle="#fff8d0",n.font=`${12+r*2}px serif`,n.fillText("\u2728",d+f*.4,m-b*.8))}function Yt(t,e,n){let o=e.run?.combat?.combat;if(!o)return;let a=it(o);t.enemies.replaceChildren(...o.order.filter(l=>l.kind!=="dragon").map(l=>{let i=document.createElement("div");return i.className="enemy-card"+(l.hp.current<=0?" dead":""),i.innerHTML=`
+          <div class="enemy-face">${l.hp.current<=0?"\u2620\uFE0F":l.emoji}</div>
+          <div class="enemy-name">${l.name}</div>
+          ${Vt(l)}`,i})),t.player.innerHTML=`
+    <div class="player-face">\u{1F409}</div>
+    <div class="player-name">Your Dragon</div>
+    ${Vt(a)}`;let r=[];if(!o.over&&A(o))for(let l of U(o)){let i=document.createElement("button");i.className="btn attack-btn",i.textContent=`\u{1F9B7} Bite the ${l.name}!`,i.addEventListener("click",()=>n(l.id)),r.push(i)}else if(!o.over){let l=document.createElement("div");l.className="turn-note",l.textContent="The monsters act\u2026",r.push(l)}t.actions.replaceChildren(...r)}function Vt(t){let e=Math.max(0,Math.round(100*t.hp.current/t.hp.max));return`
+    <div class="hp-bar"><div class="hp-fill${e<=35?" low":""}" style="width:${e}%"></div></div>
+    <div class="hp-num">${t.hp.current} / ${t.hp.max} HP</div>`}function xt(t,e){for(let n of e){let o=pe(n);o&&he(t.log,o.text,o.cls),n.type==="attack"&&(t.die.textContent=`\u{1F3B2} ${n.natural}`,t.die.className="big-die"+(n.crit?" crit":n.fumble?" fumble":""))}t.log.scrollTop=t.log.scrollHeight}function pe(t){switch(t.type){case"combat-start":return{text:`Danger! ${t.monsters.map(n=>`${n.emoji} ${n.name}`).join(", ")} block${t.monsters.length===1?"s":""} your path!`,cls:"log-start"};case"initiative":return{text:`Initiative: ${t.order.map(e=>`${e.name} ${e.initiative}`).join(" \xB7 ")}`,cls:"log-dim"};case"round":return{text:`\u2014 Round ${t.round} \u2014`,cls:"log-dim"};case"attack":{let e=t.attackerKind==="dragon",n=`(${t.natural}${t.toHit>=0?"+":""}${t.toHit} vs AC ${t.targetAc})`;return t.crit?{text:e?`CRITICAL! Your bite crunches the ${t.target} for ${t.damage}! ${n}`:`CRITICAL! The ${t.attacker}'s ${t.attackName} hits you for ${t.damage}! ${n}`,cls:e?"log-hit":"log-hurt"}:t.hit?{text:e?`Your bite hits the ${t.target} for ${t.damage}! ${n}`:`The ${t.attacker}'s ${t.attackName} hits you for ${t.damage}. ${n}`,cls:e?"log-hit":"log-hurt"}:{text:e?`Your bite misses the ${t.target}. ${n}`:`The ${t.attacker}'s ${t.attackName} misses you. ${n}`,cls:"log-miss"}}case"death":return{text:`The ${t.who} is defeated! (worth ${t.goldValue} gold)`,cls:"log-hit"};case"victory":return{text:`Victory! You snatch up ${t.gold} gold. \u{1F4B0}`,cls:"log-start"};case"defeat":return{text:"You have no strength left\u2026",cls:"log-hurt"};default:return null}}function he(t,e,n=""){let o=document.createElement("p");for(o.textContent=e,n&&(o.className=n),t.appendChild(o);t.children.length>60;)t.removeChild(t.firstChild)}function Bt(t){t.log.replaceChildren(),t.die.textContent="\u{1F3B2}",t.die.className="big-die"}function p(t){return document.getElementById(t)}function Wt(t){p("screen-title").hidden=t!=="title",p("screen-game").hidden=t!=="game"}function C(t,e){p(t).hidden=!e}function qt(t){let e=t.run;if(!e)return;let n=e.dragon.hp;p("hud-hp").textContent=`\u2764\uFE0F ${n.current}/${n.max}`,p("hud-hp").classList.toggle("danger",n.current<=Math.ceil(n.max/3)),p("hud-tier").textContent=`\u{1F409} ${fe(e.dragon.tier)}`,p("hud-depth").textContent=`\u{1F573}\uFE0F Depth ${e.dungeon.depth}`,p("hud-carried").textContent=`\u{1F4B0} ${e.unbankedGold}`,p("hud-hoard").textContent=`\u{1F3C6} ${t.meta.hoardGold.toLocaleString()}`,p("hoard-label").textContent=`Hoard: ${t.meta.hoardGold.toLocaleString()} gold`}function Ut(t){p("btn-continue").hidden=!t.hasSave,p("title-hoard").textContent=t.hasSave?`Your hoard: ${t.meta.hoardGold.toLocaleString()} gold`:""}function X(t,e=""){let n=p("explore-log"),o=document.createElement("p");for(o.textContent=t,e&&(o.className=e),n.appendChild(o);n.children.length>40;)n.removeChild(n.firstChild);n.scrollTop=n.scrollHeight}function Jt(){p("explore-log").replaceChildren()}function bt({title:t,body:e,actions:n}){p("result-title").textContent=t,p("result-body").textContent=e,p("result-actions").replaceChildren(...n.map(({label:a,onClick:r})=>{let l=document.createElement("button");return l.className="btn",l.textContent=a,l.addEventListener("click",r),l})),C("result-overlay",!0)}function fe(t){return t.charAt(0).toUpperCase()+t.slice(1)}var Z={enemies:p("combat-enemies"),player:p("combat-player"),actions:p("combat-actions"),log:p("combat-log"),die:p("combat-die")};ct((t,e)=>{if(Wt(t.screen),t.screen==="title"){Ut(t);return}qt(t),Pt(p("map"),t),_t(p("hoard-canvas"),t.meta.hoardGold);let n=t.run?.phase;C("combat-overlay",n==="combat");for(let o of e)o.type==="entered"&&(Jt(),X(`You slink into labyrinth depth ${o.depth}. Find the exit! \u{1F6AA}`)),o.type==="resumed"&&X(`Back to the hunt at depth ${o.depth}.`),o.type==="loot"&&X(`${o.icon} You found ${o.label} \u2014 ${o.gold} gold!`,"log-hit"),o.type==="combat-start"&&Bt(Z),o.type==="banked"&&bt({title:"\u{1F3C6} Treasure banked!",body:`You escaped depth ${o.depth} with ${o.banked} gold (${o.bonus} bonus for reaching the exit). Your hoard is now ${o.hoard.toLocaleString()} gold.`,actions:[{label:"\u26CF\uFE0F Delve deeper",onClick:()=>{C("result-overlay",!1),Q()}},{label:"\u{1F3E0} Rest at your lair",onClick:()=>{C("result-overlay",!1),R()}}]}),o.type==="retreat"&&bt({title:"\u{1FA79} You flee to your lair!",body:o.lost>0?`You dropped ${o.lost} unbanked gold as you fled\u2026 but your hoard of ${o.hoard.toLocaleString()} gold is safe.`:`Your hoard of ${o.hoard.toLocaleString()} gold is safe. Rest up and try again!`,actions:[{label:"\u{1F409} Hunt again",onClick:()=>{C("result-overlay",!1),Q()}},{label:"\u{1F3E0} Back to title",onClick:()=>{C("result-overlay",!1),R()}}]});n==="combat"?(xt(Z,e),Yt(Z,t,o=>ft(o))):e.some(o=>o.type==="victory")&&xt(Z,e)});var xe={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0],w:[0,-1],s:[0,1],a:[-1,0],d:[1,0],W:[0,-1],S:[0,1],A:[-1,0],D:[1,0]};document.addEventListener("keydown",t=>{let e=xe[t.key];e&&(t.preventDefault(),z(e[0],e[1]))});jt(p("map"),(t,e)=>ht(t,e));p("btn-new").addEventListener("click",()=>K(be()));p("btn-continue").addEventListener("click",()=>pt());p("btn-quit").addEventListener("click",()=>R());function be(){try{return new URLSearchParams(location.search).get("seed")}catch{return null}}mt();window.__game=gt;})();
+
+</script>
+</body>
+</html>
