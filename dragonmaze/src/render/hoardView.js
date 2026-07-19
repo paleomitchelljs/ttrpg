@@ -6,7 +6,7 @@
 import { makeSeededRNG } from '../engine/rng.js';
 import { HOARD_PILE_TIERS } from '../engine/rules.js';
 
-export function drawHoard(canvas, gold) {
+export function drawHoard(canvas, gold, dragonTierIndex = 0) {
   const ctx = canvas.getContext('2d');
   const W = canvas.width;
   const H = canvas.height;
@@ -55,4 +55,11 @@ export function drawHoard(canvas, gold) {
     ctx.font = `${12 + tier * 2}px serif`;
     ctx.fillText('✨', cx + spread * 0.4, baseY - peak * 0.8);
   }
+
+  // the dragon curls up on its hoard, drawn bigger at each age tier
+  const dragonSize = 22 + dragonTierIndex * 12;
+  ctx.font = `${dragonSize}px serif`;
+  ctx.textAlign = 'center';
+  ctx.fillText('🐉', cx, baseY - peak - 6);
+  ctx.textAlign = 'start';
 }

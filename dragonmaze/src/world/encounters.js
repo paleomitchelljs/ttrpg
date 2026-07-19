@@ -5,7 +5,9 @@ import { MONSTERS } from '../../data/monsters.js';
 import { randInt } from '../engine/rng.js';
 
 export function rollEncounter(depth, rng) {
-  const pool = MONSTERS.filter((m) => (m.minDepth ?? 1) <= depth);
+  const pool = MONSTERS.filter(
+    (m) => (m.minDepth ?? 1) <= depth && depth <= (m.maxDepth ?? Infinity)
+  );
   const totalWeight = pool.reduce((sum, m) => sum + (m.weight ?? 1), 0);
   let pick = rng() * totalWeight;
   let chosen = pool[pool.length - 1];

@@ -134,7 +134,7 @@ export function generateDungeon(seedString, depth = 1) {
     loot: lootCells.map((cell, i) => ({
       id: `loot-${i}`,
       ...toTile(cell),
-      ...rollLoot(rng),
+      ...rollLoot(rng, depth),
     })),
   };
 }

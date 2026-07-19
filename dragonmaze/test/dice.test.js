@@ -5,6 +5,15 @@ import assert from 'node:assert/strict';
 import { roll, d20, save } from '../src/engine/dice.js';
 import { makeSeededRNG } from '../src/engine/rng.js';
 import { generateDungeon } from '../src/world/maze.js';
+import {
+  tierAfterBanking,
+  resolveBreathOn,
+  rollBreathRecharge,
+  moraleCheck,
+  lootScale,
+  resolveAttack,
+} from '../src/engine/rules.js';
+import { MONSTERS, monsterById } from '../data/monsters.js';
 
 const N = 10_000;
 let passed = 0;
@@ -144,6 +153,86 @@ check('dungeon is well-formed and connected', () => {
     let floors = 0;
     for (const row of d.tiles) for (const t of row) if (t === 1) floors++;
     assert.equal(seen.size, floors, `all floor tiles reachable (seed ${seed})`);
+  }
+});
+
+// ---- Phase 1 rules
+check('tier-ups are hoard-gated', () => {
+  assert.deepEqual(tierAfterBanking('wyrmling', 999), []);
+  assert.deepEqual(tierAfterBanking('wyrmling', 1000).map((t) => t.tier), ['young']);
+  assert.deepEqual(tierAfterBanking('wyrmling', 6000).map((t) => t.tier), ['young', 'adult']);
+  assert.deepEqual(tierAfterBanking('young', 4999), []);
+  assert.deepEqual(tierAfterBanking('ancient', 999999), []);
+});
+
+check('breath save halves damage', () => {
+  const alwaysHigh = () => 0.99; // d20 = 20
+  const alwaysLow = () => 0; // d20 = 1
+  const nimble = { abilities: { dex: 2 } };
+  const saved = resolveBreathOn(nimble, 13, 11, alwaysHigh);
+  assert.equal(saved.saved, true);
+  assert.equal(saved.damage, 5); // floor(11/2)
+  const caught = resolveBreathOn(nimble, 13, 11, alwaysLow);
+  assert.equal(caught.saved, false);
+  assert.equal(caught.damage, 11);
+  assert.equal(resolveBreathOn(nimble, 13, 1, alwaysHigh).damage, 1, 'half damage never below 1');
+});
+
+check('breath recharge on 5+', () => {
+  for (let i = 0; i < 2000; i++) {
+    const r = rollBreathRecharge();
+    assert.ok(r.roll >= 1 && r.roll <= 6);
+    assert.equal(r.ready, r.roll >= 5);
+  }
+});
+
+check('morale: fearless never breaks, cowards can', () => {
+  const skeleton = monsterById('skeleton');
+  assert.equal(skeleton.morale, null);
+  assert.equal(moraleCheck(skeleton).pass, true);
+  const rat = { morale: -2 };
+  assert.equal(moraleCheck(rat, () => 0).pass, false); // d20=1, total -1 vs 12
+  assert.equal(moraleCheck(rat, () => 0.99).pass, true); // d20=20, total 18 vs 12
+});
+
+check('advantage rolls twice and keeps best', () => {
+  const seq = [0.1, 0.9, 0.5]; // d20: 3, then 19; damage d6: 4
+  let i = 0;
+  const rng = () => seq[i++];
+  const attacker = { abilities: {} };
+  const res = resolveAttack(attacker, { name: 'bite', toHit: 4, damage: '1d6' }, { ac: 15 }, rng, { advantage: true });
+  assert.equal(res.mode, 'advantage');
+  assert.deepEqual(res.dieRolls, [3, 19]);
+  assert.equal(res.natural, 19);
+  assert.equal(res.hit, true);
+});
+
+check('loot scales with depth', () => {
+  assert.equal(lootScale(1), 1);
+  assert.ok(lootScale(4) > lootScale(2));
+});
+
+check('encounters respect min/max depth', () => {
+  for (const depth of [1, 2, 5]) {
+    const d = generateDungeon(`depth-check-${depth}`, depth);
+    for (const enc of d.encounters) {
+      for (const id of enc.monsterIds) {
+        const m = monsterById(id);
+        assert.ok((m.minDepth ?? 1) <= depth, `${id} too deep for its minDepth at depth ${depth}`);
+        assert.ok(depth <= (m.maxDepth ?? Infinity), `${id} should have retired by depth ${depth}`);
+      }
+    }
+  }
+});
+
+check('roster is Phase-1 sized with sane stats', () => {
+  assert.ok(MONSTERS.length >= 8 && MONSTERS.length <= 15, `roster size ${MONSTERS.length}`);
+  for (const m of MONSTERS) {
+    assert.ok(m.ac >= 8 && m.ac <= 20, `${m.id} ac`);
+    assert.ok(m.hpMax >= 1, `${m.id} hp`);
+    assert.ok(m.attacks.length >= 1, `${m.id} attacks`);
+    assert.ok(m.goldValue > 0, `${m.id} gold`);
+    roll(m.attacks[0].damage); // throws if the dice expression is malformed
   }
 });
 

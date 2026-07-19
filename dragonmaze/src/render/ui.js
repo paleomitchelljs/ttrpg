@@ -48,8 +48,15 @@ export function clearExploreLog() {
   el('explore-log').replaceChildren();
 }
 
-export function showResult({ title, body, actions }) {
+export function showResult({ title, body, growth = null, actions }) {
   el('result-title').textContent = title;
+  const growthEl = el('result-growth');
+  growthEl.hidden = !growth;
+  if (growth) {
+    growthEl.innerHTML = `
+      <div class="growth-dragon">${growth.emoji}</div>
+      <div class="growth-text">${growth.text}</div>`;
+  }
   el('result-body').textContent = body;
   const box = el('result-actions');
   box.replaceChildren(

@@ -21,6 +21,10 @@ export function makeCombatant(data) {
     sprite: data.sprite ?? null,
     emoji: data.emoji ?? '❓',
     goldValue: data.goldValue ?? 0,
+    morale: data.morale ?? null,
+    moraleChecked: false,
+    panicked: false,
+    fled: false,
   };
 }
 
@@ -37,6 +41,7 @@ export function makeDragonCombatant(tierData, currentHp = null) {
     sprite: tierData.sprite,
     emoji: tierData.emoji,
   });
+  c.breath = tierData.breath ? { ...tierData.breath } : null;
   if (currentHp != null) c.hp.current = Math.min(currentHp, c.hp.max);
   return c;
 }

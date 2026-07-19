@@ -5,7 +5,7 @@
   "type": "module",
   "description": "Top-down browser dungeon crawler: a red dragon raids labyrinths and grows its hoard.",
   "scripts": {
-    "dev": "python3 -m http.server 8060",
+    "dev": "node serve.mjs",
     "build": "node build.mjs",
     "test": "node test/dice.test.js"
   },

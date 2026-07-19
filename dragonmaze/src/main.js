@@ -6,6 +6,7 @@ import { renderMap, bindMapClicks } from './render/mapView.js';
 import { drawHoard } from './render/hoardView.js';
 import { renderCombat, narrateCombatEvents, clearCombatLog } from './render/combatView.js';
 import * as ui from './render/ui.js';
+import { DRAGON_TIERS } from '../data/dragonProgression.js';
 
 const combatEls = {
   enemies: ui.el('combat-enemies'),
@@ -26,7 +27,8 @@ game.subscribe((state, events) => {
 
   ui.updateHud(state);
   renderMap(ui.el('map'), state);
-  drawHoard(ui.el('hoard-canvas'), state.meta.hoardGold);
+  const tierIndex = Math.max(0, DRAGON_TIERS.findIndex((t) => t.tier === state.meta.tier));
+  drawHoard(ui.el('hoard-canvas'), state.meta.hoardGold, tierIndex);
 
   const phase = state.run?.phase;
   ui.showOverlay('combat-overlay', phase === 'combat');
@@ -40,9 +42,18 @@ game.subscribe((state, events) => {
     if (ev.type === 'loot') ui.logExplore(`${ev.icon} You found ${ev.label} — ${ev.gold} gold!`, 'log-hit');
     if (ev.type === 'combat-start') clearCombatLog(combatEls);
     if (ev.type === 'banked') {
+      const tierUp = events.find((e) => e.type === 'tier-up');
+      const bankLine = `You escaped depth ${ev.depth} with ${ev.banked} gold (${ev.bonus} bonus for reaching the exit). Your hoard is now ${ev.hoard.toLocaleString()} gold.`;
       ui.showResult({
-        title: '🏆 Treasure banked!',
-        body: `You escaped depth ${ev.depth} with ${ev.banked} gold (${ev.bonus} bonus for reaching the exit). Your hoard is now ${ev.hoard.toLocaleString()} gold.`,
+        title: tierUp ? '🐲 You have GROWN!' : '🏆 Treasure banked!',
+        growth: tierUp
+          ? {
+              emoji: '🐉',
+              text: `Your hoard's warmth changes you… you are now a ${tierUp.to.label.toUpperCase()}! ` +
+                `${tierUp.to.hpMax} HP, armor ${tierUp.to.ac}, bite ${tierUp.to.attacks[0].damage}, breath ${tierUp.to.breath.damage}.`,
+            }
+          : null,
+        body: bankLine,
         actions: [
           { label: '⛏️ Delve deeper', onClick: () => { ui.showOverlay('result-overlay', false); game.nextLabyrinth(); } },
           { label: '🏠 Rest at your lair', onClick: () => { ui.showOverlay('result-overlay', false); game.quitToTitle(); } },
@@ -66,7 +77,10 @@ game.subscribe((state, events) => {
 
   if (phase === 'combat') {
     narrateCombatEvents(combatEls, events);
-    renderCombat(combatEls, state, (targetId) => game.attack(targetId));
+    renderCombat(combatEls, state, {
+      onAttack: (targetId) => game.attack(targetId),
+      onBreath: () => game.breath(),
+    });
   } else if (events.some((e) => e.type === 'victory')) {
     // final combat events (victory line) still land in the combat log
     narrateCombatEvents(combatEls, events);

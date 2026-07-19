@@ -10,9 +10,10 @@ import {
   createCombat,
   runMonsterTurns,
   playerAttack,
+  playerBreath,
   isPlayerTurn,
 } from '../engine/combat.js';
-import { endOfRunBonus } from '../engine/rules.js';
+import { endOfRunBonus, tierAfterBanking } from '../engine/rules.js';
 import { liveRNG } from '../engine/rng.js';
 import { loadSave, persist, clearSave } from './save.js';
 
@@ -174,15 +175,19 @@ function bankAndWin(events) {
   state.meta.runsCompleted += 1;
   run.phase = 'won';
   run.lastResult = { banked, bonus, hoard: state.meta.hoardGold, depth: run.dungeon.depth };
+  events.push({ type: 'banked', ...run.lastResult });
   checkTierUp(events);
   persist(state);
-  events.push({ type: 'banked', ...run.lastResult });
   emit(events);
 }
 
-/** Phase 0 stub: tiers unlock in Phase 1. Records nothing, changes nothing. */
+/** Hoard-gated growth: crossing a threshold at banking time grows the dragon. */
 function checkTierUp(events) {
-  return null;
+  const gained = tierAfterBanking(state.meta.tier, state.meta.hoardGold);
+  if (!gained.length) return;
+  const from = state.meta.tier;
+  state.meta.tier = gained[gained.length - 1].tier;
+  events.push({ type: 'tier-up', from, to: gained[gained.length - 1] });
 }
 
 // ---------------------------------------------------------------- combat
@@ -205,11 +210,20 @@ function beginCombat(encounter) {
 }
 
 export function attack(targetId) {
+  resolvePlayerAction((combat) => playerAttack(combat, targetId, liveRNG));
+}
+
+export function breath() {
+  resolvePlayerAction((combat) => playerBreath(combat, liveRNG));
+}
+
+function resolvePlayerAction(act) {
   const run = state.run;
   if (!run || run.phase !== 'combat' || !run.combat) return;
   const combat = run.combat.combat;
   if (!isPlayerTurn(combat)) return;
-  const events = playerAttack(combat, targetId, liveRNG);
+  const events = act(combat);
+  if (!events.length) return;
   if (!combat.over) events.push(...runMonsterTurns(combat, liveRNG));
   syncDragonHp();
   if (combat.over) {
@@ -230,8 +244,9 @@ function finishCombat(events) {
   const run = state.run;
   const combat = run.combat.combat;
   if (combat.winner === 'dragon') {
+    // Only defeated monsters drop gold; ones that fled keep theirs.
     const gold = combat.order
-      .filter((c) => c.kind !== 'dragon')
+      .filter((c) => c.kind !== 'dragon' && c.hp.current <= 0)
       .reduce((sum, m) => sum + (m.goldValue ?? 0), 0);
     run.unbankedGold += gold;
     const idx = run.dungeon.encounters.findIndex((e) => e.id === run.combat.encounterId);

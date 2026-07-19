@@ -6,7 +6,11 @@ turn-based d20 combat, carry loot to the exit, and bank it into a persistent
 hoard that visibly grows. No frameworks, no runtime dependencies — vanilla
 HTML/CSS/JS ES modules.
 
-Current status: **Phase 0 vertical slice** (see `docs/implementation-plan.md`).
+Current status: **Phase 1 — growth & depth** (see `docs/implementation-plan.md`):
+hoard-gated tier-ups (wyrmling→young→adult→ancient), fire breath with a d6
+recharge (area save-for-half), advantage vs panicked prey, a 13-monster roster,
+depth-scaled encounters and loot, and monster morale (failed courage checks
+mean fleeing monsters — and fled monsters keep their gold).
 
 ## Run it
 
@@ -15,6 +19,10 @@ npm run dev        # serves at http://localhost:8060 (ES modules need http, not 
 npm test           # dice + determinism tests
 npm run build      # bundles everything into dist/dragon.html (double-clickable, offline)
 ```
+
+The dev server (`serve.mjs`) sends `Cache-Control: no-store` — browsers
+otherwise heuristically cache ES modules and can run a mix of stale and fresh
+files after an edit.
 
 `build.mjs` resolves `esbuild` from the parent repo's `node_modules`; no install
 needed inside this folder.

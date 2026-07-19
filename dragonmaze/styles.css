@@ -246,6 +246,28 @@ button { font: inherit; }
 .big-die.crit { color: var(--gold); animation: pop 0.4s ease; }
 .big-die.fumble { color: #8b8b8b; }
 
+.breath-btn { background: #c2601d; }
+.btn:disabled { opacity: 0.45; cursor: default; transform: none; }
+.btn:disabled:hover { filter: none; }
+
+.badge-panic { font-size: 0.8rem; color: #ffb4a6; }
+.badge-flee { font-size: 0.85rem; color: var(--ink-dim); font-style: italic; }
+.enemy-card.fled { opacity: 0.4; }
+
+.growth { text-align: center; }
+.growth-dragon {
+  font-size: 4.5rem;
+  line-height: 1.1;
+  animation: grow-pop 1.2s ease;
+}
+.growth-text { color: var(--gold); font-size: 1.1rem; margin-top: 0.3rem; }
+
+@keyframes grow-pop {
+  0% { transform: scale(0.25); opacity: 0; }
+  55% { transform: scale(1.35); opacity: 1; }
+  100% { transform: scale(1); }
+}
+
 @keyframes pop {
   0% { transform: scale(1); }
   50% { transform: scale(1.5); }
