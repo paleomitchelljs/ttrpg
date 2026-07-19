@@ -32,6 +32,7 @@ export function renderMap(container, state) {
   }
   const d = run.dungeon;
   const { x: px, y: py } = run.playerPos;
+  container.dataset.theme = d.theme ?? 'none';
   grid.style.gridTemplateColumns = `repeat(${d.width}, var(--tile))`;
 
   const frag = document.createDocumentFragment();
@@ -61,6 +62,12 @@ export function renderMap(container, state) {
 
 function fillTile(tile, run, x, y) {
   const d = run.dungeon;
+  const door = d.doors?.find((dr) => dr.x === x && dr.y === y);
+  if (door) {
+    tile.classList.add('door-tile');
+    tile.textContent = door.to === 'surface' ? '⌂' : '◆';
+    return;
+  }
   const enc = d.encounters.find((e) => e.x === x && e.y === y);
   if (enc) {
     const m = monsterById(enc.monsterIds[0]);

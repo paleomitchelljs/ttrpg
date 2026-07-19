@@ -141,12 +141,12 @@ STRIPS = {
         "box": (2, 2, 77, 75),
     },
     # labeled panel sheet, irregular layout: absolute boxes
-    "bard-idle": {
-        "sheet": "bard-sheet.png",
+    "spawnee-idle": {
+        "sheet": "spawnee-sheet.png",
         "abs": [(51, 51, 137, 155), (204, 51, 135, 155)],
     },
-    "bard-attack": {
-        "sheet": "bard-sheet.png",
+    "spawnee-attack": {
+        "sheet": "spawnee-sheet.png",
         "abs": [(204, 253, 135, 154), (350, 253, 133, 154)],
     },
     # this sheet's grid is irregular; use absolute (x, y, w, h) frame boxes

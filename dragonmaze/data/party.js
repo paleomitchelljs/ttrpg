@@ -1,20 +1,24 @@
 // Recruitable companions — pure data, same combatant schema as monsters.
-// The bard heals and charms, the swashbuckler knows the whole spellbook,
-// and the spellblade splits the difference with a flaming sword.
+// Spawnee is a friendly vampire spawn warrior with a few limited vampire
+// powers; the swashbuckler knows the whole spellbook; the spellblade
+// splits the difference with a flaming sword.
 
 export const COMPANIONS = [
   {
-    id: 'bard',
-    name: 'Swashbuckling Bard',
+    id: 'spawnee',
+    name: 'Spawnee',
     kind: 'hero',
     ac: 15,
-    hpMax: 13,
-    abilities: { str: 1, dex: 2, con: 1, int: 1, wis: 0, cha: 3 },
-    attacks: [{ name: 'gleaming rapier', toHit: 5, damage: '1d6+2', range: 'melee' }],
-    sprite: 'hero_bard',
-    emoji: '🎵',
-    anim: { idle: 'bard-idle', attack: 'bard-attack' },
-    spells: ['healing-word'],
+    hpMax: 14,
+    abilities: { str: 2, dex: 2, con: 2, int: 1, wis: 0, cha: 2 },
+    attacks: [{ name: 'silvered blade', toHit: 5, damage: '1d8+2', range: 'melee' }],
+    sprite: 'hero_spawnee',
+    emoji: '🌙',
+    anim: { idle: 'spawnee-idle', attack: 'spawnee-attack' },
+    undead: true,
+    ability: 'relentless',
+    abilityLabel: 'slowfall — she drifts away from the first killing blow, once per fight',
+    spells: ['drain-life', 'dominate-undead'],
   },
   {
     id: 'dragonkin-swashbuckler',

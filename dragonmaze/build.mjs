@@ -34,11 +34,15 @@ if (withCss === html || withJs === withCss) {
 const assetFiles = (await readdir(join(root, 'assets'), { recursive: true }))
   .filter((f) => f.endsWith('.png'))
   .map((f) => f.split('\\').join('/'));
+let inlined = 0;
 for (const rel of assetFiles) {
+  const ref = `./assets/${rel}`;
+  if (!withJs.includes(ref)) continue; // thousands of tiles; embed only what's used
   const data = await readFile(join(root, 'assets', rel));
-  const uri = `data:image/png;base64,${data.toString('base64')}`;
-  withJs = withJs.replaceAll(`./assets/${rel}`, uri);
+  withJs = withJs.replaceAll(ref, `data:image/png;base64,${data.toString('base64')}`);
+  inlined++;
 }
+console.log(`inlined ${inlined} referenced assets`);
 
 await mkdir(join(root, 'dist'), { recursive: true });
 await writeFile(join(root, 'dist/dragon.html'), withJs);

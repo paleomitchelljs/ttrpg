@@ -286,7 +286,8 @@ check('every zone subregion is well-formed, connected, and deterministic', () =>
       const a = buildZoneDungeon(zone.id, i, 'zone-seed');
       const b = buildZoneDungeon(zone.id, i, 'zone-seed');
       assert.deepEqual(a, b, `${zone.id}/${sub.id} deterministic`);
-      assert.ok(a.start && a.exit, `${zone.id}/${sub.id} has S and E`);
+      assert.ok(a.start, `${zone.id}/${sub.id} has S`);
+      assert.ok((a.exit && a.exit.x >= 0) || a.doors.length, `${zone.id}/${sub.id} has a way out`);
       // flood fill: every floor tile reachable from start
       const seen = new Set([`${a.start.x},${a.start.y}`]);
       const queue = [[a.start.x, a.start.y]];
@@ -316,7 +317,7 @@ check('every zone subregion is well-formed, connected, and deterministic', () =>
 // ---- spells & party
 check('spellbook is well-formed and companion spells exist', () => {
   for (const s of SPELLS) {
-    roll(s.dice); // throws on a malformed expression
+    if (s.dice) roll(s.dice); // throws on a malformed expression
     assert.ok(['enemy', 'ally', 'all-enemies'].includes(s.target), `${s.id} target`);
     assert.ok(s.castDC >= 10 && s.castDC <= 15, `${s.id} castDC`);
   }
@@ -381,7 +382,7 @@ check('victory drops favor bosses', () => {
 check('items are well-formed', () => {
   for (const item of ITEMS) {
     assert.ok(['weapon', 'armor', 'trinket'].includes(item.slot), `${item.id} slot`);
-    assert.ok(Object.keys(item.mods).every((k) => ['toHit', 'damage', 'ac', 'hpMax'].includes(k)), `${item.id} mods`);
+    assert.ok(Object.keys(item.mods).every((k) => ['toHit', 'damage', 'ac', 'hpMax', 'init'].includes(k)), `${item.id} mods`);
     assert.ok(item.blurb, `${item.id} blurb`);
   }
 });
@@ -417,16 +418,63 @@ check('portal characters convert into sane companions', () => {
   assert.equal(portalToCompanion(null), null);
 });
 
-check('bard replaced the knight and shadow knight wears the red plate', () => {
-  assert.ok(companionById('bard'), 'bard exists');
+check('Spawnee is the blue-skinned vampire spawn, with her powers', () => {
+  const sp = companionById('spawnee');
+  assert.ok(sp, 'spawnee exists');
+  assert.equal(companionById('bard'), undefined);
   assert.equal(companionById('dragonkin-knight'), undefined);
-  assert.ok(SPRITES['bard-idle'] && SPRITES['shadow-knight-idle']);
+  assert.ok(sp.undead && sp.ability === 'relentless' && sp.abilityLabel.includes('slowfall'));
+  assert.deepEqual(sp.spells.sort(), ['dominate-undead', 'drain-life']);
+  assert.ok(SPRITES['spawnee-idle'] && SPRITES['shadow-knight-idle']);
   assert.ok(!monsterById('shadow-knight').facesLeft, 'red dragonkin art faces right');
+  for (const sid of sp.spells) assert.equal(spellById(sid).tome, false, `${sid} never in dragon tomes`);
+});
+
+check('drain and dominate behave', () => {
+  const dragon = makeDragonCombatant(tierByName('wyrmling'));
+  const spawnee = makeCombatant(companionById('spawnee'));
+  spawnee.hp.current = 5;
+  const skeleton = makeCombatant(monsterById('skeleton'));
+  const troll = makeCombatant(monsterById('cave-troll'));
+  const seq = [0.5, 0.6, 0.4, 0.3];
+  let i = 0;
+  const rng = () => (i < seq.length ? seq[i++] : 0.99);
+  const { combat } = createCombat([dragon, spawnee], [skeleton, troll], rng);
+  while (combat.order[combat.turnIndex].id !== spawnee.id) combat.turnIndex++;
+  const evs = playerSpell(combat, 'drain-life', troll.id, () => 0.99);
+  const hit = evs.find((e) => e.type === 'spell-hit');
+  assert.ok(hit.drained > 0, 'drain heals the caster');
+  assert.ok(spawnee.hp.current > 5, 'spawnee healed');
+  while (combat.order[combat.turnIndex].id !== spawnee.id) {
+    combat.turnIndex = (combat.turnIndex + 1) % combat.order.length;
+  }
+  const evs2 = playerSpell(combat, 'dominate-undead', skeleton.id, () => 0.99);
+  assert.ok(evs2.some((e) => e.type === 'dominated'), 'skeleton dominated');
+  assert.ok(skeleton.panicked, 'dominated undead will flee');
+});
+
+check('zone doors and boss drops reference real places and items', () => {
+  const itemById = (id) => ITEMS.find((i) => i.id === id);
+  for (const zone of ZONES) {
+    const ids = new Set(zone.subregions.map((sr) => sr.id));
+    for (const sub of zone.subregions) {
+      for (const dest of Object.values(sub.doors ?? {})) {
+        assert.ok(dest === 'surface' || ids.has(dest), `${zone.id}/${sub.id} door to ${dest}`);
+      }
+      for (const itemId of sub.boss.drops ?? []) {
+        assert.ok(itemById(itemId), `${zone.id}/${sub.id} boss drop ${itemId}`);
+      }
+      assert.ok(sub.theme, `${zone.id}/${sub.id} theme`);
+    }
+  }
+  for (const item of ITEMS) {
+    assert.ok(['upper-guk', 'lower-guk', 'cazic-thule'].includes(item.zone), `${item.id} zone`);
+  }
 });
 
 check('party combat: monsters fight heroes, heals can revive', () => {
   const dragon = makeDragonCombatant(tierByName('wyrmling'));
-  const knight = makeCombatant(companionById('bard'));
+  const knight = makeCombatant(companionById('spawnee'));
   const swash = makeCombatant(companionById('dragonkin-swashbuckler'));
   const troll = makeCombatant(monsterById('cave-troll'));
   const seq = [0.5, 0.6, 0.4, 0.3]; // initiative rolls, then combat dice

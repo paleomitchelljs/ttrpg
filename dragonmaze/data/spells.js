@@ -31,6 +31,28 @@ export const SPELLS = [
   },
 ];
 
+SPELLS.push(
+  {
+    id: 'drain-life',
+    name: 'Drain Life',
+    castDC: 11,
+    target: 'enemy',
+    dice: '1d6+1',
+    drain: true,
+    tome: false,
+    blurb: 'darkness leaps from her hand — she keeps what it takes',
+  },
+  {
+    id: 'dominate-undead',
+    name: 'Dominate Undead',
+    castDC: 12,
+    target: 'enemy',
+    dominate: true,
+    tome: false,
+    blurb: 'her will crushes the mindless dead and sends them away',
+  }
+);
+
 export function spellById(id) {
   return SPELLS.find((s) => s.id === id);
 }

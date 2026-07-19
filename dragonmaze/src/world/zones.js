@@ -23,11 +23,15 @@ export function buildZoneDungeon(zoneId, subIndex, seedString, partySize = 1) {
   let exit = null;
   const encounters = [];
   const loot = [];
+  const doors = [];
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       const ch = rows[y][x];
       if (ch === 'S') start = { x, y };
       if (ch === 'E') exit = { x, y };
+      if (ch >= '1' && ch <= '9') {
+        doors.push({ x, y, to: sub.doors?.[ch] ?? 'surface' });
+      }
       if (ch === 'M') {
         encounters.push({
           id: `enc-${encounters.length}`,
@@ -43,6 +47,7 @@ export function buildZoneDungeon(zoneId, subIndex, seedString, partySize = 1) {
           y,
           monsterIds: [...sub.boss.monsterIds],
           bossName: sub.boss.name,
+          bossDrops: [...(sub.boss.drops ?? [])],
         });
       }
       if (ch === 'L') {
@@ -50,7 +55,7 @@ export function buildZoneDungeon(zoneId, subIndex, seedString, partySize = 1) {
       }
     }
   }
-  if (!start || !exit) throw new Error(`Zone map ${zoneId}/${sub.id} needs S and E`);
+  if (!start) throw new Error(`Zone map ${zoneId}/${sub.id} needs S`);
 
   return {
     seed: seedString,
@@ -59,9 +64,11 @@ export function buildZoneDungeon(zoneId, subIndex, seedString, partySize = 1) {
     height,
     tiles,
     start,
-    exit,
+    exit: exit ?? { x: -1, y: -1 },
     encounters,
     loot,
+    doors,
+    theme: sub.theme ?? null,
     zone: {
       id: zone.id,
       name: zone.name,

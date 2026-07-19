@@ -53,16 +53,10 @@ export function updateTitle(state) {
     btn.classList.toggle('selected', (pick?.zoneId ?? '') === btn.dataset.zone);
   }
   const zone = pick ? zoneById(pick.zoneId) : null;
-  const sub = el('zone-sub');
-  sub.hidden = !zone;
-  if (zone) {
-    sub.innerHTML = zone.subregions
-      .map((s, i) => `<option value="${i}" ${i === pick.subIndex ? 'selected' : ''}>${s.name}</option>`)
-      .join('');
-    el('zone-blurb').textContent = zone.subregions[pick.subIndex]?.blurb ?? zone.blurb;
-  } else {
-    el('zone-blurb').textContent = 'An ever-changing maze, deeper and richer with every delve.';
-  }
+  el('zone-sub').hidden = true; // zones are entered at their gate; doors do the rest
+  el('zone-blurb').textContent = zone
+    ? zone.blurb
+    : 'An ever-changing maze, deeper and richer with every delve.';
 
   // familiar picker: only found familiars unlock; the rest stay mysteries
   const owned = state.meta.familiarsOwned ?? [];

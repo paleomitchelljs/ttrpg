@@ -121,11 +121,36 @@ async function presentEvent(els, ev) {
         card.classList.add('hit-flash');
         updateCardHp(card, ev.hpAfter);
       }
-      appendLog(els.log, `The bolt sears the ${ev.target} for ${ev.damage}!`, 'log-hit');
-      await delay(450);
+      if (ev.drained) {
+        const casterCard = cardOf(els, ev.casterId);
+        if (casterCard) {
+          casterCard.classList.add('heal-flash');
+          updateCardHp(casterCard, ev.casterHpAfter);
+        }
+        appendLog(els.log, `Darkness tears at the ${ev.target} for ${ev.damage} — ${ev.caster} drinks ${ev.drained} of it!`, 'log-hit');
+        await delay(500);
+        casterCard?.classList.remove('heal-flash');
+      } else {
+        appendLog(els.log, `The bolt sears the ${ev.target} for ${ev.damage}!`, 'log-hit');
+        await delay(450);
+      }
       card?.classList.remove('hit-flash');
       return;
     }
+    case 'dominated': {
+      const card = cardOf(els, ev.targetId);
+      if (card) card.classList.add('hit-flash');
+      appendLog(els.log, `The ${ev.who}'s empty eyes dim — it turns to leave, dominated.`, 'log-start');
+      await delay(500);
+      card?.classList.remove('hit-flash');
+      return;
+    }
+    case 'dominate-resisted':
+      appendLog(els.log, `The ${ev.who} is no mindless thing — the domination slides off.`, 'log-miss');
+      return delay(400);
+    case 'bane':
+      appendLog(els.log, `${ev.attacker}'s blade blazes against the ${ev.who}! (+2 undead bane)`, 'log-hit');
+      return delay(250);
     case 'spell-heal': {
       const card = cardOf(els, ev.targetId);
       if (card) {

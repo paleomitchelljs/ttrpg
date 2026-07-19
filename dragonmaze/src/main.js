@@ -26,6 +26,7 @@ const COMBAT_EVENTS = new Set([
   'combat-start', 'initiative', 'round', 'attack', 'breath', 'morale',
   'flee', 'recharge', 'death', 'hero-down', 'victory', 'defeat', 'retreat',
   'spell-cast', 'spell-hit', 'spell-heal', 'spell-wave', 'item-drop',
+  'dominated', 'dominate-resisted', 'bane',
 ]);
 
 function refreshWorld(state) {
@@ -89,6 +90,10 @@ game.subscribe((state, events) => {
       );
     }
     if (ev.type === 'resumed') ui.logExplore(`Back to the hunt at depth ${ev.depth}.`);
+    if (ev.type === 'traveled') {
+      ui.clearExploreLog();
+      ui.logExplore(`You pass through into ${ev.zone.sub}…`);
+    }
     if (ev.type === 'loot') ui.logExplore(`You found ${ev.label} — ${ev.gold} gold!`, 'log-hit');
     if (ev.type === 'tome') {
       ui.logExplore(
@@ -164,6 +169,7 @@ function sheetSubject(id) {
     abilities: c.abilities,
     attacks: c.attacks,
     spells: c.spells.map((sid) => spellById(sid)).filter(Boolean),
+    traits: c.abilityLabel ? [c.abilityLabel] : [],
     equip: equipInfo(id),
   };
 }

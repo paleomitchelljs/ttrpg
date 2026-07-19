@@ -23,7 +23,7 @@ const WEAPON_DICE = [
 
 const STRIP_BY_CLASS = [
   [/wizard|mage|sorcer|priest|cleric|shaman/i, 'spellblade'],
-  [/bard|thief|rogue|ranger|scout/i, 'bard'],
+  [/bard|thief|rogue|ranger|scout/i, 'spawnee'],
   [/./, 'swash'],
 ];
 

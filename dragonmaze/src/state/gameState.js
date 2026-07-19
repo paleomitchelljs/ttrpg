@@ -32,7 +32,7 @@ function freshMeta() {
     hoardGold: 0,
     tier: 'wyrmling',
     runsCompleted: 0,
-    party: ['bard', 'dragonkin-swashbuckler'],
+    party: ['spawnee', 'dragonkin-swashbuckler'],
     zone: null, // null = procedural labyrinth; else { zoneId, subIndex }
     familiar: null, // the active familiar (must be owned)
     familiarsOwned: [], // familiars are found in the dungeons, never bought
@@ -92,7 +92,7 @@ export function init() {
 
 /** Fill fields that predate this save's version of the game. */
 function normalizeMeta(meta) {
-  meta.party ??= ['bard', 'dragonkin-swashbuckler'];
+  meta.party ??= ['spawnee', 'dragonkin-swashbuckler'];
   meta.zone ??= null;
   meta.familiar ??= null;
   meta.familiarsOwned ??= [];
@@ -101,6 +101,12 @@ function normalizeMeta(meta) {
   meta.equipment ??= {};
   meta.customCharacters ??= [];
   if (meta.familiar && !meta.familiarsOwned.includes(meta.familiar)) meta.familiar = null;
+  meta.inventory = meta.inventory.filter((id) => itemById(id));
+  for (const slots of Object.values(meta.equipment)) {
+    for (const [slot, id] of Object.entries(slots)) {
+      if (!itemById(id)) delete slots[slot];
+    }
+  }
   return meta;
 }
 
@@ -207,7 +213,7 @@ export function enterLabyrinth(seed) {
   const partyIds = (state.meta.party ?? []).filter((id) => heroById(id));
   const zonePick = state.meta.zone;
   const dungeon = zonePick
-    ? buildZoneDungeon(zonePick.zoneId, zonePick.subIndex, seed, 1 + partyIds.length)
+    ? buildZoneDungeon(zonePick.zoneId, 0, seed, 1 + partyIds.length)
     : generateDungeon(seed, depth, 1 + partyIds.length);
   const dragonMax = tier.hpMax + equipmentMod('dragon', 'hpMax');
   state.run = {
@@ -223,6 +229,7 @@ export function enterLabyrinth(seed) {
     explored: {},
     phase: 'explore', // 'explore' | 'combat' | 'won' | 'defeat'
     combat: null,
+    encountersCleared: 0,
     lastResult: null,
   };
   reveal(state.run);
@@ -259,6 +266,20 @@ export function move(dx, dy) {
     return;
   }
 
+  // Doors connect a zone's subregions (and lead back to the surface).
+  const door = d.doors?.find((dr) => dr.x === x && dr.y === y);
+  if (door) {
+    run.playerPos = { x, y };
+    reveal(run);
+    const events = [{ type: 'moved', x, y }];
+    if (door.to === 'surface') {
+      bankAndWin(events);
+    } else {
+      travelTo(door.to, events);
+    }
+    return;
+  }
+
   run.playerPos = { x, y };
   reveal(run);
   const events = [{ type: 'moved', x, y }];
@@ -277,18 +298,8 @@ export function move(dx, dy) {
         run.unbankedGold += 75;
         events.push({ type: 'loot', label: 'an empty den (75 gold under the bedding)', gold: 75 });
       }
-    } else if (loot.cache) {
-      const unowned = ITEMS.filter((i) => !state.meta.inventory.includes(i.id));
-      if (unowned.length) {
-        const found = unowned[Math.floor(liveRNG() * unowned.length)];
-        state.meta.inventory.push(found.id);
-        events.push({ type: 'item-found', name: found.name, blurb: found.blurb });
-      } else {
-        run.unbankedGold += 90;
-        events.push({ type: 'loot', label: 'a cache of coin (90 gold)', gold: 90 });
-      }
     } else if (loot.tome) {
-      const unknown = SPELLS.filter((sp) => !state.meta.tomeSpells.includes(sp.id));
+      const unknown = SPELLS.filter((sp) => sp.tome !== false && !state.meta.tomeSpells.includes(sp.id));
       if (unknown.length) {
         const learned = unknown[Math.floor(liveRNG() * unknown.length)];
         state.meta.tomeSpells.push(learned.id);
@@ -314,6 +325,24 @@ export function move(dx, dy) {
   emit(events);
 }
 
+/** Walk through a door into another subregion of the same zone. The run
+ * continues: unbanked gold, HP, and spent spells all carry over. */
+function travelTo(subId, events) {
+  const run = state.run;
+  const zone = zoneById(run.dungeon.zone?.id);
+  if (!zone) return;
+  const idx = zone.subregions.findIndex((sr) => sr.id === subId);
+  if (idx < 0) return;
+  const dungeon = buildZoneDungeon(zone.id, idx, run.dungeon.seed, 1 + run.party.length);
+  run.dungeon = dungeon;
+  run.playerPos = { ...dungeon.start };
+  run.explored = {};
+  reveal(run);
+  persist(state);
+  events.push({ type: 'traveled', zone: dungeon.zone });
+  emit(events);
+}
+
 export function moveTo(x, y) {
   const dx = x - state.run?.playerPos.x;
   const dy = y - state.run?.playerPos.y;
@@ -322,15 +351,13 @@ export function moveTo(x, y) {
 
 function bankAndWin(events) {
   const run = state.run;
-  const bonus = endOfRunBonus(run.dungeon.depth);
+  // In zones, the surface door sits by the entrance: no free exit bonus
+  // for stepping in and straight back out.
+  const earned = !run.dungeon.zone || (run.encountersCleared ?? 0) > 0;
+  const bonus = earned ? endOfRunBonus(run.dungeon.depth) : 0;
   const banked = run.unbankedGold + bonus;
   state.meta.hoardGold += banked;
   state.meta.runsCompleted += 1;
-  // A written zone advances to its next subregion for the next delve.
-  if (state.meta.zone && run.dungeon.zone) {
-    const zone = zoneById(state.meta.zone.zoneId);
-    state.meta.zone.subIndex = Math.min(state.meta.zone.subIndex + 1, zone.subregions.length - 1);
-  }
   run.phase = 'won';
   run.lastResult = { banked, bonus, hoard: state.meta.hoardGold, depth: run.dungeon.depth };
   events.push({ type: 'banked', ...run.lastResult });
@@ -415,6 +442,10 @@ function applyEquipment(c, charKey) {
   const toHit = equipmentMod(charKey, 'toHit');
   const damage = equipmentMod(charKey, 'damage');
   c.ac += equipmentMod(charKey, 'ac');
+  c.initBonus = equipmentMod(charKey, 'init');
+  for (const item of equippedItems(charKey)) {
+    if (item.bane) c.bane = item.bane;
+  }
   for (const attack of c.attacks) {
     attack.toHit += toHit;
     attack.damage = bumpDamage(attack.damage, damage);
@@ -444,23 +475,31 @@ function finishCombat(events) {
     run.unbankedGold += slain.reduce((sum, m) => sum + (m.goldValue ?? 0), 0);
     const idx = run.dungeon.encounters.findIndex((e) => e.id === run.combat.encounterId);
     let bossName = null;
+    let bossDrops = null;
     if (idx >= 0) {
       const enc = run.dungeon.encounters[idx];
       bossName = enc.bossName ?? null;
+      bossDrops = enc.bossDrops ?? null;
       run.dungeon.encounters.splice(idx, 1);
       run.playerPos = { x: enc.x, y: enc.y };
       reveal(run);
     }
-    // The fallen sometimes leave equipment among the spoils; named boss
-    // packs usually do. Everything lands in the shared equippable inventory.
-    if (slain.length) {
-      const unowned = ITEMS.filter((i) => !state.meta.inventory.includes(i.id));
-      if (unowned.length && liveRNG() < victoryDropChance(!!bossName)) {
-        const found = unowned[Math.floor(liveRNG() * unowned.length)];
+    // Magic items come ONLY from named bosses (and quests): first from the
+    // boss's own hoard list, then the dungeon's wider treasure pool.
+    if (slain.length && bossName) {
+      const owned = state.meta.inventory;
+      const preferred = (bossDrops ?? []).filter((id) => !owned.includes(id));
+      const zoneId = run.dungeon.zone?.id ?? null;
+      const pool = preferred.length
+        ? preferred.map(itemById).filter(Boolean)
+        : ITEMS.filter((i) => i.zone === zoneId && !owned.includes(i.id));
+      if (pool.length && liveRNG() < victoryDropChance(true)) {
+        const found = pool[Math.floor(liveRNG() * pool.length)];
         state.meta.inventory.push(found.id);
         events.push({ type: 'item-drop', name: found.name, blurb: found.blurb });
       }
     }
+    run.encountersCleared = (run.encountersCleared ?? 0) + 1;
     run.phase = 'explore';
     run.combat = null;
     persist(state);

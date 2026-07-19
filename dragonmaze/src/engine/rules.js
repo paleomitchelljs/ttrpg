@@ -88,9 +88,9 @@ export function resolveAttack(attacker, attack, target, rng = Math.random, opts 
   };
 }
 
-/** Initiative: d20 + DEX modifier, once per combat, high goes first. */
+/** Initiative: d20 + DEX modifier (+ equipment), once per combat. */
 export function rollInitiative(combatant, rng = Math.random) {
-  return d20({ rng }).total + (combatant.abilities?.dex ?? 0);
+  return d20({ rng }).total + (combatant.abilities?.dex ?? 0) + (combatant.initBonus ?? 0);
 }
 
 // ---------------------------------------------------------------- breath

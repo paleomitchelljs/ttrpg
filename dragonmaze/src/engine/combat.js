@@ -232,7 +232,13 @@ export function playerAttack(combat, targetId, rng = Math.random) {
   const res = resolveAttack(actor, actor.attacks[0], target, rng, {
     advantage: !!target.panicked,
   });
-  if (res.hit) res.damage = applyDamage(target, res.damage, 'physical', events);
+  if (res.hit) {
+    if (actor.bane === 'undead' && target.undead) {
+      res.damage += 2;
+      events.push({ type: 'bane', attacker: actor.name, who: target.name });
+    }
+    res.damage = applyDamage(target, res.damage, 'physical', events);
+  }
   events.push({
     type: 'attack',
     attackerId: actor.id,
@@ -305,14 +311,34 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
     const target =
       combat.order.find((c) => c.id === targetId && isMonster(c) && alive(c)) ??
       livingMonsters(combat)[0];
-    const dmg = roll(spell.dice, rng).total + fireBonus(combat);
-    const dealt = applyDamage(target, dmg, 'fire', events);
+    if (spell.dominate) {
+      if (target.undead) {
+        target.panicked = true;
+        target.moraleChecked = true;
+        events.push({ type: 'dominated', targetId: target.id, who: target.name });
+      } else {
+        events.push({ type: 'dominate-resisted', who: target.name });
+      }
+      if (!checkVictory(combat, events)) advanceTurn(combat, events);
+      return events;
+    }
+    const dmg = roll(spell.dice, rng).total + (spell.drain ? 0 : fireBonus(combat));
+    const dealt = applyDamage(target, dmg, spell.drain ? 'physical' : 'fire', events);
+    let drained = 0;
+    if (spell.drain && dealt > 0 && caster.hp.current < caster.hp.max) {
+      drained = Math.min(dealt, caster.hp.max - caster.hp.current);
+      caster.hp.current += drained;
+    }
     events.push({
       type: 'spell-hit',
       targetId: target.id,
       target: target.name,
       damage: dealt,
       hpAfter: target.hp.current,
+      drained,
+      casterId: caster.id,
+      caster: caster.name,
+      casterHpAfter: caster.hp.current,
     });
     afterDamage(combat, target, rng, events);
   } else if (spell.target === 'ally') {
