@@ -1,0 +1,181 @@
+#!/usr/bin/env python3
+"""Crop animation frames from the 768x1392 art sheets (5x9 cells of
+~153.6x154.7), key out the flat/checkered background, and assemble
+horizontal strip PNGs under assets/sprites/.
+
+Every strip frame is cropped with the same box within its sheet so frames
+stay aligned; strips animate via CSS steps(). Also writes a contact sheet
+to /tmp-style scratch for quick visual review (pass --contact PATH).
+
+Run from dragonmaze/: python3 tools/crop_frames.py [--contact out.png]
+"""
+import sys
+from collections import deque
+from pathlib import Path
+from PIL import Image
+
+ROOT = Path(__file__).resolve().parent.parent
+ART = ROOT / "art"
+OUT = ROOT / "assets" / "sprites"
+
+CELL_W = 768 / 5
+CELL_H = 1392 / 9
+
+# Background keying tolerance per sheet: how close to a corner color a pixel
+# must be to count as background. Keep tight where the figure shares hues
+# with the backdrop (gray maces on gray, pale undead flesh on lavender).
+SHEET_TOLERANCE = {
+    "goblin-fire-sheet.png": 35,
+    "froglok-undead-sheet.png": 28,
+}
+DEFAULT_TOLERANCE = 60
+
+# strip name -> {sheet, cells: [(col, row), ...], box: (dx, dy, w, h) in-cell}
+# Cells are 1-indexed; the same box applies to every frame so they align.
+STRIPS = {
+    # wing-flap cycle: mid, up, mid, back
+    "dragon-fly": {
+        "sheet": "red-dragon-sheet.png",
+        "cells": [(3, 1), (4, 1), (3, 1), (1, 2)],
+        "box": (4, 4, 146, 146),
+    },
+    "goblin-idle": {
+        "sheet": "goblin-fire-sheet.png",
+        "cells": [(1, 7), (2, 7)],
+        "box": (4, 24, 146, 126),
+    },
+    "goblin-attack": {
+        "sheet": "goblin-fire-sheet.png",
+        "cells": [(2, 9), (4, 8)],
+        "box": (4, 24, 146, 126),
+    },
+    "sarnak-idle": {
+        "sheet": "sarnak-vampire-sheet.png",
+        "cells": [(1, 1), (2, 1)],
+        "box": (4, 4, 146, 118),
+    },
+    "sarnak-attack": {
+        "sheet": "sarnak-vampire-sheet.png",
+        "cells": [(3, 2), (4, 2)],
+        "box": (4, 4, 146, 118),
+    },
+    "froglok-zombie-idle": {
+        "sheet": "froglok-undead-sheet.png",
+        "cells": [(1, 1), (2, 1)],
+        "box": (6, 40, 140, 106),
+    },
+    "froglok-zombie-attack": {
+        "sheet": "froglok-undead-sheet.png",
+        "cells": [(3, 1), (4, 1)],
+        "box": (6, 40, 140, 106),
+    },
+    "froglok-idle": {
+        "sheet": "froglok-warriors-sheet.png",
+        "cells": [(1, 2), (2, 2)],
+        "box": (4, 6, 146, 132),
+    },
+    "froglok-attack": {
+        "sheet": "froglok-warriors-sheet.png",
+        "cells": [(2, 7), (3, 7)],
+        "box": (4, 6, 146, 132),
+    },
+    "lizardfolk-idle": {
+        "sheet": "lizardfolk-warriors-sheet.png",
+        "cells": [(1, 3), (2, 3)],
+        "box": (10, 4, 134, 138),
+    },
+    "lizardfolk-attack": {
+        "sheet": "lizardfolk-warriors-sheet.png",
+        "cells": [(2, 1), (3, 1)],
+        "box": (10, 4, 134, 138),
+    },
+}
+
+
+def is_bg_factory(im, tolerance):
+    """Background = anything close to a border-corner color, or checker gray."""
+    w, h = im.size
+    corners = [im.getpixel(p)[:3] for p in [(1, 1), (w - 2, 1), (1, h - 2), (w - 2, h - 2)]]
+
+    def is_bg(px):
+        r, g, b = px[0], px[1], px[2]
+        if max(r, g, b) - min(r, g, b) < 26 and (r + g + b) / 3 > 175:
+            return True  # white/gray checker squares
+        return any(abs(r - cr) + abs(g - cg) + abs(b - cb) < tolerance for cr, cg, cb in corners)
+
+    return is_bg
+
+
+def dekey(im, tolerance):
+    """Flood-fill transparent from the borders through background-ish pixels."""
+    im = im.convert("RGBA")
+    w, h = im.size
+    pix = im.load()
+    is_bg = is_bg_factory(im, tolerance)
+    seen = [[False] * w for _ in range(h)]
+    q = deque()
+    for x in range(w):
+        for y in (0, h - 1):
+            if is_bg(pix[x, y]) and not seen[y][x]:
+                seen[y][x] = True
+                q.append((x, y))
+    for y in range(h):
+        for x in (0, w - 1):
+            if is_bg(pix[x, y]) and not seen[y][x]:
+                seen[y][x] = True
+                q.append((x, y))
+    while q:
+        x, y = q.popleft()
+        r, g, b, _ = pix[x, y]
+        pix[x, y] = (r, g, b, 0)
+        for dx, dy in ((0, 1), (0, -1), (1, 0), (-1, 0)):
+            nx, ny = x + dx, y + dy
+            if 0 <= nx < w and 0 <= ny < h and not seen[ny][nx] and is_bg(pix[nx, ny]):
+                seen[ny][nx] = True
+                q.append((nx, ny))
+    return im
+
+
+def cell_box(box, col, row):
+    dx, dy, w, h = box
+    x = round((col - 1) * CELL_W) + dx
+    y = round((row - 1) * CELL_H) + dy
+    return (x, y, x + w, y + h)
+
+
+def main():
+    contact = None
+    if "--contact" in sys.argv:
+        contact = Path(sys.argv[sys.argv.index("--contact") + 1])
+    OUT.mkdir(parents=True, exist_ok=True)
+    sheets = {}
+    made = []
+    for name, spec in STRIPS.items():
+        sheet = spec["sheet"]
+        if sheet not in sheets:
+            sheets[sheet] = Image.open(ART / sheet).convert("RGBA")
+        tol = SHEET_TOLERANCE.get(sheet, DEFAULT_TOLERANCE)
+        frames = [dekey(sheets[sheet].crop(cell_box(spec["box"], c, r)), tol) for c, r in spec["cells"]]
+        # square frames, feet anchored at the bottom, so CSS strips are uniform
+        side = max(max(f.size) for f in frames)
+        strip = Image.new("RGBA", (side * len(frames), side), (0, 0, 0, 0))
+        for i, f in enumerate(frames):
+            strip.paste(f, (i * side + (side - f.size[0]) // 2, side - f.size[1]), f)
+        fw = fh = side
+        strip.save(OUT / f"{name}.png")
+        made.append((name, strip))
+        print(f"{name}.png: {len(frames)} frames of {fw}x{fh}")
+    if contact:
+        pad = 8
+        width = max(s.size[0] for _, s in made) + pad * 2
+        height = sum(s.size[1] + pad for _, s in made) + pad
+        board = Image.new("RGBA", (width, height), (40, 30, 50, 255))
+        y = pad
+        for name, s in made:
+            board.paste(s, (pad, y), s)
+            y += s.size[1] + pad
+        board.save(contact)
+        print(f"contact sheet: {contact}")
+
+
+main()

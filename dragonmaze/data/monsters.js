@@ -4,6 +4,8 @@
 // Stats follow plan §6; abilities are modifiers in roughly −4..+4.
 // packMax = most that can appear in one encounter.
 // morale = bonus on courage checks; null = fearless (undead/constructs never flee).
+// anim = 2-frame strips under assets/sprites/ (idle + attack); monsters
+// without one render as their emoji.
 
 export const MONSTERS = [
   // ------------------------------------------------ depth 1
@@ -26,14 +28,15 @@ export const MONSTERS = [
   },
   {
     id: 'goblin',
-    name: 'Goblin',
+    name: 'Cinder Goblin',
     kind: 'monster',
     ac: 12,
     hpMax: 6,
     abilities: { str: 0, dex: 1, con: 0, int: -1, wis: 0, cha: -1 },
-    attacks: [{ name: 'rusty blade', toHit: 3, damage: '1d6+1', range: 'melee' }],
+    attacks: [{ name: 'scorching claws', toHit: 3, damage: '1d6+1', range: 'melee' }],
     sprite: 'monster_goblin',
     emoji: '👺',
+    anim: { idle: 'goblin-idle', attack: 'goblin-attack' },
     goldValue: 8,
     minDepth: 1,
     maxDepth: 4,
@@ -84,6 +87,7 @@ export const MONSTERS = [
     attacks: [{ name: 'barbed spear', toHit: 4, damage: '1d6+2', range: 'melee' }],
     sprite: 'monster_froglok',
     emoji: '🐸',
+    anim: { idle: 'froglok-idle', attack: 'froglok-attack' },
     goldValue: 15,
     minDepth: 2,
     packMax: 2,
@@ -109,14 +113,15 @@ export const MONSTERS = [
   // ------------------------------------------------ depth 3
   {
     id: 'zombie',
-    name: 'Shambling Zombie',
+    name: 'Froglok Zombie',
     kind: 'monster',
     ac: 10,
     hpMax: 16,
     abilities: { str: 2, dex: -2, con: 2, int: -4, wis: -2, cha: -4 },
-    attacks: [{ name: 'rotting fists', toHit: 3, damage: '1d8+1', range: 'melee' }],
+    attacks: [{ name: 'rusted sword', toHit: 3, damage: '1d8+1', range: 'melee' }],
     sprite: 'monster_zombie',
     emoji: '🧟',
+    anim: { idle: 'froglok-zombie-idle', attack: 'froglok-zombie-attack' },
     goldValue: 12,
     minDepth: 3,
     packMax: 2,
@@ -133,6 +138,7 @@ export const MONSTERS = [
     attacks: [{ name: 'war axe', toHit: 5, damage: '1d8+2', range: 'melee' }],
     sprite: 'monster_lizardfolk',
     emoji: '🦎',
+    anim: { idle: 'lizardfolk-idle', attack: 'lizardfolk-attack' },
     goldValue: 22,
     minDepth: 3,
     packMax: 2,
@@ -156,6 +162,23 @@ export const MONSTERS = [
     morale: 2,
   },
   // ------------------------------------------------ depth 4
+  {
+    id: 'sarnak-vampire',
+    name: 'Sarnak Bloodseeker',
+    kind: 'monster',
+    ac: 15,
+    hpMax: 20,
+    abilities: { str: 2, dex: 3, con: 1, int: 1, wis: 1, cha: 2 },
+    attacks: [{ name: 'draining claws', toHit: 6, damage: '1d8+3', range: 'melee' }],
+    sprite: 'monster_sarnak',
+    emoji: '🧛',
+    anim: { idle: 'sarnak-idle', attack: 'sarnak-attack' },
+    goldValue: 50,
+    minDepth: 4,
+    packMax: 1,
+    weight: 2,
+    morale: 2,
+  },
   {
     id: 'bone-wraith',
     name: 'Bone Wraith',

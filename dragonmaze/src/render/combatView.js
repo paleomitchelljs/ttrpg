@@ -6,8 +6,10 @@
 // While a batch is replaying, the action buttons are locked.
 
 import { livingMonsters, dragonOf, isPlayerTurn } from '../engine/combat.js';
+import { spritePath } from './mapView.js';
 
 const DRAGON_FIRE_IMG = './assets/dragon-fire.png';
+const DRAGON_FLY_STRIP = './assets/sprites/dragon-fly.png';
 
 const delay = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -60,6 +62,7 @@ async function presentEvent(els, ev) {
     case 'attack': {
       if (ev.attackerKind === 'dragon') await playCinematic(bitePayload(ev));
       else await playToast(ev);
+      await attackBeat(els, ev);
       const line = attackLine(ev);
       appendLog(els.log, line.text, line.cls);
       return delay(150);
@@ -67,6 +70,7 @@ async function presentEvent(els, ev) {
     case 'breath': {
       await playCinematic(breathPayload(ev));
       appendLog(els.log, `You unleash a torrent of flame! (${ev.total} fire damage, save DC ${ev.dc})`, 'log-start');
+      await breathBeat(els, ev);
       for (const r of ev.results) {
         appendLog(
           els.log,
@@ -75,7 +79,7 @@ async function presentEvent(els, ev) {
             : `The ${r.name} is engulfed for ${r.damage}! (save ${r.total} vs ${r.dc})`,
           r.saved ? 'log-miss' : 'log-hit'
         );
-        await delay(180);
+        await delay(120);
       }
       return;
     }
@@ -88,9 +92,12 @@ async function presentEvent(els, ev) {
         ev.pass ? 'log-dim' : 'log-start'
       );
       return delay(350);
-    case 'flee':
+    case 'flee': {
+      const card = cardOf(els, ev.id);
+      if (card) card.classList.add('fleeing');
       appendLog(els.log, `The ${ev.who} flees into the dark! 💨`, 'log-miss');
-      return delay(350);
+      return delay(450);
+    }
     case 'recharge':
       appendLog(
         els.log,
@@ -98,9 +105,12 @@ async function presentEvent(els, ev) {
         ev.ready ? 'log-start' : 'log-dim'
       );
       return delay(250);
-    case 'death':
+    case 'death': {
+      const card = cardOf(els, ev.id);
+      if (card) card.classList.add('dying');
       appendLog(els.log, `The ${ev.who} is defeated! (worth ${ev.goldValue} gold)`, 'log-hit');
-      return delay(350);
+      return delay(500);
+    }
     case 'victory':
       appendLog(
         els.log,
@@ -113,6 +123,85 @@ async function presentEvent(els, ev) {
       return delay(600);
     default:
       return;
+  }
+}
+
+// ---------------------------------------------------------------- beats
+// Physical stage business after the dice: the attacker lunges (swapping to
+// its attack frames), the victim flashes and its HP bar drops.
+
+function cardOf(els, id) {
+  return els.enemies.querySelector(`[data-id="${CSS.escape(id)}"]`);
+}
+
+function setStrip(cardEl, mode) {
+  const sprite = cardEl?.querySelector('.combat-sprite img');
+  if (!sprite) return;
+  const src = cardEl.dataset[mode];
+  if (src) sprite.src = src;
+}
+
+function updateCardHp(cardEl, hp) {
+  if (!cardEl) return;
+  const max = Number(cardEl.dataset.hpmax) || 1;
+  const pct = Math.max(0, Math.round((100 * hp) / max));
+  const fill = cardEl.querySelector('.hp-fill');
+  const num = cardEl.querySelector('.hp-num');
+  if (fill) {
+    fill.style.width = `${pct}%`;
+    fill.classList.toggle('low', pct <= 35);
+  }
+  if (num) num.textContent = `${hp} / ${max} HP`;
+}
+
+async function attackBeat(els, ev) {
+  const dragonAttacks = ev.attackerKind === 'dragon';
+  const attacker = dragonAttacks ? els.player : cardOf(els, ev.attackerId);
+  const victim = dragonAttacks ? cardOf(els, ev.targetId) : els.player;
+  if (attacker) {
+    setStrip(attacker, 'attack');
+    attacker.classList.add(dragonAttacks ? 'lunge-up' : 'lunge-down');
+  }
+  await delay(280);
+  if (ev.hit && victim) {
+    victim.classList.add('hit-flash');
+    updateCardHp(victim, ev.targetHpAfter);
+  }
+  await delay(320);
+  if (attacker) {
+    attacker.classList.remove('lunge-up', 'lunge-down');
+    setStrip(attacker, 'idle');
+  }
+  victim?.classList.remove('hit-flash');
+}
+
+async function breathBeat(els, ev) {
+  const img = els.player.querySelector('.combat-sprite img');
+  const spriteBox = els.player.querySelector('.combat-sprite');
+  if (img) {
+    img.src = DRAGON_FIRE_IMG;
+    spriteBox.classList.remove('f4');
+    spriteBox.classList.add('static');
+  }
+  els.player.classList.add('breathing');
+  els.enemies.classList.add('scorched');
+  await delay(500);
+  for (const r of ev.results) {
+    const card = cardOf(els, r.id);
+    if (card) {
+      card.classList.add('hit-flash');
+      updateCardHp(card, r.hpAfter);
+    }
+    await delay(140);
+  }
+  await delay(400);
+  els.enemies.classList.remove('scorched');
+  els.player.classList.remove('breathing');
+  for (const card of els.enemies.querySelectorAll('.hit-flash')) card.classList.remove('hit-flash');
+  if (img) {
+    img.src = DRAGON_FLY_STRIP;
+    spriteBox.classList.add('f4');
+    spriteBox.classList.remove('static');
   }
 }
 
@@ -338,8 +427,14 @@ export function renderCombat(els, state, handlers) {
         const dead = m.hp.current <= 0;
         const card = document.createElement('div');
         card.className = 'enemy-card' + (dead ? ' dead' : '') + (m.fled ? ' fled' : '');
+        card.dataset.id = m.id;
+        card.dataset.hpmax = m.hp.max;
+        if (m.anim) {
+          card.dataset.idle = spritePath(m.anim.idle);
+          card.dataset.attack = spritePath(m.anim.attack);
+        }
         card.innerHTML = `
-          <div class="enemy-face">${dead ? '☠️' : m.fled ? '💨' : m.emoji}</div>
+          ${faceHtml(m, dead)}
           <div class="enemy-name">${m.name}</div>
           ${m.fled ? '<div class="badge-flee">fled!</div>' : hpBar(m)}
           ${!dead && !m.fled && m.panicked ? '<div class="badge-panic">😱 panicked!</div>' : ''}`;
@@ -347,8 +442,11 @@ export function renderCombat(els, state, handlers) {
       })
   );
 
+  els.player.dataset.hpmax = dragon.hp.max;
+  els.player.dataset.idle = DRAGON_FLY_STRIP;
+  els.player.dataset.attack = DRAGON_FLY_STRIP;
   els.player.innerHTML = `
-    <img class="player-face-img" src="${DRAGON_FIRE_IMG}" alt="Your dragon">
+    <div class="combat-sprite sprite f4 player-sprite flip"><img src="${DRAGON_FLY_STRIP}" alt="Your dragon"></div>
     <div class="player-name">Your Dragon</div>
     ${hpBar(dragon)}`;
 
@@ -382,6 +480,13 @@ export function renderCombat(els, state, handlers) {
     buttons.push(wait);
   }
   els.actions.replaceChildren(...buttons);
+}
+
+function faceHtml(m, dead) {
+  if (m.anim?.idle) {
+    return `<div class="combat-sprite sprite f2"><img src="${spritePath(m.anim.idle)}" alt="${m.name}"></div>`;
+  }
+  return `<div class="enemy-face">${dead ? '☠️' : m.fled ? '💨' : m.emoji}</div>`;
 }
 
 function hpBar(c) {

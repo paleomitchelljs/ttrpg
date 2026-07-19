@@ -20,6 +20,7 @@ export function makeCombatant(data) {
     conditions: [],
     sprite: data.sprite ?? null,
     emoji: data.emoji ?? '❓',
+    anim: data.anim ?? null,
     goldValue: data.goldValue ?? 0,
     morale: data.morale ?? null,
     moraleChecked: false,

@@ -2,6 +2,9 @@
 // Run with: npm test  (plain node, no framework)
 
 import assert from 'node:assert/strict';
+import { existsSync } from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import { dirname, join } from 'node:path';
 import { roll, d20, save } from '../src/engine/dice.js';
 import { makeSeededRNG } from '../src/engine/rng.js';
 import { generateDungeon } from '../src/world/maze.js';
@@ -221,6 +224,16 @@ check('encounters respect min/max depth', () => {
         assert.ok((m.minDepth ?? 1) <= depth, `${id} too deep for its minDepth at depth ${depth}`);
         assert.ok(depth <= (m.maxDepth ?? Infinity), `${id} should have retired by depth ${depth}`);
       }
+    }
+  }
+});
+
+check('every anim reference has a strip file on disk', () => {
+  const root = join(dirname(fileURLToPath(import.meta.url)), '..');
+  assert.ok(existsSync(join(root, 'assets/sprites/dragon-fly.png')), 'dragon-fly strip');
+  for (const m of MONSTERS.filter((m) => m.anim)) {
+    for (const key of [m.anim.idle, m.anim.attack]) {
+      assert.ok(existsSync(join(root, 'assets/sprites', `${key}.png`)), `missing strip ${key}`);
     }
   }
 });

@@ -3,7 +3,7 @@
 // (double-click), which raw ES modules cannot.
 
 import { build } from 'esbuild';
-import { readFile, writeFile, mkdir } from 'node:fs/promises';
+import { readFile, writeFile, mkdir, readdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
 import { dirname, join } from 'node:path';
 
@@ -29,11 +29,15 @@ if (withCss === html || withJs === withCss) {
   throw new Error('Inline markers not found in index.html — build aborted.');
 }
 
-// Inline image assets as data URIs so the single file needs nothing else.
-for (const rel of ['assets/dragon-side.png', 'assets/dragon-fire.png']) {
-  const data = await readFile(join(root, rel));
+// Inline every image under assets/ as a data URI so the single file needs
+// nothing else.
+const assetFiles = (await readdir(join(root, 'assets'), { recursive: true }))
+  .filter((f) => f.endsWith('.png'))
+  .map((f) => f.split('\\').join('/'));
+for (const rel of assetFiles) {
+  const data = await readFile(join(root, 'assets', rel));
   const uri = `data:image/png;base64,${data.toString('base64')}`;
-  withJs = withJs.replaceAll(`./${rel}`, uri);
+  withJs = withJs.replaceAll(`./assets/${rel}`, uri);
 }
 
 await mkdir(join(root, 'dist'), { recursive: true });
