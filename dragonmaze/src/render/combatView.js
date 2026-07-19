@@ -233,6 +233,9 @@ async function presentEvent(els, ev) {
       appendLog(els.log, `${ev.who} falls!`, 'log-hurt');
       return delay(500);
     }
+    case 'item-drop':
+      appendLog(els.log, `Among the spoils: ${ev.name} — ${ev.blurb}. Equip it from a character sheet!`, 'log-start');
+      return delay(600);
     case 'victory':
       appendLog(
         els.log,

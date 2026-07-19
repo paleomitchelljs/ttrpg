@@ -28,6 +28,11 @@ export function lootScale(depth) {
   return 1 + 0.3 * (depth - 1);
 }
 
+/** Chance the slain leave equipment among the spoils. Bosses carry the good stuff. */
+export function victoryDropChance(isBoss) {
+  return isBoss ? 0.5 : 0.08;
+}
+
 /** Hoard-pile visual tiers (gold thresholds for the canvas centerpiece). */
 export const HOARD_PILE_TIERS = [0, 150, 600, 1500];
 

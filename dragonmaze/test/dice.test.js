@@ -23,7 +23,7 @@ import { ZONES } from '../data/zones.js';
 import { buildZoneDungeon } from '../src/world/zones.js';
 import { FAMILIARS } from '../data/familiars.js';
 import { ITEMS } from '../data/items.js';
-import { bumpDamage } from '../src/engine/rules.js';
+import { bumpDamage, victoryDropChance } from '../src/engine/rules.js';
 import { portalToCompanion } from '../src/state/importHero.js';
 import { COMPANIONS, companionById } from '../data/party.js';
 import { resolveSpellCast } from '../src/engine/rules.js';
@@ -370,6 +370,12 @@ check('bumpDamage folds flat bonuses into dice expressions', () => {
   assert.equal(bumpDamage('1d6+2', -2), '1d6');
   assert.equal(bumpDamage('1d8+2', 0), '1d8+2');
   roll(bumpDamage('1d8+2', 3)); // stays parseable
+});
+
+check('victory drops favor bosses', () => {
+  assert.equal(victoryDropChance(true), 0.5);
+  assert.equal(victoryDropChance(false), 0.08);
+  assert.ok(victoryDropChance(true) > victoryDropChance(false));
 });
 
 check('items are well-formed', () => {

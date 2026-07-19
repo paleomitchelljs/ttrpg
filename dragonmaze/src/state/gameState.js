@@ -23,7 +23,7 @@ import {
   isPlayerTurn,
   heroesOf,
 } from '../engine/combat.js';
-import { endOfRunBonus, tierAfterBanking } from '../engine/rules.js';
+import { endOfRunBonus, tierAfterBanking, victoryDropChance } from '../engine/rules.js';
 import { liveRNG } from '../engine/rng.js';
 import { loadSave, persist, clearSave } from './save.js';
 
@@ -440,16 +440,26 @@ function finishCombat(events) {
   const combat = run.combat.combat;
   if (combat.winner === 'heroes') {
     // Only defeated monsters drop gold; ones that fled keep theirs.
-    const gold = combat.order
-      .filter((c) => c.kind !== 'dragon' && c.hp.current <= 0)
-      .reduce((sum, m) => sum + (m.goldValue ?? 0), 0);
-    run.unbankedGold += gold;
+    const slain = combat.order.filter((c) => c.kind === 'monster' && c.hp.current <= 0);
+    run.unbankedGold += slain.reduce((sum, m) => sum + (m.goldValue ?? 0), 0);
     const idx = run.dungeon.encounters.findIndex((e) => e.id === run.combat.encounterId);
+    let bossName = null;
     if (idx >= 0) {
       const enc = run.dungeon.encounters[idx];
+      bossName = enc.bossName ?? null;
       run.dungeon.encounters.splice(idx, 1);
       run.playerPos = { x: enc.x, y: enc.y };
       reveal(run);
+    }
+    // The fallen sometimes leave equipment among the spoils; named boss
+    // packs usually do. Everything lands in the shared equippable inventory.
+    if (slain.length) {
+      const unowned = ITEMS.filter((i) => !state.meta.inventory.includes(i.id));
+      if (unowned.length && liveRNG() < victoryDropChance(!!bossName)) {
+        const found = unowned[Math.floor(liveRNG() * unowned.length)];
+        state.meta.inventory.push(found.id);
+        events.push({ type: 'item-drop', name: found.name, blurb: found.blurb });
+      }
     }
     run.phase = 'explore';
     run.combat = null;

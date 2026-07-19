@@ -25,7 +25,7 @@ const combatEls = {
 const COMBAT_EVENTS = new Set([
   'combat-start', 'initiative', 'round', 'attack', 'breath', 'morale',
   'flee', 'recharge', 'death', 'hero-down', 'victory', 'defeat', 'retreat',
-  'spell-cast', 'spell-hit', 'spell-heal', 'spell-wave',
+  'spell-cast', 'spell-hit', 'spell-heal', 'spell-wave', 'item-drop',
 ]);
 
 function refreshWorld(state) {
