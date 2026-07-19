@@ -17,6 +17,7 @@ import {
   resolveAttack,
 } from '../src/engine/rules.js';
 import { MONSTERS, monsterById } from '../data/monsters.js';
+import { SPRITES } from '../src/assets-manifest.js';
 
 const N = 10_000;
 let passed = 0;
@@ -228,13 +229,17 @@ check('encounters respect min/max depth', () => {
   }
 });
 
-check('every anim reference has a strip file on disk', () => {
+check('sprite manifest is complete and every strip exists', () => {
   const root = join(dirname(fileURLToPath(import.meta.url)), '..');
-  assert.ok(existsSync(join(root, 'assets/sprites/dragon-fly.png')), 'dragon-fly strip');
+  for (const [key, rel] of Object.entries(SPRITES)) {
+    assert.ok(existsSync(join(root, rel)), `manifest entry ${key} missing on disk`);
+  }
+  for (const key of ['dragon-fly', 'dragon-up', 'dragon-down']) {
+    assert.ok(SPRITES[key], `player strip ${key} not in manifest`);
+  }
   for (const m of MONSTERS.filter((m) => m.anim)) {
-    for (const key of [m.anim.idle, m.anim.attack]) {
-      assert.ok(existsSync(join(root, 'assets/sprites', `${key}.png`)), `missing strip ${key}`);
-    }
+    assert.ok(SPRITES[m.anim.idle], `${m.id} idle strip not in manifest`);
+    assert.ok(SPRITES[m.anim.attack], `${m.id} attack strip not in manifest`);
   }
 });
 

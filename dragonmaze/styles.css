@@ -103,12 +103,19 @@ button { font: inherit; }
 }
 
 .hud-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
   background: var(--panel-2);
   border-radius: 9px;
   padding: 0.25em 0.7em;
   font-size: 1.02rem;
   white-space: nowrap;
 }
+
+.chip-icon { width: 1em; height: 1em; flex: none; }
+
+.hud-sprite { width: 1.6em; height: 1.6em; flex: none; margin: -0.3em 0; }
 
 .hud-chip.danger { background: #5c1f18; color: #ffb4a6; }
 
@@ -390,6 +397,45 @@ button { font: inherit; }
 .attack-btn { font-size: 1.15rem; }
 
 .turn-note { color: var(--ink-dim); font-style: italic; }
+
+/* ------------------------------------------------------------- touch d-pad */
+
+#dpad {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  z-index: 5;
+  display: none;
+  grid-template-columns: repeat(3, 56px);
+  grid-template-rows: repeat(3, 56px);
+  gap: 5px;
+  opacity: 0.92;
+}
+
+.dpad-btn {
+  background: var(--panel-2);
+  color: var(--ink);
+  border: 2px solid #00000088;
+  border-radius: 12px;
+  font-size: 1.35rem;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  box-shadow: 0 3px 0 #00000066;
+}
+
+.dpad-btn:active { background: var(--ember); }
+.dpad-btn.up { grid-area: 1 / 2; }
+.dpad-btn.left { grid-area: 2 / 1; }
+.dpad-btn.right { grid-area: 2 / 3; }
+.dpad-btn.down { grid-area: 3 / 2; }
+
+@media (hover: none) and (pointer: coarse) {
+  #dpad { display: grid; }
+  #playfield { padding-bottom: 200px; }
+}
+
+body.show-dpad #dpad { display: grid; }
 
 /* ------------------------------------------------------------- cinematic dice
    BG3-style replay, matching the main portal's DiceOverlay: a tumbling hex

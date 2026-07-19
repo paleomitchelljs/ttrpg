@@ -121,6 +121,24 @@ document.addEventListener('keydown', (ev) => {
 
 bindMapClicks(ui.el('map'), (x, y) => game.moveTo(x, y));
 
+// Touch D-pad: tap to step, hold to keep walking. Shown via CSS on coarse
+// pointers, plus a JS fallback for anything with a touchscreen.
+let dpadTimer = null;
+for (const btn of document.querySelectorAll('.dpad-btn')) {
+  const dx = Number(btn.dataset.dx);
+  const dy = Number(btn.dataset.dy);
+  btn.addEventListener('pointerdown', (ev) => {
+    ev.preventDefault();
+    game.move(dx, dy);
+    clearInterval(dpadTimer);
+    dpadTimer = setInterval(() => game.move(dx, dy), 220);
+  });
+  for (const type of ['pointerup', 'pointercancel', 'pointerleave']) {
+    btn.addEventListener(type, () => clearInterval(dpadTimer));
+  }
+}
+if ('ontouchstart' in window) document.body.classList.add('show-dpad');
+
 ui.el('btn-new').addEventListener('click', () => game.newGame(seedFromUrl()));
 ui.el('btn-continue').addEventListener('click', () => game.continueGame());
 ui.el('btn-quit').addEventListener('click', () => game.quitToTitle());

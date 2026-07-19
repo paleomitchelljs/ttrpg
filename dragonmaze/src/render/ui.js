@@ -18,13 +18,17 @@ export function updateHud(state) {
   const run = state.run;
   if (!run) return;
   const hp = run.dragon.hp;
-  el('hud-hp').textContent = `❤️ ${hp.current}/${hp.max}`;
+  chip('hud-hp', `${hp.current}/${hp.max}`);
   el('hud-hp').classList.toggle('danger', hp.current <= Math.ceil(hp.max / 3));
-  el('hud-tier').textContent = `🐉 ${cap(run.dragon.tier)}`;
-  el('hud-depth').textContent = `🕳️ Depth ${run.dungeon.depth}`;
-  el('hud-carried').textContent = `💰 ${run.unbankedGold}`;
-  el('hud-hoard').textContent = `🏆 ${state.meta.hoardGold.toLocaleString()}`;
+  chip('hud-tier', cap(run.dragon.tier));
+  chip('hud-depth', `Depth ${run.dungeon.depth}`);
+  chip('hud-carried', `${run.unbankedGold}`);
+  chip('hud-hoard', state.meta.hoardGold.toLocaleString());
   el('hoard-label').textContent = `Hoard: ${state.meta.hoardGold.toLocaleString()} gold`;
+}
+
+function chip(id, text) {
+  el(id).querySelector('.chip-text').textContent = text;
 }
 
 export function updateTitle(state) {

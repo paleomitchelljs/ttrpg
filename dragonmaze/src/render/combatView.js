@@ -7,9 +7,10 @@
 
 import { livingMonsters, dragonOf, isPlayerTurn } from '../engine/combat.js';
 import { spritePath } from './mapView.js';
+import { SPRITES } from '../assets-manifest.js';
 
 const DRAGON_FIRE_IMG = './assets/dragon-fire.png';
-const DRAGON_FLY_STRIP = './assets/sprites/dragon-fly.png';
+const DRAGON_FLY_STRIP = SPRITES['dragon-fly'];
 
 const delay = (ms) => new Promise((r) => setTimeout(r, ms));
 

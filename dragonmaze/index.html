@@ -22,11 +22,26 @@
 
     <section id="screen-game" class="screen" hidden>
       <header id="hud">
-        <span id="hud-hp" class="hud-chip"></span>
-        <span id="hud-tier" class="hud-chip"></span>
-        <span id="hud-depth" class="hud-chip"></span>
-        <span id="hud-carried" class="hud-chip" title="Gold carried (lost if you fall!)"></span>
-        <span id="hud-hoard" class="hud-chip" title="Banked hoard (always safe)"></span>
+        <span id="hud-hp" class="hud-chip">
+          <svg class="chip-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 14 2.6 8.6a3.8 3.8 0 1 1 5.4-5.4 3.8 3.8 0 1 1 5.4 5.4Z" fill="#e05038"/></svg>
+          <span class="chip-text"></span>
+        </span>
+        <span id="hud-tier" class="hud-chip">
+          <span class="hud-sprite sprite f4"><img src="./assets/sprites/dragon-fly.png" alt=""></span>
+          <span class="chip-text"></span>
+        </span>
+        <span id="hud-depth" class="hud-chip">
+          <svg class="chip-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M1 1h4v4h4v4h4v4h2v2H1Z" fill="#b3a98f"/></svg>
+          <span class="chip-text"></span>
+        </span>
+        <span id="hud-carried" class="hud-chip" title="Gold carried (lost if you fall!)">
+          <svg class="chip-icon" viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.5" fill="#e8b93c"/><circle cx="8" cy="8" r="3.6" fill="none" stroke="#a3781c" stroke-width="1.4"/></svg>
+          <span class="chip-text"></span>
+        </span>
+        <span id="hud-hoard" class="hud-chip" title="Banked hoard (always safe)">
+          <svg class="chip-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M4 1h8v4a4 4 0 0 1-3 3.87V11h2v2h2v2H3v-2h2v-2h2V8.87A4 4 0 0 1 4 5Z" fill="#e8b93c"/></svg>
+          <span class="chip-text"></span>
+        </span>
         <button id="btn-quit" class="btn btn-small">Save &amp; Quit</button>
       </header>
 
@@ -52,6 +67,13 @@
           <div id="combat-log" class="log combat-log"></div>
           <div id="combat-actions" class="combat-actions"></div>
         </div>
+      </div>
+
+      <div id="dpad" aria-label="movement controls">
+        <button class="dpad-btn up" data-dx="0" data-dy="-1" aria-label="up">▲</button>
+        <button class="dpad-btn left" data-dx="-1" data-dy="0" aria-label="left">◀</button>
+        <button class="dpad-btn right" data-dx="1" data-dy="0" aria-label="right">▶</button>
+        <button class="dpad-btn down" data-dx="0" data-dy="1" aria-label="down">▼</button>
       </div>
 
       <div id="result-overlay" class="overlay" hidden>

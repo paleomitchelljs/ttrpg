@@ -4,10 +4,19 @@
 // monsters with sprite strips idle-animate on their tiles.
 
 import { monsterById } from '../../data/monsters.js';
+import { SPRITES } from '../assets-manifest.js';
 
 export function spritePath(key) {
-  return `./assets/sprites/${key}.png`;
+  return SPRITES[key];
 }
+
+// Which strip the player token shows for each heading. The side strip faces
+// left natively; heading right flips it.
+const TOKEN_FACING = {
+  side: { key: 'dragon-fly', frames: 'f4' },
+  down: { key: 'dragon-down', frames: 'f2' },
+  up: { key: 'dragon-up', frames: 'f2' },
+};
 
 let lastPos = null;
 
@@ -75,16 +84,28 @@ function moveToken(token, x, y) {
   token.style.transform = `translate(${x * 100}%, ${y * 100}%)`;
   if (lastPos) {
     const dx = x - lastPos.x;
-    // the sheet's dragon faces left; flip when heading right
-    if (dx > 0) token.firstElementChild.classList.add('flip');
-    if (dx < 0) token.firstElementChild.classList.remove('flip');
-    if (dx !== 0 || y !== lastPos.y) {
+    const dy = y - lastPos.y;
+    if (dx !== 0 || dy !== 0) {
+      setFacing(token, dx, dy);
       token.classList.add('moving');
       clearTimeout(moveToken._t);
       moveToken._t = setTimeout(() => token.classList.remove('moving'), 350);
     }
   }
   lastPos = { x, y };
+}
+
+function setFacing(token, dx, dy) {
+  const sprite = token.firstElementChild;
+  const img = sprite.querySelector('img');
+  const facing = dx !== 0 ? TOKEN_FACING.side : dy > 0 ? TOKEN_FACING.down : TOKEN_FACING.up;
+  sprite.classList.toggle('flip', dx > 0);
+  const src = spritePath(facing.key);
+  if (img.getAttribute('src') !== src) {
+    img.setAttribute('src', src);
+    sprite.classList.remove('f2', 'f4');
+    sprite.classList.add(facing.frames);
+  }
 }
 
 export function bindMapClicks(container, onTileClick) {
