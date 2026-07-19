@@ -32,7 +32,7 @@ export function drawHoard(canvas, gold, dragonTierIndex = 0) {
   ctx.fillRect(0, H - 16, W, 16);
 
   const tier = HOARD_PILE_TIERS.filter((t) => gold >= t).length - 1; // 0..3
-  const coins = Math.min(420, Math.floor(gold / 4) + (gold > 0 ? 6 : 0));
+  const coins = Math.min(420, Math.floor(gold * 0.8) + (gold > 0 ? 6 : 0));
   if (coins <= 0) return;
 
   const rng = makeSeededRNG('hoard-pile');

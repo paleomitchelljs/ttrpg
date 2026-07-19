@@ -155,7 +155,7 @@ check('dungeon is well-formed and connected', () => {
     assert.ok(d.encounters.length >= 3 && d.encounters.length <= 5);
     assert.ok(d.loot.length <= 4);
     for (const l of d.loot) {
-      assert.ok(l.gold >= 2 || l.tome || l.den || l.cache, 'loot has gold or is a special find');
+      assert.ok(l.gold >= 1 || l.tome || l.den || l.cache, 'loot has gold or is a special find');
     }
     // flood-fill: every floor tile reachable from start
     const seen = new Set([`${d.start.x},${d.start.y}`]);
@@ -181,11 +181,11 @@ check('dungeon is well-formed and connected', () => {
 });
 
 // ---- Phase 1 rules
-check('tier-ups are hoard-gated', () => {
-  assert.deepEqual(tierAfterBanking('wyrmling', 999), []);
-  assert.deepEqual(tierAfterBanking('wyrmling', 1000).map((t) => t.tier), ['young']);
-  assert.deepEqual(tierAfterBanking('wyrmling', 6000).map((t) => t.tier), ['young', 'adult']);
-  assert.deepEqual(tierAfterBanking('young', 4999), []);
+check('tier-ups are hoard-gated (Shadowdark scale: 300 gold is a fortune)', () => {
+  assert.deepEqual(tierAfterBanking('wyrmling', 299), []);
+  assert.deepEqual(tierAfterBanking('wyrmling', 300).map((t) => t.tier), ['young']);
+  assert.deepEqual(tierAfterBanking('wyrmling', 1500).map((t) => t.tier), ['young', 'adult']);
+  assert.deepEqual(tierAfterBanking('young', 1199), []);
   assert.deepEqual(tierAfterBanking('ancient', 999999), []);
 });
 

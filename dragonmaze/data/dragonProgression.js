@@ -5,7 +5,7 @@ export const DRAGON_TIERS = [
   {
     tier: 'wyrmling',
     label: 'Wyrmling',
-    hoardToNext: 1000,
+    hoardToNext: 300,
     hpMax: 18,
     ac: 13,
     abilities: { str: 2, dex: 2, con: 1, int: 1, wis: 0, cha: 1 },
@@ -17,7 +17,7 @@ export const DRAGON_TIERS = [
   {
     tier: 'young',
     label: 'Young Dragon',
-    hoardToNext: 5000,
+    hoardToNext: 1200,
     hpMax: 30,
     ac: 15,
     abilities: { str: 4, dex: 2, con: 2, int: 1, wis: 1, cha: 2 },
@@ -29,7 +29,7 @@ export const DRAGON_TIERS = [
   {
     tier: 'adult',
     label: 'Adult Dragon',
-    hoardToNext: 20000,
+    hoardToNext: 5000,
     hpMax: 52,
     ac: 18,
     abilities: { str: 6, dex: 2, con: 4, int: 2, wis: 2, cha: 3 },

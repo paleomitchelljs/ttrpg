@@ -295,8 +295,8 @@ export function move(dx, dy) {
         state.meta.familiar ??= found.id;
         events.push({ type: 'familiar-found', name: found.name, blurb: found.blurb });
       } else {
-        run.unbankedGold += 75;
-        events.push({ type: 'loot', label: 'an empty den (75 gold under the bedding)', gold: 75 });
+        run.unbankedGold += 15;
+        events.push({ type: 'loot', label: 'an empty den (15 gold under the bedding)', gold: 15 });
       }
     } else if (loot.tome) {
       const unknown = SPELLS.filter((sp) => sp.tome !== false && !state.meta.tomeSpells.includes(sp.id));
@@ -305,8 +305,8 @@ export function move(dx, dy) {
         state.meta.tomeSpells.push(learned.id);
         events.push({ type: 'tome', spell: learned.name });
       } else {
-        run.unbankedGold += 100;
-        events.push({ type: 'tome', spell: null, gold: 100 });
+        run.unbankedGold += 25;
+        events.push({ type: 'tome', spell: null, gold: 25 });
       }
     } else {
       let gold = loot.gold;

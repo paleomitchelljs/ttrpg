@@ -18,9 +18,10 @@ export const MAP = {
 };
 
 // ---------------------------------------------------------------- hoard/runs
-/** Guaranteed gold for reaching the exit of a depth-N labyrinth. */
+/** Guaranteed gold for reaching the exit of a depth-N labyrinth.
+ * Shadowdark scale: gold is XP, and even deep crawls pay modestly. */
 export function endOfRunBonus(depth) {
-  return 50 + depth * 25;
+  return 10 + depth * 5;
 }
 
 /** Treasure grows richer the deeper the labyrinth. */
@@ -34,7 +35,7 @@ export function victoryDropChance(isBoss) {
 }
 
 /** Hoard-pile visual tiers (gold thresholds for the canvas centerpiece). */
-export const HOARD_PILE_TIERS = [0, 150, 600, 1500];
+export const HOARD_PILE_TIERS = [0, 50, 180, 500];
 
 /**
  * Hoard-gated growth: every tier whose threshold the hoard now clears.
