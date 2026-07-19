@@ -32,7 +32,7 @@ export function App() {
               <span className="tab-label">{t.label}</span>
             </button>
           ))}
-          <a className="tab" href="/dragon.html" target="_blank" rel="noopener">
+          <a className="tab" href={`${import.meta.env.BASE_URL}dragon.html`} target="_blank" rel="noopener">
             <span className="tab-label">🐉 Dragon Maze</span>
           </a>
         </nav>
