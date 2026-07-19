@@ -58,13 +58,13 @@ STRIPS = {
         "cells": [(1, 1), (2, 1)],
         "box": (4, 4, 146, 146),
     },
-    # party companions, side views (battle stage lines heroes up facing right)
-    "knight-idle": {
+    # the red dragonkin is the Shadow Knight (a monster; art faces right)
+    "shadow-knight-idle": {
         "sheet": "dragonkin-knight-sheet.png",
         "cells": [(1, 2), (2, 2)],
         "box": (4, 4, 146, 146),
     },
-    "knight-attack": {
+    "shadow-knight-attack": {
         "sheet": "dragonkin-knight-sheet.png",
         "cells": [(3, 3), (4, 3)],
         "box": (4, 4, 146, 146),
@@ -141,12 +141,12 @@ STRIPS = {
         "box": (2, 2, 77, 75),
     },
     # labeled panel sheet, irregular layout: absolute boxes
-    "shadow-knight-idle": {
-        "sheet": "shadow-knight-sheet.png",
+    "bard-idle": {
+        "sheet": "bard-sheet.png",
         "abs": [(51, 51, 137, 155), (204, 51, 135, 155)],
     },
-    "shadow-knight-attack": {
-        "sheet": "shadow-knight-sheet.png",
+    "bard-attack": {
+        "sheet": "bard-sheet.png",
         "abs": [(204, 253, 135, 154), (350, 253, 133, 154)],
     },
     # this sheet's grid is irregular; use absolute (x, y, w, h) frame boxes

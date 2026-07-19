@@ -22,6 +22,9 @@ import { SPELLS, spellById } from '../data/spells.js';
 import { ZONES } from '../data/zones.js';
 import { buildZoneDungeon } from '../src/world/zones.js';
 import { FAMILIARS } from '../data/familiars.js';
+import { ITEMS } from '../data/items.js';
+import { bumpDamage } from '../src/engine/rules.js';
+import { portalToCompanion } from '../src/state/importHero.js';
 import { COMPANIONS, companionById } from '../data/party.js';
 import { resolveSpellCast } from '../src/engine/rules.js';
 import { makeCombatant, makeDragonCombatant } from '../src/engine/entities.js';
@@ -151,7 +154,9 @@ check('dungeon is well-formed and connected', () => {
     assert.equal(d.tiles[d.exit.y][d.exit.x], 1, 'exit is floor');
     assert.ok(d.encounters.length >= 3 && d.encounters.length <= 5);
     assert.ok(d.loot.length <= 4);
-    for (const l of d.loot) assert.ok(l.gold >= 2, 'loot has gold');
+    for (const l of d.loot) {
+      assert.ok(l.gold >= 2 || l.tome || l.den || l.cache, 'loot has gold or is a special find');
+    }
     // flood-fill: every floor tile reachable from start
     const seen = new Set([`${d.start.x},${d.start.y}`]);
     const queue = [[d.start.x, d.start.y]];
@@ -340,7 +345,6 @@ check('resistances, abilities, familiars, and tomes hold together', () => {
   assert.equal(troll.ability, 'regenerate');
   const sk = makeCombatant(monsterById('shadow-knight'));
   assert.equal(sk.ability, 'lifedrain');
-  assert.ok(sk.facesLeft);
   assert.ok(SPRITES[sk.anim.idle] && SPRITES[sk.anim.attack], 'shadow knight strips');
   // dragon with tome spells and a familiar
   const mage = makeDragonCombatant(tierByName('wyrmling'), null, {
@@ -360,9 +364,63 @@ check('spellblade companion and familiars are well-formed', () => {
   assert.ok(SPRITES[sb.anim.idle] && SPRITES[sb.anim.attack], 'spellblade strips');
 });
 
+check('bumpDamage folds flat bonuses into dice expressions', () => {
+  assert.equal(bumpDamage('1d8+2', 1), '1d8+3');
+  assert.equal(bumpDamage('2d6', 2), '2d6+2');
+  assert.equal(bumpDamage('1d6+2', -2), '1d6');
+  assert.equal(bumpDamage('1d8+2', 0), '1d8+2');
+  roll(bumpDamage('1d8+2', 3)); // stays parseable
+});
+
+check('items are well-formed', () => {
+  for (const item of ITEMS) {
+    assert.ok(['weapon', 'armor', 'trinket'].includes(item.slot), `${item.id} slot`);
+    assert.ok(Object.keys(item.mods).every((k) => ['toHit', 'damage', 'ac', 'hpMax'].includes(k)), `${item.id} mods`);
+    assert.ok(item.blurb, `${item.id} blurb`);
+  }
+});
+
+check('portal characters convert into sane companions', () => {
+  const hero = portalToCompanion({
+    id: 'abc123',
+    name: 'Testa the Bold',
+    classId: 'fighter',
+    level: 3,
+    stats: { STR: 16, DEX: 12, CON: 14, INT: 8, WIS: 10, CHA: 13 },
+    hp: { max: 22, current: 22 },
+    ac: 15,
+    gear: [{ name: 'Longsword' }, { name: 'Shield' }],
+    spells: [],
+  });
+  assert.ok(hero, 'converted');
+  assert.equal(hero.abilities.str, 3);
+  assert.equal(hero.abilities.int, -1);
+  assert.equal(hero.ac, 15);
+  assert.equal(hero.hpMax, 22);
+  assert.equal(hero.attacks[0].toHit, 4); // str 3 + level/2
+  assert.equal(hero.attacks[0].damage, '1d8+3');
+  assert.ok(SPRITES[hero.anim.idle], 'anim strip exists');
+  const caster = portalToCompanion({
+    name: 'Wizzy', classId: 'wizard', level: 1,
+    stats: { STR: 8, DEX: 12, CON: 10, INT: 16, WIS: 10, CHA: 12 },
+    hp: { max: 6 }, ac: 11, gear: [{ name: 'Staff' }],
+    spells: ['Burning Hands', 'Cure Wounds'],
+  });
+  assert.deepEqual(caster.spells.sort(), ['ember-bolt', 'healing-word']);
+  assert.equal(portalToCompanion({ nonsense: true }), null);
+  assert.equal(portalToCompanion(null), null);
+});
+
+check('bard replaced the knight and shadow knight wears the red plate', () => {
+  assert.ok(companionById('bard'), 'bard exists');
+  assert.equal(companionById('dragonkin-knight'), undefined);
+  assert.ok(SPRITES['bard-idle'] && SPRITES['shadow-knight-idle']);
+  assert.ok(!monsterById('shadow-knight').facesLeft, 'red dragonkin art faces right');
+});
+
 check('party combat: monsters fight heroes, heals can revive', () => {
   const dragon = makeDragonCombatant(tierByName('wyrmling'));
-  const knight = makeCombatant(companionById('dragonkin-knight'));
+  const knight = makeCombatant(companionById('bard'));
   const swash = makeCombatant(companionById('dragonkin-swashbuckler'));
   const troll = makeCombatant(monsterById('cave-troll'));
   const seq = [0.5, 0.6, 0.4, 0.3]; // initiative rolls, then combat dice

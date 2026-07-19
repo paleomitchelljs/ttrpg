@@ -225,7 +225,6 @@ export const MONSTERS = [
     sprite: 'monster_shadow_knight',
     emoji: '⚔',
     anim: { idle: 'shadow-knight-idle', attack: 'shadow-knight-attack' },
-    facesLeft: true,
     resist: ['fire'],
     ability: 'lifedrain',
     goldValue: 60,

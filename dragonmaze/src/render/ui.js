@@ -2,7 +2,8 @@
 // decisions live in gameState; main.js wires intents.
 
 import { zoneById } from '../../data/zones.js';
-import { familiarById } from '../../data/familiars.js';
+import { FAMILIARS, familiarById } from '../../data/familiars.js';
+import { ITEMS, SLOTS, itemById } from '../../data/items.js';
 import { spellById } from '../../data/spells.js';
 import { SPRITES } from '../assets-manifest.js';
 
@@ -63,12 +64,45 @@ export function updateTitle(state) {
     el('zone-blurb').textContent = 'An ever-changing maze, deeper and richer with every delve.';
   }
 
-  // familiar picker
-  const fam = familiarById(state.meta.familiar);
-  for (const btn of document.querySelectorAll('.familiar-btn')) {
-    btn.classList.toggle('selected', (state.meta.familiar ?? '') === btn.dataset.fam);
-  }
-  el('familiar-blurb').textContent = fam ? fam.blurb : 'delve alone, unencumbered by pets';
+  // familiar picker: only found familiars unlock; the rest stay mysteries
+  const owned = state.meta.familiarsOwned ?? [];
+  const active = state.meta.familiar ?? '';
+  const box = el('familiar-buttons');
+  const mkBtn = (fam) => {
+    const btn = document.createElement('button');
+    btn.className = 'zone-btn familiar-btn';
+    if (fam && !owned.includes(fam.id)) {
+      btn.textContent = '???';
+      btn.disabled = true;
+      btn.classList.add('locked');
+    } else {
+      btn.textContent = fam ? fam.name : 'None';
+      btn.dataset.fam = fam?.id ?? '';
+      btn.classList.toggle('selected', active === (fam?.id ?? ''));
+    }
+    return btn;
+  };
+  box.replaceChildren(mkBtn(null), ...FAMILIARS.map(mkBtn));
+  const fam = familiarById(active);
+  el('familiar-blurb').textContent = fam
+    ? fam.blurb
+    : owned.length
+      ? 'delve alone, unencumbered by pets'
+      : 'familiars hide somewhere in the dungeons — find their dens';
+
+  // imported heroes join the party list
+  const importedBox = el('party-imported');
+  importedBox.replaceChildren(
+    ...(state.meta.customCharacters ?? []).map((c) => {
+      const label = document.createElement('label');
+      label.className = 'party-opt';
+      label.innerHTML = `
+        <input type="checkbox" data-cid="${c.id}" ${(state.meta.party ?? []).includes(c.id) ? 'checked' : ''}>
+        <span class="party-thumb sprite f2"><img src="${SPRITES[c.anim.idle]}" alt=""></span>
+        ${c.name} <span class="imported-tag">(imported)</span>`;
+      return label;
+    })
+  );
 }
 
 /**
@@ -103,8 +137,25 @@ export function showCharacterSheet(subject) {
     ${subject.breath ? `<h3>Fire Breath</h3><ul><li>${subject.breath.damage} fire damage to every enemy, save DC ${subject.breath.dc} for half; recharges on a 5+</li></ul>` : ''}
     ${spells}
     ${subject.familiar ? `<h3>Familiar</h3><ul><li>${subject.familiar.name} — ${subject.familiar.blurb}</li></ul>` : ''}
-    ${subject.traits?.length ? `<h3>Traits</h3><ul>${subject.traits.map((t) => `<li>${t}</li>`).join('')}</ul>` : ''}`;
+    ${subject.traits?.length ? `<h3>Traits</h3><ul>${subject.traits.map((t) => `<li>${t}</li>`).join('')}</ul>` : ''}
+    ${equipmentHtml(subject)}`;
   showOverlay('sheet-overlay', true);
+}
+
+function equipmentHtml(subject) {
+  if (!subject.equip) return '';
+  const { charKey, slots, taken } = subject.equip;
+  const rows = SLOTS.map((slot) => {
+    const current = slots[slot] ?? '';
+    const options = ITEMS.filter((i) => i.slot === slot && subject.equip.inventory.includes(i.id));
+    const opts = [
+      `<option value="">— nothing —</option>`,
+      ...options.map((i) => `<option value="${i.id}" ${i.id === current ? 'selected' : ''}>${i.name} — ${i.blurb}${taken[i.id] && taken[i.id] !== charKey ? ' (worn by another)' : ''}</option>`),
+    ].join('');
+    return `<label class="equip-row">${slot}: <select class="spell-select equip-select" data-char="${charKey}" data-slot="${slot}">${opts}</select></label>`;
+  }).join('');
+  return `<h3>Equipment</h3><div class="equip-grid">${rows}</div>
+    <p class="sheet-blurb">changes take effect at the next labyrinth</p>`;
 }
 
 export function logExplore(text, cls = '') {

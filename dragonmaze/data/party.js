@@ -1,21 +1,20 @@
 // Recruitable companions — pure data, same combatant schema as monsters.
-// Both come from the playable dragonkin sheets. The knight is a durable
-// blade; the swashbuckler is fragile but fights with flair and knows the
-// whole spellbook.
+// The bard heals and charms, the swashbuckler knows the whole spellbook,
+// and the spellblade splits the difference with a flaming sword.
 
 export const COMPANIONS = [
   {
-    id: 'dragonkin-knight',
-    name: 'Dragonkin Knight',
+    id: 'bard',
+    name: 'Swashbuckling Bard',
     kind: 'hero',
-    ac: 16,
-    hpMax: 14,
-    abilities: { str: 2, dex: 0, con: 1, int: 0, wis: 1, cha: 0 },
-    attacks: [{ name: 'longsword', toHit: 4, damage: '1d8+2', range: 'melee' }],
-    sprite: 'hero_knight',
-    emoji: '🛡️',
-    anim: { idle: 'knight-idle', attack: 'knight-attack' },
-    spells: [],
+    ac: 15,
+    hpMax: 13,
+    abilities: { str: 1, dex: 2, con: 1, int: 1, wis: 0, cha: 3 },
+    attacks: [{ name: 'gleaming rapier', toHit: 5, damage: '1d6+2', range: 'melee' }],
+    sprite: 'hero_bard',
+    emoji: '🎵',
+    anim: { idle: 'bard-idle', attack: 'bard-attack' },
+    spells: ['healing-word'],
   },
   {
     id: 'dragonkin-swashbuckler',

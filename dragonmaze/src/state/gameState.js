@@ -8,7 +8,10 @@ import { zoneById } from '../../data/zones.js';
 import { tierByName } from '../../data/dragonProgression.js';
 import { monsterById } from '../../data/monsters.js';
 import { companionById } from '../../data/party.js';
-import { familiarById } from '../../data/familiars.js';
+import { FAMILIARS, familiarById } from '../../data/familiars.js';
+import { ITEMS, itemById } from '../../data/items.js';
+import { parseHeroExport } from './importHero.js';
+import { bumpDamage } from '../engine/rules.js';
 import { SPELLS } from '../../data/spells.js';
 import { makeCombatant, makeDragonCombatant } from '../engine/entities.js';
 import {
@@ -29,11 +32,14 @@ function freshMeta() {
     hoardGold: 0,
     tier: 'wyrmling',
     runsCompleted: 0,
-    party: ['dragonkin-knight', 'dragonkin-swashbuckler'],
+    party: ['bard', 'dragonkin-swashbuckler'],
     zone: null, // null = procedural labyrinth; else { zoneId, subIndex }
-    familiar: null,
+    familiar: null, // the active familiar (must be owned)
+    familiarsOwned: [], // familiars are found in the dungeons, never bought
     tomeSpells: [], // spells the dragon has learned from found tomes
-    customCharacters: [],
+    inventory: [], // equippable items found in gleaming caches
+    equipment: {}, // charKey -> { weapon, armor, trinket }
+    customCharacters: [], // heroes imported from the portal's generator
     settings: { hardcore: false, sound: false },
   };
 }
@@ -86,16 +92,69 @@ export function init() {
 
 /** Fill fields that predate this save's version of the game. */
 function normalizeMeta(meta) {
-  meta.party ??= ['dragonkin-knight', 'dragonkin-swashbuckler'];
+  meta.party ??= ['bard', 'dragonkin-swashbuckler'];
   meta.zone ??= null;
   meta.familiar ??= null;
+  meta.familiarsOwned ??= [];
   meta.tomeSpells ??= [];
+  meta.inventory ??= [];
+  meta.equipment ??= {};
+  meta.customCharacters ??= [];
+  if (meta.familiar && !meta.familiarsOwned.includes(meta.familiar)) meta.familiar = null;
   return meta;
 }
 
-/** Choose the dragon's familiar (or null for none). */
+/** Look up a hero template: built-in companion or imported character. */
+function heroById(id) {
+  return companionById(id) ?? state.meta.customCharacters.find((c) => c.id === id) ?? null;
+}
+
+/** Import heroes from the portal's exported JSON. Returns how many landed. */
+export function importHeroes(json) {
+  const heroes = parseHeroExport(json);
+  for (const h of heroes) {
+    const at = state.meta.customCharacters.findIndex((c) => c.id === h.id);
+    if (at >= 0) state.meta.customCharacters[at] = h;
+    else state.meta.customCharacters.push(h);
+  }
+  persist(state);
+  emit([{ type: 'heroes-imported', count: heroes.length }]);
+  return heroes.length;
+}
+
+/** Items equipped by a character, resolved to data entries. */
+function equippedItems(charKey) {
+  return Object.values(state.meta.equipment[charKey] ?? {})
+    .map(itemById)
+    .filter(Boolean);
+}
+
+function equipmentMod(charKey, field) {
+  return equippedItems(charKey).reduce((sum, item) => sum + (item.mods[field] ?? 0), 0);
+}
+
+/** Equip an owned item (or null to clear); an item serves one wearer only. */
+export function equip(charKey, slot, itemId) {
+  if (itemId) {
+    const item = itemById(itemId);
+    if (!item || item.slot !== slot || !state.meta.inventory.includes(itemId)) return;
+    for (const [key, slots] of Object.entries(state.meta.equipment)) {
+      for (const [sl, id] of Object.entries(slots)) {
+        if (id === itemId) delete state.meta.equipment[key][sl];
+      }
+    }
+  }
+  state.meta.equipment[charKey] ??= {};
+  if (itemId) state.meta.equipment[charKey][slot] = itemId;
+  else delete state.meta.equipment[charKey][slot];
+  persist(state);
+  emit([{ type: 'equip-changed' }]);
+}
+
+/** Choose the active familiar from those already found (or null for none). */
 export function setFamiliar(familiarId) {
-  state.meta.familiar = familiarById(familiarId) ? familiarId : null;
+  state.meta.familiar =
+    familiarById(familiarId) && state.meta.familiarsOwned.includes(familiarId) ? familiarId : null;
   persist(state);
   emit([{ type: 'familiar-changed' }]);
 }
@@ -111,11 +170,10 @@ export function newGame(seed = null) {
   clearSave();
   // A new game resets progress, not the choices just made on the title
   // screen: keep the picked party and hunting ground.
-  const { party, zone, familiar } = state.meta;
+  const { party, zone } = state.meta;
   state.meta = freshMeta();
   if (party) state.meta.party = party;
   state.meta.zone = zone ?? null;
-  state.meta.familiar = familiar ?? null;
   enterLabyrinth(seed ?? randomSeed());
 }
 
@@ -138,7 +196,7 @@ export function continueGame() {
 
 /** Choose which companions join the next labyrinth. */
 export function setParty(companionIds) {
-  state.meta.party = companionIds.filter((id) => companionById(id));
+  state.meta.party = companionIds.filter((id) => heroById(id)).slice(0, 3);
   persist(state);
   emit([{ type: 'party-changed' }]);
 }
@@ -146,16 +204,18 @@ export function setParty(companionIds) {
 export function enterLabyrinth(seed) {
   const depth = state.meta.runsCompleted + 1;
   const tier = tierByName(state.meta.tier);
-  const partyIds = (state.meta.party ?? []).filter((id) => companionById(id));
+  const partyIds = (state.meta.party ?? []).filter((id) => heroById(id));
   const zonePick = state.meta.zone;
   const dungeon = zonePick
     ? buildZoneDungeon(zonePick.zoneId, zonePick.subIndex, seed, 1 + partyIds.length)
     : generateDungeon(seed, depth, 1 + partyIds.length);
+  const dragonMax = tier.hpMax + equipmentMod('dragon', 'hpMax');
   state.run = {
-    dragon: { tier: tier.tier, hp: { current: tier.hpMax, max: tier.hpMax } },
+    dragon: { tier: tier.tier, hp: { current: dragonMax, max: dragonMax } },
     party: partyIds.map((id) => {
-      const c = companionById(id);
-      return { id, hp: { current: c.hpMax, max: c.hpMax } };
+      const c = heroById(id);
+      const max = c.hpMax + equipmentMod(id, 'hpMax');
+      return { id, hp: { current: max, max } };
     }),
     unbankedGold: 0,
     dungeon,
@@ -206,7 +266,28 @@ export function move(dx, dy) {
   const lootIdx = d.loot.findIndex((l) => l.x === x && l.y === y);
   if (lootIdx >= 0) {
     const [loot] = d.loot.splice(lootIdx, 1);
-    if (loot.tome) {
+    if (loot.den) {
+      const unowned = FAMILIARS.filter((f) => !state.meta.familiarsOwned.includes(f.id));
+      if (unowned.length) {
+        const found = unowned[Math.floor(liveRNG() * unowned.length)];
+        state.meta.familiarsOwned.push(found.id);
+        state.meta.familiar ??= found.id;
+        events.push({ type: 'familiar-found', name: found.name, blurb: found.blurb });
+      } else {
+        run.unbankedGold += 75;
+        events.push({ type: 'loot', label: 'an empty den (75 gold under the bedding)', gold: 75 });
+      }
+    } else if (loot.cache) {
+      const unowned = ITEMS.filter((i) => !state.meta.inventory.includes(i.id));
+      if (unowned.length) {
+        const found = unowned[Math.floor(liveRNG() * unowned.length)];
+        state.meta.inventory.push(found.id);
+        events.push({ type: 'item-found', name: found.name, blurb: found.blurb });
+      } else {
+        run.unbankedGold += 90;
+        events.push({ type: 'loot', label: 'a cache of coin (90 gold)', gold: 90 });
+      }
+    } else if (loot.tome) {
       const unknown = SPELLS.filter((sp) => !state.meta.tomeSpells.includes(sp.id));
       if (unknown.length) {
         const learned = unknown[Math.floor(liveRNG() * unknown.length)];
@@ -275,10 +356,15 @@ function beginCombat(encounter) {
     spells: state.meta.tomeSpells,
     familiar: state.meta.familiar,
   });
+  dragon.hp.max = run.dragon.hp.max;
+  dragon.hp.current = Math.min(run.dragon.hp.current, dragon.hp.max);
+  applyEquipment(dragon, 'dragon');
   // Downed companions come along at 0 HP — a Healing Word can revive them.
   const companions = run.party.map((slot) => {
-    const c = makeCombatant(companionById(slot.id));
+    const c = makeCombatant(heroById(slot.id));
+    c.hp.max = slot.hp.max;
     c.hp.current = slot.hp.current;
+    applyEquipment(c, slot.id);
     return c;
   });
   const monsters = encounter.monsterIds.map((id) => makeCombatant(monsterById(id)));
@@ -322,6 +408,17 @@ function resolvePlayerAction(act) {
   }
   // Mid-combat state is never persisted; reloading resumes from before the fight.
   emit(events);
+}
+
+/** Fold a character's equipped item mods into its combatant. */
+function applyEquipment(c, charKey) {
+  const toHit = equipmentMod(charKey, 'toHit');
+  const damage = equipmentMod(charKey, 'damage');
+  c.ac += equipmentMod(charKey, 'ac');
+  for (const attack of c.attacks) {
+    attack.toHit += toHit;
+    attack.damage = bumpDamage(attack.damage, damage);
+  }
 }
 
 function syncDragonHp() {

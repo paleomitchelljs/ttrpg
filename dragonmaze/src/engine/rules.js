@@ -104,6 +104,16 @@ export function rollBreathRecharge(rng = Math.random) {
   return { roll: die, ready: die >= 5 };
 }
 
+/** Fold a flat bonus into a dice expression's modifier: '1d8+2' +1 → '1d8+3'. */
+export function bumpDamage(expr, n) {
+  if (!n) return expr;
+  const m = /^\s*(\d*)d(\d+)\s*(?:([+-])\s*(\d+))?\s*$/i.exec(expr);
+  if (!m) return expr;
+  const count = m[1] || '1';
+  const mod = (m[4] ? (m[3] === '-' ? -1 : 1) * parseInt(m[4], 10) : 0) + n;
+  return `${count}d${m[2]}${mod ? (mod > 0 ? `+${mod}` : `${mod}`) : ''}`;
+}
+
 // ---------------------------------------------------------------- spells
 /**
  * Casting check: d20 + CHA vs the spell's castDC. Natural 20 always works,

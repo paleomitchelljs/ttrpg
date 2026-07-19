@@ -9,6 +9,7 @@ import { presentCombat } from './render/combatView.js';
 import * as ui from './render/ui.js';
 import { DRAGON_TIERS, tierByName } from '../data/dragonProgression.js';
 import { COMPANIONS, companionById } from '../data/party.js';
+import { itemById } from '../data/items.js';
 import { familiarById } from '../data/familiars.js';
 import { spellById } from '../data/spells.js';
 import { SPRITES } from './assets-manifest.js';
@@ -97,6 +98,8 @@ game.subscribe((state, events) => {
         'log-start'
       );
     }
+    if (ev.type === 'familiar-found') ui.logExplore(`Something stirs in the den… a familiar joins you: ${ev.name} — ${ev.blurb}!`, 'log-start');
+    if (ev.type === 'item-found') ui.logExplore(`Inside the cache: ${ev.name} — ${ev.blurb}. Equip it from a character sheet!`, 'log-start');
     if (ev.type === 'banked') showBankedOverlay(ev, events);
   }
 
@@ -142,14 +145,17 @@ function sheetSubject(id) {
       breath: tier.breath,
       spells: game.state.meta.tomeSpells.map((sid) => spellById(sid)).filter(Boolean),
       familiar: familiarById(game.state.meta.familiar),
+      equip: equipInfo('dragon'),
     };
   }
-  const c = companionById(id);
+  const c = companionById(id) ?? game.state.meta.customCharacters.find((h) => h.id === id);
   if (!c) return null;
   const slot = game.state.run?.party.find((pm) => pm.id === id);
   return {
     name: c.name,
-    blurb: c.spells.length ? 'Blade in one hand, spellbook in the other.' : 'Steel, shield, and stubbornness.',
+    blurb: c.imported
+      ? 'A hero of the portal, drawn into the labyrinth.'
+      : c.spells.length ? 'Blade in one hand, spellbook in the other.' : 'Steel, songs, and stubbornness.',
     sprite: SPRITES[c.anim.idle],
     frames: 2,
     flip: true,
@@ -158,13 +164,39 @@ function sheetSubject(id) {
     abilities: c.abilities,
     attacks: c.attacks,
     spells: c.spells.map((sid) => spellById(sid)).filter(Boolean),
+    equip: equipInfo(id),
   };
 }
 
+function equipInfo(charKey) {
+  const taken = {};
+  for (const [key, slots] of Object.entries(game.state.meta.equipment ?? {})) {
+    for (const id of Object.values(slots)) taken[id] = key;
+  }
+  return {
+    charKey,
+    slots: game.state.meta.equipment?.[charKey] ?? {},
+    inventory: game.state.meta.inventory ?? [],
+    taken,
+  };
+}
+
+let openSheetId = null;
 function openSheet(id) {
   const subject = sheetSubject(id);
-  if (subject) ui.showCharacterSheet(subject);
+  if (subject) {
+    openSheetId = id;
+    ui.showCharacterSheet(subject);
+  }
 }
+
+// equipment dropdowns inside the sheet
+ui.el('sheet-body').addEventListener('change', (ev) => {
+  const sel = ev.target.closest('.equip-select');
+  if (!sel) return;
+  game.equip(sel.dataset.char, sel.dataset.slot, sel.value || null);
+  if (openSheetId) openSheet(openSheetId);
+});
 
 for (const btn of document.querySelectorAll('.sheet-btn')) {
   btn.addEventListener('click', () => openSheet(btn.dataset.sheet));
@@ -214,21 +246,36 @@ ui.el('btn-new').addEventListener('click', () => game.newGame(seedFromUrl()));
 ui.el('btn-continue').addEventListener('click', () => game.continueGame());
 ui.el('btn-quit').addEventListener('click', () => game.quitToTitle());
 
-// Party selection on the title screen.
-for (const box of document.querySelectorAll('.party-opt input')) {
-  box.addEventListener('change', () => {
-    const ids = [...document.querySelectorAll('.party-opt input:checked')].map((b) => b.dataset.cid);
-    game.setParty(ids);
-  });
-}
+// Party selection on the title screen (delegated: imported heroes render late).
+document.addEventListener('change', (ev) => {
+  if (!ev.target.matches('.party-opt input')) return;
+  const ids = [...document.querySelectorAll('.party-opt input:checked')].map((b) => b.dataset.cid);
+  game.setParty(ids);
+});
 
-// Familiar picker on the title screen.
-for (const btn of document.querySelectorAll('.familiar-btn')) {
-  btn.addEventListener('click', () => game.setFamiliar(btn.dataset.fam || null));
-}
+// Import heroes from the portal's exported JSON.
+ui.el('btn-import').addEventListener('click', () => ui.el('import-file').click());
+ui.el('import-file').addEventListener('change', async (ev) => {
+  const file = ev.target.files?.[0];
+  ev.target.value = '';
+  if (!file) return;
+  try {
+    const count = game.importHeroes(JSON.parse(await file.text()));
+    ui.logExplore(`Imported ${count} hero${count === 1 ? '' : 'es'}.`);
+  } catch {
+    ui.logExplore('That file did not look like a hero export.', 'log-hurt');
+  }
+});
 
-// Zone picker on the title screen.
-for (const btn of document.querySelectorAll('.zone-btn')) {
+// Familiar picker on the title screen (dynamic buttons; found-only).
+ui.el('familiar-buttons').addEventListener('click', (ev) => {
+  const btn = ev.target.closest('.familiar-btn');
+  if (btn && !btn.disabled) game.setFamiliar(btn.dataset.fam || null);
+});
+
+// Zone picker on the title screen. Scoped to its container: .zone-btn is
+// reused as a visual style by sheet/import/familiar buttons.
+for (const btn of document.querySelectorAll('#zone-buttons .zone-btn')) {
   btn.addEventListener('click', () => game.setZone(btn.dataset.zone || null));
 }
 ui.el('zone-sub').addEventListener('change', (ev) => {
