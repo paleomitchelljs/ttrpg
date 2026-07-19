@@ -1,6 +1,8 @@
 // Screens, HUD, overlays, exploration log. Dumb DOM helpers only — all
 // decisions live in gameState; main.js wires intents.
 
+import { zoneById } from '../../data/zones.js';
+
 export function el(id) {
   return document.getElementById(id);
 }
@@ -39,6 +41,23 @@ export function updateTitle(state) {
   const party = state.meta.party ?? [];
   for (const box of document.querySelectorAll('.party-opt input')) {
     box.checked = party.includes(box.dataset.cid);
+  }
+
+  // zone picker
+  const pick = state.meta.zone;
+  for (const btn of document.querySelectorAll('.zone-btn')) {
+    btn.classList.toggle('selected', (pick?.zoneId ?? '') === btn.dataset.zone);
+  }
+  const zone = pick ? zoneById(pick.zoneId) : null;
+  const sub = el('zone-sub');
+  sub.hidden = !zone;
+  if (zone) {
+    sub.innerHTML = zone.subregions
+      .map((s, i) => `<option value="${i}" ${i === pick.subIndex ? 'selected' : ''}>${s.name}</option>`)
+      .join('');
+    el('zone-blurb').textContent = zone.subregions[pick.subIndex]?.blurb ?? zone.blurb;
+  } else {
+    el('zone-blurb').textContent = 'An ever-changing maze, deeper and richer with every delve.';
   }
 }
 

@@ -19,6 +19,8 @@ import {
 import { MONSTERS, monsterById } from '../data/monsters.js';
 import { SPRITES } from '../src/assets-manifest.js';
 import { SPELLS, spellById } from '../data/spells.js';
+import { ZONES } from '../data/zones.js';
+import { buildZoneDungeon } from '../src/world/zones.js';
 import { COMPANIONS, companionById } from '../data/party.js';
 import { resolveSpellCast } from '../src/engine/rules.js';
 import { makeCombatant, makeDragonCombatant } from '../src/engine/entities.js';
@@ -263,6 +265,45 @@ check('roster is Phase-1 sized with sane stats', () => {
     assert.ok(m.attacks.length >= 1, `${m.id} attacks`);
     assert.ok(m.goldValue > 0, `${m.id} gold`);
     roll(m.attacks[0].damage); // throws if the dice expression is malformed
+  }
+});
+
+// ---- zones
+check('every zone subregion is well-formed, connected, and deterministic', () => {
+  for (const zone of ZONES) {
+    for (let i = 0; i < zone.subregions.length; i++) {
+      const sub = zone.subregions[i];
+      const w = sub.map[0].length;
+      for (const row of sub.map) assert.equal(row.length, w, `${zone.id}/${sub.id} rectangular`);
+      for (const t of sub.table) assert.ok(monsterById(t.id), `${zone.id}/${sub.id} table id ${t.id}`);
+      for (const id of sub.boss.monsterIds) assert.ok(monsterById(id), `${zone.id}/${sub.id} boss id ${id}`);
+      const a = buildZoneDungeon(zone.id, i, 'zone-seed');
+      const b = buildZoneDungeon(zone.id, i, 'zone-seed');
+      assert.deepEqual(a, b, `${zone.id}/${sub.id} deterministic`);
+      assert.ok(a.start && a.exit, `${zone.id}/${sub.id} has S and E`);
+      // flood fill: every floor tile reachable from start
+      const seen = new Set([`${a.start.x},${a.start.y}`]);
+      const queue = [[a.start.x, a.start.y]];
+      while (queue.length) {
+        const [x, y] = queue.pop();
+        for (const [dx, dy] of [[0, 1], [0, -1], [1, 0], [-1, 0]]) {
+          const nx = x + dx;
+          const ny = y + dy;
+          if (
+            nx >= 0 && nx < a.width && ny >= 0 && ny < a.height &&
+            a.tiles[ny][nx] === 1 && !seen.has(`${nx},${ny}`)
+          ) {
+            seen.add(`${nx},${ny}`);
+            queue.push([nx, ny]);
+          }
+        }
+      }
+      let floors = 0;
+      for (const row of a.tiles) for (const t of row) if (t === 1) floors++;
+      assert.equal(seen.size, floors, `${zone.id}/${sub.id}: all floors reachable`);
+      assert.ok(a.encounters.length >= 3, `${zone.id}/${sub.id} has encounters`);
+      assert.ok(a.loot.length >= 1, `${zone.id}/${sub.id} has loot`);
+    }
   }
 });
 

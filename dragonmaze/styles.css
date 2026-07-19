@@ -334,6 +334,19 @@ button { font: inherit; }
 .unit.active .plate { border-color: var(--gold); }
 .unit.active .unit-name::before { content: '▶ '; color: var(--gold); }
 
+.unit.enemy:not(.dead):not(.fled) { cursor: pointer; }
+.unit.enemy:not(.dead):not(.fled):hover .plate { border-color: #ffffff44; }
+.unit.enemy.targeted .plate { border-color: var(--ember); }
+.unit.enemy.targeted .unit-name::before { content: '◆ '; color: var(--ember); }
+.unit.enemy.targeted .combat-sprite,
+.unit.enemy.targeted .enemy-face {
+  outline: 2px dashed var(--ember);
+  outline-offset: 4px;
+  border-radius: 50%;
+}
+
+.target-note { color: var(--ink-dim); font-size: 0.8rem; align-self: center; }
+
 .combat-sprite {
   width: 64px;
   flex: none;
@@ -457,6 +470,43 @@ button { font: inherit; }
   border-radius: 10px;
   padding: 0.5em 0.8em;
   cursor: pointer;
+}
+
+.zone-select {
+  margin-top: 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.zone-buttons { display: flex; gap: 0.5rem; flex-wrap: wrap; justify-content: center; }
+
+.zone-btn {
+  background: var(--panel);
+  color: var(--ink-dim);
+  border: 2px solid #00000088;
+  border-radius: 10px;
+  padding: 0.4em 0.9em;
+  font: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+
+.zone-btn:hover { color: var(--ink); }
+.zone-btn.selected {
+  background: var(--panel-2);
+  color: var(--gold);
+  border-color: var(--gold);
+}
+
+.zone-blurb {
+  color: var(--ink-dim);
+  font-size: 0.9rem;
+  font-style: italic;
+  margin: 0;
+  max-width: 34rem;
+  text-align: center;
 }
 
 .party-select {

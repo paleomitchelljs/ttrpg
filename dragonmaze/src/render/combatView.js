@@ -27,6 +27,10 @@ const delay = (ms) => new Promise((r) => setTimeout(r, ms));
 const batches = [];
 let processing = false;
 
+// The highlighted enemy: attacks and single-target spells go here. Click an
+// enemy on the stage to change it; falls back to the first living monster.
+let targetId = null;
+
 /** Enqueue an event batch for dramatic replay. Safe to call every emit. */
 export function presentCombat(els, state, events, handlers) {
   batches.push({ state, events, handlers });
@@ -57,6 +61,7 @@ function lockActions(els) {
 async function presentEvent(els, ev) {
   switch (ev.type) {
     case 'combat-start': {
+      targetId = null;
       els.log.replaceChildren();
       els.overlay.hidden = false;
       const names = ev.monsters.map((m) => m.name);
@@ -524,10 +529,24 @@ export function renderCombat(els, state, handlers) {
   if (!combat) return;
   const activeId = isPlayerTurn(combat) ? currentCombatant(combat).id : null;
 
+  // keep the target valid: default to the first living monster
+  const living = livingMonsters(combat);
+  if (!living.some((m) => m.id === targetId)) targetId = living[0]?.id ?? null;
+
   els.enemies.replaceChildren(
     ...combat.order
       .filter((c) => c.kind === 'monster')
-      .map((m) => unitEl(m, 'enemy', activeId))
+      .map((m) => {
+        const unit = unitEl(m, 'enemy', activeId);
+        if (m.hp.current > 0 && !m.fled) {
+          if (m.id === targetId) unit.classList.add('targeted');
+          unit.addEventListener('click', () => {
+            targetId = m.id;
+            renderCombat(els, state, handlers);
+          });
+        }
+        return unit;
+      })
   );
   els.player.replaceChildren(...heroesOf(combat).map((h) => unitEl(h, 'hero', activeId)));
 
@@ -620,12 +639,19 @@ function renderActions(els, combat, handlers, targetSpell) {
 
   const buttons = [];
   const verb = actor.kind === 'dragon' ? 'Bite' : 'Strike';
-  for (const m of livingMonsters(combat)) {
+  const target = livingMonsters(combat).find((m) => m.id === targetId) ?? livingMonsters(combat)[0];
+  if (target) {
     const btn = document.createElement('button');
     btn.className = 'btn attack-btn';
-    btn.innerHTML = `${ICONS.fang}<span>${verb} the ${m.name}!${m.panicked ? ' (advantage!)' : ''}</span>`;
-    btn.addEventListener('click', () => handlers.onAttack(m.id));
+    btn.innerHTML = `${ICONS.fang}<span>${verb} the ${target.name}!${target.panicked ? ' (advantage!)' : ''}</span>`;
+    btn.addEventListener('click', () => handlers.onAttack(target.id));
     buttons.push(btn);
+    if (livingMonsters(combat).length > 1) {
+      const note = document.createElement('div');
+      note.className = 'target-note';
+      note.textContent = 'tap an enemy to change target';
+      buttons.push(note);
+    }
   }
   if (actor.kind === 'dragon' && actor.breath) {
     const btn = document.createElement('button');
@@ -656,7 +682,13 @@ function renderActions(els, combat, handlers, targetSpell) {
       const spell = spellById(sel.value);
       if (!spell) return;
       sel.value = '';
-      const targets = spell.target === 'enemy' ? livingMonsters(combat) : heroesOf(combat);
+      if (spell.target === 'enemy') {
+        // single-target spells hit the highlighted enemy, same as attacks
+        const target = livingMonsters(combat).find((m) => m.id === targetId) ?? livingMonsters(combat)[0];
+        handlers.onCast(spell.id, target?.id ?? null);
+        return;
+      }
+      const targets = heroesOf(combat);
       if (spell.target === 'all-enemies' || targets.length <= 1) {
         handlers.onCast(spell.id, targets[0]?.id ?? null);
       } else {

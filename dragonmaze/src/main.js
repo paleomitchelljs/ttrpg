@@ -41,7 +41,7 @@ function showBankedOverlay(ev, events) {
             `${tierUp.to.hpMax} HP, armor ${tierUp.to.ac}, bite ${tierUp.to.attacks[0].damage}, breath ${tierUp.to.breath.damage}.`,
         }
       : null,
-    body: `You escaped depth ${ev.depth} with ${ev.banked} gold (${ev.bonus} bonus for reaching the exit). Your hoard is now ${ev.hoard.toLocaleString()} gold.`,
+    body: `You escaped ${game.state.run?.dungeon.zone ? game.state.run.dungeon.zone.sub : `depth ${ev.depth}`} with ${ev.banked} gold (${ev.bonus} bonus for reaching the exit). Your hoard is now ${ev.hoard.toLocaleString()} gold.`,
     actions: [
       { label: 'Delve deeper', onClick: () => { ui.showOverlay('result-overlay', false); game.nextLabyrinth(); } },
       { label: 'Rest at your lair', onClick: () => { ui.showOverlay('result-overlay', false); game.quitToTitle(); } },
@@ -77,7 +77,11 @@ game.subscribe((state, events) => {
   for (const ev of events) {
     if (ev.type === 'entered') {
       ui.clearExploreLog();
-      ui.logExplore(`You slink into labyrinth depth ${ev.depth}. Find the exit!`);
+      ui.logExplore(
+        ev.zone
+          ? `You enter ${ev.zone.name} — ${ev.zone.sub}. Find the way down!`
+          : `You slink into labyrinth depth ${ev.depth}. Find the exit!`
+      );
     }
     if (ev.type === 'resumed') ui.logExplore(`Back to the hunt at depth ${ev.depth}.`);
     if (ev.type === 'loot') ui.logExplore(`You found ${ev.label} — ${ev.gold} gold!`, 'log-hit');
@@ -152,6 +156,15 @@ for (const box of document.querySelectorAll('.party-opt input')) {
     game.setParty(ids);
   });
 }
+
+// Zone picker on the title screen.
+for (const btn of document.querySelectorAll('.zone-btn')) {
+  btn.addEventListener('click', () => game.setZone(btn.dataset.zone || null));
+}
+ui.el('zone-sub').addEventListener('change', (ev) => {
+  const pick = game.state.meta.zone;
+  if (pick) game.setZone(pick.zoneId, Number(ev.target.value));
+});
 
 function seedFromUrl() {
   try {

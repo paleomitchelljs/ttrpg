@@ -3,6 +3,8 @@
 // generation is seeded; all combat dice are live.
 
 import { generateDungeon } from '../world/maze.js';
+import { buildZoneDungeon } from '../world/zones.js';
+import { zoneById } from '../../data/zones.js';
 import { tierByName } from '../../data/dragonProgression.js';
 import { monsterById } from '../../data/monsters.js';
 import { companionById } from '../../data/party.js';
@@ -26,6 +28,7 @@ function freshMeta() {
     tier: 'wyrmling',
     runsCompleted: 0,
     party: ['dragonkin-knight', 'dragonkin-swashbuckler'],
+    zone: null, // null = procedural labyrinth; else { zoneId, subIndex }
     customCharacters: [],
     settings: { hardcore: false, sound: false },
   };
@@ -76,12 +79,25 @@ export function init() {
 /** Fill fields that predate this save's version of the game. */
 function normalizeMeta(meta) {
   meta.party ??= ['dragonkin-knight', 'dragonkin-swashbuckler'];
+  meta.zone ??= null;
   return meta;
+}
+
+/** Choose where to hunt: a written zone (by id) or null for procedural. */
+export function setZone(zoneId, subIndex = 0) {
+  state.meta.zone = zoneId && zoneById(zoneId) ? { zoneId, subIndex } : null;
+  persist(state);
+  emit([{ type: 'zone-changed' }]);
 }
 
 export function newGame(seed = null) {
   clearSave();
+  // A new game resets progress, not the choices just made on the title
+  // screen: keep the picked party and hunting ground.
+  const { party, zone } = state.meta;
   state.meta = freshMeta();
+  if (party) state.meta.party = party;
+  state.meta.zone = zone ?? null;
   enterLabyrinth(seed ?? randomSeed());
 }
 
@@ -113,7 +129,10 @@ export function enterLabyrinth(seed) {
   const depth = state.meta.runsCompleted + 1;
   const tier = tierByName(state.meta.tier);
   const partyIds = (state.meta.party ?? []).filter((id) => companionById(id));
-  const dungeon = generateDungeon(seed, depth, 1 + partyIds.length);
+  const zonePick = state.meta.zone;
+  const dungeon = zonePick
+    ? buildZoneDungeon(zonePick.zoneId, zonePick.subIndex, seed, 1 + partyIds.length)
+    : generateDungeon(seed, depth, 1 + partyIds.length);
   state.run = {
     dragon: { tier: tier.tier, hp: { current: tier.hpMax, max: tier.hpMax } },
     party: partyIds.map((id) => {
@@ -132,7 +151,7 @@ export function enterLabyrinth(seed) {
   state.screen = 'game';
   state.hasSave = true;
   persist(state);
-  emit([{ type: 'entered', depth, seed }]);
+  emit([{ type: 'entered', depth: dungeon.depth, seed, zone: dungeon.zone ?? null }]);
 }
 
 export function quitToTitle() {
@@ -194,6 +213,11 @@ function bankAndWin(events) {
   const banked = run.unbankedGold + bonus;
   state.meta.hoardGold += banked;
   state.meta.runsCompleted += 1;
+  // A written zone advances to its next subregion for the next delve.
+  if (state.meta.zone && run.dungeon.zone) {
+    const zone = zoneById(state.meta.zone.zoneId);
+    state.meta.zone.subIndex = Math.min(state.meta.zone.subIndex + 1, zone.subregions.length - 1);
+  }
   run.phase = 'won';
   run.lastResult = { banked, bonus, hoard: state.meta.hoardGold, depth: run.dungeon.depth };
   events.push({ type: 'banked', ...run.lastResult });
