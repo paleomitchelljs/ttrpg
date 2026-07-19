@@ -30,6 +30,19 @@ export const COMPANIONS = [
     anim: { idle: 'swash-idle', attack: 'swash-attack' },
     spells: ['ember-bolt', 'healing-word', 'flame-wave'],
   },
+  {
+    id: 'dragonkin-spellblade',
+    name: 'Dragonkin Spellblade',
+    kind: 'hero',
+    ac: 15,
+    hpMax: 12,
+    abilities: { str: 2, dex: 1, con: 1, int: 2, wis: 0, cha: 1 },
+    attacks: [{ name: 'flame sword', toHit: 4, damage: '1d8+2', range: 'melee' }],
+    sprite: 'hero_spellblade',
+    emoji: '🔥',
+    anim: { idle: 'spellblade-idle', attack: 'spellblade-attack' },
+    spells: ['ember-bolt', 'flame-wave'],
+  },
 ];
 
 export function companionById(id) {

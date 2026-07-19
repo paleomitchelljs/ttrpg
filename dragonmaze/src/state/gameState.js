@@ -8,6 +8,8 @@ import { zoneById } from '../../data/zones.js';
 import { tierByName } from '../../data/dragonProgression.js';
 import { monsterById } from '../../data/monsters.js';
 import { companionById } from '../../data/party.js';
+import { familiarById } from '../../data/familiars.js';
+import { SPELLS } from '../../data/spells.js';
 import { makeCombatant, makeDragonCombatant } from '../engine/entities.js';
 import {
   createCombat,
@@ -29,6 +31,8 @@ function freshMeta() {
     runsCompleted: 0,
     party: ['dragonkin-knight', 'dragonkin-swashbuckler'],
     zone: null, // null = procedural labyrinth; else { zoneId, subIndex }
+    familiar: null,
+    tomeSpells: [], // spells the dragon has learned from found tomes
     customCharacters: [],
     settings: { hardcore: false, sound: false },
   };
@@ -59,7 +63,11 @@ function key(x, y) {
 
 function reveal(run) {
   const { x, y } = run.playerPos;
-  for (const [dx, dy] of [[0, 0], [0, -1], [0, 1], [-1, 0], [1, 0]]) {
+  const spots = [[0, 0], [0, -1], [0, 1], [-1, 0], [1, 0]];
+  if (state.meta.familiar === 'lantern-beetle') {
+    spots.push([-1, -1], [1, -1], [-1, 1], [1, 1], [0, -2], [0, 2], [-2, 0], [2, 0]);
+  }
+  for (const [dx, dy] of spots) {
     const tx = x + dx;
     const ty = y + dy;
     if (tx >= 0 && tx < run.dungeon.width && ty >= 0 && ty < run.dungeon.height) {
@@ -80,7 +88,16 @@ export function init() {
 function normalizeMeta(meta) {
   meta.party ??= ['dragonkin-knight', 'dragonkin-swashbuckler'];
   meta.zone ??= null;
+  meta.familiar ??= null;
+  meta.tomeSpells ??= [];
   return meta;
+}
+
+/** Choose the dragon's familiar (or null for none). */
+export function setFamiliar(familiarId) {
+  state.meta.familiar = familiarById(familiarId) ? familiarId : null;
+  persist(state);
+  emit([{ type: 'familiar-changed' }]);
 }
 
 /** Choose where to hunt: a written zone (by id) or null for procedural. */
@@ -94,10 +111,11 @@ export function newGame(seed = null) {
   clearSave();
   // A new game resets progress, not the choices just made on the title
   // screen: keep the picked party and hunting ground.
-  const { party, zone } = state.meta;
+  const { party, zone, familiar } = state.meta;
   state.meta = freshMeta();
   if (party) state.meta.party = party;
   state.meta.zone = zone ?? null;
+  state.meta.familiar = familiar ?? null;
   enterLabyrinth(seed ?? randomSeed());
 }
 
@@ -188,8 +206,22 @@ export function move(dx, dy) {
   const lootIdx = d.loot.findIndex((l) => l.x === x && l.y === y);
   if (lootIdx >= 0) {
     const [loot] = d.loot.splice(lootIdx, 1);
-    run.unbankedGold += loot.gold;
-    events.push({ type: 'loot', label: loot.label, icon: loot.icon, gold: loot.gold });
+    if (loot.tome) {
+      const unknown = SPELLS.filter((sp) => !state.meta.tomeSpells.includes(sp.id));
+      if (unknown.length) {
+        const learned = unknown[Math.floor(liveRNG() * unknown.length)];
+        state.meta.tomeSpells.push(learned.id);
+        events.push({ type: 'tome', spell: learned.name });
+      } else {
+        run.unbankedGold += 100;
+        events.push({ type: 'tome', spell: null, gold: 100 });
+      }
+    } else {
+      let gold = loot.gold;
+      if (state.meta.familiar === 'pack-rat') gold = Math.round(gold * 1.25);
+      run.unbankedGold += gold;
+      events.push({ type: 'loot', label: loot.label, icon: loot.icon, gold });
+    }
   }
 
   if (d.exit.x === x && d.exit.y === y) {
@@ -239,7 +271,10 @@ function checkTierUp(events) {
 function beginCombat(encounter) {
   const run = state.run;
   const tier = tierByName(run.dragon.tier);
-  const dragon = makeDragonCombatant(tier, run.dragon.hp.current);
+  const dragon = makeDragonCombatant(tier, run.dragon.hp.current, {
+    spells: state.meta.tomeSpells,
+    familiar: state.meta.familiar,
+  });
   // Downed companions come along at 0 HP — a Healing Word can revive them.
   const companions = run.party.map((slot) => {
     const c = makeCombatant(companionById(slot.id));
@@ -247,7 +282,7 @@ function beginCombat(encounter) {
     return c;
   });
   const monsters = encounter.monsterIds.map((id) => makeCombatant(monsterById(id)));
-  const { combat, events } = createCombat([dragon, ...companions], monsters, liveRNG);
+  const { combat, events } = createCombat([dragon, ...companions], monsters, liveRNG, encounter.bossName ?? null);
   run.phase = 'combat';
   run.combat = { combat, encounterId: encounter.id };
   const followUp = runMonsterTurns(combat, liveRNG);

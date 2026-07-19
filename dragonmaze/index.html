@@ -41,6 +41,28 @@
           <span class="party-thumb sprite f2"><img src="./assets/sprites/swash-idle.png" alt=""></span>
           Dragonkin Swashbuckler
         </label>
+        <label class="party-opt">
+          <input type="checkbox" data-cid="dragonkin-spellblade">
+          <span class="party-thumb sprite f2"><img src="./assets/sprites/spellblade-idle.png" alt=""></span>
+          Dragonkin Spellblade
+        </label>
+      </div>
+      <div class="party-select familiar-select">
+        <p class="party-label">Familiar:</p>
+        <div class="zone-buttons" id="familiar-buttons">
+          <button class="zone-btn familiar-btn" data-fam="">None</button>
+          <button class="zone-btn familiar-btn" data-fam="ember-wisp">Ember Wisp</button>
+          <button class="zone-btn familiar-btn" data-fam="pack-rat">Pack Rat</button>
+          <button class="zone-btn familiar-btn" data-fam="lantern-beetle">Lantern Beetle</button>
+        </div>
+        <p id="familiar-blurb" class="zone-blurb"></p>
+      </div>
+      <div class="sheet-row">
+        <span class="party-label">Character sheets:</span>
+        <button class="zone-btn sheet-btn" data-sheet="dragon">Red Dragon</button>
+        <button class="zone-btn sheet-btn" data-sheet="dragonkin-knight">Knight</button>
+        <button class="zone-btn sheet-btn" data-sheet="dragonkin-swashbuckler">Swashbuckler</button>
+        <button class="zone-btn sheet-btn" data-sheet="dragonkin-spellblade">Spellblade</button>
       </div>
       <p id="title-hoard" class="title-hoard"></p>
     </section>
@@ -113,6 +135,12 @@
       </div>
     </section>
 
+  </div>
+  <div id="sheet-overlay" class="overlay" hidden>
+    <div class="result-box sheet-box">
+      <div id="sheet-body"></div>
+      <div class="menu"><button id="sheet-close" class="btn">Close</button></div>
+    </div>
   </div>
   <div id="dice-cinematic" class="dice-overlay" hidden></div>
   <div id="roll-toast" class="roll-toast" hidden></div>

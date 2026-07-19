@@ -48,7 +48,7 @@ export function isPlayerTurn(combat) {
 }
 
 /** Roll initiative and build combat state. Breath starts charged. */
-export function createCombat(heroes, monsters, rng = Math.random) {
+export function createCombat(heroes, monsters, rng = Math.random, label = null) {
   const combatants = [...heroes, ...monsters];
   for (const c of combatants) c.initiative = rollInitiative(c, rng);
   // Ties go to the heroes (kind to the kids at the table).
@@ -63,9 +63,10 @@ export function createCombat(heroes, monsters, rng = Math.random) {
     over: false,
     winner: null,
     breathReady: true,
+    familiar: heroes.find((h) => h.kind === 'dragon')?.familiar ?? null,
   };
   const events = [
-    { type: 'combat-start', monsters: monsters.map((m) => ({ name: m.name })) },
+    { type: 'combat-start', monsters: monsters.map((m) => ({ name: m.name })), label },
     { type: 'initiative', order: order.map((c) => ({ id: c.id, name: c.name, initiative: c.initiative })) },
   ];
   // A downed companion (carried into the fight at 0 HP) never gets a turn
@@ -107,6 +108,40 @@ function checkDefeat(combat, events) {
   return true;
 }
 
+/**
+ * Apply typed damage ('physical' | 'fire') honoring resistances,
+ * vulnerabilities, and the relentless keyword. Returns the damage actually
+ * dealt and pushes explanatory events.
+ */
+function applyDamage(target, amount, type, events) {
+  let dealt = amount;
+  if (target.resist?.includes(type)) {
+    dealt = Math.max(1, Math.floor(dealt / 2));
+    events.push({ type: 'resist', id: target.id, who: target.name, dtype: type });
+  } else if (target.vulnerable?.includes(type)) {
+    dealt *= 2;
+    events.push({ type: 'vulnerable', id: target.id, who: target.name, dtype: type });
+  }
+  if (
+    target.ability === 'relentless' &&
+    !target.relentlessUsed &&
+    target.hp.current > 0 &&
+    target.hp.current - dealt <= 0
+  ) {
+    target.relentlessUsed = true;
+    target.hp.current = 1;
+    events.push({ type: 'relentless', id: target.id, who: target.name });
+    return dealt;
+  }
+  target.hp.current = Math.max(0, target.hp.current - dealt);
+  return dealt;
+}
+
+/** The dragon's familiar sharpens the party's fire. */
+function fireBonus(combat) {
+  return combat.familiar === 'ember-wisp' ? 1 : 0;
+}
+
 /** One courage check, at most once per monster per combat. */
 function triggerMorale(combat, monster, rng, events) {
   if (monster.moraleChecked || monster.morale == null) return;
@@ -136,6 +171,10 @@ export function runMonsterTurns(combat, rng = Math.random) {
   const events = [];
   while (!combat.over && isMonster(currentCombatant(combat))) {
     const monster = currentCombatant(combat);
+    if (monster.ability === 'regenerate' && monster.hp.current > 0 && monster.hp.current < monster.hp.max) {
+      monster.hp.current = Math.min(monster.hp.max, monster.hp.current + 2);
+      events.push({ type: 'regenerate', id: monster.id, who: monster.name, hpAfter: monster.hp.current });
+    }
     if (monster.panicked) {
       monster.fled = true;
       events.push({ type: 'flee', id: monster.id, who: monster.name });
@@ -146,7 +185,14 @@ export function runMonsterTurns(combat, rng = Math.random) {
     const targets = livingHeroes(combat);
     const target = targets[Math.floor(rng() * targets.length)];
     const res = resolveAttack(monster, monster.attacks[0], target, rng);
-    if (res.hit) target.hp.current = Math.max(0, target.hp.current - res.damage);
+    if (res.hit) {
+      res.damage = applyDamage(target, res.damage, 'physical', events);
+      if (monster.ability === 'lifedrain' && res.damage > 1 && monster.hp.current < monster.hp.max) {
+        const drained = Math.floor(res.damage / 2);
+        monster.hp.current = Math.min(monster.hp.max, monster.hp.current + drained);
+        events.push({ type: 'lifedrain', id: monster.id, who: monster.name, amount: drained, hpAfter: monster.hp.current });
+      }
+    }
     events.push({
       type: 'attack',
       attackerId: monster.id,
@@ -186,7 +232,7 @@ export function playerAttack(combat, targetId, rng = Math.random) {
   const res = resolveAttack(actor, actor.attacks[0], target, rng, {
     advantage: !!target.panicked,
   });
-  if (res.hit) target.hp.current = Math.max(0, target.hp.current - res.damage);
+  if (res.hit) res.damage = applyDamage(target, res.damage, 'physical', events);
   events.push({
     type: 'attack',
     attackerId: actor.id,
@@ -215,14 +261,15 @@ export function playerBreath(combat, rng = Math.random) {
   if (dragon.kind !== 'dragon' || !spec) return events;
   combat.breathReady = false;
   const dmg = roll(spec.damage, rng);
+  const total = dmg.total + fireBonus(combat);
   const targets = livingMonsters(combat);
   const results = [];
   for (const m of targets) {
-    const res = resolveBreathOn(m, spec.dc, dmg.total, rng);
-    m.hp.current = Math.max(0, m.hp.current - res.damage);
+    const res = resolveBreathOn(m, spec.dc, total, rng);
+    res.damage = applyDamage(m, res.damage, 'fire', events);
     results.push({ id: m.id, name: m.name, hpAfter: m.hp.current, ...res });
   }
-  events.push({ type: 'breath', total: dmg.total, rolls: dmg.rolls, dc: spec.dc, results });
+  events.push({ type: 'breath', total, rolls: dmg.rolls, dc: spec.dc, results });
   for (const m of targets) afterDamage(combat, m, rng, events);
   if (!checkVictory(combat, events)) advanceTurn(combat, events);
   return events;
@@ -258,13 +305,13 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
     const target =
       combat.order.find((c) => c.id === targetId && isMonster(c) && alive(c)) ??
       livingMonsters(combat)[0];
-    const dmg = roll(spell.dice, rng);
-    target.hp.current = Math.max(0, target.hp.current - dmg.total);
+    const dmg = roll(spell.dice, rng).total + fireBonus(combat);
+    const dealt = applyDamage(target, dmg, 'fire', events);
     events.push({
       type: 'spell-hit',
       targetId: target.id,
       target: target.name,
-      damage: dmg.total,
+      damage: dealt,
       hpAfter: target.hp.current,
     });
     afterDamage(combat, target, rng, events);
@@ -283,15 +330,15 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
       hpAfter: target.hp.current,
     });
   } else if (spell.target === 'all-enemies') {
-    const dmg = roll(spell.dice, rng);
+    const total = roll(spell.dice, rng).total + fireBonus(combat);
     const targets = livingMonsters(combat);
     const results = [];
     for (const m of targets) {
-      const res = resolveBreathOn(m, spell.saveDC, dmg.total, rng);
-      m.hp.current = Math.max(0, m.hp.current - res.damage);
+      const res = resolveBreathOn(m, spell.saveDC, total, rng);
+      res.damage = applyDamage(m, res.damage, 'fire', events);
       results.push({ id: m.id, name: m.name, hpAfter: m.hp.current, ...res });
     }
-    events.push({ type: 'spell-wave', total: dmg.total, dc: spell.saveDC, results });
+    events.push({ type: 'spell-wave', total, dc: spell.saveDC, results });
     for (const m of targets) afterDamage(combat, m, rng, events);
   }
 

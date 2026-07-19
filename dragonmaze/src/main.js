@@ -7,7 +7,11 @@ import { renderMap, bindMapClicks } from './render/mapView.js';
 import { drawHoard } from './render/hoardView.js';
 import { presentCombat } from './render/combatView.js';
 import * as ui from './render/ui.js';
-import { DRAGON_TIERS } from '../data/dragonProgression.js';
+import { DRAGON_TIERS, tierByName } from '../data/dragonProgression.js';
+import { COMPANIONS, companionById } from '../data/party.js';
+import { familiarById } from '../data/familiars.js';
+import { spellById } from '../data/spells.js';
+import { SPRITES } from './assets-manifest.js';
 
 const combatEls = {
   enemies: ui.el('combat-enemies'),
@@ -85,6 +89,14 @@ game.subscribe((state, events) => {
     }
     if (ev.type === 'resumed') ui.logExplore(`Back to the hunt at depth ${ev.depth}.`);
     if (ev.type === 'loot') ui.logExplore(`You found ${ev.label} — ${ev.gold} gold!`, 'log-hit');
+    if (ev.type === 'tome') {
+      ui.logExplore(
+        ev.spell
+          ? `A dusty spell tome! The dragon devours it and learns ${ev.spell}!`
+          : `A spell tome — but the dragon knows it all. Sold for ${ev.gold} gold.`,
+        'log-start'
+      );
+    }
     if (ev.type === 'banked') showBankedOverlay(ev, events);
   }
 
@@ -99,6 +111,7 @@ game.subscribe((state, events) => {
     onAttack: (targetId) => game.attack(targetId),
     onBreath: () => game.breath(),
     onCast: (spellId, targetId) => game.cast(spellId, targetId),
+    onSheet: (id) => openSheet(id),
     onBatchDone: (evts) => {
       const retreat = evts.find((e) => e.type === 'retreat');
       if (evts.some((e) => e.type === 'victory')) combatEls.overlay.hidden = true;
@@ -110,6 +123,58 @@ game.subscribe((state, events) => {
     },
   });
 });
+
+// ------------------------------------------------------------------ sheets
+function sheetSubject(id) {
+  if (id === 'dragon' || id?.startsWith?.('dragon-')) {
+    const tier = tierByName(game.state.meta.tier);
+    const runHp = game.state.run?.dragon.hp;
+    return {
+      name: `Red Dragon (${tier.label})`,
+      blurb: `Hoard: ${game.state.meta.hoardGold.toLocaleString()} gold. The labyrinth's rightful owner.`,
+      sprite: SPRITES['dragon-fly'],
+      frames: 4,
+      flip: true,
+      ac: tier.ac,
+      hp: runHp ? `${runHp.current} / ${runHp.max}` : `${tier.hpMax}`,
+      abilities: tier.abilities,
+      attacks: tier.attacks,
+      breath: tier.breath,
+      spells: game.state.meta.tomeSpells.map((sid) => spellById(sid)).filter(Boolean),
+      familiar: familiarById(game.state.meta.familiar),
+    };
+  }
+  const c = companionById(id);
+  if (!c) return null;
+  const slot = game.state.run?.party.find((pm) => pm.id === id);
+  return {
+    name: c.name,
+    blurb: c.spells.length ? 'Blade in one hand, spellbook in the other.' : 'Steel, shield, and stubbornness.',
+    sprite: SPRITES[c.anim.idle],
+    frames: 2,
+    flip: true,
+    ac: c.ac,
+    hp: slot ? `${slot.hp.current} / ${slot.hp.max}` : `${c.hpMax}`,
+    abilities: c.abilities,
+    attacks: c.attacks,
+    spells: c.spells.map((sid) => spellById(sid)).filter(Boolean),
+  };
+}
+
+function openSheet(id) {
+  const subject = sheetSubject(id);
+  if (subject) ui.showCharacterSheet(subject);
+}
+
+for (const btn of document.querySelectorAll('.sheet-btn')) {
+  btn.addEventListener('click', () => openSheet(btn.dataset.sheet));
+}
+ui.el('sheet-close').addEventListener('click', () => ui.showOverlay('sheet-overlay', false));
+ui.el('sheet-overlay').addEventListener('click', (ev) => {
+  if (ev.target === ui.el('sheet-overlay')) ui.showOverlay('sheet-overlay', false);
+});
+ui.el('hud-tier').addEventListener('click', () => openSheet('dragon'));
+ui.el('hud-tier').style.cursor = 'pointer';
 
 // ------------------------------------------------------------------ input
 const KEYS = {
@@ -155,6 +220,11 @@ for (const box of document.querySelectorAll('.party-opt input')) {
     const ids = [...document.querySelectorAll('.party-opt input:checked')].map((b) => b.dataset.cid);
     game.setParty(ids);
   });
+}
+
+// Familiar picker on the title screen.
+for (const btn of document.querySelectorAll('.familiar-btn')) {
+  btn.addEventListener('click', () => game.setFamiliar(btn.dataset.fam || null));
 }
 
 // Zone picker on the title screen.

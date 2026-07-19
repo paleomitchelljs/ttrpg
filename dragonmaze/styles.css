@@ -347,6 +347,57 @@ button { font: inherit; }
 
 .target-note { color: var(--ink-dim); font-size: 0.8rem; align-self: center; }
 
+/* enemy art that already faces left skips the default mirror */
+.unit.enemy .combat-sprite.no-mirror { transform: none; }
+
+.badge-trait { font-size: 0.72rem; color: var(--ink-dim); font-style: italic; }
+
+/* ------------------------------------------------------------- sheets */
+
+.sheet-box { text-align: left; max-width: min(460px, 94vw); }
+
+.sheet-head { display: flex; gap: 1rem; align-items: center; }
+.sheet-head h2 { margin: 0; color: var(--gold); }
+.sheet-blurb { color: var(--ink-dim); margin: 0.2rem 0 0; font-size: 0.9rem; font-style: italic; }
+.sheet-sprite { width: 84px; flex: none; filter: drop-shadow(0 3px 5px #000a); }
+
+.sheet-vitals {
+  display: flex;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  margin: 0.8rem 0 0.2rem;
+}
+
+.sheet-stat {
+  background: var(--panel-2);
+  border-radius: 8px;
+  padding: 0.2rem 0.55rem;
+  text-align: center;
+  font-size: 0.85rem;
+}
+
+.sheet-stat span { color: var(--ink-dim); display: block; font-size: 0.7rem; }
+
+#sheet-body h3 {
+  color: var(--gold);
+  font-size: 0.95rem;
+  margin: 0.7rem 0 0.2rem;
+  letter-spacing: 0.04em;
+}
+
+#sheet-body ul { margin: 0.2rem 0; padding-left: 1.2rem; font-size: 0.92rem; }
+
+.sheet-row {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.4rem;
+  align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.familiar-select { margin-top: 1rem; }
+
 .combat-sprite {
   width: 64px;
   flex: none;

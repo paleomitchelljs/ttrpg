@@ -65,7 +65,13 @@ async function presentEvent(els, ev) {
       els.log.replaceChildren();
       els.overlay.hidden = false;
       const names = ev.monsters.map((m) => m.name);
-      appendLog(els.log, `Danger! ${listNames(names)} block${names.length === 1 ? 's' : ''} your path!`, 'log-start');
+      appendLog(
+        els.log,
+        ev.label
+          ? `${ev.label}: ${listNames(names)} stand${names.length === 1 ? 's' : ''} before you!`
+          : `Danger! ${listNames(names)} block${names.length === 1 ? 's' : ''} your path!`,
+        'log-start'
+      );
       return delay(400);
     }
     case 'initiative':
@@ -155,6 +161,42 @@ async function presentEvent(els, ev) {
       }
       await delay(300);
       for (const card of els.enemies.querySelectorAll('.hit-flash')) card.classList.remove('hit-flash');
+      return;
+    }
+    case 'resist': {
+      appendLog(els.log, `The ${ev.who} shrugs off half the ${ev.dtype === 'fire' ? 'flame' : 'blow'}!`, 'log-miss');
+      return delay(250);
+    }
+    case 'vulnerable': {
+      appendLog(els.log, `The ${ev.who} ${ev.dtype === 'fire' ? 'goes up like kindling' : 'takes it hard'} — double damage!`, 'log-hit');
+      return delay(250);
+    }
+    case 'relentless': {
+      const card = cardOf(els, ev.id);
+      if (card) updateCardHp(card, 1);
+      appendLog(els.log, `The ${ev.who} should have fallen… but it keeps coming!`, 'log-start');
+      return delay(400);
+    }
+    case 'regenerate': {
+      const card = cardOf(els, ev.id);
+      if (card) {
+        card.classList.add('heal-flash');
+        updateCardHp(card, ev.hpAfter);
+      }
+      appendLog(els.log, `The ${ev.who}'s wounds knit closed. (+2 HP)`, 'log-dim');
+      await delay(350);
+      card?.classList.remove('heal-flash');
+      return;
+    }
+    case 'lifedrain': {
+      const card = cardOf(els, ev.id);
+      if (card) {
+        card.classList.add('heal-flash');
+        updateCardHp(card, ev.hpAfter);
+      }
+      appendLog(els.log, `The ${ev.who} drinks the wound — it heals ${ev.amount}!`, 'log-hurt');
+      await delay(350);
+      card?.classList.remove('heal-flash');
       return;
     }
     case 'morale':
@@ -548,7 +590,13 @@ export function renderCombat(els, state, handlers) {
         return unit;
       })
   );
-  els.player.replaceChildren(...heroesOf(combat).map((h) => unitEl(h, 'hero', activeId)));
+  els.player.replaceChildren(
+    ...heroesOf(combat).map((h) => {
+      const unit = unitEl(h, 'hero', activeId);
+      if (handlers.onSheet) unit.addEventListener('click', () => handlers.onSheet(h.templateId ?? 'dragon'));
+      return unit;
+    })
+  );
 
   renderActions(els, combat, handlers, null);
 }
@@ -579,6 +627,7 @@ function unitEl(c, side, activeId) {
       <div class="unit-name">${c.name}</div>
       ${c.fled ? '<div class="badge-flee">fled!</div>' : hpBar(c)}
       ${!dead && !c.fled && c.panicked ? '<div class="badge-panic">panicked!</div>' : ''}
+      ${side === 'enemy' ? traitBadges(c) : ''}
     </div>`;
   const face = faceHtml(c, dead);
   // heroes: sprite then plate; enemies: plate then sprite (mirrored layout)
@@ -586,14 +635,30 @@ function unitEl(c, side, activeId) {
   return unit;
 }
 
+const ABILITY_LABELS = {
+  regenerate: 'regenerates',
+  relentless: 'relentless',
+  lifedrain: 'drains life',
+};
+
+function traitBadges(c) {
+  const traits = [
+    ...(c.resist ?? []).map((t) => `resists ${t}`),
+    ...(c.vulnerable ?? []).map((t) => `fears ${t}`),
+    ...(c.ability ? [ABILITY_LABELS[c.ability] ?? c.ability] : []),
+  ];
+  return traits.length ? `<div class="badge-trait">${traits.join(' · ')}</div>` : '';
+}
+
 function faceHtml(c, dead) {
   if (c.kind === 'dragon') {
     return `<div class="combat-sprite sprite f4 flip"><img src="${DRAGON_FLY_STRIP}" alt="${c.name}"></div>`;
   }
   if (c.anim?.idle) {
-    // hero side art faces left natively; flip heroes to face the enemy column
-    const flip = c.kind === 'hero' ? ' flip' : '';
-    return `<div class="combat-sprite sprite f2${flip}"><img src="${spritePath(c.anim.idle)}" alt="${c.name}"></div>`;
+    // hero side art faces left natively; flip heroes to face the enemy column.
+    // enemy art is mirrored by CSS unless it already faces left (facesLeft).
+    const cls = c.kind === 'hero' ? ' flip' : c.facesLeft ? ' no-mirror' : '';
+    return `<div class="combat-sprite sprite f2${cls}"><img src="${spritePath(c.anim.idle)}" alt="${c.name}"></div>`;
   }
   return `<div class="enemy-face">${dead ? '☠' : c.emoji}</div>`;
 }

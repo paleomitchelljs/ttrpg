@@ -24,6 +24,8 @@ CELL_H = 1392 / 9
 # Sheets that deviate from the standard 768x1392 grid: sheet -> (cell_w, cell_h)
 SHEET_CELLS = {
     "skeleton-warrior-sheet.png": (113, 1024 / 9),
+    "dragonkin-spellblade-sheet.png": (113, 1024 / 9),
+    "monsters-menagerie-sheet.png": (565 / 7, 1024 / 13),
 }
 
 # Background keying tolerance per sheet: how close to a corner color a pixel
@@ -76,6 +78,76 @@ STRIPS = {
         "sheet": "dragonkin-swashbuckler-sheet.png",
         "cells": [(2, 1), (3, 1)],
         "box": (14, 52, 124, 94),
+    },
+    "spellblade-idle": {
+        "sheet": "dragonkin-spellblade-sheet.png",
+        "cells": [(1, 5), (2, 5)],
+        "box": (3, 3, 107, 107),
+    },
+    "spellblade-attack": {
+        "sheet": "dragonkin-spellblade-sheet.png",
+        "cells": [(1, 6), (2, 6)],
+        "box": (3, 3, 107, 107),
+    },
+    # broad-use menagerie: minotaur, bat, rat, evil eye, ogre, slime
+    "minotaur-idle": {
+        "sheet": "monsters-menagerie-sheet.png",
+        "cells": [(1, 1), (2, 1)],
+        "box": (2, 2, 77, 75),
+    },
+    "minotaur-attack": {
+        "sheet": "monsters-menagerie-sheet.png",
+        "cells": [(3, 3), (4, 3)],
+        "box": (2, 2, 77, 75),
+    },
+    "rat-idle": {
+        "sheet": "monsters-menagerie-sheet.png",
+        "cells": [(1, 6), (2, 6)],
+        "box": (2, 2, 77, 75),
+    },
+    "rat-attack": {
+        "sheet": "monsters-menagerie-sheet.png",
+        "cells": [(4, 6), (5, 6)],
+        "box": (2, 2, 77, 75),
+    },
+    "evil-eye-idle": {
+        "sheet": "monsters-menagerie-sheet.png",
+        "cells": [(1, 8), (2, 8)],
+        "box": (2, 2, 77, 75),
+    },
+    "evil-eye-attack": {
+        "sheet": "monsters-menagerie-sheet.png",
+        "cells": [(3, 8), (5, 8)],
+        "box": (2, 2, 77, 75),
+    },
+    "ogre-idle": {
+        "sheet": "monsters-menagerie-sheet.png",
+        "cells": [(1, 11), (2, 11)],
+        "box": (2, 2, 77, 75),
+    },
+    "ogre-attack": {
+        "sheet": "monsters-menagerie-sheet.png",
+        "cells": [(3, 12), (4, 12)],
+        "box": (2, 2, 77, 75),
+    },
+    "slime-idle": {
+        "sheet": "monsters-menagerie-sheet.png",
+        "cells": [(1, 13), (2, 13)],
+        "box": (2, 2, 77, 75),
+    },
+    "slime-attack": {
+        "sheet": "monsters-menagerie-sheet.png",
+        "cells": [(4, 13), (6, 13)],
+        "box": (2, 2, 77, 75),
+    },
+    # labeled panel sheet, irregular layout: absolute boxes
+    "shadow-knight-idle": {
+        "sheet": "shadow-knight-sheet.png",
+        "abs": [(51, 51, 137, 155), (204, 51, 135, 155)],
+    },
+    "shadow-knight-attack": {
+        "sheet": "shadow-knight-sheet.png",
+        "abs": [(204, 253, 135, 154), (350, 253, 133, 154)],
     },
     # this sheet's grid is irregular; use absolute (x, y, w, h) frame boxes
     "skeleton-idle": {

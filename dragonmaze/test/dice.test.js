@@ -21,6 +21,7 @@ import { SPRITES } from '../src/assets-manifest.js';
 import { SPELLS, spellById } from '../data/spells.js';
 import { ZONES } from '../data/zones.js';
 import { buildZoneDungeon } from '../src/world/zones.js';
+import { FAMILIARS } from '../data/familiars.js';
 import { COMPANIONS, companionById } from '../data/party.js';
 import { resolveSpellCast } from '../src/engine/rules.js';
 import { makeCombatant, makeDragonCombatant } from '../src/engine/entities.js';
@@ -257,8 +258,8 @@ check('sprite manifest is complete and every strip exists', () => {
   }
 });
 
-check('roster is Phase-1 sized with sane stats', () => {
-  assert.ok(MONSTERS.length >= 8 && MONSTERS.length <= 15, `roster size ${MONSTERS.length}`);
+check('roster has sane stats', () => {
+  assert.ok(MONSTERS.length >= 8, `roster size ${MONSTERS.length}`);
   for (const m of MONSTERS) {
     assert.ok(m.ac >= 8 && m.ac <= 20, `${m.id} ac`);
     assert.ok(m.hpMax >= 1, `${m.id} hp`);
@@ -325,6 +326,38 @@ check('spell casting: nat 20 works, nat 1 fizzles', () => {
   const spell = spellById('ember-bolt');
   assert.equal(resolveSpellCast(caster, spell, () => 0.99).success, true);
   assert.equal(resolveSpellCast(caster, spell, () => 0).success, false);
+});
+
+check('resistances, abilities, familiars, and tomes hold together', () => {
+  // typed damage via a real fight: a skeleton resists physical bites
+  const dragon = makeDragonCombatant(tierByName('wyrmling'));
+  const skeleton = makeCombatant(monsterById('skeleton'));
+  assert.deepEqual(skeleton.resist, ['physical']);
+  assert.deepEqual(skeleton.vulnerable, ['fire']);
+  const zombie = makeCombatant(monsterById('zombie'));
+  assert.equal(zombie.ability, 'relentless');
+  const troll = makeCombatant(monsterById('cave-troll'));
+  assert.equal(troll.ability, 'regenerate');
+  const sk = makeCombatant(monsterById('shadow-knight'));
+  assert.equal(sk.ability, 'lifedrain');
+  assert.ok(sk.facesLeft);
+  assert.ok(SPRITES[sk.anim.idle] && SPRITES[sk.anim.attack], 'shadow knight strips');
+  // dragon with tome spells and a familiar
+  const mage = makeDragonCombatant(tierByName('wyrmling'), null, {
+    spells: ['ember-bolt'],
+    familiar: 'ember-wisp',
+  });
+  assert.deepEqual(mage.spells, ['ember-bolt']);
+  assert.equal(mage.familiar, 'ember-wisp');
+});
+
+check('spellblade companion and familiars are well-formed', () => {
+  assert.equal(FAMILIARS.length, 3);
+  for (const f of FAMILIARS) assert.ok(f.id && f.name && f.blurb);
+  const sb = companionById('dragonkin-spellblade');
+  assert.ok(sb, 'spellblade exists');
+  for (const id of sb.spells) assert.ok(spellById(id));
+  assert.ok(SPRITES[sb.anim.idle] && SPRITES[sb.anim.attack], 'spellblade strips');
 });
 
 check('party combat: monsters fight heroes, heals can revive', () => {

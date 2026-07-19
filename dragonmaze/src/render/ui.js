@@ -2,6 +2,9 @@
 // decisions live in gameState; main.js wires intents.
 
 import { zoneById } from '../../data/zones.js';
+import { familiarById } from '../../data/familiars.js';
+import { spellById } from '../../data/spells.js';
+import { SPRITES } from '../assets-manifest.js';
 
 export function el(id) {
   return document.getElementById(id);
@@ -59,6 +62,49 @@ export function updateTitle(state) {
   } else {
     el('zone-blurb').textContent = 'An ever-changing maze, deeper and richer with every delve.';
   }
+
+  // familiar picker
+  const fam = familiarById(state.meta.familiar);
+  for (const btn of document.querySelectorAll('.familiar-btn')) {
+    btn.classList.toggle('selected', (state.meta.familiar ?? '') === btn.dataset.fam);
+  }
+  el('familiar-blurb').textContent = fam ? fam.blurb : 'delve alone, unencumbered by pets';
+}
+
+/**
+ * The character sheet overlay. subject:
+ * { name, blurb, sprite (strip key or null), frames, flip, ac, hp, abilities,
+ *   attacks, breath?, spells: [{name, blurb}], familiar?, traits? }
+ */
+export function showCharacterSheet(subject) {
+  const abilityRow = Object.entries(subject.abilities)
+    .map(([k, v]) => `<div class="sheet-stat"><span>${k.toUpperCase()}</span><b>${v >= 0 ? '+' : ''}${v}</b></div>`)
+    .join('');
+  const attacks = subject.attacks
+    .map((a) => `<li>${cap(a.name)} — +${a.toHit} to hit, ${a.damage} damage</li>`)
+    .join('');
+  const spells = subject.spells.length
+    ? `<h3>Spells</h3><ul>${subject.spells.map((s) => `<li>${s.name} — ${s.blurb}</li>`).join('')}</ul>`
+    : '';
+  el('sheet-body').innerHTML = `
+    <div class="sheet-head">
+      ${subject.sprite ? `<div class="sprite f${subject.frames ?? 2}${subject.flip ? ' flip' : ''} sheet-sprite"><img src="${subject.sprite}" alt=""></div>` : ''}
+      <div>
+        <h2>${subject.name}</h2>
+        <p class="sheet-blurb">${subject.blurb}</p>
+      </div>
+    </div>
+    <div class="sheet-vitals">
+      <div class="sheet-stat"><span>AC</span><b>${subject.ac}</b></div>
+      <div class="sheet-stat"><span>HP</span><b>${subject.hp}</b></div>
+      ${abilityRow}
+    </div>
+    <h3>Attacks</h3><ul>${attacks}</ul>
+    ${subject.breath ? `<h3>Fire Breath</h3><ul><li>${subject.breath.damage} fire damage to every enemy, save DC ${subject.breath.dc} for half; recharges on a 5+</li></ul>` : ''}
+    ${spells}
+    ${subject.familiar ? `<h3>Familiar</h3><ul><li>${subject.familiar.name} — ${subject.familiar.blurb}</li></ul>` : ''}
+    ${subject.traits?.length ? `<h3>Traits</h3><ul>${subject.traits.map((t) => `<li>${t}</li>`).join('')}</ul>` : ''}`;
+  showOverlay('sheet-overlay', true);
 }
 
 export function logExplore(text, cls = '') {

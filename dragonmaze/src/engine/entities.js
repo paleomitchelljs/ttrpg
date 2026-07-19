@@ -21,6 +21,11 @@ export function makeCombatant(data) {
     sprite: data.sprite ?? null,
     emoji: data.emoji ?? '❓',
     anim: data.anim ?? null,
+    facesLeft: data.facesLeft ?? false,
+    resist: [...(data.resist ?? [])],
+    vulnerable: [...(data.vulnerable ?? [])],
+    ability: data.ability ?? null,
+    relentlessUsed: false,
     spells: [...(data.spells ?? [])],
     burned: [],
     goldValue: data.goldValue ?? 0,
@@ -32,7 +37,7 @@ export function makeCombatant(data) {
 }
 
 /** Build the player's dragon combatant from a progression tier. */
-export function makeDragonCombatant(tierData, currentHp = null) {
+export function makeDragonCombatant(tierData, currentHp = null, opts = {}) {
   const c = makeCombatant({
     id: `dragon-${tierData.tier}`,
     name: 'Red Dragon',
@@ -43,8 +48,10 @@ export function makeDragonCombatant(tierData, currentHp = null) {
     attacks: tierData.attacks,
     sprite: tierData.sprite,
     emoji: tierData.emoji,
+    spells: opts.spells ?? [],
   });
   c.breath = tierData.breath ? { ...tierData.breath } : null;
+  c.familiar = opts.familiar ?? null;
   if (currentHp != null) c.hp.current = Math.min(currentHp, c.hp.max);
   return c;
 }
