@@ -112,6 +112,7 @@ function renderProps(container, run) {
     el.style.top = `calc(var(--tile) * ${p.y})`;
     el.style.width = `calc(var(--tile) * ${p.w})`;
     el.style.height = `calc(var(--tile) * ${p.h})`;
+    el.style.zIndex = (p.y + p.h) * 10; // depth = base row; tall props occlude what's behind
     el.innerHTML = `<img src="${src}" alt="">`;
     frag.appendChild(el);
   }
@@ -151,6 +152,9 @@ function moveToken(token, x, y) {
   token.hidden = false;
   // translate is in token-widths, i.e. tiles
   token.style.transform = `translate(${x * 100}%, ${y * 100}%)`;
+  // depth against props: a prop with base row R has z (R*10); the token at row y
+  // sits in front of props based at or above it, behind those based lower.
+  token.style.zIndex = (y + 1) * 10 + 5;
   if (lastPos) {
     const dx = x - lastPos.x;
     const dy = y - lastPos.y;

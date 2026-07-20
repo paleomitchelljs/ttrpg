@@ -70,5 +70,6 @@ export const TILES = {
   'round-hut': './assets/tiles/round-hut.png',
   'snake-statue': './assets/tiles/snake-statue.png',
   'stone-hut': './assets/tiles/stone-hut.png',
+  'wall-temple': './assets/tiles/wall-temple.png',
   'well': './assets/tiles/well.png',
 };
