@@ -30,7 +30,6 @@ SHEET_CELLS = {
     "monsters-menagerie-sheet.png": (565 / 7, 1024 / 13),
     "turquoise-barbarian-sheet.png": (113, 1024 / 9),
     "beren-warrior-sheet.png": (113, 1024 / 9),
-    "avatar-of-fear-sheet.png": (113, 1024 / 9),
 }
 
 # Background keying tolerance per sheet: how close to a corner color a pixel
@@ -147,8 +146,7 @@ STRIPS = {
     "beren-attack": {"sheet": "beren-warrior-sheet.png", "abs": [(8, 40, 100, 115), (224, 40, 100, 115)]},
     "beren-walk": {"sheet": "beren-warrior-sheet.png", "abs": [(8, 170, 100, 118), (120, 170, 100, 118)]},
     # --- Avatar of Fear (zone boss; label in col 1, frames cols 2-5; faces left) ---
-    "avatar-of-fear-idle": {"sheet": "avatar-of-fear-sheet.png", "cells": [(2, 3), (3, 3)], "box": (6, 4, 107, 109)},
-    "avatar-of-fear-attack": {"sheet": "avatar-of-fear-sheet.png", "cells": [(3, 1), (4, 1)], "box": (6, 4, 107, 109)},
+    # avatar-of-fear-* now come from a Nano Banana pose grid via slice_grid.py
     # --- golem/beast pack (abs boxes; ~56px cells) ---
     "clay-golem-idle": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(2, 8, 52, 103), (58, 8, 52, 103)]},
     "clay-golem-attack": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(170, 8, 52, 103), (226, 8, 52, 103)]},
