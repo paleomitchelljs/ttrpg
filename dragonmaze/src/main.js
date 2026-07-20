@@ -137,6 +137,16 @@ game.subscribe((state, events) => {
       ui.clearExploreLog();
       ui.logExplore(`You pass through into ${ev.zone.sub}…`);
     }
+    if (ev.type === 'portal-prompt') {
+      ui.showResult({
+        title: 'The Sunken Well',
+        body: ev.label,
+        actions: [
+          { label: 'Descend', onClick: () => { ui.showOverlay('result-overlay', false); game.usePortal(ev.to); } },
+          { label: 'Not now', onClick: () => ui.showOverlay('result-overlay', false) },
+        ],
+      });
+    }
     if (ev.type === 'loot') ui.logExplore(`You found ${ev.label} — ${ev.gold} gold!`, 'log-hit');
     if (ev.type === 'tome') {
       ui.logExplore(

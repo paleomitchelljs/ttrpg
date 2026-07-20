@@ -88,6 +88,7 @@ export function buildZoneDungeon(zoneId, subIndex, seedString, partySize = 1) {
     doors,
     edges: sub.edges ?? null, // { n|s|e|w: neighbouring subId } — walk off an edge
     props: (sub.props ?? []).map((p) => ({ ...p })), // decorative overlays
+    portals: (sub.portals ?? []).map((p) => ({ ...p })), // walk-into tiles that prompt to travel (e.g. the well)
     subId: sub.id,
     theme: sub.theme ?? null,
     zone: {

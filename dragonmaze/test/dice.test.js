@@ -288,7 +288,7 @@ check('every zone subregion is well-formed, connected, and deterministic', () =>
       const b = buildZoneDungeon(zone.id, i, 'zone-seed');
       assert.deepEqual(a, b, `${zone.id}/${sub.id} deterministic`);
       assert.ok(a.start, `${zone.id}/${sub.id} has S`);
-      assert.ok((a.exit && a.exit.x >= 0) || a.doors.length, `${zone.id}/${sub.id} has a way out`);
+      assert.ok((a.exit && a.exit.x >= 0) || a.doors.length || a.edges || a.portals.length, `${zone.id}/${sub.id} has a way out`);
       // flood fill: every floor tile reachable from start
       const seen = new Set([`${a.start.x},${a.start.y}`]);
       const queue = [[a.start.x, a.start.y]];
@@ -494,6 +494,9 @@ check('zone doors and boss drops reference real places and items', () => {
       }
       for (const dest of Object.values(sub.edges ?? {})) {
         assert.ok(ids.has(dest), `${zone.id}/${sub.id} edge to ${dest}`);
+      }
+      for (const p of sub.portals ?? []) {
+        assert.ok(ids.has(p.to), `${zone.id}/${sub.id} portal to ${p.to}`);
       }
       for (const itemId of sub.boss?.drops ?? []) {
         assert.ok(itemById(itemId), `${zone.id}/${sub.id} boss drop ${itemId}`);

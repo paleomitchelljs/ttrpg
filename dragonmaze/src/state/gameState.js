@@ -377,6 +377,13 @@ export function move(dx, dy) {
     return;
   }
 
+  // A portal (the well): walking into it asks before it whisks you away.
+  const portal = d.portals?.find((p) => p.x === x && p.y === y);
+  if (portal) {
+    emit([{ type: 'portal-prompt', to: portal.to, label: portal.label }]);
+    return;
+  }
+
   if (d.tiles[y][x] !== 1) return; // wall
 
   // Bump-to-fight: stepping at a monster tile starts combat; the party
@@ -447,6 +454,27 @@ function travelThrough(originDoor, events) {
   persist(state);
   events.push({ type: 'traveled', zone: dungeon.zone });
   emit(events);
+}
+
+/** Descend/enter a portal (e.g. climb down the well) after the player confirms.
+ * Like travelThrough but with no origin door: arrive at the paired return door
+ * if the destination has one, else at its start. */
+export function usePortal(to) {
+  const run = state.run;
+  if (!run || run.phase !== 'explore') return;
+  const zone = zoneById(run.dungeon.zone?.id);
+  if (!zone) return;
+  const fromSub = run.dungeon.subId;
+  const idx = zone.subregions.findIndex((sr) => sr.id === to);
+  if (idx < 0) return;
+  const dungeon = buildZoneDungeon(zone.id, idx, run.dungeon.seed, 1 + run.party.length);
+  run.dungeon = dungeon;
+  const back = dungeon.doors.find((dd) => dd.to === fromSub);
+  run.playerPos = back ? { ...back.entry } : { ...dungeon.start };
+  run.explored = {};
+  reveal(run);
+  persist(state);
+  emit([{ type: 'traveled', zone: dungeon.zone }]);
 }
 
 /** The first walkable tile scanning in from the edge opposite `dir`, in the
