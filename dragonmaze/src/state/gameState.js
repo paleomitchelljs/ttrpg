@@ -355,7 +355,17 @@ export function move(dx, dy) {
   const x = run.playerPos.x + dx;
   const y = run.playerPos.y + dy;
   const d = run.dungeon;
-  if (x < 0 || x >= d.width || y < 0 || y >= d.height) return;
+  if (x < 0 || x >= d.width || y < 0 || y >= d.height) {
+    // Walked off the map edge: if this subregion links that edge to a
+    // neighbour, cross into it (arriving at the opposite edge, same lane).
+    const dir = dx > 0 ? 'e' : dx < 0 ? 'w' : dy > 0 ? 's' : 'n';
+    const dest = d.edges?.[dir];
+    if (dest) {
+      const events = [];
+      travelEdge(dir, dest, dx !== 0 ? run.playerPos.y : run.playerPos.x, events);
+    }
+    return;
+  }
 
   // Doors sit ON the wall: walk INTO one to travel or bank — you never stand
   // on it. Checked before the wall block below.
@@ -432,6 +442,37 @@ function travelThrough(originDoor, events) {
   run.dungeon = dungeon;
   const back = dungeon.doors.find((dd) => dd.to === fromSub);
   run.playerPos = back ? { ...back.entry } : { ...dungeon.start };
+  run.explored = {};
+  reveal(run);
+  persist(state);
+  events.push({ type: 'traveled', zone: dungeon.zone });
+  emit(events);
+}
+
+/** The first walkable tile scanning in from the edge opposite `dir`, in the
+ * player's lane, so crossing an edge feels continuous. Falls back to start. */
+function arrivalTile(dungeon, dir, lane) {
+  const { width, height, tiles } = dungeon;
+  const floor = (x, y) => x >= 0 && x < width && y >= 0 && y < height && tiles[y][x] === 1;
+  if (dir === 'e') for (let x = 0; x < width; x++) { if (floor(x, lane)) return { x, y: lane }; }
+  else if (dir === 'w') for (let x = width - 1; x >= 0; x--) { if (floor(x, lane)) return { x, y: lane }; }
+  else if (dir === 's') for (let y = 0; y < height; y++) { if (floor(lane, y)) return { x: lane, y }; }
+  else if (dir === 'n') for (let y = height - 1; y >= 0; y--) { if (floor(lane, y)) return { x: lane, y }; }
+  return { ...dungeon.start };
+}
+
+/** Walk off an edge into the neighbouring sub-area of the same region. Like
+ * travelThrough, but triggered by the map boundary rather than a door; you
+ * arrive at the matching spot on the opposite edge. */
+function travelEdge(dir, destSubId, lane, events) {
+  const run = state.run;
+  const zone = zoneById(run.dungeon.zone?.id);
+  if (!zone) return;
+  const idx = zone.subregions.findIndex((sr) => sr.id === destSubId);
+  if (idx < 0) return;
+  const dungeon = buildZoneDungeon(zone.id, idx, run.dungeon.seed, 1 + run.party.length);
+  run.dungeon = dungeon;
+  run.playerPos = arrivalTile(dungeon, dir, lane);
   run.explored = {};
   reveal(run);
   persist(state);

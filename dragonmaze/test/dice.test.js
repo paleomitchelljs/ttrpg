@@ -283,7 +283,7 @@ check('every zone subregion is well-formed, connected, and deterministic', () =>
       const w = sub.map[0].length;
       for (const row of sub.map) assert.equal(row.length, w, `${zone.id}/${sub.id} rectangular`);
       for (const t of sub.table) assert.ok(monsterById(t.id), `${zone.id}/${sub.id} table id ${t.id}`);
-      for (const id of sub.boss.monsterIds) assert.ok(monsterById(id), `${zone.id}/${sub.id} boss id ${id}`);
+      for (const id of sub.boss?.monsterIds ?? []) assert.ok(monsterById(id), `${zone.id}/${sub.id} boss id ${id}`);
       const a = buildZoneDungeon(zone.id, i, 'zone-seed');
       const b = buildZoneDungeon(zone.id, i, 'zone-seed');
       assert.deepEqual(a, b, `${zone.id}/${sub.id} deterministic`);
@@ -487,7 +487,10 @@ check('zone doors and boss drops reference real places and items', () => {
       for (const dest of Object.values(sub.doors ?? {})) {
         assert.ok(dest === 'surface' || ids.has(dest), `${zone.id}/${sub.id} door to ${dest}`);
       }
-      for (const itemId of sub.boss.drops ?? []) {
+      for (const dest of Object.values(sub.edges ?? {})) {
+        assert.ok(ids.has(dest), `${zone.id}/${sub.id} edge to ${dest}`);
+      }
+      for (const itemId of sub.boss?.drops ?? []) {
         assert.ok(itemById(itemId), `${zone.id}/${sub.id} boss drop ${itemId}`);
       }
       assert.ok(sub.theme, `${zone.id}/${sub.id} theme`);
@@ -496,6 +499,25 @@ check('zone doors and boss drops reference real places and items', () => {
   for (const item of ITEMS) {
     assert.ok(['upper-guk', 'lower-guk', 'lost-temple'].includes(item.zone), `${item.id} zone`);
   }
+});
+
+check('edge-linked sub-areas connect back reciprocally', () => {
+  const opp = { n: 's', s: 'n', e: 'w', w: 'e' };
+  for (const zone of ZONES) {
+    const byId = new Map(zone.subregions.map((s) => [s.id, s]));
+    for (const sub of zone.subregions) {
+      for (const [dir, dest] of Object.entries(sub.edges ?? {})) {
+        const nb = byId.get(dest);
+        assert.ok(nb, `${sub.id} edge ${dir} -> unknown ${dest}`);
+        assert.equal(nb.edges?.[opp[dir]], sub.id, `${dest} should link ${opp[dir]} back to ${sub.id}`);
+      }
+    }
+  }
+  // the courtyard is the four-quadrant proof of the mechanic
+  const temple = ZONES.find((z) => z.id === 'lost-temple');
+  const quads = ['courtyard-nw', 'courtyard-ne', 'courtyard-sw', 'courtyard-se'];
+  for (const q of quads) assert.ok(temple.subregions.find((s) => s.id === q), `courtyard has ${q}`);
+  assert.equal(temple.subregions[0].id, 'courtyard-nw', 'zone entry is the courtyard gate');
 });
 
 check('wall-doors have interior entries, directions, and valid bosses', () => {
@@ -509,7 +531,7 @@ check('wall-doors have interior entries, directions, and valid bosses', () => {
         assert.ok(Math.abs(door.dir.dx) + Math.abs(door.dir.dy) === 1, `${zone.id}/${sub.id} door ${door.ch} dir`);
       }
       // every referenced boss/miniboss monster exists
-      for (const id of sub.boss.monsterIds) assert.ok(monsterById(id), `${zone.id}/${sub.id} boss id ${id}`);
+      for (const id of sub.boss?.monsterIds ?? []) assert.ok(monsterById(id), `${zone.id}/${sub.id} boss id ${id}`);
       for (const id of sub.miniboss?.monsterIds ?? []) assert.ok(monsterById(id), `${zone.id}/${sub.id} miniboss id ${id}`);
     }
   }

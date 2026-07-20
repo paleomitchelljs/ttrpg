@@ -86,6 +86,7 @@ export function buildZoneDungeon(zoneId, subIndex, seedString, partySize = 1) {
     encounters,
     loot,
     doors,
+    edges: sub.edges ?? null, // { n|s|e|w: neighbouring subId } — walk off an edge
     subId: sub.id,
     theme: sub.theme ?? null,
     zone: {
