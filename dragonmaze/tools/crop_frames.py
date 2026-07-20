@@ -193,8 +193,7 @@ STRIPS = {
     },
     # froglok-zombie-* and froglok-* (live warriors) now come from Nano Banana
     # pose grids via tools/slice_grid.py
-    "lizardfolk-idle": {"sheet": "lizardfolk-warriors-sheet.png", "abs": [(15, 338, 132, 150), (163, 338, 132, 150)]},
-    "lizardfolk-attack": {"sheet": "lizardfolk-warriors-sheet.png", "abs": [(20, 10, 145, 150), (175, 10, 145, 150)]},
+    # lizardfolk-* now come from a Nano Banana pose grid via tools/slice_grid.py
     # stone golem (courtyard boss): side-view move as idle, side-view attack windup + lunge
     "stone-golem-idle": {"sheet": "stone-golem-sheet.png", "abs": [(32, 170, 108, 118), (150, 170, 108, 118)]},
     "stone-golem-attack": {"sheet": "stone-golem-sheet.png", "abs": [(30, 66, 112, 86), (368, 66, 116, 86)]},
