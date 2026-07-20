@@ -151,7 +151,12 @@ function triggerMorale(combat, monster, rng, events) {
   if (monster.moraleChecked || monster.morale == null) return;
   if (!alive(monster) || monster.panicked) return;
   monster.moraleChecked = true;
-  const res = moraleCheck(monster, rng);
+  // Beren cows beasts: a 'wild' monster fighting him checks morale at
+  // disadvantage, so it routs more readily.
+  const dread =
+    monster.faction === 'wild' &&
+    livingHeroes(combat).some((h) => h.traits?.includes('beast-dread'));
+  const res = moraleCheck(monster, rng, dread);
   if (!res.pass) monster.panicked = true;
   events.push({ type: 'morale', id: monster.id, who: monster.name, ...res });
 }
@@ -367,7 +372,8 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
     const dealt = applyDamage(target, dmg, spell.drain ? 'physical' : 'fire', events);
     let drained = 0;
     if (spell.drain && dealt > 0 && caster.hp.current < caster.hp.max) {
-      drained = Math.min(dealt, caster.hp.max - caster.hp.current);
+      // lifesteal is capped at half the damage — no full heal-tanking off one mob
+      drained = Math.min(Math.ceil(dealt / 2), caster.hp.max - caster.hp.current);
       caster.hp.current += drained;
     }
     events.push({

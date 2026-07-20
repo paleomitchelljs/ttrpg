@@ -335,6 +335,31 @@ check('spell casting: nat 20 works, nat 1 fizzles', () => {
   assert.equal(resolveSpellCast(caster, spell, () => 0).success, false);
 });
 
+check('Beren cows beasts: wild monsters check morale at disadvantage', () => {
+  const snake = makeCombatant(monsterById('giant-snake')); // faction 'wild'
+  assert.equal(snake.faction, 'wild');
+  assert.ok(companionById('beren').traits.includes('beast-dread'), 'Beren has beast-dread');
+  assert.ok(moraleCheck(snake, () => 0.95, false).pass, 'a nat-20 holds without disadvantage');
+  let i = 0;
+  const rolls = [0.95, 0.05]; // disadvantage keeps the worse of the two (nat 2)
+  const res = moraleCheck(snake, () => rolls[i++], true);
+  assert.ok(!res.pass && res.disadvantage, 'disadvantage takes the worse roll and routs');
+});
+
+check('drain life steals at most half the damage', () => {
+  const spawnee = makeCombatant(companionById('spawnee'));
+  spawnee.hp.current = 1;
+  const rat = makeCombatant(monsterById('giant-rat'));
+  rat.hp.current = rat.hp.max = 100;
+  const { combat } = createCombat([spawnee], [rat], () => 0.5);
+  while (combat.order[combat.turnIndex].id !== spawnee.id)
+    combat.turnIndex = (combat.turnIndex + 1) % combat.order.length;
+  const evs = playerSpell(combat, 'drain-life', rat.id, () => 0.99); // 1d8 -> 8 damage
+  const hit = evs.find((e) => e.type === 'spell-hit');
+  assert.equal(hit.damage, 8);
+  assert.equal(hit.drained, 4, 'lifesteal capped at half of 8');
+});
+
 check('resistances, abilities, familiars, and tomes hold together', () => {
   // typed damage via a real fight: a skeleton resists physical bites
   const dragon = makeDragonCombatant(tierByName('wyrmling'));

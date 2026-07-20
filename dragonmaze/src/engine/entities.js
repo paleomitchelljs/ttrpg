@@ -29,6 +29,8 @@ export function makeCombatant(data) {
     resist: [...(data.resist ?? [])],
     vulnerable: [...(data.vulnerable ?? [])],
     ability: data.ability ?? null,
+    traits: [...(data.traits ?? [])], // hero passives, e.g. Beren's 'beast-dread'
+    faction: data.faction ?? null, // 'wild' == beast, for Beren and parley
     relentlessUsed: false,
     spells: [...(data.spells ?? [])],
     castStat: data.castStat ?? 'cha', // which ability powers this caster's spells

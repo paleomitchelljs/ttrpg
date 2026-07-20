@@ -194,9 +194,13 @@ export const MORALE_DC = 12;
  * d20 + the monster's morale bonus vs MORALE_DC. Fearless monsters
  * (morale: null — undead, constructs) never check.
  */
-export function moraleCheck(monster, rng = Math.random) {
+export function moraleCheck(monster, rng = Math.random, disadvantage = false) {
   if (monster.morale == null) return { fearless: true, pass: true };
-  const die = d20({ rng });
+  let die = d20({ rng });
+  if (disadvantage) {
+    const other = d20({ rng }); // beasts fighting Beren rout easier: keep the worse roll
+    if (other.total < die.total) die = other;
+  }
   const total = die.total + monster.morale;
-  return { fearless: false, roll: die.total, bonus: monster.morale, total, dc: MORALE_DC, pass: total >= MORALE_DC };
+  return { fearless: false, roll: die.total, bonus: monster.morale, total, dc: MORALE_DC, pass: total >= MORALE_DC, disadvantage };
 }

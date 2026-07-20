@@ -55,7 +55,7 @@ export const COMPANIONS = [
     blurb: 'The party’s arcanist: fire in one hand, mending in the other.',
     role: 'Arcane Spellblade',
     castStat: 'int', // trained arcane magic
-    spells: ['ember-bolt', 'healing-word', 'flame-wave'],
+    spells: ['ember-bolt', 'magic-missile', 'healing-word', 'flame-wave', 'lightning-bolt'],
   },
   {
     id: 'beren',
@@ -69,7 +69,9 @@ export const COMPANIONS = [
     emoji: '🗡️',
     anim: { idle: 'beren-idle', attack: 'beren-attack' },
     walk: 'beren-walk',
-    blurb: 'A stalwart human warrior — steel, shield, and a level head.',
+    traits: ['beast-dread'],
+    abilityLabel: 'beastfriend — beasts rout more easily against him; once a day he can charm one',
+    blurb: 'A stalwart human warrior — steel, shield, and a level head with wild things.',
     role: 'Warrior',
     spells: [],
   },
