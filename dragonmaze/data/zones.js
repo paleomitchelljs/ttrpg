@@ -203,11 +203,10 @@ export const ZONES = [
         table: [
           { id: 'froglok-skirmisher', weight: 2, packMax: 2 },
           { id: 'skeleton', weight: 2, packMax: 3 },
-          { id: 'shadow-knight', weight: 2, packMax: 1 },
           { id: 'bone-wraith', weight: 1, packMax: 1 },
           { id: 'evil-eye', weight: 1, packMax: 1 },
         ],
-        boss: { name: 'Vethyl, the Silt-Lich’s champion', monsterIds: ['shadow-knight', 'bone-wraith', 'skeleton'], drops: ['silt-lich-robe', 'flowing-black-sash'] },
+        boss: { name: 'Vethyl, the Silt-Lich’s champion', monsterIds: ['bone-wraith', 'skeleton'], drops: ['silt-lich-robe', 'flowing-black-sash'] },
         map: [
           '#2####E########',
           '#S.....#....M.#',
@@ -404,7 +403,6 @@ export const ZONES = [
         table: [
           { id: 'bone-wraith', weight: 2, packMax: 1 },
           { id: 'lizardfolk-warrior', weight: 1, packMax: 2 },
-          { id: 'shadow-knight', weight: 1, packMax: 1 },
         ],
         boss: { name: 'The Avatar of Fear', monsterIds: ['avatar-of-fear', 'bone-wraith', 'bone-wraith'], drops: ['rubicite-breastplate'] },
         map: [

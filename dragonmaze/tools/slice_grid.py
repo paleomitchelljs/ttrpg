@@ -14,6 +14,8 @@ import argparse
 from pathlib import Path
 from PIL import Image
 
+from spritelib import write_manifest
+
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "assets" / "sprites"
 
@@ -145,6 +147,10 @@ def main():
         made.append((name, len(frames), strip))
         fh = strip.height
         print(f"{out.name}: {len(frames)} frames, {fh}x{fh} each (from {side}px cells)")
+
+    if not args.outdir:  # wrote into the real sprites dir; refresh the manifest
+        manifest, n = write_manifest(ROOT)
+        print(f"manifest: {manifest.relative_to(ROOT)} ({n} strips)")
 
     if args.preview:
         pad = 12

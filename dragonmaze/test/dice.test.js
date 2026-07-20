@@ -345,9 +345,9 @@ check('resistances, abilities, familiars, and tomes hold together', () => {
   assert.equal(zombie.ability, 'relentless');
   const troll = makeCombatant(monsterById('cave-troll'));
   assert.equal(troll.ability, 'regenerate');
-  const sk = makeCombatant(monsterById('shadow-knight'));
-  assert.equal(sk.ability, 'lifedrain');
-  assert.ok(SPRITES[sk.anim.idle] && SPRITES[sk.anim.attack], 'shadow knight strips');
+  const templar = makeCombatant(monsterById('tae-ew-templar'));
+  assert.equal(templar.ability, 'lifedrain');
+  assert.ok(SPRITES[templar.anim.idle] && SPRITES[templar.anim.attack], 'tae ew templar strips');
   // dragon with tome spells and a familiar
   const mage = makeDragonCombatant(tierByName('wyrmling'), null, {
     spells: ['ember-bolt'],
@@ -427,7 +427,7 @@ check('Spawnee is the blue-skinned vampire spawn, with her powers', () => {
   assert.ok(sp.undead && sp.ability === 'relentless' && sp.abilityLabel.includes('slowfall'));
   assert.deepEqual(sp.spells.sort(), ['dominate-undead', 'drain-life']);
   assert.ok(SPRITES['spawnee-idle'] && SPRITES['shadow-knight-idle']);
-  assert.ok(!monsterById('shadow-knight').facesLeft, 'red dragonkin art faces right');
+  assert.ok(!monsterById('lizardman-crusader').facesLeft, 'red dragonkin art faces right');
   for (const sid of sp.spells) assert.equal(spellById(sid).tome, false, `${sid} never in dragon tomes`);
 });
 
