@@ -17,7 +17,7 @@ import {
   resolveAttack,
 } from '../src/engine/rules.js';
 import { MONSTERS, monsterById } from '../data/monsters.js';
-import { SPRITES } from '../src/assets-manifest.js';
+import { SPRITES, TILES } from '../src/assets-manifest.js';
 import { SPELLS, spellById } from '../data/spells.js';
 import { ZONES } from '../data/zones.js';
 import { buildZoneDungeon } from '../src/world/zones.js';
@@ -311,6 +311,11 @@ check('every zone subregion is well-formed, connected, and deterministic', () =>
       assert.equal(seen.size, floors, `${zone.id}/${sub.id}: all floors reachable`);
       assert.ok(a.encounters.length >= 3, `${zone.id}/${sub.id} has encounters`);
       assert.ok(a.loot.length >= 1, `${zone.id}/${sub.id} has loot`);
+      for (const p of sub.props ?? []) {
+        assert.ok(TILES[p.key], `${zone.id}/${sub.id} prop key ${p.key}`);
+        assert.ok(p.x >= 0 && p.x + p.w <= w && p.y >= 0 && p.y + p.h <= sub.map.length,
+          `${zone.id}/${sub.id} prop ${p.key} in bounds`);
+      }
     }
   }
 });

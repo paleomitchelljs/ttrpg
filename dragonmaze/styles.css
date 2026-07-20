@@ -267,6 +267,45 @@ button { font: inherit; }
   filter: drop-shadow(0 2px 2px #0009);
 }
 
+/* decorative props (huts, statues, braziers, wells) layered over the grid */
+#map-props {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+.map-prop {
+  position: absolute;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.map-prop img {
+  max-width: 100%;
+  max-height: 100%;
+  image-rendering: pixelated;
+  filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.55));
+}
+
+/* a floor tile that's really a walk-off passage into the next sub-area */
+.tile.edge-exit { position: relative; }
+.tile.edge-exit::after {
+  content: '›';
+  position: absolute;
+  color: rgba(255, 240, 190, 0.9);
+  font-weight: 700;
+  font-size: calc(var(--tile) * 0.66);
+  line-height: 1;
+  text-shadow: 0 0 6px rgba(255, 220, 130, 0.85);
+  animation: edge-pulse 1.7s ease-in-out infinite;
+}
+.tile.edge-e::after { right: 2px; top: 50%; transform: translateY(-50%); }
+.tile.edge-w::after { left: 2px; top: 50%; transform: translateY(-50%) scaleX(-1); }
+.tile.edge-s::after { bottom: -1px; left: 50%; transform: translateX(-50%) rotate(90deg); }
+.tile.edge-n::after { top: -1px; left: 50%; transform: translateX(-50%) rotate(-90deg); }
+@keyframes edge-pulse { 0%, 100% { opacity: 0.35; } 50% { opacity: 0.9; } }
+
 #side {
   display: flex;
   flex-direction: column;

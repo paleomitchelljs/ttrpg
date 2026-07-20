@@ -87,6 +87,7 @@ export function buildZoneDungeon(zoneId, subIndex, seedString, partySize = 1) {
     loot,
     doors,
     edges: sub.edges ?? null, // { n|s|e|w: neighbouring subId } — walk off an edge
+    props: (sub.props ?? []).map((p) => ({ ...p })), // decorative overlays
     subId: sub.id,
     theme: sub.theme ?? null,
     zone: {

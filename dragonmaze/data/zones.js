@@ -239,6 +239,12 @@ export const ZONES = [
         theme: 'grass',
         doors: {},
         edges: { e: 'courtyard-ne', s: 'courtyard-sw' },
+        props: [
+          { x: 3, y: 3, w: 3, h: 4, key: 'round-hut' },
+          { x: 9, y: 4, w: 3, h: 4, key: 'stone-hut' },
+          { x: 5, y: 1, w: 1, h: 2, key: 'brazier1' },
+          { x: 9, y: 1, w: 1, h: 2, key: 'brazier2' },
+        ],
         table: [
           { id: 'lizardfolk-warrior', weight: 3, packMax: 2 },
           { id: 'giant-spider', weight: 2, packMax: 2 },
@@ -266,6 +272,12 @@ export const ZONES = [
         theme: 'grass',
         doors: { 3: 'throne-palace' },
         edges: { w: 'courtyard-nw', s: 'courtyard-se' },
+        props: [
+          { x: 4, y: 3, w: 2, h: 3, key: 'snake-statue' },
+          { x: 9, y: 3, w: 2, h: 3, key: 'gator-statue' },
+          { x: 2, y: 4, w: 1, h: 2, key: 'brazier1' },
+          { x: 12, y: 4, w: 1, h: 2, key: 'brazier2' },
+        ],
         table: [
           { id: 'lizardfolk-warrior', weight: 3, packMax: 2 },
           { id: 'giant-spider', weight: 2, packMax: 2 },
@@ -294,6 +306,11 @@ export const ZONES = [
         theme: 'grass',
         doors: { 1: 'sewers-gumdrop' },
         edges: { n: 'courtyard-nw', e: 'courtyard-se' },
+        props: [
+          { x: 6, y: 6, w: 3, h: 4, key: 'well' },
+          { x: 4, y: 2, w: 3, h: 4, key: 'round-hut' },
+          { x: 11, y: 2, w: 1, h: 2, key: 'brazier1' },
+        ],
         table: [
           { id: 'lizardfolk-warrior', weight: 3, packMax: 2 },
           { id: 'giant-spider', weight: 2, packMax: 2 },
@@ -321,6 +338,11 @@ export const ZONES = [
         theme: 'grass',
         doors: { 2: 'maze-of-doors' },
         edges: { n: 'courtyard-ne', w: 'courtyard-sw' },
+        props: [
+          { x: 9, y: 2, w: 4, h: 5, key: 'building-snake' },
+          { x: 3, y: 3, w: 3, h: 4, key: 'stone-hut' },
+          { x: 2, y: 7, w: 1, h: 2, key: 'brazier1' },
+        ],
         table: [
           { id: 'lizardfolk-warrior', weight: 3, packMax: 2 },
           { id: 'giant-spider', weight: 2, packMax: 2 },

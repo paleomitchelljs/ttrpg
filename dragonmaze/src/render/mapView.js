@@ -5,7 +5,7 @@
 
 import { monsterById } from '../../data/monsters.js';
 import { companionById } from '../../data/party.js';
-import { SPRITES } from '../assets-manifest.js';
+import { SPRITES, TILES } from '../assets-manifest.js';
 
 export function spritePath(key) {
   return SPRITES[key];
@@ -73,6 +73,12 @@ export function renderMap(container, state) {
         tile.classList.add('wall');
       } else {
         tile.classList.add('floor');
+        // A floor tile on a linked border is a walk-off passage to the next
+        // sub-area — cue it so it doesn't read as a dead end.
+        if (x === d.width - 1 && d.edges?.e) tile.classList.add('edge-exit', 'edge-e');
+        else if (x === 0 && d.edges?.w) tile.classList.add('edge-exit', 'edge-w');
+        else if (y === d.height - 1 && d.edges?.s) tile.classList.add('edge-exit', 'edge-s');
+        else if (y === 0 && d.edges?.n) tile.classList.add('edge-exit', 'edge-n');
         fillTile(tile, run, x, y);
         if (Math.abs(x - px) + Math.abs(y - py) === 1) {
           tile.classList.add('steppable');
@@ -82,9 +88,34 @@ export function renderMap(container, state) {
     }
   }
   grid.replaceChildren(frag);
+  renderProps(container, run);
   tokenFacing = facingFor(state);
   syncTokenStrip(token);
   moveToken(token, px, py);
+}
+
+// Decorative props (huts, statues, braziers, wells) are absolutely-positioned
+// images over the grid, spanning w×h tiles, revealed once their anchor is seen.
+function renderProps(container, run) {
+  const layer = container.querySelector('#map-props');
+  if (!layer) return;
+  const d = run.dungeon;
+  layer.style.width = `calc(var(--tile) * ${d.width})`;
+  layer.style.height = `calc(var(--tile) * ${d.height})`;
+  const frag = document.createDocumentFragment();
+  for (const p of d.props ?? []) {
+    const src = TILES[p.key];
+    if (!src || !run.explored[`${p.x},${p.y}`]) continue;
+    const el = document.createElement('div');
+    el.className = 'map-prop';
+    el.style.left = `calc(var(--tile) * ${p.x})`;
+    el.style.top = `calc(var(--tile) * ${p.y})`;
+    el.style.width = `calc(var(--tile) * ${p.w})`;
+    el.style.height = `calc(var(--tile) * ${p.h})`;
+    el.innerHTML = `<img src="${src}" alt="">`;
+    frag.appendChild(el);
+  }
+  layer.replaceChildren(frag);
 }
 
 function syncTokenStrip(token) {
