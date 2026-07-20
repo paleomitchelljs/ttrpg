@@ -507,28 +507,55 @@ check('new companions and monster art are wired', () => {
   }
 });
 
+check('casting keys off the class stat, and the swashbuckler is spell-free', () => {
+  // spellblade casts on INT (+3), not CHA (+1)
+  const sb = makeCombatant(companionById('dragonkin-spellblade'));
+  assert.equal(sb.castStat, 'int');
+  const cast = resolveSpellCast(sb, spellById('ember-bolt'), () => 0.5); // d20 = 11
+  assert.equal(cast.stat, 'int');
+  assert.equal(cast.bonus, sb.abilities.int);
+  // spawnee casts on CHA
+  assert.equal(makeCombatant(companionById('spawnee')).castStat, 'cha');
+  // the swashbuckler no longer casts anything
+  assert.deepEqual(companionById('dragonkin-swashbuckler').spells, []);
+  // imported casters pick up the right stat by class
+  const wiz = portalToCompanion({
+    name: 'Wiz', classId: 'wizard', level: 1,
+    stats: { STR: 8, DEX: 12, CON: 10, INT: 16, WIS: 10, CHA: 12 },
+    hp: { max: 6 }, ac: 11, gear: [{ name: 'Dagger' }], spells: ['Magic Missile'],
+  });
+  assert.equal(wiz.castStat, 'int');
+  const priest = portalToCompanion({
+    name: 'Cler', classId: 'priest', level: 1,
+    stats: { STR: 12, DEX: 10, CON: 12, INT: 8, WIS: 16, CHA: 10 },
+    hp: { max: 8 }, ac: 13, gear: [{ name: 'Mace' }], spells: ['Cure Wounds'],
+  });
+  assert.equal(priest.castStat, 'wis');
+});
+
 check('party combat: monsters fight heroes, heals can revive', () => {
   const dragon = makeDragonCombatant(tierByName('wyrmling'));
-  const knight = makeCombatant(companionById('spawnee'));
-  const swash = makeCombatant(companionById('dragonkin-swashbuckler'));
+  const downed = makeCombatant(companionById('spawnee'));
+  const healer = makeCombatant(companionById('dragonkin-spellblade')); // the arcane healer
+  assert.ok(healer.spells.includes('healing-word'), 'spellblade knows Healing Word');
   const troll = makeCombatant(monsterById('cave-troll'));
   const seq = [0.5, 0.6, 0.4, 0.3]; // initiative rolls, then combat dice
   let i = 0;
   const rng = () => (i < seq.length ? seq[i++] : 0.99);
-  const { combat } = createCombat([dragon, knight, swash], [troll], rng);
+  const { combat } = createCombat([dragon, downed, healer], [troll], rng);
   assert.equal(combat.order.length, 4);
   runMonsterTurns(combat, rng);
   assert.ok(isPlayerTurn(combat), 'a hero should be up after monster turns');
 
-  // knock the knight down, then Healing Word him back up mid-fight
-  knight.hp.current = 0;
-  swash.burned = [];
-  while (combat.order[combat.turnIndex].id !== swash.id) combat.turnIndex++;
-  const events = playerSpell(combat, 'healing-word', knight.id, () => 0.99);
+  // knock a companion down, then Healing Word them back up mid-fight
+  downed.hp.current = 0;
+  healer.burned = [];
+  while (combat.order[combat.turnIndex].id !== healer.id) combat.turnIndex++;
+  const events = playerSpell(combat, 'healing-word', downed.id, () => 0.99);
   const heal = events.find((e) => e.type === 'spell-heal');
   assert.ok(heal, 'heal event emitted');
   assert.equal(heal.revived, true);
-  assert.ok(knight.hp.current > 0, 'knight revived');
+  assert.ok(downed.hp.current > 0, 'companion revived');
   assert.equal(livingMonsters(combat).length, 1);
 });
 

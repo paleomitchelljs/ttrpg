@@ -428,6 +428,31 @@ button { font: inherit; }
 
 .sheet-box { text-align: left; max-width: min(460px, 94vw); }
 
+/* ------------------------------------------------------------- party panel */
+.party-box { text-align: left; max-width: min(560px, 96vw); }
+.party-box h2 { margin: 0 0 0.2rem; color: var(--gold); }
+.party-list { display: flex; flex-direction: column; gap: 0.4rem; margin: 0.6rem 0; max-height: 60vh; overflow-y: auto; }
+.party-card {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: var(--panel);
+  border: 2px solid #00000066;
+  border-radius: 10px;
+  padding: 0.35rem 0.6rem;
+  cursor: pointer;
+}
+.party-card:hover { background: var(--panel-2); }
+.party-card.chosen { border-color: var(--gold); background: var(--panel-2); }
+.party-card-check { width: 1.1em; color: var(--gold); font-weight: bold; flex: none; text-align: center; }
+.party-card-face { width: 40px; height: 40px; flex: none; }
+.party-card-info { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.party-card-name { font-weight: bold; }
+.party-card-role { color: var(--ink-dim); font-size: 0.8rem; }
+.party-card-spells { color: var(--gold); font-size: 0.78rem; }
+.party-card-sheet { flex: none; font-size: 0.8rem; }
+.imported-tag { color: var(--ink-dim); font-size: 0.75rem; font-weight: normal; }
+
 .sheet-head { display: flex; gap: 1rem; align-items: center; }
 .sheet-head h2 { margin: 0; color: var(--gold); }
 .sheet-blurb { color: var(--ink-dim); margin: 0.2rem 0 0; font-size: 0.9rem; font-style: italic; }
@@ -886,3 +911,5 @@ body.show-dpad #dpad { display: grid; }
 .roll-toast-verdict.good { color: #ff9d8a; }
 .roll-toast-verdict.bad { color: var(--good); }
 .roll-toast-verdict.fumble { color: var(--good); }
+
+.cast-stat { color: var(--ink-dim); font-size: 0.8rem; font-weight: normal; }

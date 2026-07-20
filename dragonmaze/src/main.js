@@ -201,6 +201,7 @@ function sheetSubject(id) {
       breath: tier.breath,
       spells: game.state.meta.tomeSpells.map((sid) => spellById(sid)).filter(Boolean),
       familiar: familiarById(game.state.meta.familiar),
+      castStat: 'cha',
       renown: Object.entries(game.state.meta.reputation ?? {})
         .filter(([, v]) => v !== 0)
         .map(([faction, v]) => `${faction}: ${v > 0 ? '+' : ''}${v} (${rulesRef.dispositionLabel(v)})`),
@@ -226,6 +227,7 @@ function sheetSubject(id) {
     abilities: c.abilities,
     attacks: c.attacks,
     spells: c.spells.map((sid) => spellById(sid)).filter(Boolean),
+    castStat: c.castStat ?? 'cha',
     traits: c.abilityLabel ? [c.abilityLabel] : [],
     growth: {
       level: g.level,
@@ -290,6 +292,17 @@ for (const btn of document.querySelectorAll('.sheet-btn')) {
   btn.addEventListener('click', () => openSheet(btn.dataset.sheet));
 }
 ui.el('sheet-close').addEventListener('click', () => ui.showOverlay('sheet-overlay', false));
+
+// Party panel: open, close, select cards, view a companion's sheet.
+ui.el('btn-party').addEventListener('click', () => ui.showOverlay('party-overlay', true));
+ui.el('party-close').addEventListener('click', () => ui.showOverlay('party-overlay', false));
+ui.el('party-overlay').addEventListener('click', (ev) => {
+  if (ev.target === ui.el('party-overlay')) { ui.showOverlay('party-overlay', false); return; }
+  const sheetBtn = ev.target.closest('.party-card-sheet');
+  if (sheetBtn) { ev.stopPropagation(); openSheet(sheetBtn.dataset.sheet); return; }
+  const card = ev.target.closest('.party-card');
+  if (card) game.toggleCompanion(card.dataset.cid);
+});
 ui.el('sheet-overlay').addEventListener('click', (ev) => {
   if (ev.target === ui.el('sheet-overlay')) ui.showOverlay('sheet-overlay', false);
 });
@@ -343,13 +356,6 @@ if ('ontouchstart' in window) document.body.classList.add('show-dpad');
 ui.el('btn-new').addEventListener('click', () => game.newGame(seedFromUrl()));
 ui.el('btn-continue').addEventListener('click', () => game.continueGame());
 ui.el('btn-quit').addEventListener('click', () => game.quitToTitle());
-
-// Party selection on the title screen (delegated: imported heroes render late).
-document.addEventListener('change', (ev) => {
-  if (!ev.target.matches('.party-opt input')) return;
-  const ids = [...document.querySelectorAll('.party-opt input:checked')].map((b) => b.dataset.cid);
-  game.setParty(ids);
-});
 
 // Import heroes from the portal's exported JSON.
 ui.el('btn-import').addEventListener('click', () => ui.el('import-file').click());

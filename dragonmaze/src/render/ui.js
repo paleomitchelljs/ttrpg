@@ -5,6 +5,7 @@ import { zoneById } from '../../data/zones.js';
 import { FAMILIARS, familiarById } from '../../data/familiars.js';
 import { ITEMS, SLOTS, itemById } from '../../data/items.js';
 import { spellById } from '../../data/spells.js';
+import { COMPANIONS } from '../../data/party.js';
 import { SPRITES } from '../assets-manifest.js';
 
 export function el(id) {
@@ -42,10 +43,13 @@ export function updateTitle(state) {
   el('title-hoard').textContent = state.hasSave
     ? `Your hoard: ${state.meta.hoardGold.toLocaleString()} gold`
     : '';
+  // party summary + panel (all companions live in the panel now)
   const party = state.meta.party ?? [];
-  for (const box of document.querySelectorAll('.party-opt input')) {
-    box.checked = party.includes(box.dataset.cid);
-  }
+  const named = party.map((id) => allCompanions(state).find((c) => c.id === id)?.name ?? id);
+  el('party-summary').textContent = party.length
+    ? `Party: ${named.join(', ')}`
+    : 'No companions — the dragon delves alone.';
+  renderPartyPanel(state);
 
   // zone picker
   const pick = state.meta.zone;
@@ -88,18 +92,39 @@ export function updateTitle(state) {
     : owned.length
       ? 'delve alone, unencumbered by pets'
       : 'familiars hide somewhere in the dungeons — find their dens';
+}
 
-  // imported heroes join the party list
-  const importedBox = el('party-imported');
-  importedBox.replaceChildren(
-    ...(state.meta.customCharacters ?? []).map((c) => {
-      const label = document.createElement('label');
-      label.className = 'party-opt';
-      label.innerHTML = `
-        <input type="checkbox" data-cid="${c.id}" ${(state.meta.party ?? []).includes(c.id) ? 'checked' : ''}>
-        <span class="party-thumb sprite f2"><img src="${SPRITES[c.anim.idle]}" alt=""></span>
-        ${c.name} <span class="imported-tag">(imported)</span>`;
-      return label;
+const PARTY_CAP = 4;
+
+function allCompanions(state) {
+  return [...COMPANIONS, ...(state.meta.customCharacters ?? [])];
+}
+
+/** The party-selection panel: every companion as a selectable card. */
+export function renderPartyPanel(state) {
+  const party = state.meta.party ?? [];
+  const alone = state.meta.mode === 'party';
+  el('party-count').textContent =
+    `${party.length} / ${PARTY_CAP} chosen — ${alone ? 'the party delves without the dragon' : 'alongside the dragon'}`;
+  el('party-list').replaceChildren(
+    ...allCompanions(state).map((c) => {
+      const chosen = party.includes(c.id);
+      const card = document.createElement('div');
+      card.className = 'party-card' + (chosen ? ' chosen' : '');
+      card.dataset.cid = c.id;
+      const magic = c.spells?.length
+        ? `Casts on ${(c.castStat ?? 'cha').toUpperCase()} — ${c.spells.map((id) => spellById(id)?.name).filter(Boolean).join(', ')}`
+        : 'No magic — pure steel';
+      card.innerHTML = `
+        <span class="party-card-check">${chosen ? '✓' : ''}</span>
+        <span class="party-card-face sprite f2 flip"><img src="${SPRITES[c.anim.idle]}" alt=""></span>
+        <span class="party-card-info">
+          <span class="party-card-name">${c.name}${c.imported ? ' <span class="imported-tag">(imported)</span>' : ''}</span>
+          <span class="party-card-role">${c.role ?? 'Adventurer'} · AC ${c.ac} · ${c.hpMax} HP · ${c.attacks[0].damage}</span>
+          <span class="party-card-spells">${magic}</span>
+        </span>
+        <button class="party-card-sheet zone-btn" data-sheet="${c.id}">Sheet</button>`;
+      return card;
     })
   );
 }
@@ -117,7 +142,7 @@ export function showCharacterSheet(subject) {
     .map((a) => `<li>${cap(a.name)} — +${a.toHit} to hit, ${a.damage} damage</li>`)
     .join('');
   const spells = subject.spells.length
-    ? `<h3>Spells</h3><ul>${subject.spells.map((s) => `<li>${s.name} — ${s.blurb}</li>`).join('')}</ul>`
+    ? `<h3>Spells <span class="cast-stat">(cast on ${(subject.castStat ?? 'cha').toUpperCase()})</span></h3><ul>${subject.spells.map((s) => `<li>${s.name} — ${s.blurb}</li>`).join('')}</ul>`
     : '';
   el('sheet-body').innerHTML = `
     <div class="sheet-head">

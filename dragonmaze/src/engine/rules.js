@@ -140,10 +140,13 @@ export function levelForXp(xp) {
  */
 export function resolveSpellCast(caster, spell, rng = Math.random) {
   const die = d20({ rng });
-  const bonus = caster.abilities?.cha ?? 0;
+  // Casting keys off the caster's spellcasting ability (Shadowdark: wizards
+  // INT, priests WIS; our dragon and vampire cast on CHA). Defaults to CHA.
+  const stat = caster.castStat ?? 'cha';
+  const bonus = caster.abilities?.[stat] ?? 0;
   const total = die.total + bonus;
   const success = die.total !== 1 && (die.total === 20 || total >= spell.castDC);
-  return { natural: die.total, bonus, total, dc: spell.castDC, success };
+  return { natural: die.total, bonus, stat, total, dc: spell.castDC, success };
 }
 
 // ---------------------------------------------------------------- parley & renown

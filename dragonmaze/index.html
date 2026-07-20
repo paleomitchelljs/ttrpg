@@ -35,39 +35,15 @@
       </div>
 
       <div class="party-select">
-        <p class="party-label">Companions for the delve:</p>
-        <label class="party-opt">
-          <input type="checkbox" data-cid="spawnee">
-          <span class="party-thumb sprite f2"><img src="./assets/sprites/spawnee-idle.png" alt=""></span>
-          Spawnee
-        </label>
-        <label class="party-opt">
-          <input type="checkbox" data-cid="dragonkin-swashbuckler">
-          <span class="party-thumb sprite f2"><img src="./assets/sprites/swash-idle.png" alt=""></span>
-          Dragonkin Swashbuckler
-        </label>
-        <label class="party-opt">
-          <input type="checkbox" data-cid="dragonkin-spellblade">
-          <span class="party-thumb sprite f2"><img src="./assets/sprites/spellblade-idle.png" alt=""></span>
-          Dragonkin Spellblade
-        </label>
-        <div id="party-imported"></div>
-        <div class="sheet-row">
-          <button id="btn-import" class="zone-btn">Import heroes (JSON)</button>
-          <input id="import-file" type="file" accept=".json,application/json" hidden>
-        </div>
+        <p class="party-label">Who joins the delve?</p>
+        <button id="btn-party" class="btn">Choose your party…</button>
+        <p id="party-summary" class="zone-blurb"></p>
+        <button class="zone-btn sheet-btn" data-sheet="dragon">View the dragon's sheet</button>
       </div>
       <div class="party-select familiar-select">
         <p class="party-label">Familiar:</p>
         <div class="zone-buttons" id="familiar-buttons"></div>
         <p id="familiar-blurb" class="zone-blurb"></p>
-      </div>
-      <div class="sheet-row">
-        <span class="party-label">Character sheets:</span>
-        <button class="zone-btn sheet-btn" data-sheet="dragon">Red Dragon</button>
-        <button class="zone-btn sheet-btn" data-sheet="spawnee">Spawnee</button>
-        <button class="zone-btn sheet-btn" data-sheet="dragonkin-swashbuckler">Swashbuckler</button>
-        <button class="zone-btn sheet-btn" data-sheet="dragonkin-spellblade">Spellblade</button>
       </div>
       <p id="title-hoard" class="title-hoard"></p>
     </section>
@@ -147,6 +123,18 @@
     <div class="result-box sheet-box">
       <div id="sheet-body"></div>
       <div class="menu"><button id="sheet-close" class="btn">Close</button></div>
+    </div>
+  </div>
+  <div id="party-overlay" class="overlay" hidden>
+    <div class="result-box party-box">
+      <h2>Choose Your Party</h2>
+      <p id="party-count" class="sheet-blurb"></p>
+      <div id="party-list" class="party-list"></div>
+      <div class="sheet-row">
+        <button id="btn-import" class="zone-btn">Import heroes (JSON)</button>
+        <input id="import-file" type="file" accept=".json,application/json" hidden>
+      </div>
+      <div class="menu"><button id="party-close" class="btn">Done</button></div>
     </div>
   </div>
   <div id="dice-cinematic" class="dice-overlay" hidden></div>

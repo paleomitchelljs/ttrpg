@@ -114,11 +114,12 @@ async function presentEvent(els, ev) {
     }
     case 'spell-cast': {
       await playCinematic(spellPayload(ev));
+      const math = `(${ev.total} vs DC ${ev.dc}, on ${(ev.stat ?? 'cha').toUpperCase()})`;
       appendLog(
         els.log,
         ev.success
-          ? `${ev.caster} casts ${ev.name}! (${ev.total} vs DC ${ev.dc})`
-          : `${ev.caster}'s ${ev.name} fizzles… the spell is spent for this fight. (${ev.total} vs DC ${ev.dc})`,
+          ? `${ev.caster} casts ${ev.name}! ${math}`
+          : `${ev.caster}'s ${ev.name} fizzles… the spell is spent for this fight. ${math}`,
         ev.success ? 'log-start' : 'log-miss'
       );
       return delay(200);
@@ -478,7 +479,7 @@ function spellPayload(ev) {
     rolls: [ev.natural],
     kept: ev.natural,
     mode: 'straight',
-    parts: ev.bonus ? [{ label: 'magic', value: ev.bonus }] : [],
+    parts: ev.bonus ? [{ label: (ev.stat ?? 'cha').toUpperCase(), value: ev.bonus }] : [],
     total: ev.total,
     targetLabel: `DC ${ev.dc}`,
     verdict: ev.success ? 'CAST!' : 'FIZZLE…',

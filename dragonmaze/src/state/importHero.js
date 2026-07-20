@@ -66,6 +66,14 @@ export function portalToCompanion(char) {
     if (!spells.length && /wizard|mage|sorcer|priest|cleric|shaman|bard/i.test(classId)) {
       spells = ['ember-bolt'];
     }
+    // Spellcasting ability by class (Shadowdark: wizard INT, priest WIS,
+    // bard/sorcerer/warlock CHA). Martials never cast, so it's unused.
+    const castStat = /priest|cleric|shaman|druid/i.test(classId)
+      ? 'wis'
+      : /wizard|mage/i.test(classId)
+        ? 'int'
+        : 'cha';
+    const role = classId ? classId.charAt(0).toUpperCase() + classId.slice(1) : 'Adventurer';
     return {
       id: `hero-${char.id ?? char.name.toLowerCase().replace(/\W+/g, '-')}`,
       name: char.name,
@@ -83,6 +91,8 @@ export function portalToCompanion(char) {
       emoji: '❖',
       anim: { idle: `${strip}-idle`, attack: `${strip}-attack` },
       spells,
+      castStat,
+      role,
       imported: true,
     };
   } catch {

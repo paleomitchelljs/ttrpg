@@ -31,6 +31,7 @@ export function makeCombatant(data) {
     ability: data.ability ?? null,
     relentlessUsed: false,
     spells: [...(data.spells ?? [])],
+    castStat: data.castStat ?? 'cha', // which ability powers this caster's spells
     burned: [],
     goldValue: data.goldValue ?? 0,
     morale: data.morale ?? null,

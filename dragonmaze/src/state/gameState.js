@@ -8,7 +8,7 @@ import { rollEncounter } from '../world/encounters.js';
 import { zoneById } from '../../data/zones.js';
 import { tierByName } from '../../data/dragonProgression.js';
 import { monsterById } from '../../data/monsters.js';
-import { companionById } from '../../data/party.js';
+import { COMPANIONS, companionById } from '../../data/party.js';
 import { FAMILIARS, familiarById } from '../../data/familiars.js';
 import { ITEMS, itemById } from '../../data/items.js';
 import { parseHeroExport } from './importHero.js';
@@ -42,7 +42,7 @@ function freshMeta() {
     hoardGold: 0,
     tier: 'wyrmling',
     runsCompleted: 0,
-    party: ['spawnee', 'dragonkin-swashbuckler'],
+    party: ['spawnee', 'dragonkin-spellblade'],
     mode: 'dragon', // 'dragon' = dragon + party; 'party' = the party alone
     heroGrowth: {}, // charId -> { xp, level, pending, choices: [{type, spellId?}] }
     reputation: {}, // faction -> renown (kills of their enemies raise it)
@@ -105,7 +105,7 @@ export function init() {
 
 /** Fill fields that predate this save's version of the game. */
 function normalizeMeta(meta) {
-  meta.party ??= ['spawnee', 'dragonkin-swashbuckler'];
+  meta.party ??= ['spawnee', 'dragonkin-spellblade'];
   meta.mode ??= 'dragon';
   meta.heroGrowth ??= {};
   meta.reputation ??= {};
@@ -277,9 +277,30 @@ export function continueGame() {
   }
 }
 
+/** Most companions that may join the dragon on one delve. */
+export const PARTY_CAP = 4;
+
+/** Every recruitable companion: the built-ins plus imported portal heroes. */
+export function allCompanions() {
+  return [...COMPANIONS, ...state.meta.customCharacters];
+}
+
+/** Toggle one companion in/out of the party, honoring the cap. */
+export function toggleCompanion(id) {
+  if (!heroById(id)) return;
+  const party = state.meta.party ?? [];
+  if (party.includes(id)) {
+    state.meta.party = party.filter((p) => p !== id);
+  } else if (party.length < PARTY_CAP) {
+    state.meta.party = [...party, id];
+  }
+  persist(state);
+  emit([{ type: 'party-changed' }]);
+}
+
 /** Choose which companions join the next labyrinth. */
 export function setParty(companionIds) {
-  state.meta.party = companionIds.filter((id) => heroById(id)).slice(0, 3);
+  state.meta.party = companionIds.filter((id) => heroById(id)).slice(0, PARTY_CAP);
   persist(state);
   emit([{ type: 'party-changed' }]);
 }
