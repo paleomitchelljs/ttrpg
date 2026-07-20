@@ -7,6 +7,7 @@
 import { makeSeededRNG, randInt } from '../engine/rng.js';
 import { rollLoot } from './loot.js';
 import { zoneById } from '../../data/zones.js';
+import { SCENERY } from '../../data/scenery.js';
 
 export function buildZoneDungeon(zoneId, subIndex, seedString, partySize = 1) {
   const zone = zoneById(zoneId);
@@ -87,7 +88,7 @@ export function buildZoneDungeon(zoneId, subIndex, seedString, partySize = 1) {
     loot,
     doors,
     edges: sub.edges ?? null, // { n|s|e|w: neighbouring subId } — walk off an edge
-    props: (sub.props ?? []).map((p) => ({ ...p })), // decorative overlays
+    props: (SCENERY[sub.id] ?? sub.props ?? []).map((p) => ({ ...p })), // hand-placed scenery, else the zones.js seed
     portals: (sub.portals ?? []).map((p) => ({ ...p })), // walk-into tiles that prompt to travel (e.g. the well)
     subId: sub.id,
     theme: sub.theme ?? null,

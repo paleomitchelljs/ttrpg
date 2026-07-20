@@ -71,19 +71,6 @@ export function renderMap(container, state) {
         if (Math.abs(x - px) + Math.abs(y - py) === 1) tile.classList.add('steppable');
       } else if (d.tiles[y][x] !== 1) {
         tile.classList.add('wall');
-        // Temple walls autotile: pick a variant, orient the cap away from the
-        // floor it faces, and stand a column at the corners.
-        if (d.theme === 'grass') {
-          const wt = wallTile(d, x, y);
-          if (wt) {
-            tile.classList.add('wall-img');
-            if (wt.col) tile.classList.add('wall-col-cell');
-            const img = document.createElement('img');
-            img.src = TILES[wt.key];
-            if (wt.rot) img.style.transform = `rotate(${wt.rot}deg)`;
-            tile.appendChild(img);
-          }
-        }
       } else {
         tile.classList.add('floor');
         // A floor tile on a linked border is a walk-off passage to the next
@@ -127,26 +114,10 @@ function renderProps(container, run) {
     el.style.height = `calc(var(--tile) * ${p.h})`;
     el.style.zIndex = (p.y + p.h) * 10; // depth = base row; tall props occlude what's behind
     el.innerHTML = `<img src="${src}" alt="">`;
+    if (p.rot) el.firstElementChild.style.transform = `rotate(${p.rot}deg)`;
     frag.appendChild(el);
   }
   layer.replaceChildren(frag);
-}
-
-// Autotile a temple wall cell: variant + cap orientation from the floor it
-// faces; a column where only a diagonal is floor (an outer corner). Returns
-// null for a fully-buried wall (keeps the plain CSS fill).
-const WALL_VARIANTS = ['wall-a', 'wall-b', 'wall-c'];
-function wallTile(d, x, y) {
-  const floor = (xx, yy) =>
-    xx >= 0 && xx < d.width && yy >= 0 && yy < d.height && d.tiles[yy][xx] === 1;
-  const fN = floor(x, y - 1), fS = floor(x, y + 1), fE = floor(x + 1, y), fW = floor(x - 1, y);
-  if (!(fN || fS || fE || fW)) {
-    const diag = floor(x - 1, y - 1) || floor(x + 1, y - 1) || floor(x - 1, y + 1) || floor(x + 1, y + 1);
-    return diag ? { key: 'wall-col', rot: 0, col: true } : null;
-  }
-  const key = WALL_VARIANTS[(((x * 3 + y) % 3) + 3) % 3];
-  const rot = fS ? 0 : fN ? 180 : fW ? 90 : 270; // cap points away from the floor
-  return { key, rot };
 }
 
 function syncTokenStrip(token) {
