@@ -40,6 +40,13 @@ SHEET_TOLERANCE = {
 }
 DEFAULT_TOLERANCE = 60
 
+# Sheets whose backdrop is a multi-tone checker: the 4 corners can all land on
+# one tone, leaving the other tone(s) un-seeded. List every backdrop tone here
+# so the flood-fill recognizes them regardless of which square a corner hits.
+SHEET_BG = {
+    "froglok-undead-sheet.png": [(187, 163, 161), (96, 66, 74), (63, 49, 49)],
+}
+
 # strip name -> {sheet, cells: [(col, row), ...], box: (dx, dy, w, h) in-cell}
 # Cells are 1-indexed; the same box applies to every frame so they align.
 STRIPS = {
@@ -72,21 +79,9 @@ STRIPS = {
         "cells": [(3, 3), (4, 3)],
         "box": (4, 4, 146, 146),
     },
-    "swash-walk": {
-        "sheet": "dragonkin-swashbuckler-sheet.png",
-        "cells": [(1, 2), (2, 2)],
-        "box": (14, 38, 124, 108),
-    },
-    "swash-idle": {
-        "sheet": "dragonkin-swashbuckler-sheet.png",
-        "cells": [(1, 3), (2, 3)],
-        "box": (14, 52, 124, 94),
-    },
-    "swash-attack": {
-        "sheet": "dragonkin-swashbuckler-sheet.png",
-        "cells": [(2, 1), (3, 1)],
-        "box": (14, 52, 124, 94),
-    },
+    "swash-walk": {"sheet": "dragonkin-swashbuckler-sheet.png", "abs": [(50, 200, 140, 120), (185, 200, 140, 120)]},
+    "swash-idle": {"sheet": "dragonkin-swashbuckler-sheet.png", "abs": [(40, 370, 150, 108), (200, 370, 145, 108)]},
+    "swash-attack": {"sheet": "dragonkin-swashbuckler-sheet.png", "abs": [(40, 60, 150, 108), (200, 60, 150, 108)]},
     "spellblade-walk": {
         "sheet": "dragonkin-spellblade-sheet.png",
         "cells": [(2, 4), (3, 4)],
@@ -169,12 +164,12 @@ STRIPS = {
     "clay-golem-attack": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(170, 8, 52, 103), (226, 8, 52, 103)]},
     "iron-golem-idle": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(339, 8, 55, 103), (396, 8, 55, 103)]},
     "iron-golem-attack": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(452, 8, 55, 103), (396, 8, 55, 103)]},
-    "snake-idle": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(58, 232, 56, 98), (170, 232, 56, 98)]},
-    "snake-attack": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(170, 232, 56, 98), (226, 232, 56, 98)]},
-    "gargoyle-idle": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(452, 8, 56, 103), (509, 8, 56, 103)]},
-    "gargoyle-attack": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(339, 232, 56, 98), (396, 232, 56, 98)]},
-    "fungus-idle": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(2, 912, 56, 108), (58, 912, 56, 108)]},
-    "fungus-attack": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(114, 912, 56, 108), (170, 912, 56, 108)]},
+    "snake-idle": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(2, 898, 60, 64), (62, 898, 60, 64)]},
+    "snake-attack": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(120, 898, 60, 64), (178, 898, 60, 64)]},
+    "gargoyle-idle": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(285, 216, 60, 68), (340, 216, 60, 68)]},
+    "gargoyle-attack": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(396, 216, 60, 68), (452, 216, 58, 68)]},
+    "fungus-idle": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(2, 963, 58, 61), (62, 963, 58, 61)]},
+    "fungus-attack": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(120, 963, 58, 61), (178, 963, 58, 61)]},
     # labeled panel sheet, irregular layout: absolute boxes
     "spawnee-walk": {
         "sheet": "spawnee-sheet.png",
@@ -217,16 +212,8 @@ STRIPS = {
         "cells": [(3, 2), (4, 2)],
         "box": (4, 4, 146, 118),
     },
-    "froglok-zombie-idle": {
-        "sheet": "froglok-undead-sheet.png",
-        "cells": [(1, 1), (2, 1)],
-        "box": (6, 40, 140, 106),
-    },
-    "froglok-zombie-attack": {
-        "sheet": "froglok-undead-sheet.png",
-        "cells": [(3, 1), (4, 1)],
-        "box": (6, 40, 140, 106),
-    },
+    "froglok-zombie-idle": {"sheet": "froglok-undead-sheet.png", "abs": [(16, 44, 146, 168), (166, 44, 146, 168)]},
+    "froglok-zombie-attack": {"sheet": "froglok-undead-sheet.png", "abs": [(312, 40, 150, 172), (466, 40, 150, 172)]},
     "froglok-idle": {
         "sheet": "froglok-warriors-sheet.png",
         "cells": [(1, 2), (2, 2)],
@@ -237,39 +224,39 @@ STRIPS = {
         "cells": [(2, 7), (3, 7)],
         "box": (4, 6, 146, 132),
     },
-    "lizardfolk-idle": {
-        "sheet": "lizardfolk-warriors-sheet.png",
-        "cells": [(1, 3), (2, 3)],
-        "box": (10, 4, 134, 138),
-    },
-    "lizardfolk-attack": {
-        "sheet": "lizardfolk-warriors-sheet.png",
-        "cells": [(2, 1), (3, 1)],
-        "box": (10, 4, 134, 138),
-    },
+    "lizardfolk-idle": {"sheet": "lizardfolk-warriors-sheet.png", "abs": [(15, 338, 132, 150), (163, 338, 132, 150)]},
+    "lizardfolk-attack": {"sheet": "lizardfolk-warriors-sheet.png", "abs": [(20, 10, 145, 150), (175, 10, 145, 150)]},
+    # stone golem (courtyard boss): side-view move as idle, side-view attack windup + lunge
+    "stone-golem-idle": {"sheet": "stone-golem-sheet.png", "abs": [(32, 170, 108, 118), (150, 170, 108, 118)]},
+    "stone-golem-attack": {"sheet": "stone-golem-sheet.png", "abs": [(30, 66, 112, 86), (368, 66, 116, 86)]},
 }
 
 
-def is_bg_factory(im, tolerance):
-    """Background = anything close to a border-corner color, or checker gray."""
+def is_bg_factory(im, tolerance, extra=()):
+    """Background = anything close to a border-corner color, or checker gray.
+
+    `extra` supplies known backdrop tones for sheets whose corners can't
+    sample every tone (multi-tone checkers).
+    """
     w, h = im.size
     corners = [im.getpixel(p)[:3] for p in [(1, 1), (w - 2, 1), (1, h - 2), (w - 2, h - 2)]]
+    refs = corners + list(extra)
 
     def is_bg(px):
         r, g, b = px[0], px[1], px[2]
         if max(r, g, b) - min(r, g, b) < 26 and (r + g + b) / 3 > 175:
             return True  # white/gray checker squares
-        return any(abs(r - cr) + abs(g - cg) + abs(b - cb) < tolerance for cr, cg, cb in corners)
+        return any(abs(r - cr) + abs(g - cg) + abs(b - cb) < tolerance for cr, cg, cb in refs)
 
     return is_bg
 
 
-def dekey(im, tolerance):
+def dekey(im, tolerance, extra=()):
     """Flood-fill transparent from the borders through background-ish pixels."""
     im = im.convert("RGBA")
     w, h = im.size
     pix = im.load()
-    is_bg = is_bg_factory(im, tolerance)
+    is_bg = is_bg_factory(im, tolerance, extra)
     seen = [[False] * w for _ in range(h)]
     q = deque()
     for x in range(w):
@@ -314,11 +301,12 @@ def main():
         if sheet not in sheets:
             sheets[sheet] = Image.open(ART / sheet).convert("RGBA")
         tol = SHEET_TOLERANCE.get(sheet, DEFAULT_TOLERANCE)
+        extra = SHEET_BG.get(sheet, ())
         if "abs" in spec:
             boxes = [(x, y, x + bw, y + bh) for x, y, bw, bh in spec["abs"]]
         else:
             boxes = [cell_box(spec["box"], c, r, sheet) for c, r in spec["cells"]]
-        frames = [dekey(sheets[sheet].crop(b), tol) for b in boxes]
+        frames = [dekey(sheets[sheet].crop(b), tol, extra) for b in boxes]
         # square frames, feet anchored at the bottom, so CSS strips are uniform
         side = max(max(f.size) for f in frames)
         strip = Image.new("RGBA", (side * len(frames), side), (0, 0, 0, 0))

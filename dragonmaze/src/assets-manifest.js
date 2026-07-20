@@ -55,4 +55,6 @@ export const SPRITES = {
   'froglok-attack': './assets/sprites/froglok-attack.png',
   'lizardfolk-idle': './assets/sprites/lizardfolk-idle.png',
   'lizardfolk-attack': './assets/sprites/lizardfolk-attack.png',
+  'stone-golem-idle': './assets/sprites/stone-golem-idle.png',
+  'stone-golem-attack': './assets/sprites/stone-golem-attack.png',
 };

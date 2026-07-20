@@ -371,6 +371,7 @@ export const MONSTERS = [
     sprite: 'monster_golem',
     resist: ['physical'],
     emoji: '🗿',
+    anim: { idle: 'stone-golem-idle', attack: 'stone-golem-attack' },
     faction: 'construct',
     parley: 'never',
     goldValue: 20,
