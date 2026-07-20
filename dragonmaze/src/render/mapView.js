@@ -57,8 +57,18 @@ export function renderMap(container, state) {
       tile.className = 'tile';
       tile.dataset.x = x;
       tile.dataset.y = y;
+      const door = d.doors?.find((dr) => dr.x === x && dr.y === y);
       if (!run.explored[`${x},${y}`]) {
         tile.classList.add('fog');
+      } else if (door) {
+        // A door embedded in the border wall; the side it opens onto is the
+        // direction you walk to use it.
+        tile.classList.add('wall', 'door-tile');
+        tile.dataset.dir = door.dir.dx > 0 ? 'e' : door.dir.dx < 0 ? 'w' : door.dir.dy > 0 ? 's' : 'n';
+        const leaf = document.createElement('div');
+        leaf.className = door.to === 'surface' ? 'door-leaf surface' : 'door-leaf';
+        tile.appendChild(leaf);
+        if (Math.abs(x - px) + Math.abs(y - py) === 1) tile.classList.add('steppable');
       } else if (d.tiles[y][x] !== 1) {
         tile.classList.add('wall');
       } else {
@@ -91,12 +101,6 @@ function syncTokenStrip(token) {
 
 function fillTile(tile, run, x, y) {
   const d = run.dungeon;
-  const door = d.doors?.find((dr) => dr.x === x && dr.y === y);
-  if (door) {
-    tile.classList.add('door-tile');
-    tile.textContent = door.to === 'surface' ? '⌂' : '◆';
-    return;
-  }
   const enc = d.encounters.find((e) => e.x === x && e.y === y);
   if (enc) {
     const m = monsterById(enc.monsterIds[0]);
@@ -109,9 +113,7 @@ function fillTile(tile, run, x, y) {
   }
   if (d.loot.some((l) => l.x === x && l.y === y)) {
     tile.textContent = '💰';
-    return;
   }
-  if (d.exit.x === x && d.exit.y === y) tile.textContent = '🚪';
 }
 
 function moveToken(token, x, y) {

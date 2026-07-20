@@ -26,6 +26,9 @@ SHEET_CELLS = {
     "skeleton-warrior-sheet.png": (113, 1024 / 9),
     "dragonkin-spellblade-sheet.png": (113, 1024 / 9),
     "monsters-menagerie-sheet.png": (565 / 7, 1024 / 13),
+    "turquoise-barbarian-sheet.png": (113, 1024 / 9),
+    "beren-warrior-sheet.png": (113, 1024 / 9),
+    "avatar-of-fear-sheet.png": (113, 1024 / 9),
 }
 
 # Background keying tolerance per sheet: how close to a corner color a pixel
@@ -150,6 +153,28 @@ STRIPS = {
         "cells": [(4, 13), (6, 13)],
         "box": (2, 2, 77, 75),
     },
+    # --- Turquoise, Yuan-Ti barbarian (playable; faces left) ---
+    "turquoise-idle": {"sheet": "turquoise-barbarian-sheet.png", "cells": [(1, 3), (2, 3)], "box": (6, 8, 101, 105)},
+    "turquoise-attack": {"sheet": "turquoise-barbarian-sheet.png", "cells": [(3, 1), (4, 1)], "box": (6, 8, 101, 105)},
+    "turquoise-walk": {"sheet": "turquoise-barbarian-sheet.png", "cells": [(1, 2), (2, 2)], "box": (6, 8, 101, 105)},
+    # --- Beren, human warrior (playable; faces left) ---
+    "beren-idle": {"sheet": "beren-warrior-sheet.png", "abs": [(450, 168, 110, 118), (450, 168, 110, 118)]},
+    "beren-attack": {"sheet": "beren-warrior-sheet.png", "abs": [(8, 40, 100, 115), (224, 40, 100, 115)]},
+    "beren-walk": {"sheet": "beren-warrior-sheet.png", "abs": [(8, 170, 100, 118), (120, 170, 100, 118)]},
+    # --- Avatar of Fear (zone boss; label in col 1, frames cols 2-5; faces left) ---
+    "avatar-of-fear-idle": {"sheet": "avatar-of-fear-sheet.png", "cells": [(2, 3), (3, 3)], "box": (6, 4, 107, 109)},
+    "avatar-of-fear-attack": {"sheet": "avatar-of-fear-sheet.png", "cells": [(3, 1), (4, 1)], "box": (6, 4, 107, 109)},
+    # --- golem/beast pack (abs boxes; ~56px cells) ---
+    "clay-golem-idle": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(2, 8, 52, 103), (58, 8, 52, 103)]},
+    "clay-golem-attack": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(170, 8, 52, 103), (226, 8, 52, 103)]},
+    "iron-golem-idle": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(339, 8, 55, 103), (396, 8, 55, 103)]},
+    "iron-golem-attack": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(452, 8, 55, 103), (396, 8, 55, 103)]},
+    "snake-idle": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(58, 232, 56, 98), (170, 232, 56, 98)]},
+    "snake-attack": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(170, 232, 56, 98), (226, 232, 56, 98)]},
+    "gargoyle-idle": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(452, 8, 56, 103), (509, 8, 56, 103)]},
+    "gargoyle-attack": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(339, 232, 56, 98), (396, 232, 56, 98)]},
+    "fungus-idle": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(2, 912, 56, 108), (58, 912, 56, 108)]},
+    "fungus-attack": {"sheet": "monsters-golems-beasts-sheet.png", "abs": [(114, 912, 56, 108), (170, 912, 56, 108)]},
     # labeled panel sheet, irregular layout: absolute boxes
     "spawnee-walk": {
         "sheet": "spawnee-sheet.png",

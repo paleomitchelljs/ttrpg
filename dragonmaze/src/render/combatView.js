@@ -66,6 +66,11 @@ async function presentEvent(els, ev) {
     case 'combat-start': {
       targetId = null;
       els.log.replaceChildren();
+      // Clear the previous fight's stage so no defeated cards flash before the
+      // new combatants render.
+      els.enemies.replaceChildren();
+      els.player.replaceChildren();
+      els.actions.replaceChildren();
       els.overlay.hidden = false;
       const names = ev.monsters.map((m) => m.name);
       appendLog(

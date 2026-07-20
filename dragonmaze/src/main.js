@@ -36,10 +36,51 @@ function refreshWorld(state) {
   renderMap(ui.el('map'), state);
   const tierIndex = Math.max(0, DRAGON_TIERS.findIndex((t) => t.tier === state.meta.tier));
   drawHoard(ui.el('hoard-canvas'), state.meta.hoardGold, tierIndex);
+  renderRoster(state);
+}
+
+/** The explore-screen party roster: each member's HP + a tap to their sheet. */
+function renderRoster(state) {
+  const box = ui.el('party-roster');
+  const run = state.run;
+  if (!run) { box.replaceChildren(); return; }
+  const members = [];
+  if (run.dragon) {
+    members.push({ key: 'dragon', name: 'Red Dragon', hp: run.dragon.hp, sprite: SPRITES['dragon-fly'], frames: 4 });
+  }
+  for (const slot of run.party) {
+    const c = companionById(slot.id) ?? game.state.meta.customCharacters.find((h) => h.id === slot.id);
+    if (c) members.push({ key: slot.id, name: c.name, hp: slot.hp, sprite: SPRITES[c.anim.idle], frames: 2, pending: game.state.meta.heroGrowth?.[slot.id]?.pending ?? 0 });
+  }
+  box.replaceChildren(
+    ...members.map((m) => {
+      const pct = Math.max(0, Math.round((100 * m.hp.current) / m.hp.max));
+      const row = document.createElement('button');
+      row.className = 'roster-row';
+      row.dataset.sheet = m.key;
+      row.innerHTML = `
+        <span class="roster-face sprite f${m.frames} flip"><img src="${m.sprite}" alt=""></span>
+        <span class="roster-info">
+          <span class="roster-name">${m.name}${m.pending ? ' <span class="roster-levelup">level up!</span>' : ''}</span>
+          <span class="hp-bar"><span class="hp-fill${pct <= 35 ? ' low' : ''}" style="width:${pct}%"></span></span>
+        </span>
+        <span class="roster-hp">${m.hp.current}/${m.hp.max}</span>`;
+      return row;
+    })
+  );
 }
 
 function showBankedOverlay(ev, events) {
   const tierUp = events.find((e) => e.type === 'tier-up');
+  // In a bespoke zone the *regions* are the depth (reached through doors), so
+  // there is no "delve deeper" into a fresh procedural maze — you surface.
+  const inZone = !!game.state.run?.dungeon.zone;
+  const actions = inZone
+    ? [{ label: 'Return to the surface', onClick: () => { ui.showOverlay('result-overlay', false); game.quitToTitle(); } }]
+    : [
+        { label: 'Delve deeper', onClick: () => { ui.showOverlay('result-overlay', false); game.nextLabyrinth(); } },
+        { label: 'Rest at your lair', onClick: () => { ui.showOverlay('result-overlay', false); game.quitToTitle(); } },
+      ];
   ui.showResult({
     title: tierUp ? 'You have GROWN!' : 'Treasure banked!',
     growth: tierUp
@@ -49,12 +90,9 @@ function showBankedOverlay(ev, events) {
             `${tierUp.to.hpMax} HP, armor ${tierUp.to.ac}, bite ${tierUp.to.attacks[0].damage}, breath ${tierUp.to.breath.damage}.`,
         }
       : null,
-    body: `You escaped ${game.state.run?.dungeon.zone ? game.state.run.dungeon.zone.sub : `depth ${ev.depth}`} with ${ev.banked} gold (${ev.bonus} bonus for reaching the exit). Your hoard is now ${ev.hoard.toLocaleString()} gold.` +
+    body: `You escaped ${inZone ? game.state.run.dungeon.zone.sub : `depth ${ev.depth}`} with ${ev.banked} gold (${ev.bonus} bonus for reaching the exit). Your hoard is now ${ev.hoard.toLocaleString()} gold.` +
       events.filter((e) => e.type === 'level-up').map((e) => ` ${e.who} reaches level ${e.level}!`).join(''),
-    actions: [
-      { label: 'Delve deeper', onClick: () => { ui.showOverlay('result-overlay', false); game.nextLabyrinth(); } },
-      { label: 'Rest at your lair', onClick: () => { ui.showOverlay('result-overlay', false); game.quitToTitle(); } },
-    ],
+    actions,
   });
 }
 
@@ -85,6 +123,8 @@ game.subscribe((state, events) => {
 
   for (const ev of events) {
     if (ev.type === 'entered') {
+      // A fresh delve dismisses any leftover result overlay (retreat/banked).
+      ui.showOverlay('result-overlay', false);
       ui.clearExploreLog();
       ui.logExplore(
         ev.zone
@@ -109,6 +149,12 @@ game.subscribe((state, events) => {
     if (ev.type === 'familiar-found') ui.logExplore(`Something stirs in the den… a familiar joins you: ${ev.name} — ${ev.blurb}!`, 'log-start');
     if (ev.type === 'item-found') ui.logExplore(`Inside the cache: ${ev.name} — ${ev.blurb}. Equip it from a character sheet!`, 'log-start');
     if (ev.type === 'level-up') ui.logExplore(`${ev.who} reaches level ${ev.level}! Open their sheet to choose an advance.`, 'log-start');
+    if (ev.type === 'rested') {
+      ui.logExplore(
+        ev.ambush ? 'You make camp… but something finds you in the dark!' : 'You make camp and bind your wounds. The party recovers.',
+        ev.ambush ? 'log-hurt' : 'log-hit'
+      );
+    }
     if (ev.type === 'banked') showBankedOverlay(ev, events);
   }
 
@@ -167,9 +213,11 @@ function sheetSubject(id) {
   const g = game.state.meta.heroGrowth?.[id] ?? { xp: 0, level: 1, pending: 0, choices: [] };
   return {
     name: c.name,
-    blurb: c.imported
-      ? 'A hero of the portal, drawn into the labyrinth.'
-      : c.spells.length ? 'Blade in one hand, spellbook in the other.' : 'Steel, songs, and stubbornness.',
+    blurb: c.blurb
+      ? c.blurb
+      : c.imported
+        ? 'A hero of the portal, drawn into the labyrinth.'
+        : c.spells.length ? 'Blade in one hand, spellbook in the other.' : 'Steel, songs, and stubbornness.',
     sprite: SPRITES[c.anim.idle],
     frames: 2,
     flip: true,
@@ -247,6 +295,16 @@ ui.el('sheet-overlay').addEventListener('click', (ev) => {
 });
 ui.el('hud-tier').addEventListener('click', () => openSheet('dragon'));
 ui.el('hud-tier').style.cursor = 'pointer';
+
+// Party roster: tap any member (out of combat) to open their sheet — manage
+// equipment, spend level-ups, read their story.
+ui.el('party-roster').addEventListener('click', (ev) => {
+  const row = ev.target.closest('.roster-row');
+  if (row) openSheet(row.dataset.sheet);
+});
+
+// Rest between fights (risky).
+ui.el('btn-rest').addEventListener('click', () => game.rest());
 
 // ------------------------------------------------------------------ input
 const KEYS = {

@@ -17,37 +17,38 @@ export function buildZoneDungeon(zoneId, subIndex, seedString, partySize = 1) {
   const rows = sub.map;
   const height = rows.length;
   const width = rows[0].length;
-  const tiles = rows.map((r) => [...r].map((ch) => (ch === '#' ? 0 : 1)));
+  // Doors ('1'-'9') and the surface exit ('E') sit ON border walls — they are
+  // NOT walkable floor; you walk *into* them from the adjacent floor tile.
+  const isDoorCh = (ch) => ch === 'E' || (ch >= '1' && ch <= '9');
+  const tiles = rows.map((r) => [...r].map((ch) => (ch === '#' || isDoorCh(ch) ? 0 : 1)));
+  const floorAt = (x, y) => x >= 0 && x < width && y >= 0 && y < height && tiles[y][x] === 1;
 
   let start = null;
-  let exit = null;
   const encounters = [];
   const loot = [];
-  const doors = [];
+  const doorCells = [];
   for (let y = 0; y < height; y++) {
     for (let x = 0; x < width; x++) {
       const ch = rows[y][x];
       if (ch === 'S') start = { x, y };
-      if (ch === 'E') exit = { x, y };
-      if (ch >= '1' && ch <= '9') {
-        doors.push({ x, y, to: sub.doors?.[ch] ?? 'surface' });
-      }
+      if (isDoorCh(ch)) doorCells.push({ x, y, ch });
       if (ch === 'M') {
-        encounters.push({
-          id: `enc-${encounters.length}`,
-          x,
-          y,
-          monsterIds: rollZoneEncounter(sub, rng, partySize),
-        });
+        encounters.push({ id: `enc-${encounters.length}`, x, y, monsterIds: rollZoneEncounter(sub, rng, partySize) });
       }
       if (ch === 'B') {
         encounters.push({
-          id: `boss-${x}-${y}`,
-          x,
-          y,
+          id: `boss-${x}-${y}`, x, y,
           monsterIds: [...sub.boss.monsterIds],
           bossName: sub.boss.name,
           bossDrops: [...(sub.boss.drops ?? [])],
+        });
+      }
+      if (ch === 'b' && sub.miniboss) {
+        encounters.push({
+          id: `miniboss-${x}-${y}`, x, y,
+          monsterIds: [...sub.miniboss.monsterIds],
+          bossName: sub.miniboss.name,
+          bossDrops: [...(sub.miniboss.drops ?? [])],
         });
       }
       if (ch === 'L') {
@@ -57,6 +58,23 @@ export function buildZoneDungeon(zoneId, subIndex, seedString, partySize = 1) {
   }
   if (!start) throw new Error(`Zone map ${zoneId}/${sub.id} needs S`);
 
+  // Each door's `entry` is its one interior-floor neighbour; `dir` points from
+  // the entry into the door (the way you walk to travel). `to` names the
+  // destination subregion (or 'surface' to bank).
+  const doors = doorCells.map(({ x, y, ch }) => {
+    let entry = null;
+    let dir = { dx: 0, dy: 0 };
+    for (const [dx, dy] of [[0, -1], [0, 1], [-1, 0], [1, 0]]) {
+      if (floorAt(x + dx, y + dy)) {
+        entry = { x: x + dx, y: y + dy };
+        dir = { dx: -dx, dy: -dy };
+        break;
+      }
+    }
+    if (!entry) throw new Error(`Door ${ch} in ${zoneId}/${sub.id} has no interior neighbour`);
+    return { x, y, ch, entry, dir, to: ch === 'E' ? 'surface' : sub.doors?.[ch] ?? 'surface' };
+  });
+
   return {
     seed: seedString,
     depth: sub.difficulty,
@@ -64,10 +82,11 @@ export function buildZoneDungeon(zoneId, subIndex, seedString, partySize = 1) {
     height,
     tiles,
     start,
-    exit: exit ?? { x: -1, y: -1 },
+    exit: doors.find((d) => d.to === 'surface') ?? null,
     encounters,
     loot,
     doors,
+    subId: sub.id,
     theme: sub.theme ?? null,
     zone: {
       id: zone.id,

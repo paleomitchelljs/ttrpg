@@ -4,6 +4,7 @@
 
 import { generateDungeon } from '../world/maze.js';
 import { buildZoneDungeon } from '../world/zones.js';
+import { rollEncounter } from '../world/encounters.js';
 import { zoneById } from '../../data/zones.js';
 import { tierByName } from '../../data/dragonProgression.js';
 import { monsterById } from '../../data/monsters.js';
@@ -334,27 +335,24 @@ export function move(dx, dy) {
   const y = run.playerPos.y + dy;
   const d = run.dungeon;
   if (x < 0 || x >= d.width || y < 0 || y >= d.height) return;
-  if (d.tiles[y][x] !== 1) return;
 
-  // Bump-to-fight: stepping at a monster tile starts combat; the dragon
+  // Doors sit ON the wall: walk INTO one to travel or bank — you never stand
+  // on it. Checked before the wall block below.
+  const door = d.doors?.find((dr) => dr.x === x && dr.y === y);
+  if (door) {
+    const events = [];
+    if (door.to === 'surface') bankAndWin(events);
+    else travelThrough(door, events);
+    return;
+  }
+
+  if (d.tiles[y][x] !== 1) return; // wall
+
+  // Bump-to-fight: stepping at a monster tile starts combat; the party
   // only occupies the tile after winning.
   const encounter = d.encounters.find((e) => e.x === x && e.y === y);
   if (encounter) {
     beginCombat(encounter);
-    return;
-  }
-
-  // Doors connect a zone's subregions (and lead back to the surface).
-  const door = d.doors?.find((dr) => dr.x === x && dr.y === y);
-  if (door) {
-    run.playerPos = { x, y };
-    reveal(run);
-    const events = [{ type: 'moved', x, y }];
-    if (door.to === 'surface') {
-      bankAndWin(events);
-    } else {
-      travelTo(door.to, events);
-    }
     return;
   }
 
@@ -394,31 +392,81 @@ export function move(dx, dy) {
     }
   }
 
-  if (d.exit.x === x && d.exit.y === y) {
-    bankAndWin(events);
-    return;
-  }
-
   persist(state);
   emit(events);
 }
 
 /** Walk through a door into another subregion of the same zone. The run
- * continues: unbanked gold, HP, and spent spells all carry over. */
-function travelTo(subId, events) {
+ * continues (gold, HP, spent spells carry over). Persistent placement: you
+ * arrive at the paired return door's inner tile — entering from the matching
+ * edge — or at the region's start if the door is one-way (e.g. a drop). */
+function travelThrough(originDoor, events) {
   const run = state.run;
   const zone = zoneById(run.dungeon.zone?.id);
   if (!zone) return;
-  const idx = zone.subregions.findIndex((sr) => sr.id === subId);
+  const fromSub = run.dungeon.subId;
+  const idx = zone.subregions.findIndex((sr) => sr.id === originDoor.to);
   if (idx < 0) return;
   const dungeon = buildZoneDungeon(zone.id, idx, run.dungeon.seed, 1 + run.party.length);
   run.dungeon = dungeon;
-  run.playerPos = { ...dungeon.start };
+  const back = dungeon.doors.find((dd) => dd.to === fromSub);
+  run.playerPos = back ? { ...back.entry } : { ...dungeon.start };
   run.explored = {};
   reveal(run);
   persist(state);
   events.push({ type: 'traveled', zone: dungeon.zone });
   emit(events);
+}
+
+/** Roll a wandering pack for an ambush at the party's current spot. */
+function rollAmbushIds(run) {
+  const d = run.dungeon;
+  if (d.zone) {
+    const zone = zoneById(d.zone.id);
+    const sub = zone?.subregions.find((s) => s.id === d.subId);
+    const pool = sub?.table ?? [];
+    if (pool.length) {
+      const total = pool.reduce((a, t) => a + t.weight, 0);
+      let r = liveRNG() * total;
+      let chosen = pool[pool.length - 1];
+      for (const t of pool) {
+        r -= t.weight;
+        if (r < 0) { chosen = t; break; }
+      }
+      const n = 1 + Math.floor(liveRNG() * (chosen.packMax ?? 1));
+      return Array(Math.min(n, 3)).fill(chosen.id);
+    }
+  }
+  return rollEncounter(d.depth, liveRNG, 1 + run.party.length);
+}
+
+/**
+ * Make camp between fights. Heroes recover about half their missing HP — but
+ * resting in a dungeon is risky (Shadowdark), and a wandering pack may fall on
+ * you before the fire burns down. Risk climbs with the depth.
+ */
+export function rest() {
+  const run = state.run;
+  if (!run || run.phase !== 'explore') return;
+  const mend = (hp) => {
+    hp.current = Math.min(hp.max, hp.current + Math.ceil((hp.max - hp.current) / 2) + Math.ceil(hp.max * 0.1));
+  };
+  if (run.dragon) mend(run.dragon.hp);
+  for (const slot of run.party) mend(slot.hp);
+
+  const risk = Math.min(0.55, 0.15 + run.dungeon.depth * 0.06);
+  if (liveRNG() < risk) {
+    emit([{ type: 'rested', ambush: true }]);
+    beginCombat({
+      id: 'ambush',
+      x: run.playerPos.x,
+      y: run.playerPos.y,
+      monsterIds: rollAmbushIds(run),
+    });
+    return;
+  }
+  persist(state);
+  emit([{ type: 'rested', ambush: false }]);
 }
 
 export function moveTo(x, y) {

@@ -121,8 +121,8 @@ check('save() compares vs DC', () => {
 
 // ---- seeded RNG determinism
 check('same seed, same stream', () => {
-  const a = makeSeededRNG('cazic-thule');
-  const b = makeSeededRNG('cazic-thule');
+  const a = makeSeededRNG('lost-temple');
+  const b = makeSeededRNG('lost-temple');
   for (let i = 0; i < 100; i++) assert.equal(a(), b());
 });
 
@@ -469,7 +469,41 @@ check('zone doors and boss drops reference real places and items', () => {
     }
   }
   for (const item of ITEMS) {
-    assert.ok(['upper-guk', 'lower-guk', 'cazic-thule'].includes(item.zone), `${item.id} zone`);
+    assert.ok(['upper-guk', 'lower-guk', 'lost-temple'].includes(item.zone), `${item.id} zone`);
+  }
+});
+
+check('wall-doors have interior entries, directions, and valid bosses', () => {
+  for (const zone of ZONES) {
+    for (let i = 0; i < zone.subregions.length; i++) {
+      const sub = zone.subregions[i];
+      const d = buildZoneDungeon(zone.id, i, 'doortest');
+      for (const door of d.doors) {
+        assert.ok(d.tiles[door.y][door.x] === 0, `${zone.id}/${sub.id} door ${door.ch} is on a wall`);
+        assert.ok(d.tiles[door.entry.y][door.entry.x] === 1, `${zone.id}/${sub.id} door ${door.ch} entry is floor`);
+        assert.ok(Math.abs(door.dir.dx) + Math.abs(door.dir.dy) === 1, `${zone.id}/${sub.id} door ${door.ch} dir`);
+      }
+      // every referenced boss/miniboss monster exists
+      for (const id of sub.boss.monsterIds) assert.ok(monsterById(id), `${zone.id}/${sub.id} boss id ${id}`);
+      for (const id of sub.miniboss?.monsterIds ?? []) assert.ok(monsterById(id), `${zone.id}/${sub.id} miniboss id ${id}`);
+    }
+  }
+  // the pyramid carries a mini-boss
+  const pyramid = ZONES.find((z) => z.id === 'lost-temple').subregions.find((s) => s.id === 'archon-pyramid');
+  assert.ok(pyramid.miniboss, 'pyramid has a mini-boss');
+});
+
+check('new companions and monster art are wired', () => {
+  for (const id of ['beren', 'turquoise']) {
+    const c = companionById(id);
+    assert.ok(c, `${id} exists`);
+    assert.ok(SPRITES[c.anim.idle] && SPRITES[c.anim.attack] && SPRITES[c.walk], `${id} strips`);
+    assert.ok(c.blurb, `${id} blurb`);
+  }
+  for (const id of ['clay-golem', 'iron-golem', 'avatar-of-fear', 'gargoyle', 'giant-snake', 'fungus-man']) {
+    const m = monsterById(id);
+    assert.ok(m, `${id} exists`);
+    assert.ok(SPRITES[m.anim.idle] && SPRITES[m.anim.attack], `${id} strips`);
   }
 });
 
