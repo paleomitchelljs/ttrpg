@@ -4,6 +4,7 @@
 // monsters with sprite strips idle-animate on their tiles.
 
 import { monsterById } from '../../data/monsters.js';
+import { companionById } from '../../data/party.js';
 import { SPRITES } from '../assets-manifest.js';
 
 export function spritePath(key) {
@@ -12,13 +13,27 @@ export function spritePath(key) {
 
 // Which strip the player token shows for each heading. The side strip faces
 // left natively; heading right flips it.
-const TOKEN_FACING = {
+const DRAGON_FACING = {
   side: { key: 'dragon-fly', frames: 'f4' },
   down: { key: 'dragon-down', frames: 'f2' },
   up: { key: 'dragon-up', frames: 'f2' },
 };
 
+// The overworld token is the dragon — or, on party-only delves, the party's
+// leader walking in its stead (same strip for every heading).
+let tokenFacing = DRAGON_FACING;
 let lastPos = null;
+
+function facingFor(state) {
+  const run = state.run;
+  if (!run || run.dragon) return DRAGON_FACING;
+  const leadId = run.party[0]?.id;
+  const lead =
+    companionById(leadId) ?? state.meta.customCharacters?.find((c) => c.id === leadId) ?? null;
+  const key = lead?.walk ?? lead?.anim?.idle ?? 'dragon-fly';
+  const strip = { key, frames: 'f2' };
+  return { side: strip, down: strip, up: strip };
+}
 
 export function renderMap(container, state) {
   const grid = container.querySelector('#map-grid');
@@ -57,7 +72,21 @@ export function renderMap(container, state) {
     }
   }
   grid.replaceChildren(frag);
+  tokenFacing = facingFor(state);
+  syncTokenStrip(token);
   moveToken(token, px, py);
+}
+
+function syncTokenStrip(token) {
+  const sprite = token.firstElementChild;
+  const img = sprite.querySelector('img');
+  const side = tokenFacing.side;
+  const src = spritePath(side.key) ?? SPRITES['dragon-fly'];
+  if (img.getAttribute('src') !== src && !sprite.classList.contains('mid-face')) {
+    img.setAttribute('src', src);
+    sprite.classList.remove('f2', 'f4');
+    sprite.classList.add(side.frames);
+  }
 }
 
 function fillTile(tile, run, x, y) {
@@ -105,7 +134,7 @@ function moveToken(token, x, y) {
 function setFacing(token, dx, dy) {
   const sprite = token.firstElementChild;
   const img = sprite.querySelector('img');
-  const facing = dx !== 0 ? TOKEN_FACING.side : dy > 0 ? TOKEN_FACING.down : TOKEN_FACING.up;
+  const facing = dx !== 0 ? tokenFacing.side : dy > 0 ? tokenFacing.down : tokenFacing.up;
   sprite.classList.toggle('flip', dx > 0);
   const src = spritePath(facing.key);
   if (img.getAttribute('src') !== src) {

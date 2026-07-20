@@ -15,6 +15,7 @@ export const COMPANIONS = [
     sprite: 'hero_spawnee',
     emoji: '🌙',
     anim: { idle: 'spawnee-idle', attack: 'spawnee-attack' },
+    walk: 'spawnee-walk',
     undead: true,
     ability: 'relentless',
     abilityLabel: 'slowfall — she drifts away from the first killing blow, once per fight',
@@ -31,6 +32,7 @@ export const COMPANIONS = [
     sprite: 'hero_swashbuckler',
     emoji: '🗡️',
     anim: { idle: 'swash-idle', attack: 'swash-attack' },
+    walk: 'swash-walk',
     spells: ['ember-bolt', 'healing-word', 'flame-wave'],
   },
   {
@@ -44,6 +46,7 @@ export const COMPANIONS = [
     sprite: 'hero_spellblade',
     emoji: '🔥',
     anim: { idle: 'spellblade-idle', attack: 'spellblade-attack' },
+    walk: 'spellblade-walk',
     spells: ['ember-bolt', 'flame-wave'],
   },
 ];

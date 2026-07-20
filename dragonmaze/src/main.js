@@ -11,7 +11,8 @@ import { DRAGON_TIERS, tierByName } from '../data/dragonProgression.js';
 import { COMPANIONS, companionById } from '../data/party.js';
 import { itemById } from '../data/items.js';
 import { familiarById } from '../data/familiars.js';
-import { spellById } from '../data/spells.js';
+import { spellById, SPELLS as SPELLS_ALL } from '../data/spells.js';
+import * as rulesRef from './engine/rules.js';
 import { SPRITES } from './assets-manifest.js';
 
 const combatEls = {
@@ -27,6 +28,7 @@ const COMBAT_EVENTS = new Set([
   'flee', 'recharge', 'death', 'hero-down', 'victory', 'defeat', 'retreat',
   'spell-cast', 'spell-hit', 'spell-heal', 'spell-wave', 'item-drop',
   'dominated', 'dominate-resisted', 'bane',
+  'parley', 'parley-rout', 'parley-peace', 'parley-paid', 'quest-received', 'quest-complete',
 ]);
 
 function refreshWorld(state) {
@@ -47,7 +49,8 @@ function showBankedOverlay(ev, events) {
             `${tierUp.to.hpMax} HP, armor ${tierUp.to.ac}, bite ${tierUp.to.attacks[0].damage}, breath ${tierUp.to.breath.damage}.`,
         }
       : null,
-    body: `You escaped ${game.state.run?.dungeon.zone ? game.state.run.dungeon.zone.sub : `depth ${ev.depth}`} with ${ev.banked} gold (${ev.bonus} bonus for reaching the exit). Your hoard is now ${ev.hoard.toLocaleString()} gold.`,
+    body: `You escaped ${game.state.run?.dungeon.zone ? game.state.run.dungeon.zone.sub : `depth ${ev.depth}`} with ${ev.banked} gold (${ev.bonus} bonus for reaching the exit). Your hoard is now ${ev.hoard.toLocaleString()} gold.` +
+      events.filter((e) => e.type === 'level-up').map((e) => ` ${e.who} reaches level ${e.level}!`).join(''),
     actions: [
       { label: 'Delve deeper', onClick: () => { ui.showOverlay('result-overlay', false); game.nextLabyrinth(); } },
       { label: 'Rest at your lair', onClick: () => { ui.showOverlay('result-overlay', false); game.quitToTitle(); } },
@@ -105,6 +108,7 @@ game.subscribe((state, events) => {
     }
     if (ev.type === 'familiar-found') ui.logExplore(`Something stirs in the den… a familiar joins you: ${ev.name} — ${ev.blurb}!`, 'log-start');
     if (ev.type === 'item-found') ui.logExplore(`Inside the cache: ${ev.name} — ${ev.blurb}. Equip it from a character sheet!`, 'log-start');
+    if (ev.type === 'level-up') ui.logExplore(`${ev.who} reaches level ${ev.level}! Open their sheet to choose an advance.`, 'log-start');
     if (ev.type === 'banked') showBankedOverlay(ev, events);
   }
 
@@ -119,6 +123,7 @@ game.subscribe((state, events) => {
     onAttack: (targetId) => game.attack(targetId),
     onBreath: () => game.breath(),
     onCast: (spellId, targetId) => game.cast(spellId, targetId),
+    onParley: (mode) => game.parley(mode),
     onSheet: (id) => openSheet(id),
     onBatchDone: (evts) => {
       const retreat = evts.find((e) => e.type === 'retreat');
@@ -150,12 +155,16 @@ function sheetSubject(id) {
       breath: tier.breath,
       spells: game.state.meta.tomeSpells.map((sid) => spellById(sid)).filter(Boolean),
       familiar: familiarById(game.state.meta.familiar),
+      renown: Object.entries(game.state.meta.reputation ?? {})
+        .filter(([, v]) => v !== 0)
+        .map(([faction, v]) => `${faction}: ${v > 0 ? '+' : ''}${v} (${rulesRef.dispositionLabel(v)})`),
       equip: equipInfo('dragon'),
     };
   }
-  const c = companionById(id) ?? game.state.meta.customCharacters.find((h) => h.id === id);
+  const c = game.heroWithGrowth(id);
   if (!c) return null;
   const slot = game.state.run?.party.find((pm) => pm.id === id);
+  const g = game.state.meta.heroGrowth?.[id] ?? { xp: 0, level: 1, pending: 0, choices: [] };
   return {
     name: c.name,
     blurb: c.imported
@@ -170,8 +179,25 @@ function sheetSubject(id) {
     attacks: c.attacks,
     spells: c.spells.map((sid) => spellById(sid)).filter(Boolean),
     traits: c.abilityLabel ? [c.abilityLabel] : [],
+    growth: {
+      level: g.level,
+      xp: g.xp,
+      pending: g.pending,
+      next: nextLevelXp(g.level),
+      learnable: learnableSpells(id),
+    },
     equip: equipInfo(id),
   };
+}
+
+function nextLevelXp(level) {
+  const { LEVEL_XP } = rulesRef;
+  return level < LEVEL_XP.length ? LEVEL_XP[level] : null;
+}
+
+function learnableSpells(id) {
+  const known = game.heroWithGrowth(id)?.spells ?? [];
+  return SPELLS_ALL.filter((sp) => sp.tome !== false && !known.includes(sp.id));
 }
 
 function equipInfo(charKey) {
@@ -202,6 +228,14 @@ ui.el('sheet-body').addEventListener('change', (ev) => {
   if (!sel) return;
   game.equip(sel.dataset.char, sel.dataset.slot, sel.value || null);
   if (openSheetId) openSheet(openSheetId);
+});
+
+// level-up advance choices inside the sheet
+ui.el('sheet-body').addEventListener('click', (ev) => {
+  const btn = ev.target.closest('.advance-btn');
+  if (!btn || !openSheetId) return;
+  game.chooseAdvance(openSheetId, btn.dataset.advance, btn.dataset.spell ?? null);
+  openSheet(openSheetId);
 });
 
 for (const btn of document.querySelectorAll('.sheet-btn')) {
@@ -272,6 +306,11 @@ ui.el('import-file').addEventListener('change', async (ev) => {
     ui.logExplore('That file did not look like a hero export.', 'log-hurt');
   }
 });
+
+// Delve mode: the dragon with its party, or the party alone.
+for (const btn of document.querySelectorAll('.mode-btn')) {
+  btn.addEventListener('click', () => game.setMode(btn.dataset.mode));
+}
 
 // Familiar picker on the title screen (dynamic buttons; found-only).
 ui.el('familiar-buttons').addEventListener('click', (ev) => {

@@ -20,10 +20,19 @@ import {
   playerAttack,
   playerBreath,
   playerSpell,
+  playerParley,
   isPlayerTurn,
   heroesOf,
 } from '../engine/combat.js';
-import { endOfRunBonus, tierAfterBanking, victoryDropChance } from '../engine/rules.js';
+import {
+  endOfRunBonus,
+  tierAfterBanking,
+  victoryDropChance,
+  levelForXp,
+  FACTION_ENEMIES,
+  parleyDC,
+  dispositionLabel,
+} from '../engine/rules.js';
 import { liveRNG } from '../engine/rng.js';
 import { loadSave, persist, clearSave } from './save.js';
 
@@ -33,6 +42,9 @@ function freshMeta() {
     tier: 'wyrmling',
     runsCompleted: 0,
     party: ['spawnee', 'dragonkin-swashbuckler'],
+    mode: 'dragon', // 'dragon' = dragon + party; 'party' = the party alone
+    heroGrowth: {}, // charId -> { xp, level, pending, choices: [{type, spellId?}] }
+    reputation: {}, // faction -> renown (kills of their enemies raise it)
     zone: null, // null = procedural labyrinth; else { zoneId, subIndex }
     familiar: null, // the active familiar (must be owned)
     familiarsOwned: [], // familiars are found in the dungeons, never bought
@@ -93,6 +105,9 @@ export function init() {
 /** Fill fields that predate this save's version of the game. */
 function normalizeMeta(meta) {
   meta.party ??= ['spawnee', 'dragonkin-swashbuckler'];
+  meta.mode ??= 'dragon';
+  meta.heroGrowth ??= {};
+  meta.reputation ??= {};
   meta.zone ??= null;
   meta.familiar ??= null;
   meta.familiarsOwned ??= [];
@@ -113,6 +128,66 @@ function normalizeMeta(meta) {
 /** Look up a hero template: built-in companion or imported character. */
 function heroById(id) {
   return companionById(id) ?? state.meta.customCharacters.find((c) => c.id === id) ?? null;
+}
+
+/** Growth record for a hero (created on demand). */
+function growthFor(id) {
+  state.meta.heroGrowth[id] ??= { xp: 0, level: 1, pending: 0, choices: [] };
+  return state.meta.heroGrowth[id];
+}
+
+/** A hero template with every chosen advance folded in. */
+export function heroWithGrowth(id) {
+  const base = heroById(id);
+  if (!base) return null;
+  const g = state.meta.heroGrowth[id];
+  if (!g || !g.choices.length) return base;
+  const hero = {
+    ...base,
+    abilities: { ...base.abilities },
+    attacks: base.attacks.map((a) => ({ ...a })),
+    spells: [...base.spells],
+  };
+  for (const choice of g.choices) {
+    if (choice.type === 'hp') hero.hpMax += 2;
+    if (choice.type === 'ac') hero.ac += 1;
+    if (choice.type === 'attack') hero.attacks.forEach((a) => (a.toHit += 1));
+    if (choice.type === 'spell' && choice.spellId && !hero.spells.includes(choice.spellId)) {
+      hero.spells.push(choice.spellId);
+    }
+  }
+  return hero;
+}
+
+/** Spend a pending level-up on an advance. */
+export function chooseAdvance(charId, type, spellId = null) {
+  const g = growthFor(charId);
+  if (g.pending <= 0) return;
+  if (!['hp', 'ac', 'attack', 'spell'].includes(type)) return;
+  if (type === 'spell') {
+    const spell = SPELLS.find((sp) => sp.id === spellId && sp.tome !== false);
+    const known = heroWithGrowth(charId)?.spells ?? [];
+    if (!spell || known.includes(spellId)) return;
+  }
+  g.choices.push(type === 'spell' ? { type, spellId } : { type });
+  g.pending -= 1;
+  // an HP advance helps immediately if this hero is mid-run
+  if (type === 'hp') {
+    const slot = state.run?.party.find((pm) => pm.id === charId);
+    if (slot) {
+      slot.hp.max += 2;
+      slot.hp.current += 2;
+    }
+  }
+  persist(state);
+  emit([{ type: 'advance-chosen', charId }]);
+}
+
+/** Delve as the dragon with its party, or as the party alone. */
+export function setMode(mode) {
+  state.meta.mode = mode === 'party' ? 'party' : 'dragon';
+  persist(state);
+  emit([{ type: 'mode-changed' }]);
 }
 
 /** Import heroes from the portal's exported JSON. Returns how many landed. */
@@ -176,10 +251,11 @@ export function newGame(seed = null) {
   clearSave();
   // A new game resets progress, not the choices just made on the title
   // screen: keep the picked party and hunting ground.
-  const { party, zone } = state.meta;
+  const { party, zone, mode } = state.meta;
   state.meta = freshMeta();
   if (party) state.meta.party = party;
   state.meta.zone = zone ?? null;
+  state.meta.mode = mode ?? 'dragon';
   enterLabyrinth(seed ?? randomSeed());
 }
 
@@ -215,11 +291,13 @@ export function enterLabyrinth(seed) {
   const dungeon = zonePick
     ? buildZoneDungeon(zonePick.zoneId, 0, seed, 1 + partyIds.length)
     : generateDungeon(seed, depth, 1 + partyIds.length);
+  // The party can delve alone, on the dragon's behalf — but never empty.
+  const partyMode = state.meta.mode === 'party' && partyIds.length > 0;
   const dragonMax = tier.hpMax + equipmentMod('dragon', 'hpMax');
   state.run = {
-    dragon: { tier: tier.tier, hp: { current: dragonMax, max: dragonMax } },
+    dragon: partyMode ? null : { tier: tier.tier, hp: { current: dragonMax, max: dragonMax } },
     party: partyIds.map((id) => {
-      const c = heroById(id);
+      const c = heroWithGrowth(id);
       const max = c.hpMax + equipmentMod(id, 'hpMax');
       return { id, hp: { current: max, max } };
     }),
@@ -358,6 +436,17 @@ function bankAndWin(events) {
   const banked = run.unbankedGold + bonus;
   state.meta.hoardGold += banked;
   state.meta.runsCompleted += 1;
+  // Gold is XP: everyone on the delve grows by what was banked.
+  for (const slot of run.party) {
+    const g = growthFor(slot.id);
+    g.xp += banked;
+    const newLevel = levelForXp(g.xp);
+    if (newLevel > g.level) {
+      g.pending += newLevel - g.level;
+      g.level = newLevel;
+      events.push({ type: 'level-up', charId: slot.id, who: heroById(slot.id)?.name ?? slot.id, level: newLevel });
+    }
+  }
   run.phase = 'won';
   run.lastResult = { banked, bonus, hoard: state.meta.hoardGold, depth: run.dungeon.depth };
   events.push({ type: 'banked', ...run.lastResult });
@@ -378,24 +467,45 @@ function checkTierUp(events) {
 // ---------------------------------------------------------------- combat
 function beginCombat(encounter) {
   const run = state.run;
-  const tier = tierByName(run.dragon.tier);
-  const dragon = makeDragonCombatant(tier, run.dragon.hp.current, {
-    spells: state.meta.tomeSpells,
-    familiar: state.meta.familiar,
-  });
-  dragon.hp.max = run.dragon.hp.max;
-  dragon.hp.current = Math.min(run.dragon.hp.current, dragon.hp.max);
-  applyEquipment(dragon, 'dragon');
+  let heroes = [];
+  if (run.dragon) {
+    const tier = tierByName(run.dragon.tier);
+    const dragon = makeDragonCombatant(tier, run.dragon.hp.current, {
+      spells: state.meta.tomeSpells,
+      familiar: state.meta.familiar,
+    });
+    dragon.hp.max = run.dragon.hp.max;
+    dragon.hp.current = Math.min(run.dragon.hp.current, dragon.hp.max);
+    applyEquipment(dragon, 'dragon');
+    heroes.push(dragon);
+  }
   // Downed companions come along at 0 HP — a Healing Word can revive them.
-  const companions = run.party.map((slot) => {
-    const c = makeCombatant(heroById(slot.id));
+  for (const slot of run.party) {
+    const c = makeCombatant(heroWithGrowth(slot.id));
     c.hp.max = slot.hp.max;
     c.hp.current = slot.hp.current;
     applyEquipment(c, slot.id);
-    return c;
-  });
+    heroes.push(c);
+  }
   const monsters = encounter.monsterIds.map((id) => makeCombatant(monsterById(id)));
-  const { combat, events } = createCombat([dragon, ...companions], monsters, liveRNG, encounter.bossName ?? null);
+  const { combat, events } = createCombat(heroes, monsters, liveRNG, encounter.bossName ?? null);
+  // Can this pack be talked to? Mindless things can't; hated parties are
+  // refused outright.
+  const lead = monsterById(encounter.monsterIds[0]);
+  const rep = state.meta.reputation[lead?.faction] ?? 0;
+  const willing = lead?.parley && lead.parley !== 'never' && monsters.every((m) => {
+    const t = monsterById(m.templateId);
+    return t?.parley && t.parley !== 'never';
+  });
+  combat.parleyInfo = willing && rep > -10
+    ? {
+        faction: lead.faction,
+        disposition: dispositionLabel(rep),
+        dc: parleyDC(lead.parley, rep),
+        barterCost: Math.ceil(monsters.reduce((sum, m) => sum + (m.goldValue ?? 0), 0) / 2),
+      }
+    : null;
+  if (combat.parleyInfo) combat.parleyInfo.canBarter = run.unbankedGold >= combat.parleyInfo.barterCost;
   run.phase = 'combat';
   run.combat = { combat, encounterId: encounter.id };
   const followUp = runMonsterTurns(combat, liveRNG);
@@ -418,6 +528,37 @@ export function breath() {
 
 export function cast(spellId, targetId = null) {
   resolvePlayerAction((combat) => playerSpell(combat, spellId, targetId, liveRNG));
+}
+
+/** Talk instead of fight: 'threaten' | 'persuade' | 'barter' | 'work'. */
+export function parley(mode) {
+  const run = state.run;
+  const combat = run?.combat?.combat;
+  const info = combat?.parleyInfo;
+  if (!info) return;
+  if (mode === 'barter' && run.unbankedGold < info.barterCost) return;
+  resolvePlayerAction((c) => {
+    const events = playerParley(c, mode, info.dc, liveRNG);
+    const succeeded = events.some((e) => e.type === 'parley' && e.success);
+    if (succeeded) {
+      if (mode === 'barter') {
+        run.unbankedGold -= info.barterCost;
+        events.push({ type: 'parley-paid', cost: info.barterCost });
+      }
+      if (mode === 'work') {
+        const boss = run.dungeon.encounters.find((e) => e.id.startsWith('boss'));
+        if (boss) {
+          const reward = 15 + run.dungeon.depth * 10;
+          run.quest = { encId: boss.id, name: boss.bossName, reward, from: info.faction };
+          events.push({ type: 'quest-received', target: boss.bossName, reward });
+        }
+      }
+      if (mode !== 'threaten') {
+        state.meta.reputation[info.faction] = (state.meta.reputation[info.faction] ?? 0) + 1;
+      }
+    }
+    return events;
+  });
 }
 
 function resolvePlayerAction(act) {
@@ -458,7 +599,7 @@ function syncDragonHp() {
   if (!combat) return;
   for (const hero of heroesOf(combat)) {
     if (hero.kind === 'dragon') {
-      run.dragon.hp.current = hero.hp.current;
+      if (run.dragon) run.dragon.hp.current = hero.hp.current;
     } else {
       const slot = run.party.find((p) => p.id === hero.templateId);
       if (slot) slot.hp.current = hero.hp.current;
@@ -473,6 +614,17 @@ function finishCombat(events) {
     // Only defeated monsters drop gold; ones that fled keep theirs.
     const slain = combat.order.filter((c) => c.kind === 'monster' && c.hp.current <= 0);
     run.unbankedGold += slain.reduce((sum, m) => sum + (m.goldValue ?? 0), 0);
+    // Renown: every faction remembers who kills its own — and its enemies.
+    for (const m of slain) {
+      const t = monsterById(m.templateId);
+      if (!t?.faction) continue;
+      state.meta.reputation[t.faction] = (state.meta.reputation[t.faction] ?? 0) - 1;
+      for (const friend of Object.keys(FACTION_ENEMIES)) {
+        if (FACTION_ENEMIES[friend]?.includes(t.faction)) {
+          state.meta.reputation[friend] = (state.meta.reputation[friend] ?? 0) + 1;
+        }
+      }
+    }
     const idx = run.dungeon.encounters.findIndex((e) => e.id === run.combat.encounterId);
     let bossName = null;
     let bossDrops = null;
@@ -484,6 +636,14 @@ function finishCombat(events) {
       run.playerPos = { x: enc.x, y: enc.y };
       reveal(run);
     }
+    // A promised bounty pays out when its target falls.
+    if (run.quest && run.quest.encId === run.combat.encounterId) {
+      run.unbankedGold += run.quest.reward;
+      events.push({ type: 'quest-complete', target: run.quest.name, reward: run.quest.reward, from: run.quest.from });
+      state.meta.reputation[run.quest.from] = (state.meta.reputation[run.quest.from] ?? 0) + 2;
+      run.quest = null;
+    }
+
     // Magic items come ONLY from named bosses (and quests): first from the
     // boss's own hoard list, then the dungeon's wider treasure pool.
     if (slain.length && bossName) {

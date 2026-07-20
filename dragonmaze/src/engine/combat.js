@@ -17,6 +17,7 @@ import {
   resolveSpellCast,
 } from './rules.js';
 import { roll } from './dice.js';
+import { resolveParleyCheck } from './rules.js';
 import { spellById } from '../../data/spells.js';
 
 const alive = (c) => c.hp.current > 0 && !c.fled;
@@ -99,9 +100,12 @@ function checkVictory(combat, events) {
   return true;
 }
 
-/** The dragon falling ends the fight in defeat, whoever else stands. */
+/** With the dragon along, its fall ends the fight; a party adventuring
+ * alone is beaten only when every hero is down. */
 function checkDefeat(combat, events) {
-  if (dragonOf(combat).hp.current > 0) return false;
+  const dragon = dragonOf(combat);
+  const beaten = dragon ? dragon.hp.current <= 0 : livingHeroes(combat).length === 0;
+  if (!beaten) return false;
   combat.over = true;
   combat.winner = 'monsters';
   events.push({ type: 'defeat' });
@@ -206,6 +210,7 @@ export function runMonsterTurns(combat, rng = Math.random) {
     });
     if (target.kind === 'dragon' && checkDefeat(combat, events)) return events;
     afterDamage(combat, target, rng, events);
+    if (checkDefeat(combat, events)) return events;
     advanceTurn(combat, events);
   }
   // The dragon's turn is coming up: try to rekindle spent breath.
@@ -278,6 +283,42 @@ export function playerBreath(combat, rng = Math.random) {
   events.push({ type: 'breath', total, rolls: dmg.rolls, dc: spec.dc, results });
   for (const m of targets) afterDamage(combat, m, rng, events);
   if (!checkVictory(combat, events)) advanceTurn(combat, events);
+  return events;
+}
+
+/**
+ * Talk instead of fight. Available on the first round only, once per
+ * combat, and only against creatures willing to hear it (the UI gates
+ * that). The check is CHA vs a DC the caller computed from disposition
+ * and renown. Outcomes:
+ *   threaten — success routs every living monster (they keep their gold)
+ *   persuade — success ends the fight peacefully
+ *   barter   — like persuade; the caller already took the payment
+ *   work     — like persuade; the caller records the bounty they offer
+ */
+export function playerParley(combat, mode, dc, rng = Math.random) {
+  const events = [];
+  if (!isPlayerTurn(combat) || combat.parleyUsed || combat.round > 1) return events;
+  combat.parleyUsed = true;
+  const actor = currentCombatant(combat);
+  const check = resolveParleyCheck(actor, dc, rng);
+  events.push({ type: 'parley', mode, actor: actor.name, ...check });
+  if (check.success) {
+    if (mode === 'threaten') {
+      for (const m of livingMonsters(combat)) {
+        m.panicked = true;
+        m.moraleChecked = true;
+      }
+      events.push({ type: 'parley-rout' });
+      advanceTurn(combat, events);
+      return events;
+    }
+    for (const m of livingMonsters(combat)) m.fled = true;
+    events.push({ type: 'parley-peace', mode });
+    checkVictory(combat, events);
+    return events;
+  }
+  advanceTurn(combat, events);
   return events;
 }
 

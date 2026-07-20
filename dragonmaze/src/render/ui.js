@@ -23,10 +23,10 @@ export function showOverlay(id, visible) {
 export function updateHud(state) {
   const run = state.run;
   if (!run) return;
-  const hp = run.dragon.hp;
+  const hp = run.dragon ? run.dragon.hp : run.party[0]?.hp ?? { current: 0, max: 1 };
   chip('hud-hp', `${hp.current}/${hp.max}`);
   el('hud-hp').classList.toggle('danger', hp.current <= Math.ceil(hp.max / 3));
-  chip('hud-tier', cap(run.dragon.tier));
+  chip('hud-tier', run.dragon ? cap(run.dragon.tier) : 'The Party');
   chip('hud-depth', `Depth ${run.dungeon.depth}`);
   chip('hud-carried', `${run.unbankedGold}`);
   chip('hud-hoard', state.meta.hoardGold.toLocaleString());
@@ -57,6 +57,11 @@ export function updateTitle(state) {
   el('zone-blurb').textContent = zone
     ? zone.blurb
     : 'An ever-changing maze, deeper and richer with every delve.';
+
+  // delve mode
+  for (const btn of document.querySelectorAll('.mode-btn')) {
+    btn.classList.toggle('selected', (state.meta.mode ?? 'dragon') === btn.dataset.mode);
+  }
 
   // familiar picker: only found familiars unlock; the rest stay mysteries
   const owned = state.meta.familiarsOwned ?? [];
@@ -131,9 +136,31 @@ export function showCharacterSheet(subject) {
     ${subject.breath ? `<h3>Fire Breath</h3><ul><li>${subject.breath.damage} fire damage to every enemy, save DC ${subject.breath.dc} for half; recharges on a 5+</li></ul>` : ''}
     ${spells}
     ${subject.familiar ? `<h3>Familiar</h3><ul><li>${subject.familiar.name} — ${subject.familiar.blurb}</li></ul>` : ''}
+    ${subject.renown?.length ? `<h3>Renown</h3><ul>${subject.renown.map((r) => `<li>${r}</li>`).join('')}</ul>` : ''}
     ${subject.traits?.length ? `<h3>Traits</h3><ul>${subject.traits.map((t) => `<li>${t}</li>`).join('')}</ul>` : ''}
+    ${growthHtml(subject)}
     ${equipmentHtml(subject)}`;
   showOverlay('sheet-overlay', true);
+}
+
+function growthHtml(subject) {
+  if (!subject.growth) return '';
+  const g = subject.growth;
+  let html = `<h3>Level ${g.level}</h3><p class="sheet-blurb">${g.xp} XP${g.next ? ` — next level at ${g.next}` : ' — at the summit'}</p>`;
+  if (g.pending > 0) {
+    const spellOpts = g.learnable
+      .map((sp) => `<button class="zone-btn advance-btn" data-advance="spell" data-spell="${sp.id}">Learn ${sp.name}</button>`)
+      .join('');
+    html += `
+      <p class="sheet-blurb">Level up! Choose ${g.pending} advance${g.pending > 1 ? 's' : ''}:</p>
+      <div class="zone-buttons">
+        <button class="zone-btn advance-btn" data-advance="hp">+2 max HP</button>
+        <button class="zone-btn advance-btn" data-advance="attack">+1 to hit</button>
+        <button class="zone-btn advance-btn" data-advance="ac">+1 AC</button>
+        ${spellOpts}
+      </div>`;
+  }
+  return html;
 }
 
 function equipmentHtml(subject) {

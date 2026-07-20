@@ -69,6 +69,11 @@ STRIPS = {
         "cells": [(3, 3), (4, 3)],
         "box": (4, 4, 146, 146),
     },
+    "swash-walk": {
+        "sheet": "dragonkin-swashbuckler-sheet.png",
+        "cells": [(1, 2), (2, 2)],
+        "box": (14, 38, 124, 108),
+    },
     "swash-idle": {
         "sheet": "dragonkin-swashbuckler-sheet.png",
         "cells": [(1, 3), (2, 3)],
@@ -78,6 +83,11 @@ STRIPS = {
         "sheet": "dragonkin-swashbuckler-sheet.png",
         "cells": [(2, 1), (3, 1)],
         "box": (14, 52, 124, 94),
+    },
+    "spellblade-walk": {
+        "sheet": "dragonkin-spellblade-sheet.png",
+        "cells": [(2, 4), (3, 4)],
+        "box": (3, 3, 107, 107),
     },
     "spellblade-idle": {
         "sheet": "dragonkin-spellblade-sheet.png",
@@ -141,6 +151,10 @@ STRIPS = {
         "box": (2, 2, 77, 75),
     },
     # labeled panel sheet, irregular layout: absolute boxes
+    "spawnee-walk": {
+        "sheet": "spawnee-sheet.png",
+        "abs": [(351, 51, 135, 155), (501, 51, 135, 155)],
+    },
     "spawnee-idle": {
         "sheet": "spawnee-sheet.png",
         "abs": [(51, 51, 137, 155), (204, 51, 135, 155)],

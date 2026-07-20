@@ -120,6 +120,19 @@ export function bumpDamage(expr, n) {
   return `${count}d${m[2]}${mod ? (mod > 0 ? `+${mod}` : `${mod}`) : ''}`;
 }
 
+// ---------------------------------------------------------------- leveling
+// Gold is XP (Shadowdark): banked gold advances every party member on the
+// delve. Cumulative thresholds for levels 1..10.
+export const LEVEL_XP = [0, 50, 120, 250, 450, 700, 1000, 1400, 1900, 2500];
+
+export function levelForXp(xp) {
+  let level = 1;
+  for (let i = 1; i < LEVEL_XP.length; i++) {
+    if (xp >= LEVEL_XP[i]) level = i + 1;
+  }
+  return level;
+}
+
 // ---------------------------------------------------------------- spells
 /**
  * Casting check: d20 + CHA vs the spell's castDC. Natural 20 always works,
@@ -131,6 +144,43 @@ export function resolveSpellCast(caster, spell, rng = Math.random) {
   const total = die.total + bonus;
   const success = die.total !== 1 && (die.total === 20 || total >= spell.castDC);
   return { natural: die.total, bonus, total, dc: spell.castDC, success };
+}
+
+// ---------------------------------------------------------------- parley & renown
+// Old grudges of the dungeons: slaying a faction's enemies earns its trust,
+// slaying its own erodes it (Shadowdark-style renown).
+export const FACTION_ENEMIES = {
+  froglok: ['undead', 'lizardfolk'],
+  undead: ['froglok'],
+  lizardfolk: ['froglok'],
+  goblinoid: [],
+  sarnak: [],
+  aberrant: [],
+  wild: [],
+  construct: [],
+};
+
+/** Parley DC: base 12, shifted by disposition and standing. */
+export function parleyDC(parley, rep) {
+  const base = parley === 'willing' ? 11 : 13;
+  return Math.max(8, Math.min(18, base - Math.floor((rep ?? 0) / 3)));
+}
+
+/** How a faction greets you at this standing. */
+export function dispositionLabel(rep) {
+  if (rep >= 5) return 'friendly';
+  if (rep <= -10) return 'hateful';
+  if (rep <= -5) return 'hostile';
+  return 'wary';
+}
+
+/** A CHA check to talk instead of fight. Nat 20 always lands, nat 1 never. */
+export function resolveParleyCheck(actor, dc, rng = Math.random) {
+  const die = d20({ rng });
+  const bonus = actor.abilities?.cha ?? 0;
+  const total = die.total + bonus;
+  const success = die.total !== 1 && (die.total === 20 || total >= dc);
+  return { natural: die.total, bonus, total, dc, success };
 }
 
 // ---------------------------------------------------------------- morale

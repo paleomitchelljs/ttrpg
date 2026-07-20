@@ -23,7 +23,8 @@ import { ZONES } from '../data/zones.js';
 import { buildZoneDungeon } from '../src/world/zones.js';
 import { FAMILIARS } from '../data/familiars.js';
 import { ITEMS } from '../data/items.js';
-import { bumpDamage, victoryDropChance } from '../src/engine/rules.js';
+import { bumpDamage, victoryDropChance, levelForXp, LEVEL_XP } from '../src/engine/rules.js';
+import * as gameState from '../src/state/gameState.js';
 import { portalToCompanion } from '../src/state/importHero.js';
 import { COMPANIONS, companionById } from '../data/party.js';
 import { resolveSpellCast } from '../src/engine/rules.js';
@@ -495,6 +496,64 @@ check('party combat: monsters fight heroes, heals can revive', () => {
   assert.equal(heal.revived, true);
   assert.ok(knight.hp.current > 0, 'knight revived');
   assert.equal(livingMonsters(combat).length, 1);
+});
+
+// ---- leveling & party-only mode
+check('gold-as-XP levels follow the thresholds', () => {
+  assert.equal(levelForXp(0), 1);
+  assert.equal(levelForXp(49), 1);
+  assert.equal(levelForXp(50), 2);
+  assert.equal(levelForXp(120), 3);
+  assert.equal(levelForXp(999999), LEVEL_XP.length);
+});
+
+check('growth choices fold into the hero template', () => {
+  const game = gameState;
+  game.state.meta.heroGrowth = {
+    spawnee: { xp: 200, level: 3, pending: 0, choices: [{ type: 'hp' }, { type: 'hp' }, { type: 'ac' }, { type: 'attack' }, { type: 'spell', spellId: 'ember-bolt' }] },
+  };
+  const grown = game.heroWithGrowth('spawnee');
+  const base = companionById('spawnee');
+  assert.equal(grown.hpMax, base.hpMax + 4);
+  assert.equal(grown.ac, base.ac + 1);
+  assert.equal(grown.attacks[0].toHit, base.attacks[0].toHit + 1);
+  assert.ok(grown.spells.includes('ember-bolt'));
+  assert.ok(grown.spells.includes('drain-life'), 'base spells kept');
+
+  // chooseAdvance guards: no pending -> no change; vampire spells unlearnable
+  game.chooseAdvance('spawnee', 'hp');
+  assert.equal(game.state.meta.heroGrowth.spawnee.choices.length, 5);
+  game.state.meta.heroGrowth.spawnee.pending = 1;
+  game.chooseAdvance('spawnee', 'spell', 'dominate-undead');
+  assert.equal(game.state.meta.heroGrowth.spawnee.pending, 1, 'vampire powers cannot be chosen');
+  game.chooseAdvance('spawnee', 'spell', 'healing-word');
+  assert.equal(game.state.meta.heroGrowth.spawnee.pending, 0);
+});
+
+check('a party without the dragon loses only when everyone is down', () => {
+  const spawnee = makeCombatant(companionById('spawnee'));
+  const swash = makeCombatant(companionById('dragonkin-swashbuckler'));
+  const troll = makeCombatant(monsterById('cave-troll'));
+  const { combat } = createCombat([spawnee, swash], [troll], () => 0.5);
+  assert.equal(combat.order.length, 3);
+  // one hero down and one standing: the troll's blow must not end it yet
+  swash.hp.current = 0;
+  spawnee.hp.current = 30; // sturdy for a moment
+  combat.turnIndex = combat.order.findIndex((c) => c.id === troll.id);
+  runMonsterTurns(combat, () => 0.7);
+  assert.ok(!combat.over, 'fight continues while a hero stands');
+  // last hero at 1 HP with slowfall spent: the next hit is defeat
+  spawnee.relentlessUsed = true;
+  spawnee.hp.current = 1;
+  combat.turnIndex = combat.order.findIndex((c) => c.id === troll.id);
+  runMonsterTurns(combat, () => 0.7);
+  assert.equal(combat.winner, 'monsters', 'party wiped without a dragon');
+});
+
+check('companion walk strips exist for overworld duty', () => {
+  for (const c of COMPANIONS) {
+    assert.ok(c.walk && SPRITES[c.walk], `${c.id} walk strip`);
+  }
 });
 
 console.log(`\n${passed} checks passed.`);

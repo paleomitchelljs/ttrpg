@@ -23,6 +23,9 @@ const DRAGON_FLY_STRIP = SPRITES['dragon-fly'];
 
 const delay = (ms) => new Promise((r) => setTimeout(r, ms));
 
+// sentinel for the parley submenu inside renderActions
+const PARLEY_MENU = Symbol('parley');
+
 // ---------------------------------------------------------------- queue
 const batches = [];
 let processing = false;
@@ -224,6 +227,40 @@ async function presentEvent(els, ev) {
       card?.classList.remove('heal-flash');
       return;
     }
+    case 'parley': {
+      const verb = { threaten: 'growls a threat', persuade: 'talks fast', barter: 'offers a trade', work: 'asks for work' }[ev.mode] ?? 'parleys';
+      appendLog(
+        els.log,
+        ev.success
+          ? `${ev.actor} ${verb} — and they listen! (${ev.total} vs DC ${ev.dc})`
+          : `${ev.actor} ${verb}… but they aren't having it. (${ev.total} vs DC ${ev.dc})`,
+        ev.success ? 'log-start' : 'log-miss'
+      );
+      return delay(450);
+    }
+    case 'parley-rout':
+      appendLog(els.log, `They break! The whole pack scatters before you!`, 'log-start');
+      return delay(450);
+    case 'parley-peace':
+      appendLog(
+        els.log,
+        ev.mode === 'barter'
+          ? 'A deal is struck — they withdraw with their price.'
+          : ev.mode === 'work'
+            ? 'Weapons lower. They have a job for you…'
+            : 'Words win. They lower their weapons and withdraw.',
+        'log-start'
+      );
+      return delay(500);
+    case 'parley-paid':
+      appendLog(els.log, `You hand over ${ev.cost} gold.`, 'log-miss');
+      return delay(300);
+    case 'quest-received':
+      appendLog(els.log, `Bounty accepted: slay ${ev.target} for ${ev.reward} gold!`, 'log-start');
+      return delay(500);
+    case 'quest-complete':
+      appendLog(els.log, `Bounty fulfilled — ${ev.target} is slain! ${ev.reward} gold, and word of your deed spreads.`, 'log-start');
+      return delay(600);
     case 'morale':
       appendLog(
         els.log,
@@ -709,8 +746,9 @@ function renderActions(els, combat, handlers, targetSpell) {
   }
   const actor = currentCombatant(combat);
 
-  // Second step of casting: pick the spell's target.
-  if (targetSpell) {
+  // Second step of casting: pick the spell's target. (PARLEY_MENU is handled
+  // in the parley block below, not here.)
+  if (targetSpell && targetSpell !== PARLEY_MENU) {
     const buttons = [];
     const targets =
       targetSpell.target === 'enemy' ? livingMonsters(combat) : heroesOf(combat);
@@ -757,6 +795,40 @@ function renderActions(els, combat, handlers, targetSpell) {
       btn.innerHTML = `${ICONS.flame}<span>Recharging…</span>`;
       btn.disabled = true;
     }
+    buttons.push(btn);
+  }
+  if (combat.parleyInfo && !combat.parleyUsed && combat.round === 1) {
+    if (targetSpell === PARLEY_MENU) {
+      const info = combat.parleyInfo;
+      const mk = (mode, label, disabled = false) => {
+        const b = document.createElement('button');
+        b.className = 'btn attack-btn parley-btn';
+        b.innerHTML = `<span>${label}</span>`;
+        b.disabled = disabled;
+        if (!disabled) b.addEventListener('click', () => handlers.onParley(mode));
+        return b;
+      };
+      const cancel = document.createElement('button');
+      cancel.className = 'btn btn-small';
+      cancel.textContent = 'Cancel';
+      cancel.addEventListener('click', () => renderActions(els, combat, handlers, null));
+      const note = document.createElement('div');
+      note.className = 'target-note';
+      note.textContent = `they seem ${info.disposition} (CHA check, DC ${info.dc})`;
+      els.actions.replaceChildren(
+        mk('threaten', 'Threaten'),
+        mk('persuade', 'Persuade'),
+        mk('barter', `Barter (${info.barterCost} gold)`, !info.canBarter),
+        mk('work', 'Ask for work'),
+        cancel,
+        note
+      );
+      return;
+    }
+    const btn = document.createElement('button');
+    btn.className = 'btn attack-btn parley-btn';
+    btn.innerHTML = `<span>Parley…</span>`;
+    btn.addEventListener('click', () => renderActions(els, combat, handlers, PARLEY_MENU));
     buttons.push(btn);
   }
   if (actor.spells.length) {
