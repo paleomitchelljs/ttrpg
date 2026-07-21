@@ -12,6 +12,7 @@ find objects as connected non-magenta blobs, then crop the ones we name.
       -> crops named props into assets/tiles/, magenta keyed out.
 """
 import argparse
+import json
 from collections import deque
 from pathlib import Path
 from PIL import Image, ImageDraw
@@ -20,6 +21,19 @@ from spritelib import write_manifest
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "assets" / "tiles"
+TAGS = ROOT / "data" / "tile-tags.json"
+
+
+def record_tags(name, tags, sheet, box):
+    """Merge one tile's tags + provenance into data/tile-tags.json."""
+    data = {}
+    if TAGS.exists():
+        try:
+            data = json.loads(TAGS.read_text())
+        except Exception:
+            data = {}
+    data[name] = {"tags": [t for t in tags if t], "sheet": sheet, "box": list(box)}
+    TAGS.write_text(json.dumps(dict(sorted(data.items())), indent=2) + "\n")
 
 
 def is_bg(px):
@@ -90,13 +104,21 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("sheet")
     ap.add_argument("--detect", action="store_true")
+    ap.add_argument("--json", action="store_true", help="with --detect, print boxes as JSON")
     ap.add_argument("--overview", default=None)
     ap.add_argument("--crop", nargs="*", default=[])  # NAME=X,Y,W,H
+    # single tagged slice (used by the in-editor slicer)
+    ap.add_argument("--name", default=None)
+    ap.add_argument("--box", default=None, help="x,y,w,h")
+    ap.add_argument("--tags", default="", help="comma-separated")
     args = ap.parse_args()
     im = Image.open(args.sheet).convert("RGBA")
 
     if args.detect:
         boxes = detect(im)
+        if args.json:
+            print(json.dumps([{"x": x, "y": y, "w": w, "h": h, "area": a} for x, y, w, h, a in boxes]))
+            return
         over = im.copy()
         d = ImageDraw.Draw(over)
         for i, (x, y, w, h, a) in enumerate(boxes):
@@ -109,6 +131,15 @@ def main():
         return
 
     OUT.mkdir(parents=True, exist_ok=True)
+
+    if args.name and args.box:
+        x, y, w, h = (int(n) for n in args.box.split(","))
+        dekey_crop(im, (x, y, w, h)).save(OUT / f"{args.name}.png")
+        record_tags(args.name, args.tags.split(","), Path(args.sheet).name, (x, y, w, h))
+        write_manifest(ROOT)
+        print(json.dumps({"ok": True, "name": args.name, "tags": [t for t in args.tags.split(",") if t]}))
+        return
+
     for spec in args.crop:
         name, box = spec.split("=")
         x, y, w, h = (int(n) for n in box.split(","))

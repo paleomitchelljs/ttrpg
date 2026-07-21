@@ -1,0 +1,162 @@
+{
+  "brazier1": {
+    "tags": [
+      "prop",
+      "light"
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "box": [
+      840,
+      544,
+      76,
+      152
+    ]
+  },
+  "brazier2": {
+    "tags": [
+      "prop",
+      "light"
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "box": [
+      1116,
+      548,
+      80,
+      148
+    ]
+  },
+  "building-snake": {
+    "tags": [
+      "building"
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "box": [
+      528,
+      712,
+      344,
+      280
+    ]
+  },
+  "gator-statue": {
+    "tags": [
+      "statue"
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "box": [
+      156,
+      524,
+      104,
+      172
+    ]
+  },
+  "round-hut": {
+    "tags": [
+      "building"
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "box": [
+      276,
+      708,
+      228,
+      284
+    ]
+  },
+  "snake-statue": {
+    "tags": [
+      "statue"
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "box": [
+      28,
+      524,
+      124,
+      176
+    ]
+  },
+  "stone-hut": {
+    "tags": [
+      "building"
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "box": [
+      16,
+      716,
+      252,
+      276
+    ]
+  },
+  "wall-a": {
+    "tags": [
+      "wall"
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "box": [
+      26,
+      18,
+      72,
+      72
+    ]
+  },
+  "wall-b": {
+    "tags": [
+      "wall"
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "box": [
+      128,
+      18,
+      72,
+      72
+    ]
+  },
+  "wall-c": {
+    "tags": [
+      "wall"
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "box": [
+      236,
+      18,
+      72,
+      72
+    ]
+  },
+  "wall-col": {
+    "tags": [
+      "wall",
+      "corner"
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "box": [
+      1145,
+      286,
+      60,
+      92
+    ]
+  },
+  "wall-temple": {
+    "tags": [
+      "wall",
+      "floor"
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "box": [
+      188,
+      296,
+      64,
+      64
+    ]
+  },
+  "well": {
+    "tags": [
+      "structure"
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "box": [
+      1224,
+      724,
+      244,
+      268
+    ]
+  }
+}
