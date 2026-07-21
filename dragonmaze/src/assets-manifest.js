@@ -2,6 +2,8 @@
 // Lists every PNG in assets/sprites and assets/tiles; build.mjs inlines the
 // referenced ones as data URIs.
 export const SPRITES = {
+  'alligator-attack': './assets/sprites/alligator-attack.png',
+  'alligator-idle': './assets/sprites/alligator-idle.png',
   'avatar-of-fear-attack': './assets/sprites/avatar-of-fear-attack.png',
   'avatar-of-fear-idle': './assets/sprites/avatar-of-fear-idle.png',
   'beren-attack': './assets/sprites/beren-attack.png',
@@ -22,6 +24,8 @@ export const SPRITES = {
   'fungus-idle': './assets/sprites/fungus-idle.png',
   'gargoyle-attack': './assets/sprites/gargoyle-attack.png',
   'gargoyle-idle': './assets/sprites/gargoyle-idle.png',
+  'girallon-attack': './assets/sprites/girallon-attack.png',
+  'girallon-idle': './assets/sprites/girallon-idle.png',
   'goblin-attack': './assets/sprites/goblin-attack.png',
   'goblin-idle': './assets/sprites/goblin-idle.png',
   'iron-golem-attack': './assets/sprites/iron-golem-attack.png',
@@ -55,9 +59,13 @@ export const SPRITES = {
   'swash-attack': './assets/sprites/swash-attack.png',
   'swash-idle': './assets/sprites/swash-idle.png',
   'swash-walk': './assets/sprites/swash-walk.png',
+  'thief-attack': './assets/sprites/thief-attack.png',
+  'thief-idle': './assets/sprites/thief-idle.png',
   'turquoise-attack': './assets/sprites/turquoise-attack.png',
   'turquoise-idle': './assets/sprites/turquoise-idle.png',
   'turquoise-walk': './assets/sprites/turquoise-walk.png',
+  'wolfpack-bandit-attack': './assets/sprites/wolfpack-bandit-attack.png',
+  'wolfpack-bandit-idle': './assets/sprites/wolfpack-bandit-idle.png',
   'yuan-ti-attack': './assets/sprites/yuan-ti-attack.png',
   'yuan-ti-idle': './assets/sprites/yuan-ti-idle.png',
 };

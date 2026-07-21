@@ -1,0 +1,1980 @@
+[
+  {
+    "zone": "upper-guk",
+    "sub": "sunken-gate",
+    "name": "The Sunken Gate & City Labyrinth",
+    "index": 0,
+    "size": {
+      "w": 15,
+      "h": 11
+    },
+    "theme": "swamp",
+    "difficulty": 1,
+    "start": {
+      "x": 1,
+      "y": 1
+    },
+    "doors": [
+      {
+        "ch": "E",
+        "x": 6,
+        "y": 0,
+        "to": "surface"
+      },
+      {
+        "ch": "1",
+        "x": 14,
+        "y": 9,
+        "to": "mushroom-crypts"
+      }
+    ],
+    "edges": null,
+    "portals": [],
+    "table": [
+      {
+        "id": "froglok-skirmisher",
+        "weight": 3,
+        "packMax": 2
+      },
+      {
+        "id": "giant-rat",
+        "weight": 2,
+        "packMax": 3
+      },
+      {
+        "id": "fungus-man",
+        "weight": 2,
+        "packMax": 2
+      }
+    ],
+    "boss": {
+      "name": "The gate-watch",
+      "monsterIds": [
+        "froglok-skirmisher",
+        "froglok-skirmisher"
+      ],
+      "drops": [
+        "croak-horn"
+      ]
+    },
+    "miniboss": null,
+    "objects": [
+      {
+        "type": "monster",
+        "x": 10,
+        "y": 1,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 10,
+        "y": 4,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 6,
+        "y": 7,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 13,
+        "y": 1,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 5,
+        "y": 5,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 1,
+        "y": 9,
+        "roll": true
+      },
+      {
+        "type": "boss",
+        "x": 5,
+        "y": 9,
+        "name": "The gate-watch",
+        "pack": [
+          "froglok-skirmisher",
+          "froglok-skirmisher"
+        ],
+        "drops": [
+          "croak-horn"
+        ]
+      }
+    ]
+  },
+  {
+    "zone": "upper-guk",
+    "sub": "mushroom-crypts",
+    "name": "The Mushroom Farm",
+    "index": 1,
+    "size": {
+      "w": 15,
+      "h": 11
+    },
+    "theme": "swamp",
+    "difficulty": 2,
+    "start": {
+      "x": 1,
+      "y": 1
+    },
+    "doors": [
+      {
+        "ch": "1",
+        "x": 1,
+        "y": 0,
+        "to": "sunken-gate"
+      },
+      {
+        "ch": "E",
+        "x": 7,
+        "y": 0,
+        "to": "surface"
+      },
+      {
+        "ch": "2",
+        "x": 14,
+        "y": 9,
+        "to": "the-crypts"
+      }
+    ],
+    "edges": null,
+    "portals": [],
+    "table": [
+      {
+        "id": "froglok-skirmisher",
+        "weight": 2,
+        "packMax": 2
+      },
+      {
+        "id": "fungus-man",
+        "weight": 3,
+        "packMax": 3
+      },
+      {
+        "id": "giant-spider",
+        "weight": 2,
+        "packMax": 2
+      },
+      {
+        "id": "green-slime",
+        "weight": 1,
+        "packMax": 1
+      }
+    ],
+    "boss": {
+      "name": "A troll raider of Innothule",
+      "monsterIds": [
+        "cave-troll"
+      ],
+      "drops": [
+        "gatorscale-sleeves"
+      ]
+    },
+    "miniboss": null,
+    "objects": [
+      {
+        "type": "monster",
+        "x": 13,
+        "y": 1,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 2,
+        "y": 3,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 7,
+        "y": 3,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 4,
+        "y": 8,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 9,
+        "y": 1,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 5,
+        "y": 6,
+        "roll": true
+      },
+      {
+        "type": "boss",
+        "x": 7,
+        "y": 9,
+        "name": "A troll raider of Innothule",
+        "pack": [
+          "cave-troll"
+        ],
+        "drops": [
+          "gatorscale-sleeves"
+        ]
+      }
+    ]
+  },
+  {
+    "zone": "upper-guk",
+    "sub": "the-crypts",
+    "name": "The Crypts",
+    "index": 2,
+    "size": {
+      "w": 15,
+      "h": 11
+    },
+    "theme": "dark",
+    "difficulty": 2,
+    "start": {
+      "x": 1,
+      "y": 1
+    },
+    "doors": [
+      {
+        "ch": "2",
+        "x": 1,
+        "y": 0,
+        "to": "mushroom-crypts"
+      },
+      {
+        "ch": "E",
+        "x": 7,
+        "y": 0,
+        "to": "surface"
+      },
+      {
+        "ch": "3",
+        "x": 14,
+        "y": 1,
+        "to": "temple-gator-pools"
+      }
+    ],
+    "edges": null,
+    "portals": [],
+    "table": [
+      {
+        "id": "skeleton",
+        "weight": 3,
+        "packMax": 2
+      },
+      {
+        "id": "zombie",
+        "weight": 2,
+        "packMax": 2
+      },
+      {
+        "id": "gargoyle",
+        "weight": 2,
+        "packMax": 2
+      }
+    ],
+    "boss": {
+      "name": "The Escaped Ghoul, the crypt-thing",
+      "monsterIds": [
+        "bone-wraith",
+        "zombie"
+      ],
+      "drops": [
+        "deepwater-circlet"
+      ]
+    },
+    "miniboss": null,
+    "objects": [
+      {
+        "type": "monster",
+        "x": 12,
+        "y": 1,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 9,
+        "y": 4,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 2,
+        "y": 6,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 7,
+        "y": 8,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 5,
+        "y": 1,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 5,
+        "y": 4,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 12,
+        "y": 6,
+        "roll": true
+      },
+      {
+        "type": "boss",
+        "x": 10,
+        "y": 9,
+        "name": "The Escaped Ghoul, the crypt-thing",
+        "pack": [
+          "bone-wraith",
+          "zombie"
+        ],
+        "drops": [
+          "deepwater-circlet"
+        ]
+      }
+    ]
+  },
+  {
+    "zone": "upper-guk",
+    "sub": "temple-gator-pools",
+    "name": "The Temple of Marr & the Gator Pools",
+    "index": 3,
+    "size": {
+      "w": 15,
+      "h": 11
+    },
+    "theme": "swamp",
+    "difficulty": 3,
+    "start": {
+      "x": 1,
+      "y": 1
+    },
+    "doors": [
+      {
+        "ch": "3",
+        "x": 1,
+        "y": 0,
+        "to": "the-crypts"
+      },
+      {
+        "ch": "E",
+        "x": 7,
+        "y": 0,
+        "to": "surface"
+      }
+    ],
+    "edges": null,
+    "portals": [],
+    "table": [
+      {
+        "id": "froglok-skirmisher",
+        "weight": 2,
+        "packMax": 2
+      },
+      {
+        "id": "alligator",
+        "weight": 3,
+        "packMax": 2
+      },
+      {
+        "id": "gargoyle",
+        "weight": 2,
+        "packMax": 2
+      }
+    ],
+    "boss": {
+      "name": "The Ancient Crocodile of the pools",
+      "monsterIds": [
+        "cave-troll",
+        "alligator"
+      ],
+      "drops": [
+        "mithril-two-hander",
+        "testament-of-marr"
+      ]
+    },
+    "miniboss": null,
+    "objects": [
+      {
+        "type": "monster",
+        "x": 5,
+        "y": 3,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 10,
+        "y": 3,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 12,
+        "y": 5,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 2,
+        "y": 7,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 7,
+        "y": 1,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 5,
+        "y": 5,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 7,
+        "y": 9,
+        "roll": true
+      },
+      {
+        "type": "boss",
+        "x": 9,
+        "y": 9,
+        "name": "The Ancient Crocodile of the pools",
+        "pack": [
+          "cave-troll",
+          "alligator"
+        ],
+        "drops": [
+          "mithril-two-hander",
+          "testament-of-marr"
+        ]
+      }
+    ]
+  },
+  {
+    "zone": "lower-guk",
+    "sub": "kings-redoubt",
+    "name": "The Living Side — King’s Redoubt",
+    "index": 0,
+    "size": {
+      "w": 15,
+      "h": 11
+    },
+    "theme": "dark",
+    "difficulty": 3,
+    "start": {
+      "x": 1,
+      "y": 1
+    },
+    "doors": [
+      {
+        "ch": "E",
+        "x": 6,
+        "y": 0,
+        "to": "surface"
+      },
+      {
+        "ch": "1",
+        "x": 14,
+        "y": 9,
+        "to": "ghoul-kingdom"
+      }
+    ],
+    "edges": null,
+    "portals": [],
+    "table": [
+      {
+        "id": "froglok-skirmisher",
+        "weight": 3,
+        "packMax": 3
+      },
+      {
+        "id": "cave-troll",
+        "weight": 1,
+        "packMax": 1
+      },
+      {
+        "id": "lizardfolk-warrior",
+        "weight": 1,
+        "packMax": 2
+      }
+    ],
+    "boss": {
+      "name": "Warlord Kaltusk of the Underhorn",
+      "monsterIds": [
+        "minotaur",
+        "froglok-skirmisher"
+      ],
+      "drops": [
+        "kaltusk-axe",
+        "froglok-crown"
+      ]
+    },
+    "miniboss": null,
+    "objects": [
+      {
+        "type": "monster",
+        "x": 6,
+        "y": 1,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 7,
+        "y": 4,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 2,
+        "y": 7,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 13,
+        "y": 1,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 5,
+        "y": 3,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 5,
+        "y": 9,
+        "roll": true
+      },
+      {
+        "type": "boss",
+        "x": 10,
+        "y": 9,
+        "name": "Warlord Kaltusk of the Underhorn",
+        "pack": [
+          "minotaur",
+          "froglok-skirmisher"
+        ],
+        "drops": [
+          "kaltusk-axe",
+          "froglok-crown"
+        ]
+      }
+    ]
+  },
+  {
+    "zone": "lower-guk",
+    "sub": "ghoul-kingdom",
+    "name": "The Dead Side — Ghoul Kingdom",
+    "index": 1,
+    "size": {
+      "w": 15,
+      "h": 11
+    },
+    "theme": "dark",
+    "difficulty": 4,
+    "start": {
+      "x": 1,
+      "y": 1
+    },
+    "doors": [
+      {
+        "ch": "1",
+        "x": 1,
+        "y": 0,
+        "to": "kings-redoubt"
+      },
+      {
+        "ch": "E",
+        "x": 6,
+        "y": 0,
+        "to": "surface"
+      },
+      {
+        "ch": "2",
+        "x": 14,
+        "y": 9,
+        "to": "the-front"
+      }
+    ],
+    "edges": null,
+    "portals": [],
+    "table": [
+      {
+        "id": "zombie",
+        "weight": 3,
+        "packMax": 3
+      },
+      {
+        "id": "skeleton",
+        "weight": 3,
+        "packMax": 2
+      },
+      {
+        "id": "bone-wraith",
+        "weight": 2,
+        "packMax": 1
+      }
+    ],
+    "boss": {
+      "name": "The Ghoul Lord’s court",
+      "monsterIds": [
+        "bone-wraith",
+        "zombie",
+        "zombie"
+      ],
+      "drops": [
+        "ghoulbane",
+        "ykesha-short-sword"
+      ]
+    },
+    "miniboss": null,
+    "objects": [
+      {
+        "type": "monster",
+        "x": 5,
+        "y": 1,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 10,
+        "y": 4,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 5,
+        "y": 7,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 13,
+        "y": 1,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 3,
+        "y": 4,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 10,
+        "y": 7,
+        "roll": true
+      },
+      {
+        "type": "boss",
+        "x": 5,
+        "y": 9,
+        "name": "The Ghoul Lord’s court",
+        "pack": [
+          "bone-wraith",
+          "zombie",
+          "zombie"
+        ],
+        "drops": [
+          "ghoulbane",
+          "ykesha-short-sword"
+        ]
+      }
+    ]
+  },
+  {
+    "zone": "lower-guk",
+    "sub": "the-front",
+    "name": "The Front — Where the War Grinds On",
+    "index": 2,
+    "size": {
+      "w": 15,
+      "h": 11
+    },
+    "theme": "dark",
+    "difficulty": 5,
+    "start": {
+      "x": 1,
+      "y": 1
+    },
+    "doors": [
+      {
+        "ch": "2",
+        "x": 1,
+        "y": 0,
+        "to": "ghoul-kingdom"
+      },
+      {
+        "ch": "E",
+        "x": 6,
+        "y": 0,
+        "to": "surface"
+      }
+    ],
+    "edges": null,
+    "portals": [],
+    "table": [
+      {
+        "id": "froglok-skirmisher",
+        "weight": 2,
+        "packMax": 2
+      },
+      {
+        "id": "skeleton",
+        "weight": 2,
+        "packMax": 3
+      },
+      {
+        "id": "bone-wraith",
+        "weight": 1,
+        "packMax": 1
+      },
+      {
+        "id": "evil-eye",
+        "weight": 1,
+        "packMax": 1
+      }
+    ],
+    "boss": {
+      "name": "Vethyl, the Silt-Lich’s champion",
+      "monsterIds": [
+        "bone-wraith",
+        "skeleton"
+      ],
+      "drops": [
+        "silt-lich-robe",
+        "flowing-black-sash"
+      ]
+    },
+    "miniboss": null,
+    "objects": [
+      {
+        "type": "monster",
+        "x": 12,
+        "y": 1,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 5,
+        "y": 3,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 7,
+        "y": 5,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 12,
+        "y": 3,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 1,
+        "y": 7,
+        "roll": true
+      },
+      {
+        "type": "boss",
+        "x": 9,
+        "y": 9,
+        "name": "Vethyl, the Silt-Lich’s champion",
+        "pack": [
+          "bone-wraith",
+          "skeleton"
+        ],
+        "drops": [
+          "silt-lich-robe",
+          "flowing-black-sash"
+        ]
+      }
+    ]
+  },
+  {
+    "zone": "lost-temple",
+    "sub": "courtyard-nw",
+    "name": "The Courtyard Gate",
+    "index": 0,
+    "size": {
+      "w": 15,
+      "h": 11
+    },
+    "theme": "grass",
+    "difficulty": 2,
+    "start": {
+      "x": 2,
+      "y": 2
+    },
+    "doors": [
+      {
+        "ch": "E",
+        "x": 7,
+        "y": 0,
+        "to": "surface"
+      }
+    ],
+    "edges": {
+      "e": "courtyard-ne",
+      "s": "courtyard-sw"
+    },
+    "portals": [],
+    "table": [
+      {
+        "id": "lizardfolk-warrior",
+        "weight": 3,
+        "packMax": 2
+      },
+      {
+        "id": "giant-spider",
+        "weight": 2,
+        "packMax": 2
+      },
+      {
+        "id": "giant-rat",
+        "weight": 1,
+        "packMax": 3
+      }
+    ],
+    "boss": null,
+    "miniboss": null,
+    "objects": [
+      {
+        "type": "decor",
+        "id": "round-hut",
+        "tags": [
+          "building"
+        ],
+        "x": 3,
+        "y": 4,
+        "w": 2,
+        "h": 3,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "stone-hut",
+        "tags": [
+          "building"
+        ],
+        "x": 10,
+        "y": 5,
+        "w": 2,
+        "h": 3,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "brazier1",
+        "tags": [
+          "prop",
+          "light"
+        ],
+        "x": 5,
+        "y": 1,
+        "w": 1,
+        "h": 2,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "brazier2",
+        "tags": [
+          "prop",
+          "light"
+        ],
+        "x": 9,
+        "y": 1,
+        "w": 1,
+        "h": 2,
+        "rot": 0
+      },
+      {
+        "type": "monster",
+        "x": 9,
+        "y": 3,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 4,
+        "y": 4,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 6,
+        "y": 7,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 11,
+        "y": 8,
+        "roll": true
+      }
+    ]
+  },
+  {
+    "zone": "lost-temple",
+    "sub": "courtyard-ne",
+    "name": "The Palace Approach",
+    "index": 1,
+    "size": {
+      "w": 15,
+      "h": 11
+    },
+    "theme": "grass",
+    "difficulty": 2,
+    "start": {
+      "x": 12,
+      "y": 8
+    },
+    "doors": [
+      {
+        "ch": "3",
+        "x": 7,
+        "y": 0,
+        "to": "throne-palace"
+      }
+    ],
+    "edges": {
+      "w": "courtyard-nw",
+      "s": "courtyard-se"
+    },
+    "portals": [],
+    "table": [
+      {
+        "id": "lizardfolk-warrior",
+        "weight": 3,
+        "packMax": 2
+      },
+      {
+        "id": "giant-spider",
+        "weight": 2,
+        "packMax": 2
+      },
+      {
+        "id": "giant-rat",
+        "weight": 1,
+        "packMax": 3
+      }
+    ],
+    "boss": {
+      "name": "The golem of the courtyard",
+      "monsterIds": [
+        "stone-golem"
+      ],
+      "drops": [
+        "thulian-claws"
+      ]
+    },
+    "miniboss": null,
+    "objects": [
+      {
+        "type": "decor",
+        "id": "snake-statue",
+        "tags": [
+          "statue"
+        ],
+        "x": 4,
+        "y": 3,
+        "w": 2,
+        "h": 3,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "gator-statue",
+        "tags": [
+          "statue"
+        ],
+        "x": 9,
+        "y": 3,
+        "w": 2,
+        "h": 3,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "brazier1",
+        "tags": [
+          "prop",
+          "light"
+        ],
+        "x": 2,
+        "y": 4,
+        "w": 1,
+        "h": 2,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "brazier2",
+        "tags": [
+          "prop",
+          "light"
+        ],
+        "x": 12,
+        "y": 4,
+        "w": 1,
+        "h": 2,
+        "rot": 0
+      },
+      {
+        "type": "monster",
+        "x": 3,
+        "y": 5,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 11,
+        "y": 6,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 4,
+        "y": 8,
+        "roll": true
+      },
+      {
+        "type": "boss",
+        "x": 7,
+        "y": 2,
+        "name": "The golem of the courtyard",
+        "pack": [
+          "stone-golem"
+        ],
+        "drops": [
+          "thulian-claws"
+        ]
+      }
+    ]
+  },
+  {
+    "zone": "lost-temple",
+    "sub": "courtyard-sw",
+    "name": "The Sunken Well",
+    "index": 2,
+    "size": {
+      "w": 15,
+      "h": 11
+    },
+    "theme": "grass",
+    "difficulty": 2,
+    "start": {
+      "x": 3,
+      "y": 8
+    },
+    "doors": [],
+    "edges": {
+      "n": "courtyard-nw",
+      "e": "courtyard-se"
+    },
+    "portals": [
+      {
+        "x": 7,
+        "y": 8,
+        "to": "sewers-gumdrop",
+        "label": "A dark shaft plunges into the sewers below. Climb down into the well?"
+      }
+    ],
+    "table": [
+      {
+        "id": "lizardfolk-warrior",
+        "weight": 3,
+        "packMax": 2
+      },
+      {
+        "id": "giant-spider",
+        "weight": 2,
+        "packMax": 2
+      },
+      {
+        "id": "giant-rat",
+        "weight": 1,
+        "packMax": 3
+      }
+    ],
+    "boss": null,
+    "miniboss": null,
+    "objects": [
+      {
+        "type": "decor",
+        "id": "well",
+        "tags": [
+          "structure"
+        ],
+        "x": 6,
+        "y": 7,
+        "w": 2,
+        "h": 2,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "round-hut",
+        "tags": [
+          "building"
+        ],
+        "x": 4,
+        "y": 3,
+        "w": 2,
+        "h": 3,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "brazier1",
+        "tags": [
+          "prop",
+          "light"
+        ],
+        "x": 11,
+        "y": 2,
+        "w": 1,
+        "h": 2,
+        "rot": 0
+      },
+      {
+        "type": "monster",
+        "x": 4,
+        "y": 3,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 9,
+        "y": 5,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 6,
+        "y": 6,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 11,
+        "y": 3,
+        "roll": true
+      }
+    ]
+  },
+  {
+    "zone": "lost-temple",
+    "sub": "courtyard-se",
+    "name": "The Maze Gate",
+    "index": 3,
+    "size": {
+      "w": 15,
+      "h": 11
+    },
+    "theme": "grass",
+    "difficulty": 2,
+    "start": {
+      "x": 7,
+      "y": 8
+    },
+    "doors": [
+      {
+        "ch": "2",
+        "x": 14,
+        "y": 5,
+        "to": "maze-of-doors"
+      }
+    ],
+    "edges": {
+      "n": "courtyard-ne",
+      "w": "courtyard-sw"
+    },
+    "portals": [],
+    "table": [
+      {
+        "id": "lizardfolk-warrior",
+        "weight": 3,
+        "packMax": 2
+      },
+      {
+        "id": "giant-spider",
+        "weight": 2,
+        "packMax": 2
+      },
+      {
+        "id": "giant-rat",
+        "weight": 1,
+        "packMax": 3
+      }
+    ],
+    "boss": null,
+    "miniboss": null,
+    "objects": [
+      {
+        "type": "decor",
+        "id": "building-snake",
+        "tags": [
+          "building"
+        ],
+        "x": 9,
+        "y": 3,
+        "w": 3,
+        "h": 4,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "stone-hut",
+        "tags": [
+          "building"
+        ],
+        "x": 3,
+        "y": 4,
+        "w": 2,
+        "h": 3,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "brazier1",
+        "tags": [
+          "prop",
+          "light"
+        ],
+        "x": 2,
+        "y": 7,
+        "w": 1,
+        "h": 2,
+        "rot": 0
+      },
+      {
+        "type": "monster",
+        "x": 9,
+        "y": 3,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 5,
+        "y": 4,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 6,
+        "y": 7,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 3,
+        "y": 6,
+        "roll": true
+      }
+    ]
+  },
+  {
+    "zone": "lost-temple",
+    "sub": "throne-palace",
+    "name": "The Temple-Palace",
+    "index": 4,
+    "size": {
+      "w": 15,
+      "h": 11
+    },
+    "theme": "sand",
+    "difficulty": 3,
+    "start": {
+      "x": 1,
+      "y": 1
+    },
+    "doors": [
+      {
+        "ch": "3",
+        "x": 6,
+        "y": 0,
+        "to": "courtyard-ne"
+      },
+      {
+        "ch": "4",
+        "x": 14,
+        "y": 9,
+        "to": "temple-depths"
+      }
+    ],
+    "edges": null,
+    "portals": [],
+    "table": [
+      {
+        "id": "lizardfolk-warrior",
+        "weight": 3,
+        "packMax": 2
+      },
+      {
+        "id": "sarnak-vampire",
+        "weight": 1,
+        "packMax": 1
+      },
+      {
+        "id": "giant-spider",
+        "weight": 1,
+        "packMax": 2
+      }
+    ],
+    "boss": {
+      "name": "The Tae Ew Templar",
+      "monsterIds": [
+        "tae-ew-templar",
+        "lizardfolk-warrior"
+      ],
+      "drops": [
+        "rubicite-greaves",
+        "lizardscale-cloak"
+      ]
+    },
+    "miniboss": null,
+    "objects": [
+      {
+        "type": "monster",
+        "x": 7,
+        "y": 3,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 3,
+        "y": 6,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 11,
+        "y": 6,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 13,
+        "y": 1,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 6,
+        "y": 6,
+        "roll": true
+      },
+      {
+        "type": "boss",
+        "x": 7,
+        "y": 9,
+        "name": "The Tae Ew Templar",
+        "pack": [
+          "tae-ew-templar",
+          "lizardfolk-warrior"
+        ],
+        "drops": [
+          "rubicite-greaves",
+          "lizardscale-cloak"
+        ]
+      }
+    ]
+  },
+  {
+    "zone": "lost-temple",
+    "sub": "temple-depths",
+    "name": "The Temple Depths",
+    "index": 5,
+    "size": {
+      "w": 15,
+      "h": 11
+    },
+    "theme": "dark",
+    "difficulty": 4,
+    "start": {
+      "x": 1,
+      "y": 1
+    },
+    "doors": [
+      {
+        "ch": "4",
+        "x": 1,
+        "y": 0,
+        "to": "throne-palace"
+      },
+      {
+        "ch": "5",
+        "x": 14,
+        "y": 1,
+        "to": "summoning-chamber"
+      }
+    ],
+    "edges": null,
+    "portals": [],
+    "table": [
+      {
+        "id": "lizardfolk-warrior",
+        "weight": 2,
+        "packMax": 2
+      },
+      {
+        "id": "bone-wraith",
+        "weight": 2,
+        "packMax": 1
+      },
+      {
+        "id": "sarnak-vampire",
+        "weight": 1,
+        "packMax": 1
+      }
+    ],
+    "boss": {
+      "name": "Fright and Terror, the Rift-Guardians",
+      "monsterIds": [
+        "gargoyle",
+        "gargoyle"
+      ],
+      "drops": [
+        "tribal-mask"
+      ]
+    },
+    "miniboss": null,
+    "objects": [
+      {
+        "type": "monster",
+        "x": 6,
+        "y": 3,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 10,
+        "y": 5,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 6,
+        "y": 7,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 3,
+        "y": 5,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 10,
+        "y": 7,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 1,
+        "y": 9,
+        "roll": true
+      },
+      {
+        "type": "boss",
+        "x": 6,
+        "y": 9,
+        "name": "Fright and Terror, the Rift-Guardians",
+        "pack": [
+          "gargoyle",
+          "gargoyle"
+        ],
+        "drops": [
+          "tribal-mask"
+        ]
+      }
+    ]
+  },
+  {
+    "zone": "lost-temple",
+    "sub": "maze-of-doors",
+    "name": "The Maze of Ten Thousand Doors",
+    "index": 6,
+    "size": {
+      "w": 15,
+      "h": 11
+    },
+    "theme": "sand",
+    "difficulty": 3,
+    "start": {
+      "x": 1,
+      "y": 1
+    },
+    "doors": [
+      {
+        "ch": "6",
+        "x": 6,
+        "y": 0,
+        "to": "archon-pyramid"
+      },
+      {
+        "ch": "2",
+        "x": 1,
+        "y": 9,
+        "to": "courtyard-se"
+      }
+    ],
+    "edges": null,
+    "portals": [],
+    "table": [
+      {
+        "id": "lizardfolk-warrior",
+        "weight": 3,
+        "packMax": 3
+      },
+      {
+        "id": "giant-snake",
+        "weight": 2,
+        "packMax": 2
+      },
+      {
+        "id": "giant-spider",
+        "weight": 2,
+        "packMax": 2
+      },
+      {
+        "id": "green-slime",
+        "weight": 1,
+        "packMax": 2
+      }
+    ],
+    "boss": {
+      "name": "The Clay Golem of the Maze",
+      "monsterIds": [
+        "clay-golem"
+      ],
+      "drops": [
+        "thulian-claws"
+      ]
+    },
+    "miniboss": null,
+    "objects": [
+      {
+        "type": "monster",
+        "x": 13,
+        "y": 2,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 3,
+        "y": 4,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 12,
+        "y": 6,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 10,
+        "y": 1,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 5,
+        "y": 8,
+        "roll": true
+      },
+      {
+        "type": "boss",
+        "x": 12,
+        "y": 8,
+        "name": "The Clay Golem of the Maze",
+        "pack": [
+          "clay-golem"
+        ],
+        "drops": [
+          "thulian-claws"
+        ]
+      }
+    ]
+  },
+  {
+    "zone": "lost-temple",
+    "sub": "archon-pyramid",
+    "name": "The Archon Pyramid",
+    "index": 7,
+    "size": {
+      "w": 15,
+      "h": 11
+    },
+    "theme": "sand",
+    "difficulty": 4,
+    "start": {
+      "x": 1,
+      "y": 1
+    },
+    "doors": [
+      {
+        "ch": "6",
+        "x": 1,
+        "y": 0,
+        "to": "maze-of-doors"
+      },
+      {
+        "ch": "7",
+        "x": 14,
+        "y": 9,
+        "to": "sewers-gumdrop"
+      }
+    ],
+    "edges": null,
+    "portals": [],
+    "table": [
+      {
+        "id": "lizardman-crusader",
+        "weight": 2,
+        "packMax": 1
+      },
+      {
+        "id": "giant-snake",
+        "weight": 2,
+        "packMax": 2
+      },
+      {
+        "id": "gargoyle",
+        "weight": 1,
+        "packMax": 1
+      }
+    ],
+    "boss": {
+      "name": "The Lizardman Archon",
+      "monsterIds": [
+        "lizardman-archon",
+        "lizardman-crusader"
+      ],
+      "drops": [
+        "rubicite-breastplate"
+      ]
+    },
+    "miniboss": {
+      "name": "The Tae Ew Crusader",
+      "monsterIds": [
+        "lizardman-crusader",
+        "lizardfolk-warrior"
+      ]
+    },
+    "objects": [
+      {
+        "type": "monster",
+        "x": 8,
+        "y": 7,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 12,
+        "y": 3,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 6,
+        "y": 5,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 9,
+        "y": 9,
+        "roll": true
+      },
+      {
+        "type": "boss",
+        "x": 6,
+        "y": 9,
+        "name": "The Lizardman Archon",
+        "pack": [
+          "lizardman-archon",
+          "lizardman-crusader"
+        ],
+        "drops": [
+          "rubicite-breastplate"
+        ]
+      },
+      {
+        "type": "miniboss",
+        "x": 5,
+        "y": 3,
+        "name": "The Tae Ew Crusader",
+        "pack": [
+          "lizardman-crusader",
+          "lizardfolk-warrior"
+        ]
+      }
+    ]
+  },
+  {
+    "zone": "lost-temple",
+    "sub": "sewers-gumdrop",
+    "name": "The Sewers & the Iron Golem",
+    "index": 8,
+    "size": {
+      "w": 15,
+      "h": 11
+    },
+    "theme": "dark",
+    "difficulty": 4,
+    "start": {
+      "x": 1,
+      "y": 1
+    },
+    "doors": [
+      {
+        "ch": "1",
+        "x": 1,
+        "y": 0,
+        "to": "courtyard-sw"
+      },
+      {
+        "ch": "5",
+        "x": 14,
+        "y": 1,
+        "to": "summoning-chamber"
+      }
+    ],
+    "edges": null,
+    "portals": [],
+    "table": [
+      {
+        "id": "alligator",
+        "weight": 3,
+        "packMax": 2
+      },
+      {
+        "id": "green-slime",
+        "weight": 2,
+        "packMax": 2
+      },
+      {
+        "id": "giant-rat",
+        "weight": 2,
+        "packMax": 3
+      },
+      {
+        "id": "giant-snake",
+        "weight": 1,
+        "packMax": 2
+      }
+    ],
+    "boss": {
+      "name": "The Iron Golem of the Drains",
+      "monsterIds": [
+        "iron-golem"
+      ],
+      "drops": [
+        "idol-of-thule"
+      ]
+    },
+    "miniboss": null,
+    "objects": [
+      {
+        "type": "monster",
+        "x": 7,
+        "y": 3,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 11,
+        "y": 4,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 3,
+        "y": 5,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 12,
+        "y": 1,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 8,
+        "y": 6,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 4,
+        "y": 8,
+        "roll": true
+      },
+      {
+        "type": "boss",
+        "x": 10,
+        "y": 9,
+        "name": "The Iron Golem of the Drains",
+        "pack": [
+          "iron-golem"
+        ],
+        "drops": [
+          "idol-of-thule"
+        ]
+      }
+    ]
+  },
+  {
+    "zone": "lost-temple",
+    "sub": "summoning-chamber",
+    "name": "The Summoning Chamber of the Avatar",
+    "index": 9,
+    "size": {
+      "w": 15,
+      "h": 11
+    },
+    "theme": "dark",
+    "difficulty": 5,
+    "start": {
+      "x": 1,
+      "y": 1
+    },
+    "doors": [
+      {
+        "ch": "5",
+        "x": 1,
+        "y": 0,
+        "to": "temple-depths"
+      },
+      {
+        "ch": "E",
+        "x": 6,
+        "y": 0,
+        "to": "surface"
+      }
+    ],
+    "edges": null,
+    "portals": [],
+    "table": [
+      {
+        "id": "bone-wraith",
+        "weight": 2,
+        "packMax": 1
+      },
+      {
+        "id": "lizardfolk-warrior",
+        "weight": 1,
+        "packMax": 2
+      }
+    ],
+    "boss": {
+      "name": "The Avatar of Fear",
+      "monsterIds": [
+        "avatar-of-fear",
+        "bone-wraith",
+        "bone-wraith"
+      ],
+      "drops": [
+        "rubicite-breastplate"
+      ]
+    },
+    "miniboss": null,
+    "objects": [
+      {
+        "type": "monster",
+        "x": 13,
+        "y": 1,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 5,
+        "y": 4,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 9,
+        "y": 4,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 2,
+        "y": 8,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 12,
+        "y": 8,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 7,
+        "y": 1,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 1,
+        "y": 9,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 13,
+        "y": 9,
+        "roll": true
+      },
+      {
+        "type": "boss",
+        "x": 7,
+        "y": 8,
+        "name": "The Avatar of Fear",
+        "pack": [
+          "avatar-of-fear",
+          "bone-wraith",
+          "bone-wraith"
+        ],
+        "drops": [
+          "rubicite-breastplate"
+        ]
+      }
+    ]
+  }
+]

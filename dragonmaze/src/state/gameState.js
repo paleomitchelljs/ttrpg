@@ -422,6 +422,16 @@ export function move(dx, dy) {
         run.unbankedGold += 25;
         events.push({ type: 'tome', spell: null, gold: 25 });
       }
+    } else if (loot.item) {
+      // A hand-placed cache pinned to a specific magic item (see the editor).
+      const it = itemById(loot.item);
+      if (it && !state.meta.inventory.includes(it.id)) {
+        state.meta.inventory.push(it.id);
+        events.push({ type: 'item-drop', name: it.name, blurb: it.blurb });
+      } else {
+        run.unbankedGold += 20;
+        events.push({ type: 'loot', label: 'a picked-clean cache', gold: 20 });
+      }
     } else {
       let gold = loot.gold;
       if (state.meta.familiar === 'pack-rat') gold = Math.round(gold * 1.25);

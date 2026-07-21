@@ -1,0 +1,426 @@
+== upper-guk / sunken-gate  [The Sunken Gate & City Labyrinth]
+   15x11  theme swamp  difficulty 1
+   start 1,1 | exit(surface) 6,0 | door 1->mushroom-crypts 14,9
+   table: froglok-skirmisher(w3,≤2)  giant-rat(w2,≤3)  fungus-man(w2,≤2)
+   objects (type · identity · @cell):
+     monster  roll (region table)                            @10,1
+     monster  roll (region table)                            @10,4
+     monster  roll (region table)                            @6,7
+     loot     roll (gold/tome/den)                           @13,1
+     loot     roll (gold/tome/den)                           @5,5
+     loot     roll (gold/tome/den)                           @1,9
+     boss     The gate-watch [froglok-skirmisher, froglok-skirmisher] drops croak-horn @5,9
+   grid (M monster · L loot · B boss · b mini · d decor anchor):
+     ######E########
+     #S........M..L#
+     #.###.#.#####.#
+     #.#...#.#...#.#
+     #.#.###.#.M.#.#
+     #.#..L#.#.#.#.#
+     #.###.#.#.#.#.#
+     #...#.M.#.#...#
+     ###.#####.##..#
+     #L...B........1
+     ###############
+
+== upper-guk / mushroom-crypts  [The Mushroom Farm]
+   15x11  theme swamp  difficulty 2
+   start 1,1 | door 1->sunken-gate 1,0 | exit(surface) 7,0 | door 2->the-crypts 14,9
+   table: froglok-skirmisher(w2,≤2)  fungus-man(w3,≤3)  giant-spider(w2,≤2)  green-slime(w1,≤1)
+   objects (type · identity · @cell):
+     monster  roll (region table)                            @13,1
+     monster  roll (region table)                            @2,3
+     monster  roll (region table)                            @7,3
+     monster  roll (region table)                            @4,8
+     loot     roll (gold/tome/den)                           @9,1
+     loot     roll (gold/tome/den)                           @5,6
+     boss     A troll raider of Innothule [cave-troll] drops gatorscale-sleeves @7,9
+   grid (M monster · L loot · B boss · b mini · d decor anchor):
+     #1#####E#######
+     #S..#....L#..M#
+     #...#.....#...#
+     #.M.#..M..##.##
+     #...#.....#...#
+     ##.####.###.#.#
+     #....L#...#.#.#
+     #.###.#.#.#.#.#
+     #.#.M...#...#.#
+     #.#####B###...2
+     ###############
+
+== upper-guk / the-crypts  [The Crypts]
+   15x11  theme dark  difficulty 2
+   start 1,1 | door 2->mushroom-crypts 1,0 | exit(surface) 7,0 | door 3->temple-gator-pools 14,1
+   table: skeleton(w3,≤2)  zombie(w2,≤2)  gargoyle(w2,≤2)
+   objects (type · identity · @cell):
+     monster  roll (region table)                            @12,1
+     monster  roll (region table)                            @9,4
+     monster  roll (region table)                            @2,6
+     monster  roll (region table)                            @7,8
+     loot     roll (gold/tome/den)                           @5,1
+     loot     roll (gold/tome/den)                           @5,4
+     loot     roll (gold/tome/den)                           @12,6
+     boss     The Escaped Ghoul, the crypt-thing [bone-wraith, zombie] drops deepwater-circlet @10,9
+   grid (M monster · L loot · B boss · b mini · d decor anchor):
+     #2#####E#######
+     #S..#L#...#.M.3
+     #.#.........#.#
+     #.#.###.###.#.#
+     #.#.#L#.#M#.#.#
+     #.#.#.#.#.#.#.#
+     #.M.........L.#
+     #.###.###.###.#
+     #...#..M#...#.#
+     #.#...#...B...#
+     ###############
+
+== upper-guk / temple-gator-pools  [The Temple of Marr & the Gator Pools]
+   15x11  theme swamp  difficulty 3
+   start 1,1 | door 3->the-crypts 1,0 | exit(surface) 7,0
+   table: froglok-skirmisher(w2,≤2)  alligator(w3,≤2)  gargoyle(w2,≤2)
+   objects (type · identity · @cell):
+     monster  roll (region table)                            @5,3
+     monster  roll (region table)                            @10,3
+     monster  roll (region table)                            @12,5
+     monster  roll (region table)                            @2,7
+     loot     roll (gold/tome/den)                           @7,1
+     loot     roll (gold/tome/den)                           @5,5
+     loot     roll (gold/tome/den)                           @7,9
+     boss     The Ancient Crocodile of the pools [cave-troll, alligator] drops mithril-two-hander, testament-of-marr @9,9
+   grid (M monster · L loot · B boss · b mini · d decor anchor):
+     #3#####E#######
+     #S....#L......#
+     #.##.##.####.##
+     #.#..M....M#..#
+     #.#.######.##.#
+     #.#.#L..#..#M.#
+     #.#.#.#.#.##.##
+     #.M.#.#....#..#
+     #.####.###.##.#
+     #......L#B....#
+     ###############
+
+== lower-guk / kings-redoubt  [The Living Side — King’s Redoubt]
+   15x11  theme dark  difficulty 3
+   start 1,1 | exit(surface) 6,0 | door 1->ghoul-kingdom 14,9
+   table: froglok-skirmisher(w3,≤3)  cave-troll(w1,≤1)  lizardfolk-warrior(w1,≤2)
+   objects (type · identity · @cell):
+     monster  roll (region table)                            @6,1
+     monster  roll (region table)                            @7,4
+     monster  roll (region table)                            @2,7
+     loot     roll (gold/tome/den)                           @13,1
+     loot     roll (gold/tome/den)                           @5,3
+     loot     roll (gold/tome/den)                           @5,9
+     boss     Warlord Kaltusk of the Underhorn [minotaur, froglok-skirmisher] drops kaltusk-axe, froglok-crown @10,9
+   grid (M monster · L loot · B boss · b mini · d decor anchor):
+     ######E########
+     #S....M....#.L#
+     #.########.#.##
+     #.#..L#..#.#..#
+     #.#.#.#M.#.##.#
+     #.#.#.#..#....#
+     #.#.#.##.#.####
+     #.M.#....#....#
+     #.####.#.####.#
+     #....L.#..B...1
+     ###############
+
+== lower-guk / ghoul-kingdom  [The Dead Side — Ghoul Kingdom]
+   15x11  theme dark  difficulty 4
+   start 1,1 | door 1->kings-redoubt 1,0 | exit(surface) 6,0 | door 2->the-front 14,9
+   table: zombie(w3,≤3)  skeleton(w3,≤2)  bone-wraith(w2,≤1)
+   objects (type · identity · @cell):
+     monster  roll (region table)                            @5,1
+     monster  roll (region table)                            @10,4
+     monster  roll (region table)                            @5,7
+     loot     roll (gold/tome/den)                           @13,1
+     loot     roll (gold/tome/den)                           @3,4
+     loot     roll (gold/tome/den)                           @10,7
+     boss     The Ghoul Lord’s court [bone-wraith, zombie, zombie] drops ghoulbane, ykesha-short-sword @5,9
+   grid (M monster · L loot · B boss · b mini · d decor anchor):
+     #1####E########
+     #S...M.......L#
+     #.###.###.###.#
+     #.###.###.###.#
+     #..L......M...#
+     #.###.###.###.#
+     #.###.###.###.#
+     #....M....L...#
+     #.###.###.###.#
+     #....B........2
+     ###############
+
+== lower-guk / the-front  [The Front — Where the War Grinds On]
+   15x11  theme dark  difficulty 5
+   start 1,1 | door 2->ghoul-kingdom 1,0 | exit(surface) 6,0
+   table: froglok-skirmisher(w2,≤2)  skeleton(w2,≤3)  bone-wraith(w1,≤1)  evil-eye(w1,≤1)
+   objects (type · identity · @cell):
+     monster  roll (region table)                            @12,1
+     monster  roll (region table)                            @5,3
+     monster  roll (region table)                            @7,5
+     loot     roll (gold/tome/den)                           @12,3
+     loot     roll (gold/tome/den)                           @1,7
+     boss     Vethyl, the Silt-Lich’s champion [bone-wraith, skeleton] drops silt-lich-robe, flowing-black-sash @9,9
+   grid (M monster · L loot · B boss · b mini · d decor anchor):
+     #2####E########
+     #S.....#....M.#
+     #.####.#.####.#
+     #.#..M.#.#..L.#
+     #.#.####.#.####
+     #.#....M.#....#
+     ####.#####.##.#
+     #L...#...#.#..#
+     #.####.#.#.#.##
+     #......#.B....#
+     ###############
+
+== lost-temple / courtyard-nw  [The Courtyard Gate]
+   15x11  theme grass  difficulty 2
+   start 2,2 | exit(surface) 7,0 | edges e:courtyard-ne s:courtyard-sw
+   table: lizardfolk-warrior(w3,≤2)  giant-spider(w2,≤2)  giant-rat(w1,≤3)
+   objects (type · identity · @cell):
+     decor    round-hut (building) 2x3 rot0                  @3,4
+     decor    stone-hut (building) 2x3 rot0                  @10,5
+     decor    brazier1 (prop/light) 1x2 rot0                 @5,1
+     decor    brazier2 (prop/light) 1x2 rot0                 @9,1
+     monster  roll (region table)                            @9,3
+     monster  roll (region table)                            @4,4
+     monster  roll (region table)                            @6,7
+     loot     roll (gold/tome/den)                           @11,8
+   grid (M monster · L loot · B boss · b mini · d decor anchor):
+     #######E#######
+     #....d...d.....
+     #.S............
+     #........M.....
+     #..dM..........
+     #.........d....
+     #..............
+     #.....M........
+     #..........L...
+     #..............
+     #..............
+
+== lost-temple / courtyard-ne  [The Palace Approach]
+   15x11  theme grass  difficulty 2
+   start 12,8 | door 3->throne-palace 7,0 | edges w:courtyard-nw s:courtyard-se
+   table: lizardfolk-warrior(w3,≤2)  giant-spider(w2,≤2)  giant-rat(w1,≤3)
+   objects (type · identity · @cell):
+     decor    snake-statue (statue) 2x3 rot0                 @4,3
+     decor    gator-statue (statue) 2x3 rot0                 @9,3
+     decor    brazier1 (prop/light) 1x2 rot0                 @2,4
+     decor    brazier2 (prop/light) 1x2 rot0                 @12,4
+     monster  roll (region table)                            @3,5
+     monster  roll (region table)                            @11,6
+     loot     roll (gold/tome/den)                           @4,8
+     boss     The golem of the courtyard [stone-golem] drops thulian-claws @7,2
+   grid (M monster · L loot · B boss · b mini · d decor anchor):
+     #######3#######
+     ......#.#.....#
+     ......#B#.....#
+     ....d....d....#
+     ..d.........d.#
+     ...M..........#
+     ...........M..#
+     ..............#
+     ....L.......S.#
+     ..............#
+     ..............#
+
+== lost-temple / courtyard-sw  [The Sunken Well]
+   15x11  theme grass  difficulty 2
+   start 3,8 | edges n:courtyard-nw e:courtyard-se | portal->sewers-gumdrop 7,8
+   table: lizardfolk-warrior(w3,≤2)  giant-spider(w2,≤2)  giant-rat(w1,≤3)
+   objects (type · identity · @cell):
+     decor    well (structure) 2x2 rot0                      @6,7
+     decor    round-hut (building) 2x3 rot0                  @4,3
+     decor    brazier1 (prop/light) 1x2 rot0                 @11,2
+     monster  roll (region table)                            @4,3
+     monster  roll (region table)                            @9,5
+     monster  roll (region table)                            @6,6
+     loot     roll (gold/tome/den)                           @11,3
+   grid (M monster · L loot · B boss · b mini · d decor anchor):
+     #..............
+     #..............
+     #..........d...
+     #...M......L...
+     #..............
+     #........M.....
+     #.....M........
+     #.....d........
+     #..S...........
+     #..............
+     ###############
+
+== lost-temple / courtyard-se  [The Maze Gate]
+   15x11  theme grass  difficulty 2
+   start 7,8 | door 2->maze-of-doors 14,5 | edges n:courtyard-ne w:courtyard-sw
+   table: lizardfolk-warrior(w3,≤2)  giant-spider(w2,≤2)  giant-rat(w1,≤3)
+   objects (type · identity · @cell):
+     decor    building-snake (building) 3x4 rot0             @9,3
+     decor    stone-hut (building) 2x3 rot0                  @3,4
+     decor    brazier1 (prop/light) 1x2 rot0                 @2,7
+     monster  roll (region table)                            @9,3
+     monster  roll (region table)                            @5,4
+     monster  roll (region table)                            @6,7
+     loot     roll (gold/tome/den)                           @3,6
+   grid (M monster · L loot · B boss · b mini · d decor anchor):
+     ..............#
+     ..............#
+     ..............#
+     .........M....#
+     ...d.M........#
+     ..............2
+     ...L..........#
+     ..d...M.......#
+     .......S......#
+     ..............#
+     ###############
+
+== lost-temple / throne-palace  [The Temple-Palace]
+   15x11  theme sand  difficulty 3
+   start 1,1 | door 3->courtyard-ne 6,0 | door 4->temple-depths 14,9
+   table: lizardfolk-warrior(w3,≤2)  sarnak-vampire(w1,≤1)  giant-spider(w1,≤2)
+   objects (type · identity · @cell):
+     monster  roll (region table)                            @7,3
+     monster  roll (region table)                            @3,6
+     monster  roll (region table)                            @11,6
+     loot     roll (gold/tome/den)                           @13,1
+     loot     roll (gold/tome/den)                           @6,6
+     boss     The Tae Ew Templar [tae-ew-templar, lizardfolk-warrior] drops rubicite-greaves, lizardscale-cloak @7,9
+   grid (M monster · L loot · B boss · b mini · d decor anchor):
+     ######3########
+     #S..#.....#..L#
+     #.#.#.###.#.#.#
+     #.#.#.#M#.#.#.#
+     #.#...#.#...#.#
+     #.##.##.##.##.#
+     #..M.#L..#.M..#
+     ##.#.#.#.#.#.##
+     #..#.......#..#
+     #.....#B#.....4
+     ###############
+
+== lost-temple / temple-depths  [The Temple Depths]
+   15x11  theme dark  difficulty 4
+   start 1,1 | door 4->throne-palace 1,0 | door 5->summoning-chamber 14,1
+   table: lizardfolk-warrior(w2,≤2)  bone-wraith(w2,≤1)  sarnak-vampire(w1,≤1)
+   objects (type · identity · @cell):
+     monster  roll (region table)                            @6,3
+     monster  roll (region table)                            @10,5
+     monster  roll (region table)                            @6,7
+     loot     roll (gold/tome/den)                           @3,5
+     loot     roll (gold/tome/den)                           @10,7
+     loot     roll (gold/tome/den)                           @1,9
+     boss     Fright and Terror, the Rift-Guardians [gargoyle, gargoyle] drops tribal-mask @6,9
+   grid (M monster · L loot · B boss · b mini · d decor anchor):
+     #4#############
+     #S............5
+     #.###.###.###.#
+     #.....M.......#
+     #.###.###.###.#
+     #..L......M...#
+     #.###.###.###.#
+     #.....M...L...#
+     #.###.###.###.#
+     #L....B.......#
+     ###############
+
+== lost-temple / maze-of-doors  [The Maze of Ten Thousand Doors]
+   15x11  theme sand  difficulty 3
+   start 1,1 | door 6->archon-pyramid 6,0 | door 2->courtyard-se 1,9
+   table: lizardfolk-warrior(w3,≤3)  giant-snake(w2,≤2)  giant-spider(w2,≤2)  green-slime(w1,≤2)
+   objects (type · identity · @cell):
+     monster  roll (region table)                            @13,2
+     monster  roll (region table)                            @3,4
+     monster  roll (region table)                            @12,6
+     loot     roll (gold/tome/den)                           @10,1
+     loot     roll (gold/tome/den)                           @5,8
+     boss     The Clay Golem of the Maze [clay-golem] drops thulian-claws @12,8
+   grid (M monster · L loot · B boss · b mini · d decor anchor):
+     ######6########
+     #S.#...#..L#..#
+     #..#.#.#.#.#.M#
+     #.##.#.#.#.#.##
+     #..M.#...#....#
+     ##.#.###.####.#
+     #..#...#.#..M.#
+     #.####.#.#.####
+     #.#..L.#.#..B.#
+     #2..##...##...#
+     ###############
+
+== lost-temple / archon-pyramid  [The Archon Pyramid]
+   15x11  theme sand  difficulty 4
+   start 1,1 | door 6->maze-of-doors 1,0 | door 7->sewers-gumdrop 14,9
+   table: lizardman-crusader(w2,≤1)  giant-snake(w2,≤2)  gargoyle(w1,≤1)
+   objects (type · identity · @cell):
+     monster  roll (region table)                            @8,7
+     loot     roll (gold/tome/den)                           @12,3
+     loot     roll (gold/tome/den)                           @6,5
+     loot     roll (gold/tome/den)                           @9,9
+     boss     The Lizardman Archon [lizardman-archon, lizardman-crusader] drops rubicite-breastplate @6,9
+     miniboss The Tae Ew Crusader [lizardman-crusader, lizardfolk-warrior] @5,3
+   grid (M monster · L loot · B boss · b mini · d decor anchor):
+     #6#############
+     #S............#
+     #############.#
+     ###..b......L.#
+     ###.###########
+     ###...L.....###
+     ###########.###
+     #####...M...###
+     #####.#########
+     #####.B..L....7
+     ###############
+
+== lost-temple / sewers-gumdrop  [The Sewers & the Iron Golem]
+   15x11  theme dark  difficulty 4
+   start 1,1 | door 1->courtyard-sw 1,0 | door 5->summoning-chamber 14,1
+   table: alligator(w3,≤2)  green-slime(w2,≤2)  giant-rat(w2,≤3)  giant-snake(w1,≤2)
+   objects (type · identity · @cell):
+     monster  roll (region table)                            @7,3
+     monster  roll (region table)                            @11,4
+     monster  roll (region table)                            @3,5
+     loot     roll (gold/tome/den)                           @12,1
+     loot     roll (gold/tome/den)                           @8,6
+     loot     roll (gold/tome/den)                           @4,8
+     boss     The Iron Golem of the Drains [iron-golem] drops idol-of-thule @10,9
+   grid (M monster · L loot · B boss · b mini · d decor anchor):
+     #1#############
+     #S...#....#.L.5
+     #.##.#..##...##
+     #.#..##M....#.#
+     #.#.##..#..M..#
+     #..M#..#..##.##
+     ##.#..##L#....#
+     #..#.##.##.##.#
+     #.##L#...#..#.#
+     #......#.#B...#
+     ###############
+
+== lost-temple / summoning-chamber  [The Summoning Chamber of the Avatar]
+   15x11  theme dark  difficulty 5
+   start 1,1 | door 5->temple-depths 1,0 | exit(surface) 6,0
+   table: bone-wraith(w2,≤1)  lizardfolk-warrior(w1,≤2)
+   objects (type · identity · @cell):
+     monster  roll (region table)                            @13,1
+     monster  roll (region table)                            @5,4
+     monster  roll (region table)                            @9,4
+     monster  roll (region table)                            @2,8
+     monster  roll (region table)                            @12,8
+     loot     roll (gold/tome/den)                           @7,1
+     loot     roll (gold/tome/den)                           @1,9
+     loot     roll (gold/tome/den)                           @13,9
+     boss     The Avatar of Fear [avatar-of-fear, bone-wraith, bone-wraith] drops rubicite-breastplate @7,8
+   grid (M monster · L loot · B boss · b mini · d decor anchor):
+     #5####E########
+     #S.....L#....M#
+     #.##.##.##.##.#
+     #.#.........#.#
+     #.#.#M#.#M#.#.#
+     #.#.........#.#
+     #.#..##.##..#.#
+     #.#..#...#..#.#
+     #.M..#.B.#..M.#
+     #L...#...#...L#
+     ###############

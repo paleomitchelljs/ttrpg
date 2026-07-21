@@ -6,7 +6,9 @@
   "description": "Top-down browser dungeon crawler: a red dragon raids labyrinths and grows its hoard.",
   "scripts": {
     "dev": "node serve.mjs",
+    "editor": "node serve.mjs --open",
     "build": "node build.mjs",
+    "map": "node dump-map.mjs",
     "test": "node test/dice.test.js"
   },
   "devDependencies": {

@@ -161,6 +161,7 @@ export const FACTION_ENEMIES = {
   aberrant: [],
   wild: [],
   construct: [],
+  bandit: [],
 };
 
 /** Parley DC: base 12, shifted by disposition and standing. */

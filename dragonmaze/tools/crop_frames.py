@@ -26,10 +26,8 @@ CELL_H = 1392 / 9
 # Sheets that deviate from the standard 768x1392 grid: sheet -> (cell_w, cell_h)
 SHEET_CELLS = {
     "skeleton-warrior-sheet.png": (113, 1024 / 9),
-    "dragonkin-spellblade-sheet.png": (113, 1024 / 9),
     "monsters-menagerie-sheet.png": (565 / 7, 1024 / 13),
     "turquoise-barbarian-sheet.png": (113, 1024 / 9),
-    "beren-warrior-sheet.png": (113, 1024 / 9),
 }
 
 # Background keying tolerance per sheet: how close to a corner color a pixel
@@ -37,16 +35,13 @@ SHEET_CELLS = {
 # with the backdrop (gray maces on gray, pale undead flesh on lavender).
 SHEET_TOLERANCE = {
     "goblin-fire-sheet.png": 35,
-    "froglok-undead-sheet.png": 28,
 }
 DEFAULT_TOLERANCE = 60
 
 # Sheets whose backdrop is a multi-tone checker: the 4 corners can all land on
 # one tone, leaving the other tone(s) un-seeded. List every backdrop tone here
 # so the flood-fill recognizes them regardless of which square a corner hits.
-SHEET_BG = {
-    "froglok-undead-sheet.png": [(187, 163, 161), (96, 66, 74), (63, 49, 49)],
-}
+SHEET_BG = {}
 
 # strip name -> {sheet, cells: [(col, row), ...], box: (dx, dy, w, h) in-cell}
 # Cells are 1-indexed; the same box applies to every frame so they align.
@@ -69,23 +64,8 @@ STRIPS = {
         "cells": [(1, 1), (2, 1)],
         "box": (4, 4, 146, 146),
     },
-    # shadow-knight-* and swash-* now come from Nano Banana pose grids
-    # via tools/slice_grid.py
-    "spellblade-walk": {
-        "sheet": "dragonkin-spellblade-sheet.png",
-        "cells": [(2, 4), (3, 4)],
-        "box": (3, 3, 107, 107),
-    },
-    "spellblade-idle": {
-        "sheet": "dragonkin-spellblade-sheet.png",
-        "cells": [(1, 5), (2, 5)],
-        "box": (3, 3, 107, 107),
-    },
-    "spellblade-attack": {
-        "sheet": "dragonkin-spellblade-sheet.png",
-        "cells": [(1, 6), (2, 6)],
-        "box": (3, 3, 107, 107),
-    },
+    # shadow-knight-*, swash-*, and spellblade-* now come from Nano Banana pose
+    # grids via tools/slice_grid.py
     # broad-use menagerie: minotaur, bat, rat, evil eye, ogre, slime
     "minotaur-idle": {
         "sheet": "monsters-menagerie-sheet.png",
@@ -141,10 +121,7 @@ STRIPS = {
     "turquoise-idle": {"sheet": "turquoise-barbarian-sheet.png", "cells": [(1, 3), (2, 3)], "box": (6, 8, 101, 105)},
     "turquoise-attack": {"sheet": "turquoise-barbarian-sheet.png", "cells": [(3, 1), (4, 1)], "box": (6, 8, 101, 105)},
     "turquoise-walk": {"sheet": "turquoise-barbarian-sheet.png", "cells": [(1, 2), (2, 2)], "box": (6, 8, 101, 105)},
-    # --- Beren, human warrior (playable; faces left) ---
-    "beren-idle": {"sheet": "beren-warrior-sheet.png", "abs": [(450, 168, 110, 118), (450, 168, 110, 118)]},
-    "beren-attack": {"sheet": "beren-warrior-sheet.png", "abs": [(8, 40, 100, 115), (224, 40, 100, 115)]},
-    "beren-walk": {"sheet": "beren-warrior-sheet.png", "abs": [(8, 170, 100, 118), (120, 170, 100, 118)]},
+    # beren-* now come from a Nano Banana pose grid via tools/slice_grid.py
     # --- Avatar of Fear (zone boss; label in col 1, frames cols 2-5; faces left) ---
     # avatar-of-fear-* now come from a Nano Banana pose grid via slice_grid.py
     # --- golem/beast pack (abs boxes; ~56px cells) ---
@@ -192,9 +169,7 @@ STRIPS = {
     # froglok-zombie-* and froglok-* (live warriors) now come from Nano Banana
     # pose grids via tools/slice_grid.py
     # lizardfolk-* now come from a Nano Banana pose grid via tools/slice_grid.py
-    # stone golem (courtyard boss): side-view move as idle, side-view attack windup + lunge
-    "stone-golem-idle": {"sheet": "stone-golem-sheet.png", "abs": [(32, 170, 108, 118), (150, 170, 108, 118)]},
-    "stone-golem-attack": {"sheet": "stone-golem-sheet.png", "abs": [(30, 66, 112, 86), (368, 66, 116, 86)]},
+    # stone-golem-* now come from a Nano Banana pose grid via tools/slice_grid.py
 }
 
 

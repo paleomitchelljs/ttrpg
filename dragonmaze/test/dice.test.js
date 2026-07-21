@@ -311,10 +311,19 @@ check('every zone subregion is well-formed, connected, and deterministic', () =>
       assert.equal(seen.size, floors, `${zone.id}/${sub.id}: all floors reachable`);
       assert.ok(a.encounters.length >= 3, `${zone.id}/${sub.id} has encounters`);
       assert.ok(a.loot.length >= 1, `${zone.id}/${sub.id} has loot`);
-      for (const p of sub.props ?? []) {
-        assert.ok(TILES[p.key], `${zone.id}/${sub.id} prop key ${p.key}`);
+      for (const p of a.props) {
+        assert.ok(TILES[p.key], `${zone.id}/${sub.id} decor key ${p.key}`);
         assert.ok(p.x >= 0 && p.x + p.w <= w && p.y >= 0 && p.y + p.h <= sub.map.length,
-          `${zone.id}/${sub.id} prop ${p.key} in bounds`);
+          `${zone.id}/${sub.id} decor ${p.key} in bounds`);
+      }
+      // Placed monsters and loot must sit on floor and name real ids.
+      for (const e of a.encounters) {
+        assert.equal(a.tiles[e.y]?.[e.x], 1, `${zone.id}/${sub.id} encounter on floor @${e.x},${e.y}`);
+        for (const id of e.monsterIds) assert.ok(monsterById(id), `${zone.id}/${sub.id} monster id ${id}`);
+      }
+      for (const l of a.loot) {
+        assert.equal(a.tiles[l.y]?.[l.x], 1, `${zone.id}/${sub.id} loot on floor @${l.x},${l.y}`);
+        if (l.item) assert.ok(ITEMS.some((it) => it.id === l.item), `${zone.id}/${sub.id} loot item ${l.item}`);
       }
     }
   }
@@ -555,7 +564,7 @@ check('new companions and monster art are wired', () => {
     assert.ok(SPRITES[c.anim.idle] && SPRITES[c.anim.attack] && SPRITES[c.walk], `${id} strips`);
     assert.ok(c.blurb, `${id} blurb`);
   }
-  for (const id of ['clay-golem', 'iron-golem', 'avatar-of-fear', 'gargoyle', 'giant-snake', 'fungus-man']) {
+  for (const id of ['clay-golem', 'iron-golem', 'stone-golem', 'alligator', 'girallon', 'thief', 'wolfpack-bandit', 'avatar-of-fear', 'gargoyle', 'giant-snake', 'fungus-man']) {
     const m = monsterById(id);
     assert.ok(m, `${id} exists`);
     assert.ok(SPRITES[m.anim.idle] && SPRITES[m.anim.attack], `${id} strips`);
