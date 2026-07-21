@@ -35,7 +35,10 @@ function refreshWorld(state) {
   ui.updateHud(state);
   renderMap(ui.el('map'), state);
   const tierIndex = Math.max(0, DRAGON_TIERS.findIndex((t) => t.tier === state.meta.tier));
-  drawHoard(ui.el('hoard-canvas'), state.meta.hoardGold, tierIndex);
+  // Hide the hoard pile until there's gold to draw — no empty cave box early on.
+  const canvas = ui.el('hoard-canvas');
+  canvas.hidden = state.meta.hoardGold <= 0;
+  if (!canvas.hidden) drawHoard(canvas, state.meta.hoardGold, tierIndex);
   renderRoster(state);
 }
 

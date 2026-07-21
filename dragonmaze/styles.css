@@ -2,7 +2,7 @@
    player, high contrast, no external fonts. */
 
 :root {
-  --tile: clamp(24px, 4.6vmin, 44px); /* min small enough that a 15-wide map fits a phone */
+  --tile: clamp(22px, 6vmin, 60px); /* fills more of a desktop; min small enough that a 15-wide map fits a phone */
   --bg: #14101a;
   --panel: #221a2c;
   --panel-2: #2c2138;
