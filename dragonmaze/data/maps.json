@@ -874,8 +874,8 @@
         ],
         "x": 3,
         "y": 4,
-        "w": 2,
-        "h": 3,
+        "w": 1.5,
+        "h": 2.5,
         "rot": 0
       },
       {
@@ -886,8 +886,8 @@
         ],
         "x": 10,
         "y": 5,
-        "w": 2,
-        "h": 3,
+        "w": 1.5,
+        "h": 2.5,
         "rot": 0
       },
       {
@@ -899,7 +899,7 @@
         ],
         "x": 5,
         "y": 1,
-        "w": 1,
+        "w": 0.5,
         "h": 2,
         "rot": 0
       },
@@ -912,8 +912,320 @@
         ],
         "x": 9,
         "y": 1,
-        "w": 1,
+        "w": 0.5,
         "h": 2,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "wall-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 7,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "wall-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 8,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "wall-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 9,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "wall-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 10,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "wall-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 11,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "wall-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 12,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "wall-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 13,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "wall-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 14,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "wall-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 5,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "wall-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 4,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "wall-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 3,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "wall-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 2,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "wall-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 1,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "wall-a",
+        "tags": [
+          "wall"
+        ],
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "wall-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 0,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "type": "decor",
+        "id": "wall-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 0,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "type": "decor",
+        "id": "wall-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 0,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "type": "decor",
+        "id": "wall-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 0,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "type": "decor",
+        "id": "wall-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 0,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "type": "decor",
+        "id": "wall-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 0,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "type": "decor",
+        "id": "wall-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 0,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "type": "decor",
+        "id": "wall-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 0,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "type": "decor",
+        "id": "wall-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 0,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "type": "decor",
+        "id": "wall-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 0,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "type": "decor",
+        "id": "wall-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 6,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "snake-statue",
+        "tags": [
+          "statue"
+        ],
+        "x": 7,
+        "y": 4,
+        "w": 0.5,
+        "h": 1,
         "rot": 0
       },
       {

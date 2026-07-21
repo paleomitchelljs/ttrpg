@@ -11,6 +11,7 @@ import { rollLoot } from './loot.js';
 import { zoneById } from '../../data/zones.js';
 import { PLACEMENTS } from '../../data/placements.js';
 import { itemById } from '../../data/items.js';
+import { monsterById } from '../../data/monsters.js';
 
 export function buildZoneDungeon(zoneId, subIndex, seedString, partySize = 1) {
   const zone = zoneById(zoneId);
@@ -73,6 +74,15 @@ export function buildZoneDungeon(zoneId, subIndex, seedString, partySize = 1) {
     id: `loot-${i}`, x: l.x, y: l.y,
     ...(l.item ? pinnedLoot(l.item) : rollLoot(rng, sub.difficulty)),
   }));
+
+  // Golems (and any monster flagged `patrol`) pace their post and give chase;
+  // `home` anchors the beat. See tickEnemies() in gameState.
+  for (const e of encounters) {
+    if (e.monsterIds.some((id) => monsterById(id)?.patrol)) {
+      e.patrol = true;
+      e.home = { x: e.x, y: e.y };
+    }
+  }
 
   // Each door's `entry` is its one interior-floor neighbour; `dir` points from
   // the entry into the door (the way you walk to travel). `to` names the

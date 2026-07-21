@@ -414,6 +414,7 @@ export const MONSTERS = [
     emoji: '🗿',
     anim: { idle: 'stone-golem-idle', attack: 'stone-golem-attack' },
     facesLeft: true,
+    patrol: true, // paces its area; gives chase if it spots the party
     faction: 'construct',
     parley: 'never',
     goldValue: 20,
@@ -495,6 +496,7 @@ export const MONSTERS = [
     emoji: '🗿',
     anim: { idle: 'clay-golem-idle', attack: 'clay-golem-attack' },
     facesLeft: true,
+    patrol: true, // paces its area; gives chase if it spots the party
     resist: ['physical'],
     ability: 'regenerate',
     faction: 'construct',
@@ -517,6 +519,7 @@ export const MONSTERS = [
     emoji: '🗿',
     anim: { idle: 'iron-golem-idle', attack: 'iron-golem-attack' },
     facesLeft: true,
+    patrol: true, // paces its area; gives chase if it spots the party
     resist: ['physical', 'fire'],
     faction: 'construct',
     parley: 'never',

@@ -156,6 +156,7 @@ button { font: inherit; }
 /* Seamless dungeon: no per-tile borders or gaps; the grid should read as
    continuous stone and passage, not as boxes. Once seen, always lit. */
 .tile.fog { background: #0b0812; }
+.tile.fog-dim { opacity: 0.42; } /* the ring two tiles out under a light — partially seen */
 .tile.wall {
   background: #2b2138;
   box-shadow: inset 0 0 14px #00000055;

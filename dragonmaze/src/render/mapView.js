@@ -58,30 +58,40 @@ export function renderMap(container, state) {
       tile.dataset.x = x;
       tile.dataset.y = y;
       const door = d.doors?.find((dr) => dr.x === x && dr.y === y);
-      if (!run.explored[`${x},${y}`]) {
+      const cleared = run.explored[`${x},${y}`];
+      // A ring two tiles out, glimpsed under a light: show the terrain faintly
+      // but none of its contents, and it isn't steppable until fully cleared.
+      const dim = !cleared && run.dimSeen?.[`${x},${y}`];
+      if (!cleared && !dim) {
         tile.classList.add('fog');
       } else if (door) {
         // A door embedded in the border wall; the side it opens onto is the
         // direction you walk to use it.
+        if (dim) tile.classList.add('fog-dim');
         tile.classList.add('wall', 'door-tile');
         tile.dataset.dir = door.dir.dx > 0 ? 'e' : door.dir.dx < 0 ? 'w' : door.dir.dy > 0 ? 's' : 'n';
         const leaf = document.createElement('div');
         leaf.className = door.to === 'surface' ? 'door-leaf surface' : 'door-leaf';
         tile.appendChild(leaf);
-        if (Math.abs(x - px) + Math.abs(y - py) === 1) tile.classList.add('steppable');
+        if (cleared && Math.abs(x - px) + Math.abs(y - py) === 1) tile.classList.add('steppable');
       } else if (d.tiles[y][x] !== 1) {
+        if (dim) tile.classList.add('fog-dim');
         tile.classList.add('wall');
       } else {
         tile.classList.add('floor');
-        // A floor tile on a linked border is a walk-off passage to the next
-        // sub-area — cue it so it doesn't read as a dead end.
-        if (x === d.width - 1 && d.edges?.e) tile.classList.add('edge-exit', 'edge-e');
-        else if (x === 0 && d.edges?.w) tile.classList.add('edge-exit', 'edge-w');
-        else if (y === d.height - 1 && d.edges?.s) tile.classList.add('edge-exit', 'edge-s');
-        else if (y === 0 && d.edges?.n) tile.classList.add('edge-exit', 'edge-n');
-        fillTile(tile, run, x, y);
-        if (Math.abs(x - px) + Math.abs(y - py) === 1) {
-          tile.classList.add('steppable');
+        if (dim) {
+          tile.classList.add('fog-dim');
+        } else {
+          // A floor tile on a linked border is a walk-off passage to the next
+          // sub-area — cue it so it doesn't read as a dead end.
+          if (x === d.width - 1 && d.edges?.e) tile.classList.add('edge-exit', 'edge-e');
+          else if (x === 0 && d.edges?.w) tile.classList.add('edge-exit', 'edge-w');
+          else if (y === d.height - 1 && d.edges?.s) tile.classList.add('edge-exit', 'edge-s');
+          else if (y === 0 && d.edges?.n) tile.classList.add('edge-exit', 'edge-n');
+          fillTile(tile, run, x, y);
+          if (Math.abs(x - px) + Math.abs(y - py) === 1) {
+            tile.classList.add('steppable');
+          }
         }
       }
       frag.appendChild(tile);

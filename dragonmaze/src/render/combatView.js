@@ -45,7 +45,12 @@ async function processBatches(els) {
   while (batches.length) {
     const { state, events, handlers } = batches.shift();
     lockActions(els);
-    for (const ev of events) await presentEvent(els, ev);
+    for (const ev of events) {
+      await presentEvent(els, ev);
+      // 'combat-start' clears the stage; repopulate it at once so the party and
+      // enemies are visible immediately, not only when the batch finishes.
+      if (ev.type === 'combat-start') renderRoster(els, state);
+    }
     const combat = state.run?.combat?.combat;
     if (combat && !combat.over) renderCombat(els, state, handlers);
     handlers.onBatchDone?.(events);
@@ -293,7 +298,7 @@ async function presentEvent(els, ev) {
       const card = cardOf(els, ev.id);
       if (card) card.classList.add('dying');
       appendLog(els.log, `The ${ev.who} is defeated! (worth ${ev.goldValue} gold)`, 'log-hit');
-      return delay(500);
+      return delay(800);
     }
     case 'hero-down': {
       const card = cardOf(els, ev.id);
@@ -303,14 +308,14 @@ async function presentEvent(els, ev) {
     }
     case 'item-drop':
       appendLog(els.log, `Among the spoils: ${ev.name} — ${ev.blurb}. Equip it from a character sheet!`, 'log-start');
-      return delay(600);
+      return delay(2400);
     case 'victory':
       appendLog(
         els.log,
         `Victory! You snatch up ${ev.gold} gold.${ev.fled ? ' The cowards that fled kept theirs!' : ''}`,
         'log-start'
       );
-      return delay(700);
+      return delay(2000);
     case 'defeat':
       appendLog(els.log, `The dragon has no strength left…`, 'log-hurt');
       return delay(600);
@@ -636,6 +641,17 @@ const ICONS = {
   flame: '<svg class="btn-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1c1 3-3 4.5-3 8a3 3 0 0 0 6 .2C11 7 12.4 6.6 11.4 4 13.5 6 15 7.8 15 10A7 7 0 1 1 1 10C1 6.2 6 4.6 8 1Z" fill="#ffb03b"/></svg>',
   spark: '<svg class="btn-icon" viewBox="0 0 16 16" aria-hidden="true"><path d="M8 1l1.8 5.2L15 8l-5.2 1.8L8 15l-1.8-5.2L1 8l5.2-1.8Z" fill="#cbb3ff"/></svg>',
 };
+
+// Draw the combatants with no actions or click handlers — used the instant
+// combat opens so the stage isn't blank while the opening beats replay.
+function renderRoster(els, state) {
+  const combat = state.run?.combat?.combat;
+  if (!combat) return;
+  els.enemies.replaceChildren(
+    ...combat.order.filter((c) => c.kind === 'monster').map((m) => unitEl(m, 'enemy', null))
+  );
+  els.player.replaceChildren(...heroesOf(combat).map((h) => unitEl(h, 'hero', null)));
+}
 
 export function renderCombat(els, state, handlers) {
   const combat = state.run?.combat?.combat;

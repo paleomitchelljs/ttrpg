@@ -179,26 +179,52 @@
    start 2,2 | exit(surface) 7,0 | edges e:courtyard-ne s:courtyard-sw
    table: lizardfolk-warrior(w3,≤2)  giant-spider(w2,≤2)  giant-rat(w1,≤3)
    objects (type · identity · @cell):
-     decor    round-hut (building) 2x3 rot0                  @3,4
-     decor    stone-hut (building) 2x3 rot0                  @10,5
-     decor    brazier1 (prop/light) 1x2 rot0                 @5,1
-     decor    brazier2 (prop/light) 1x2 rot0                 @9,1
+     decor    round-hut (building) 1.5x2.5 rot0              @3,4
+     decor    stone-hut (building) 1.5x2.5 rot0              @10,5
+     decor    brazier1 (prop/light) 0.5x2 rot0               @5,1
+     decor    brazier2 (prop/light) 0.5x2 rot0               @9,1
+     decor    wall-b (wall) 1x1 rot0                         @7,0
+     decor    wall-b (wall) 1x1 rot0                         @8,0
+     decor    wall-b (wall) 1x1 rot0                         @9,0
+     decor    wall-b (wall) 1x1 rot0                         @10,0
+     decor    wall-b (wall) 1x1 rot0                         @11,0
+     decor    wall-b (wall) 1x1 rot0                         @12,0
+     decor    wall-b (wall) 1x1 rot0                         @13,0
+     decor    wall-b (wall) 1x1 rot0                         @14,0
+     decor    wall-b (wall) 1x1 rot0                         @5,0
+     decor    wall-b (wall) 1x1 rot0                         @4,0
+     decor    wall-b (wall) 1x1 rot0                         @3,0
+     decor    wall-b (wall) 1x1 rot0                         @2,0
+     decor    wall-b (wall) 1x1 rot0                         @1,0
+     decor    wall-a (wall) 1x1 rot0                         @0,0
+     decor    wall-b (wall) 1x1 rot270                       @0,1
+     decor    wall-b (wall) 1x1 rot270                       @0,2
+     decor    wall-b (wall) 1x1 rot270                       @0,3
+     decor    wall-b (wall) 1x1 rot270                       @0,4
+     decor    wall-b (wall) 1x1 rot270                       @0,5
+     decor    wall-b (wall) 1x1 rot270                       @0,6
+     decor    wall-b (wall) 1x1 rot270                       @0,7
+     decor    wall-b (wall) 1x1 rot270                       @0,8
+     decor    wall-b (wall) 1x1 rot270                       @0,9
+     decor    wall-b (wall) 1x1 rot270                       @0,10
+     decor    wall-b (wall) 1x1 rot0                         @6,0
+     decor    snake-statue (statue) 0.5x1 rot0               @7,4
      monster  roll (region table)                            @9,3
      monster  roll (region table)                            @4,4
      monster  roll (region table)                            @6,7
      loot     roll (gold/tome/den)                           @11,8
    grid (M monster · L loot · B boss · b mini · d decor anchor):
-     #######E#######
-     #....d...d.....
-     #.S............
-     #........M.....
-     #..dM..........
-     #.........d....
-     #..............
-     #.....M........
-     #..........L...
-     #..............
-     #..............
+     ddddddddddddddd
+     d....d...d.....
+     d.S............
+     d........M.....
+     d..dM..d.......
+     d.........d....
+     d..............
+     d.....M........
+     d..........L...
+     d..............
+     d..............
 
 == lost-temple / courtyard-ne  [The Palace Approach]
    15x11  theme grass  difficulty 2

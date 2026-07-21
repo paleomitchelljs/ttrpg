@@ -80,17 +80,31 @@ function key(x, y) {
   return `${x},${y}`;
 }
 
+// A light source (the lantern-beetle familiar) or a party member with
+// darkvision (Spawnee, the Yuan-Ti) widens sight: a full 3x3 lit, plus the ring
+// two tiles out glimpsed dimly. Without light it's the bare plus. No light
+// *spell* exists yet — add it here when one does.
+function hasLight(run) {
+  return state.meta.familiar === 'lantern-beetle'
+    || (run.party ?? []).some((s) => companionById(s.id)?.darkvision);
+}
+
 function reveal(run) {
   const { x, y } = run.playerPos;
-  const spots = [[0, 0], [0, -1], [0, 1], [-1, 0], [1, 0]];
-  if (state.meta.familiar === 'lantern-beetle') {
-    spots.push([-1, -1], [1, -1], [-1, 1], [1, 1], [0, -2], [0, 2], [-2, 0], [2, 0]);
-  }
-  for (const [dx, dy] of spots) {
-    const tx = x + dx;
-    const ty = y + dy;
-    if (tx >= 0 && tx < run.dungeon.width && ty >= 0 && ty < run.dungeon.height) {
-      run.explored[key(tx, ty)] = true;
+  const { width: W, height: H } = run.dungeon;
+  run.dimSeen ??= {};
+  const inb = (tx, ty) => tx >= 0 && tx < W && ty >= 0 && ty < H;
+  const lit = hasLight(run);
+  // Fully lit (permanent): the plus, filled to a 3x3 when a light is up.
+  const clear = [[0, 0], [0, -1], [0, 1], [-1, 0], [1, 0]];
+  if (lit) clear.push([-1, -1], [1, -1], [-1, 1], [1, 1]);
+  for (const [dx, dy] of clear) if (inb(x + dx, y + dy)) run.explored[key(x + dx, y + dy)] = true;
+  // Partially seen: the ring at distance 2, only under light, never overriding
+  // a cleared tile.
+  if (lit) {
+    for (let dy = -2; dy <= 2; dy++) for (let dx = -2; dx <= 2; dx++) {
+      if (Math.max(Math.abs(dx), Math.abs(dy)) !== 2) continue;
+      if (inb(x + dx, y + dy) && !run.explored[key(x + dx, y + dy)]) run.dimSeen[key(x + dx, y + dy)] = true;
     }
   }
 }
@@ -327,6 +341,7 @@ export function enterLabyrinth(seed) {
     dungeon,
     playerPos: { ...dungeon.start },
     explored: {},
+    dimSeen: {},
     phase: 'explore', // 'explore' | 'combat' | 'won' | 'defeat'
     combat: null,
     encountersCleared: 0,
@@ -345,6 +360,139 @@ export function quitToTitle() {
   state.hasSave = loadSave() != null;
   if (state.run && state.run.phase !== 'explore') state.run = null;
   emit([{ type: 'quit-to-title' }]);
+}
+
+// ---------------------------------------------------------------- enemy AI
+// Patrollers (the golems) pace a short beat around their post and give chase
+// when the party strays within sight — one tile per player step.
+const DETECT_RADIUS = 3;
+const PATROL_LEASH = 3;
+
+const isFloor = (d, x, y) => x >= 0 && x < d.width && y >= 0 && y < d.height && d.tiles[y][x] === 1;
+const occupiedBy = (d, x, y, self) => d.encounters.some((e) => e !== self && e.x === x && e.y === y);
+const openLen = (d, enc, sx, sy) => {
+  let n = 0, x = enc.x + sx, y = enc.y + sy;
+  while (isFloor(d, x, y) && n < PATROL_LEASH) { n++; x += sx; y += sy; }
+  return n;
+};
+
+// Clear line of sight: every tile the ray crosses (bar the endpoints) is floor.
+function lineOfSight(d, x0, y0, x1, y1) {
+  const adx = Math.abs(x1 - x0), ady = Math.abs(y1 - y0);
+  const sx = x0 < x1 ? 1 : -1, sy = y0 < y1 ? 1 : -1;
+  let err = adx - ady, x = x0, y = y0;
+  while (x !== x1 || y !== y1) {
+    const e2 = 2 * err;
+    if (e2 > -ady) { err -= ady; x += sx; }
+    if (e2 < adx) { err += adx; y += sy; }
+    if ((x !== x1 || y !== y1) && !isFloor(d, x, y)) return false;
+  }
+  return true;
+}
+
+// One greedy step toward (tx,ty), preferring the longer axis.
+function stepToward(enc, tx, ty, d) {
+  const dx = Math.sign(tx - enc.x), dy = Math.sign(ty - enc.y);
+  const tries = Math.abs(tx - enc.x) >= Math.abs(ty - enc.y) ? [[dx, 0], [0, dy]] : [[0, dy], [dx, 0]];
+  for (const [sx, sy] of tries) {
+    if (!sx && !sy) continue;
+    const nx = enc.x + sx, ny = enc.y + sy;
+    if (isFloor(d, nx, ny) && !occupiedBy(d, nx, ny, enc)) { enc.x = nx; enc.y = ny; return; }
+  }
+}
+
+// Pace back and forth along the roomier axis, within a short leash of home.
+function patrolPace(enc, d) {
+  if (!enc.patrolAxis) {
+    enc.patrolAxis = openLen(d, enc, 1, 0) + openLen(d, enc, -1, 0) >= openLen(d, enc, 0, 1) + openLen(d, enc, 0, -1) ? 'x' : 'y';
+    enc.patrolDir = 1;
+  }
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const [sx, sy] = enc.patrolAxis === 'x' ? [enc.patrolDir, 0] : [0, enc.patrolDir];
+    const nx = enc.x + sx, ny = enc.y + sy;
+    const leashed = Math.abs(nx - enc.home.x) <= PATROL_LEASH && Math.abs(ny - enc.home.y) <= PATROL_LEASH;
+    if (leashed && isFloor(d, nx, ny) && !occupiedBy(d, nx, ny, enc)) { enc.x = nx; enc.y = ny; return; }
+    enc.patrolDir *= -1; // hit a wall or the leash — turn around
+  }
+}
+
+// Move every patroller/fleer one step. Returns an encounter that needs to fight
+// the party (a golem that reached them, or the thief cornered), or null. Pushes
+// a 'robbed' event if the fleeing thief made it to a door.
+function tickEnemies(run, events) {
+  const d = run.dungeon;
+  const { x: px, y: py } = run.playerPos;
+  // A cornered thief (party on or beside him) is caught before he can bolt —
+  // parley, then a fight if it fails.
+  const thief = d.encounters.find((e) => e.flee);
+  if (thief && Math.max(Math.abs(thief.x - px), Math.abs(thief.y - py)) <= 1) {
+    thief.flee = false;
+    return thief;
+  }
+  // Everyone else steps: patrollers chase or pace, the thief runs for his door.
+  for (const enc of d.encounters) {
+    if (enc.flee) { stepToward(enc, enc.target.x, enc.target.y, d); continue; }
+    if (!enc.patrol) continue;
+    enc.home ??= { x: enc.x, y: enc.y };
+    const cheb = Math.max(Math.abs(enc.x - px), Math.abs(enc.y - py));
+    if (cheb > 0 && cheb <= DETECT_RADIUS && lineOfSight(d, enc.x, enc.y, px, py)) stepToward(enc, px, py, d);
+    else patrolPace(enc, d);
+  }
+  // A thief who reached his door is gone with the cut.
+  if (thief && thief.x === thief.target.x && thief.y === thief.target.y) {
+    run.unbankedGold = Math.max(0, run.unbankedGold - thief.steal);
+    d.encounters.splice(d.encounters.indexOf(thief), 1);
+    events.push({ type: 'robbed', gold: thief.steal, escaped: true });
+  }
+  return d.encounters.find((e) => e.patrol && e.x === px && e.y === py) ?? null;
+}
+
+// ------------------------------------------------ the camp thief
+const bestPartyWis = (run) =>
+  (run.party ?? []).reduce((best, s) => Math.max(best, companionById(s.id)?.abilities?.wis ?? 0), 0);
+
+// A floor tile a few steps off the party, clear of other encounters.
+function pickHeistSpawn(run) {
+  const d = run.dungeon, { x: px, y: py } = run.playerPos, cands = [];
+  for (let r = 2; r <= 3; r++) for (let dy = -r; dy <= r; dy++) for (let dx = -r; dx <= r; dx++) {
+    if (Math.max(Math.abs(dx), Math.abs(dy)) !== r) continue;
+    const x = px + dx, y = py + dy;
+    if (isFloor(d, x, y) && !occupiedBy(d, x, y, null)) cands.push({ x, y });
+  }
+  return cands.length ? cands[Math.floor(liveRNG() * cands.length)] : null;
+}
+
+const nearestDoorEntry = (run, from) => {
+  let best = null, bd = Infinity;
+  for (const dr of run.dungeon.doors ?? []) {
+    if (!dr.entry) continue;
+    const dist = Math.abs(dr.entry.x - from.x) + Math.abs(dr.entry.y - from.y);
+    if (dist < bd) { bd = dist; best = { ...dr.entry }; }
+  }
+  return best;
+};
+
+// On camp, a gold-scaled chance a thief tries your purse. Spotted (best WIS +
+// d20 vs 12) he bolts for a door to give chase; unseen he lifts a cut clean.
+// Returns { kind: 'chase'|'silent', cut } or null.
+function maybeThiefHeist(run) {
+  if (run.unbankedGold < 20) return null;
+  if (liveRNG() >= Math.min(0.4, 0.1 + run.unbankedGold / 2000)) return null;
+  const cut = Math.max(1, Math.round(run.unbankedGold * 0.2));
+  const spotted = 1 + Math.floor(liveRNG() * 20) + bestPartyWis(run) >= 12;
+  if (spotted) {
+    const spawn = pickHeistSpawn(run);
+    const door = spawn && nearestDoorEntry(run, spawn);
+    if (spawn && door) {
+      run.dungeon.encounters.push({
+        id: 'thief-heist', x: spawn.x, y: spawn.y,
+        monsterIds: ['thief'], flee: true, target: door, steal: cut,
+      });
+      return { kind: 'chase', cut };
+    }
+  }
+  run.unbankedGold = Math.max(0, run.unbankedGold - cut);
+  return { kind: 'silent', cut };
 }
 
 // ---------------------------------------------------------------- exploring
@@ -440,8 +588,12 @@ export function move(dx, dy) {
     }
   }
 
+  // The party has taken its step — now the patrollers (and any fleeing thief)
+  // take theirs.
+  const caught = tickEnemies(run, events);
   persist(state);
   emit(events);
+  if (caught) beginCombat(caught);
 }
 
 /** Walk through a door into another subregion of the same zone. The run
@@ -460,6 +612,7 @@ function travelThrough(originDoor, events) {
   const back = dungeon.doors.find((dd) => dd.to === fromSub);
   run.playerPos = back ? { ...back.entry } : { ...dungeon.start };
   run.explored = {};
+  run.dimSeen = {};
   reveal(run);
   persist(state);
   events.push({ type: 'traveled', zone: dungeon.zone });
@@ -482,6 +635,7 @@ export function usePortal(to) {
   const back = dungeon.doors.find((dd) => dd.to === fromSub);
   run.playerPos = back ? { ...back.entry } : { ...dungeon.start };
   run.explored = {};
+  run.dimSeen = {};
   reveal(run);
   persist(state);
   emit([{ type: 'traveled', zone: dungeon.zone }]);
@@ -512,6 +666,7 @@ function travelEdge(dir, destSubId, lane, events) {
   run.dungeon = dungeon;
   run.playerPos = arrivalTile(dungeon, dir, lane);
   run.explored = {};
+  run.dimSeen = {};
   reveal(run);
   persist(state);
   events.push({ type: 'traveled', zone: dungeon.zone });
@@ -553,6 +708,19 @@ export function rest() {
   };
   if (run.dragon) mend(run.dragon.hp);
   for (const slot of run.party) mend(slot.hp);
+
+  // A camp thief may try your purse — his own event, before any wandering pack.
+  const heist = maybeThiefHeist(run);
+  if (heist?.kind === 'chase') {
+    persist(state);
+    emit([{ type: 'heist-start', gold: heist.cut }]);
+    return;
+  }
+  if (heist?.kind === 'silent') {
+    persist(state);
+    emit([{ type: 'rested', ambush: false }, { type: 'robbed', gold: heist.cut, escaped: false }]);
+    return;
+  }
 
   const risk = Math.min(0.55, 0.15 + run.dungeon.depth * 0.06);
   if (liveRNG() < risk) {

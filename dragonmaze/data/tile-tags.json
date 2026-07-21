@@ -73,6 +73,30 @@
       176
     ]
   },
+  "snakestatue": {
+    "tags": [
+      "statue"
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "box": [
+      28,
+      524,
+      124,
+      176
+    ]
+  },
+  "snakewall": {
+    "tags": [
+      "wall"
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "box": [
+      604,
+      256,
+      128,
+      116
+    ]
+  },
   "stone-hut": {
     "tags": [
       "building"

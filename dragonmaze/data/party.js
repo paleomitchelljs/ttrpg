@@ -17,6 +17,7 @@ export const COMPANIONS = [
     anim: { idle: 'spawnee-idle', attack: 'spawnee-attack' },
     walk: 'spawnee-walk',
     undead: true,
+    darkvision: true, // vampire's-eye — widens the party's view underground
     ability: 'relentless',
     abilityLabel: 'slowfall — she drifts away from the first killing blow, once per fight',
     blurb: 'A friendly vampire spawn warrior — her stolen life keeps her on her feet, and the mindless dead answer to her.',
@@ -87,6 +88,7 @@ export const COMPANIONS = [
     emoji: '🪓',
     anim: { idle: 'turquoise-idle', attack: 'turquoise-attack' },
     walk: 'turquoise-walk',
+    darkvision: true, // Yuan-Ti serpent-sight — widens the party's view underground
     ability: 'relentless',
     abilityLabel: 'unyielding — she shrugs off the first killing blow, once per fight',
     blurb: 'A Yuan-Ti barbarian; her serpent blood keeps her swinging past mortal wounds.',

@@ -165,6 +165,19 @@ game.subscribe((state, events) => {
         ev.ambush ? 'log-hurt' : 'log-hit'
       );
     }
+    if (ev.type === 'heist-start') {
+      ui.logExplore('A thief bolts from your camp with your purse in his eye — catch him before he slips out a door!', 'log-hurt');
+    }
+    if (ev.type === 'robbed') {
+      ui.showResult({
+        title: 'Robbed!',
+        growth: { img: SPRITES['thief-portrait'], text: 'The Thief' },
+        body: ev.escaped
+          ? `The thief ducks out a door with ${ev.gold} gold — gone into the dark.`
+          : `You wake to a lighter purse: a thief lifted ${ev.gold} gold while you slept.`,
+        actions: [{ label: 'Blast!', onClick: () => ui.showOverlay('result-overlay', false) }],
+      });
+    }
     if (ev.type === 'banked') showBankedOverlay(ev, events);
   }
 
