@@ -42,16 +42,11 @@ function selObj() { return sel ? subPlace()[sel.kind]?.[sel.i] ?? null : null; }
 
 const setStatus = (t) => { $('status').textContent = t; if (t) setTimeout(() => ($('status').textContent === t) && ($('status').textContent = ''), 4000); };
 
-// A freshly dropped decor tile inherits its source crop's aspect (from
-// tile-tags.json), scaled so the longer side spans 2 tiles — no square
-// letterboxing of tall props.
-function defaultSize(key) {
-  const box = tagMeta[key]?.box;
-  if (!box) return { w: 2, h: 2 };
-  const bw = box[2], bh = box[3];
-  const snap = (n) => Math.max(0.5, Math.round(n * 2) / 2);
-  return bw >= bh ? { w: 2, h: snap((2 * bh) / bw) } : { w: snap((2 * bw) / bh), h: 2 };
-}
+// Sticky decor placement: a freshly dropped tile inherits the last size and
+// rotation you set, so laying a run of same-sized tiles (walls!) needs no
+// re-adjusting each time. Starts at one grid cell.
+let deco = { w: 1, h: 1, rot: 0 };
+const syncDeco = (o) => { deco = { w: o.w, h: o.h, rot: o.rot ?? 0 }; };
 
 // ---------------------------------------------------------------- data load
 async function loadTiles() {
@@ -176,7 +171,7 @@ function markerEl(kind, m, i) {
 }
 function placeBrush(x, y) {
   const P = subPlace();
-  if (brush.kind === 'decor') { P.decor.push({ key: brush.key, x, y, ...defaultSize(brush.key), rot: 0 }); sel = { kind: 'decor', i: P.decor.length - 1 }; }
+  if (brush.kind === 'decor') { P.decor.push({ key: brush.key, x, y, w: deco.w, h: deco.h, rot: deco.rot }); sel = { kind: 'decor', i: P.decor.length - 1 }; }
   else { P[brush.kind].push({ x, y }); sel = { kind: brush.kind, i: P[brush.kind].length - 1 }; }
 }
 stage.addEventListener('pointerdown', (e) => {
@@ -207,7 +202,7 @@ function inspector() {
   const box = $('inspector');
   const o = selObj();
   if (!o) {
-    box.innerHTML = `<h3>Nothing selected</h3><div class="hint">Pick a decor tile or a <b>Monster / Treasure / Boss / Mini</b> brush on the left, then click the map to place it. Click a placement to select; drag to move.<br><br><kbd>R</kbd> rotate decor · <kbd>Del</kbd> delete · arrows nudge · <kbd>[</kbd> <kbd>]</kbd> scale decor</div>`;
+    box.innerHTML = `<h3>Nothing selected</h3><div class="hint">Pick a decor tile or a <b>Monster / Treasure / Boss / Mini</b> brush on the left, then click the map to place it. Click a placement to select; drag to move.<br><br>New decor keeps the last size &amp; rotation you set — size one, place many.<br><br><kbd>R</kbd> rotate decor · <kbd>Del</kbd> delete · arrows nudge · <kbd>[</kbd> <kbd>]</kbd> scale decor</div>`;
     return;
   }
   if (sel.kind === 'decor') {
@@ -269,6 +264,7 @@ function act(a) {
     else if (a === 'w+') o.w += 0.5;
     else if (a === 'h-') o.h = Math.max(0.5, o.h - 0.5);
     else if (a === 'h+') o.h += 0.5;
+    syncDeco(o); // remember this size/rotation for the next decor placed
   }
   render();
 }
@@ -282,8 +278,8 @@ document.addEventListener('keydown', (e) => {
   else if (e.key === 'ArrowDown') o.y += step;
   else if ((e.key === 'r' || e.key === 'R') && sel.kind === 'decor') act('rot');
   else if (e.key === 'Delete' || e.key === 'Backspace') act('del');
-  else if (e.key === '[' && sel.kind === 'decor') { o.w = Math.max(0.5, o.w - 0.5); o.h = Math.max(0.5, o.h - 0.5); }
-  else if (e.key === ']' && sel.kind === 'decor') { o.w += 0.5; o.h += 0.5; }
+  else if (e.key === '[' && sel.kind === 'decor') { o.w = Math.max(0.5, o.w - 0.5); o.h = Math.max(0.5, o.h - 0.5); syncDeco(o); }
+  else if (e.key === ']' && sel.kind === 'decor') { o.w += 0.5; o.h += 0.5; syncDeco(o); }
   else return;
   e.preventDefault(); render();
 });
