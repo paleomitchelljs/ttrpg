@@ -327,6 +327,31 @@ export function playerParley(combat, mode, dc, rng = Math.random) {
   return events;
 }
 
+// Intimidate the highlighted enemy: a CHA check vs its resolve (braver monsters
+// are harder). Success panics it — a panicked monster flees on its turn.
+// Fearless things (undead, constructs) can't be cowed.
+export function playerIntimidate(combat, targetId, rng = Math.random) {
+  const events = [];
+  if (!isPlayerTurn(combat)) return events;
+  const actor = currentCombatant(combat);
+  const target = livingMonsters(combat).find((m) => m.id === targetId) ?? livingMonsters(combat)[0];
+  if (!target) return events;
+  if (target.morale == null) {
+    events.push({ type: 'intimidate', actor: actor.name, target: target.name, targetId: target.id, fearless: true, success: false });
+    advanceTurn(combat, events);
+    return events;
+  }
+  const dc = 12 + target.morale;
+  const check = resolveParleyCheck(actor, dc, rng);
+  events.push({ type: 'intimidate', actor: actor.name, target: target.name, targetId: target.id, ...check });
+  if (check.success) {
+    target.panicked = true;
+    target.moraleChecked = true;
+  }
+  advanceTurn(combat, events);
+  return events;
+}
+
 /**
  * The current hero casts a known, unburned spell. A failed casting check
  * fizzles and burns the spell for the rest of the combat.

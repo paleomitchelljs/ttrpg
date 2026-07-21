@@ -33,6 +33,9 @@ let processing = false;
 // The highlighted enemy: attacks and single-target spells go here. Click an
 // enemy on the stage to change it; falls back to the first living monster.
 let targetId = null;
+// The highlighted ally: heals go here. Click a hero on the stage to change it;
+// falls back to the most wounded.
+let heroTargetId = null;
 
 /** Enqueue an event batch for dramatic replay. Safe to call every emit. */
 export function presentCombat(els, state, events, handlers) {
@@ -281,6 +284,22 @@ async function presentEvent(els, ev) {
         ev.pass ? 'log-dim' : 'log-start'
       );
       return delay(350);
+    case 'intimidate': {
+      const card = cardOf(els, ev.targetId);
+      if (ev.fearless) {
+        appendLog(els.log, `The ${ev.target} is fearless — threats roll off it.`, 'log-miss');
+        return delay(400);
+      }
+      appendLog(
+        els.log,
+        ev.success
+          ? `${ev.actor} cows the ${ev.target}! (${ev.total} vs DC ${ev.dc})`
+          : `${ev.actor} tries to cow the ${ev.target}, but it holds. (${ev.total} vs DC ${ev.dc})`,
+        ev.success ? 'log-start' : 'log-miss'
+      );
+      if (ev.success && card) card.classList.add('hit-flash');
+      return delay(500);
+    }
     case 'flee': {
       const card = cardOf(els, ev.id);
       if (card) card.classList.add('fleeing');
@@ -677,10 +696,19 @@ export function renderCombat(els, state, handlers) {
         return unit;
       })
   );
+  // keep the heal target valid: default to the most wounded living hero
+  const allies = livingHeroes(combat);
+  if (!allies.some((h) => h.id === heroTargetId)) {
+    heroTargetId = allies.slice().sort((a, b) => a.hp.current / a.hp.max - b.hp.current / b.hp.max)[0]?.id ?? null;
+  }
   els.player.replaceChildren(
     ...heroesOf(combat).map((h) => {
       const unit = unitEl(h, 'hero', activeId);
-      if (handlers.onSheet) unit.addEventListener('click', () => handlers.onSheet(h.templateId ?? 'dragon'));
+      if (h.hp.current > 0) {
+        if (h.id === heroTargetId) unit.classList.add('ally-targeted');
+        // Click a hero to aim heals at them — same gesture as tapping an enemy.
+        unit.addEventListener('click', () => { heroTargetId = h.id; renderCombat(els, state, handlers); });
+      }
       return unit;
     })
   );
@@ -819,38 +847,12 @@ function renderActions(els, combat, handlers, targetSpell) {
     }
     buttons.push(btn);
   }
-  if (combat.parleyInfo && !combat.parleyUsed && combat.round === 1) {
-    if (targetSpell === PARLEY_MENU) {
-      const info = combat.parleyInfo;
-      const mk = (mode, label, disabled = false) => {
-        const b = document.createElement('button');
-        b.className = 'btn attack-btn parley-btn';
-        b.innerHTML = `<span>${label}</span>`;
-        b.disabled = disabled;
-        if (!disabled) b.addEventListener('click', () => handlers.onParley(mode));
-        return b;
-      };
-      const cancel = document.createElement('button');
-      cancel.className = 'btn btn-small';
-      cancel.textContent = 'Cancel';
-      cancel.addEventListener('click', () => renderActions(els, combat, handlers, null));
-      const note = document.createElement('div');
-      note.className = 'target-note';
-      note.textContent = `they seem ${info.disposition} (CHA check, DC ${info.dc})`;
-      els.actions.replaceChildren(
-        mk('threaten', 'Threaten'),
-        mk('persuade', 'Persuade'),
-        mk('barter', `Barter (${info.barterCost} gold)`, !info.canBarter),
-        mk('work', 'Ask for work'),
-        cancel,
-        note
-      );
-      return;
-    }
+  // Intimidate the highlighted enemy: a CHA check to panic it into fleeing.
+  if (target) {
     const btn = document.createElement('button');
-    btn.className = 'btn attack-btn parley-btn';
-    btn.innerHTML = `<span>Parley…</span>`;
-    btn.addEventListener('click', () => renderActions(els, combat, handlers, PARLEY_MENU));
+    btn.className = 'btn attack-btn intimidate-btn';
+    btn.innerHTML = `<span>Intimidate the ${target.name}</span>`;
+    btn.addEventListener('click', () => handlers.onIntimidate(target.id));
     buttons.push(btn);
   }
   if (actor.spells.length) {
@@ -862,7 +864,7 @@ function renderActions(els, combat, handlers, targetSpell) {
         .map((id) => {
           const s = spellById(id);
           const burned = actor.burned.includes(id);
-          return `<option value="${id}" ${burned ? 'disabled' : ''}>${s.name} — ${s.blurb}${burned ? ' (spent)' : ''}</option>`;
+          return `<option value="${id}" ${burned ? 'disabled' : ''}>${s.name}${burned ? ' (spent)' : ''}</option>`;
         })
         .join('');
     sel.addEventListener('change', () => {
@@ -879,7 +881,9 @@ function renderActions(els, combat, handlers, targetSpell) {
       if (spell.target === 'all-enemies' || targets.length <= 1) {
         handlers.onCast(spell.id, targets[0]?.id ?? null);
       } else {
-        renderActions(els, combat, handlers, spell);
+        // Heal-style spell: cast on the highlighted ally (default: most wounded).
+        // Tap a hero on the stage to change who, like tapping an enemy.
+        handlers.onCast(spell.id, heroTargetId ?? targets[0]?.id ?? null);
       }
     });
     buttons.push(sel);

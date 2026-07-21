@@ -2,7 +2,7 @@
    player, high contrast, no external fonts. */
 
 :root {
-  --tile: clamp(28px, 4.2vmin, 44px);
+  --tile: clamp(24px, 4.6vmin, 44px); /* min small enough that a 15-wide map fits a phone */
   --bg: #14101a;
   --panel: #221a2c;
   --panel-2: #2c2138;
@@ -394,6 +394,8 @@ button { font: inherit; }
   padding: 1rem;
   z-index: 10;
 }
+/* A sheet opened from the party panel must stack above it, not behind. */
+#sheet-overlay { z-index: 20; }
 
 .combat-box, .result-box {
   background: var(--panel);
@@ -464,6 +466,11 @@ button { font: inherit; }
 .unit.enemy:not(.dead):not(.fled):hover .plate { border-color: #ffffff44; }
 .unit.enemy.targeted .plate { border-color: var(--ember); }
 .unit.enemy.targeted .unit-name::before { content: '◆ '; color: var(--ember); }
+/* Heroes are tappable to aim heals, mirroring enemy targeting. */
+.unit.hero:not(.down):not(.dead) { cursor: pointer; }
+.unit.hero:not(.down):not(.dead):hover .plate { border-color: #ffffff44; }
+.unit.hero.ally-targeted .plate { border-color: #6cc0ff; }
+.unit.hero.ally-targeted .unit-name::before { content: '✚ '; color: #6cc0ff; }
 .unit.enemy.targeted .combat-sprite,
 .unit.enemy.targeted .enemy-face {
   outline: 2px dashed var(--ember);
@@ -772,6 +779,18 @@ button { font: inherit; }
 @media (hover: none) and (pointer: coarse) {
   #dpad { display: grid; }
   #playfield { padding-bottom: 200px; }
+  /* fat-finger-friendly tap targets (~44px min) */
+  .btn, .zone-btn { min-height: 2.75rem; }
+}
+
+/* Narrow screens: stack the combat actions full-width as easy thumb targets
+   instead of a cramped wrapped row. */
+@media (max-width: 520px) {
+  .combat-actions { flex-direction: column; align-items: stretch; }
+  .combat-actions > * { width: 100%; }
+  .combat-actions .attack-btn,
+  .combat-actions .spell-select { min-height: 3rem; justify-content: center; }
+  .btn-big { min-width: 0; width: 100%; }
 }
 
 body.show-dpad #dpad { display: grid; }

@@ -131,6 +131,7 @@ game.subscribe((state, events) => {
           ? `You enter ${ev.zone.name} — ${ev.zone.sub}. Find the way down!`
           : `You slink into labyrinth depth ${ev.depth}. Find the exit!`
       );
+      ui.logExplore('Tap an adjacent tile to move, or use the arrow keys / pad.', 'log-dim');
     }
     if (ev.type === 'resumed') ui.logExplore(`Back to the hunt at depth ${ev.depth}.`);
     if (ev.type === 'traveled') {
@@ -147,6 +148,26 @@ game.subscribe((state, events) => {
         ],
       });
     }
+    if (ev.type === 'parley-offer') {
+      const answer = (mode) => () => { ui.showOverlay('result-overlay', false); game.resolveEncounter(mode); };
+      ui.showResult({
+        title: 'Parley?',
+        body: `${ev.names.join(', ')} block your path — they seem ${ev.disposition}. Talk your way past, or draw steel? (CHA check, DC ${ev.dc})`,
+        actions: [
+          { label: 'Fight!', onClick: answer('fight') },
+          { label: 'Threaten', onClick: answer('threaten') },
+          { label: 'Persuade', onClick: answer('persuade') },
+          ...(ev.canBarter ? [{ label: `Barter (${ev.barterCost} gold)`, onClick: answer('barter') }] : []),
+          { label: 'Ask for work', onClick: answer('work') },
+        ],
+      });
+    }
+    if (ev.type === 'parley-outcome') {
+      const win = { threaten: 'They flinch and scatter before you!', persuade: 'Cooler heads prevail — they let you pass.', barter: 'Coin changes hands; they wave you through.', work: 'You strike a deal — they point you toward bigger prey.' };
+      ui.logExplore(ev.success ? (win[ev.mode] ?? 'They let you pass.') : 'The parley fails — steel it is!', ev.success ? 'log-hit' : 'log-hurt');
+    }
+    if (ev.type === 'parley-paid') ui.logExplore(`You part with ${ev.cost} gold.`, 'log-dim');
+    if (ev.type === 'quest-received') ui.logExplore(`A job: bring down ${ev.target} for ${ev.reward} gold.`, 'log-start');
     if (ev.type === 'loot') ui.logExplore(`You found ${ev.label} — ${ev.gold} gold!`, 'log-hit');
     if (ev.type === 'tome') {
       ui.logExplore(
@@ -192,7 +213,7 @@ game.subscribe((state, events) => {
     onAttack: (targetId) => game.attack(targetId),
     onBreath: () => game.breath(),
     onCast: (spellId, targetId) => game.cast(spellId, targetId),
-    onParley: (mode) => game.parley(mode),
+    onIntimidate: (targetId) => game.intimidate(targetId),
     onSheet: (id) => openSheet(id),
     onBatchDone: (evts) => {
       const retreat = evts.find((e) => e.type === 'retreat');

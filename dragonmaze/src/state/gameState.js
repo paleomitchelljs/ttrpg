@@ -12,7 +12,7 @@ import { COMPANIONS, companionById } from '../../data/party.js';
 import { FAMILIARS, familiarById } from '../../data/familiars.js';
 import { ITEMS, itemById } from '../../data/items.js';
 import { parseHeroExport } from './importHero.js';
-import { bumpDamage } from '../engine/rules.js';
+import { bumpDamage, resolveParleyCheck } from '../engine/rules.js';
 import { SPELLS } from '../../data/spells.js';
 import { makeCombatant, makeDragonCombatant } from '../engine/entities.js';
 import {
@@ -21,7 +21,7 @@ import {
   playerAttack,
   playerBreath,
   playerSpell,
-  playerParley,
+  playerIntimidate,
   isPlayerTurn,
   heroesOf,
 } from '../engine/combat.js';
@@ -538,7 +538,7 @@ export function move(dx, dy) {
   // only occupies the tile after winning.
   const encounter = d.encounters.find((e) => e.x === x && e.y === y);
   if (encounter) {
-    beginCombat(encounter);
+    engage(encounter);
     return;
   }
 
@@ -593,7 +593,7 @@ export function move(dx, dy) {
   const caught = tickEnemies(run, events);
   persist(state);
   emit(events);
-  if (caught) beginCombat(caught);
+  if (caught) engage(caught);
 }
 
 /** Walk through a door into another subregion of the same zone. The run
@@ -781,6 +781,69 @@ function checkTierUp(events) {
 }
 
 // ---------------------------------------------------------------- combat
+// ----------------------------------------------------- parley (before a fight)
+// The best talker the party can field.
+function bestFace(run) {
+  let cha = run.dragon ? 2 : 0;
+  for (const slot of run.party) cha = Math.max(cha, companionById(slot.id)?.abilities?.cha ?? 0);
+  return { abilities: { cha } };
+}
+
+// Will this pack talk, and on what terms? Computed without building the fight.
+function parleyOffer(run, encounter) {
+  const lead = monsterById(encounter.monsterIds[0]);
+  if (!lead?.parley || lead.parley === 'never') return null;
+  if (!encounter.monsterIds.every((id) => { const t = monsterById(id); return t?.parley && t.parley !== 'never'; })) return null;
+  const rep = state.meta.reputation[lead.faction] ?? 0;
+  if (rep <= -10) return null; // too hated to reason with
+  const barterCost = Math.ceil(encounter.monsterIds.reduce((s, id) => s + (monsterById(id)?.goldValue ?? 0), 0) / 2);
+  return { faction: lead.faction, disposition: dispositionLabel(rep), dc: parleyDC(lead.parley, rep), barterCost, canBarter: run.unbankedGold >= barterCost };
+}
+
+// Bump into a pack: offer parley once, up front, if they'll talk — else straight
+// to the fight. Not persisted, so a reload just replays the bump.
+function engage(encounter) {
+  const run = state.run;
+  const offer = parleyOffer(run, encounter);
+  if (!offer) { beginCombat(encounter); return; }
+  run.pendingEncounter = encounter;
+  run.pendingParley = offer;
+  run.phase = 'parley'; // blocks movement until the player answers
+  emit([{ type: 'parley-offer', names: encounter.monsterIds.map((id) => monsterById(id)?.name ?? id), ...offer }]);
+}
+
+// The player's answer: 'fight' | 'threaten' | 'persuade' | 'barter' | 'work'.
+// Success ends it without a fight; failure starts one.
+export function resolveEncounter(mode) {
+  const run = state.run;
+  if (!run || run.phase !== 'parley' || !run.pendingEncounter) return;
+  const encounter = run.pendingEncounter;
+  const offer = run.pendingParley;
+  run.pendingEncounter = null;
+  run.pendingParley = null;
+  run.phase = 'explore';
+  if (mode === 'fight' || !mode) { beginCombat(encounter); return; }
+  const check = resolveParleyCheck(bestFace(run), offer.dc, liveRNG);
+  const events = [{ type: 'parley-outcome', mode, success: check.success, total: check.total, dc: offer.dc }];
+  if (!check.success) { emit(events); beginCombat(encounter); return; }
+  if (mode === 'barter') { run.unbankedGold = Math.max(0, run.unbankedGold - offer.barterCost); events.push({ type: 'parley-paid', cost: offer.barterCost }); }
+  if (mode === 'work') {
+    const boss = run.dungeon.encounters.find((e) => e.id.startsWith('boss'));
+    if (boss) {
+      const reward = 15 + run.dungeon.depth * 10;
+      run.quest = { encId: boss.id, name: boss.bossName, reward, from: offer.faction };
+      events.push({ type: 'quest-received', target: boss.bossName, reward });
+    }
+  }
+  if (mode !== 'threaten' && offer.faction) state.meta.reputation[offer.faction] = (state.meta.reputation[offer.faction] ?? 0) + 1;
+  const idx = run.dungeon.encounters.indexOf(encounter);
+  if (idx >= 0) run.dungeon.encounters.splice(idx, 1);
+  run.playerPos = { x: encounter.x, y: encounter.y };
+  reveal(run);
+  persist(state);
+  emit(events);
+}
+
 function beginCombat(encounter) {
   const run = state.run;
   let heroes = [];
@@ -846,35 +909,9 @@ export function cast(spellId, targetId = null) {
   resolvePlayerAction((combat) => playerSpell(combat, spellId, targetId, liveRNG));
 }
 
-/** Talk instead of fight: 'threaten' | 'persuade' | 'barter' | 'work'. */
-export function parley(mode) {
-  const run = state.run;
-  const combat = run?.combat?.combat;
-  const info = combat?.parleyInfo;
-  if (!info) return;
-  if (mode === 'barter' && run.unbankedGold < info.barterCost) return;
-  resolvePlayerAction((c) => {
-    const events = playerParley(c, mode, info.dc, liveRNG);
-    const succeeded = events.some((e) => e.type === 'parley' && e.success);
-    if (succeeded) {
-      if (mode === 'barter') {
-        run.unbankedGold -= info.barterCost;
-        events.push({ type: 'parley-paid', cost: info.barterCost });
-      }
-      if (mode === 'work') {
-        const boss = run.dungeon.encounters.find((e) => e.id.startsWith('boss'));
-        if (boss) {
-          const reward = 15 + run.dungeon.depth * 10;
-          run.quest = { encId: boss.id, name: boss.bossName, reward, from: info.faction };
-          events.push({ type: 'quest-received', target: boss.bossName, reward });
-        }
-      }
-      if (mode !== 'threaten') {
-        state.meta.reputation[info.faction] = (state.meta.reputation[info.faction] ?? 0) + 1;
-      }
-    }
-    return events;
-  });
+/** Cow the highlighted enemy mid-fight: a CHA check to panic it into fleeing. */
+export function intimidate(targetId) {
+  resolvePlayerAction((combat) => playerIntimidate(combat, targetId, liveRNG));
 }
 
 function resolvePlayerAction(act) {
