@@ -19,7 +19,8 @@ import { SPRITES } from '../assets-manifest.js';
 import { SPELLS, spellById } from '../../data/spells.js';
 
 const DRAGON_FIRE_IMG = './assets/dragon-fire.png';
-const DRAGON_FLY_STRIP = SPRITES['dragon-fly'];
+const DRAGON_IDLE_STRIP = SPRITES['dragon-idle'];
+const DRAGON_ATTACK_STRIP = SPRITES['dragon-attack'];
 
 const delay = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -472,9 +473,9 @@ async function breathBeat(els, ev) {
   dragonCard?.classList.remove('breathing');
   for (const card of els.enemies.querySelectorAll('.hit-flash')) card.classList.remove('hit-flash');
   if (img) {
-    img.src = DRAGON_FLY_STRIP;
-    spriteBox.classList.add('f4');
-    spriteBox.classList.remove('static');
+    img.src = DRAGON_IDLE_STRIP;
+    spriteBox.classList.add('static');
+    spriteBox.classList.remove('f4');
   }
 }
 
@@ -758,8 +759,8 @@ function unitEl(c, side, activeId) {
   unit.dataset.id = c.id;
   unit.dataset.hpmax = c.hp.max;
   if (c.kind === 'dragon') {
-    unit.dataset.idle = DRAGON_FLY_STRIP;
-    unit.dataset.attack = DRAGON_FLY_STRIP;
+    unit.dataset.idle = DRAGON_IDLE_STRIP;
+    unit.dataset.attack = DRAGON_ATTACK_STRIP;
   } else if (c.anim) {
     unit.dataset.idle = spritePath(c.anim.idle);
     unit.dataset.attack = spritePath(c.anim.attack);
@@ -794,7 +795,7 @@ function traitBadges(c) {
 
 function faceHtml(c, dead) {
   if (c.kind === 'dragon') {
-    return `<div class="combat-sprite sprite f4 flip"><img src="${DRAGON_FLY_STRIP}" alt="${c.name}"></div>`;
+    return `<div class="combat-sprite sprite static flip"><img src="${DRAGON_IDLE_STRIP}" alt="${c.name}"></div>`;
   }
   if (c.anim?.idle) {
     // hero side art faces left natively; flip heroes to face the enemy column.

@@ -1235,6 +1235,12 @@ export const PLACEMENTS = {
         "title": "The Sunken Well",
         "label": "A dark shaft plunges into the sewers below. Climb down into the well?"
       }
+    ],
+    "loot": [
+      {
+        "x": 11,
+        "y": 2
+      }
     ]
   },
   "courtyard-se": {

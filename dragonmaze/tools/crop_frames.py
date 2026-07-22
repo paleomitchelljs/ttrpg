@@ -35,6 +35,10 @@ SHEET_CELLS = {
 # with the backdrop (gray maces on gray, pale undead flesh on lavender).
 SHEET_TOLERANCE = {
     "goblin-fire-sheet.png": 35,
+    # JPEG-sourced: bright-magenta bg blurs into a pink fringe on the dragon's
+    # edges. A wider tolerance clears it (the dark-red dragon is far from magenta
+    # in blue, so it's safe).
+    "red-dragon-attack-sheet.png": 95,
 }
 DEFAULT_TOLERANCE = 60
 
@@ -46,23 +50,24 @@ SHEET_BG = {}
 # strip name -> {sheet, cells: [(col, row), ...], box: (dx, dy, w, h) in-cell}
 # Cells are 1-indexed; the same box applies to every frame so they align.
 STRIPS = {
-    # wing-flap cycle: mid, up, mid, back
-    "dragon-fly": {
-        "sheet": "red-dragon-sheet.png",
-        "cells": [(3, 1), (4, 1), (3, 1), (1, 2)],
-        "box": (4, 4, 146, 146),
+    # Red dragon (the player). 3D-rendered poses on magenta; every pose faces
+    # RIGHT, so `flip` mirrors them to the engine's left-native convention.
+    # Movement + idle come from the six-pose sheet; the roaring attack from the
+    # two-pose sheet (Jonathan's pick).
+    "dragon-fly": {  # overworld movement: wings-up + wings-down flap (side view)
+        "sheet": "red-dragon-poses-sheet.png",
+        "abs": [(117, 250, 382, 268), (126, 506, 422, 237)],
+        "flip": True,
     },
-    # facing the camera (moving down): wide-wing flap pair
-    "dragon-down": {
-        "sheet": "red-dragon-sheet.png",
-        "cells": [(1, 5), (2, 5)],
-        "box": (4, 4, 146, 146),
+    "dragon-idle": {  # combat idle: side rearing, wings folded back
+        "sheet": "red-dragon-poses-sheet.png",
+        "abs": [(848, 30, 385, 232)],
+        "flip": True,
     },
-    # flying away (moving up): folded vertical silhouette pair
-    "dragon-up": {
-        "sheet": "red-dragon-sheet.png",
-        "cells": [(1, 1), (2, 1)],
-        "box": (4, 4, 146, 146),
+    "dragon-attack": {  # combat attack: rearing, mouth wide open
+        "sheet": "red-dragon-attack-sheet.png",
+        "abs": [(51, 173, 723, 646)],
+        "flip": True,
     },
     # shadow-knight-*, swash-*, and spellblade-* now come from Nano Banana pose
     # grids via tools/slice_grid.py
@@ -248,6 +253,8 @@ def main():
         else:
             boxes = [cell_box(spec["box"], c, r, sheet) for c, r in spec["cells"]]
         frames = [dekey(sheets[sheet].crop(b), tol, extra) for b in boxes]
+        if spec.get("flip"):  # art faces right; the engine is left-native
+            frames = [f.transpose(Image.FLIP_LEFT_RIGHT) for f in frames]
         # square frames, feet anchored at the bottom, so CSS strips are uniform
         side = max(max(f.size) for f in frames)
         strip = Image.new("RGBA", (side * len(frames), side), (0, 0, 0, 0))

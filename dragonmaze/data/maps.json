@@ -2430,6 +2430,12 @@
         "roll": true
       },
       {
+        "type": "loot",
+        "x": 11,
+        "y": 2,
+        "roll": true
+      },
+      {
         "type": "portal",
         "x": 3,
         "y": 8,

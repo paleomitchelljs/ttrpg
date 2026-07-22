@@ -258,7 +258,7 @@ check('sprite manifest is complete and every strip exists', () => {
   for (const [key, rel] of Object.entries(SPRITES)) {
     assert.ok(existsSync(join(root, rel)), `manifest entry ${key} missing on disk`);
   }
-  for (const key of ['dragon-fly', 'dragon-up', 'dragon-down']) {
+  for (const key of ['dragon-fly', 'dragon-idle', 'dragon-attack']) {
     assert.ok(SPRITES[key], `player strip ${key} not in manifest`);
   }
   for (const m of MONSTERS.filter((m) => m.anim)) {
@@ -316,8 +316,13 @@ check('every zone subregion is well-formed, connected, and deterministic', () =>
       assert.ok(a.loot.length >= 1, `${zone.id}/${sub.id} has loot`);
       for (const p of a.props) {
         assert.ok(TILES[p.key], `${zone.id}/${sub.id} decor key ${p.key}`);
-        assert.ok(p.x >= 0 && p.x + p.w <= w && p.y >= 0 && p.y + p.h <= sub.map.length,
-          `${zone.id}/${sub.id} decor ${p.key} in bounds`);
+        // The decor ANCHOR must sit on the map; its rendered footprint may overhang
+        // an edge by up to a tile, since props (wall depth, tall statues, edge trims)
+        // are deliberately sized past their cell. A larger overhang means it's misplaced.
+        assert.ok(p.x >= 0 && p.x < w && p.y >= 0 && p.y < sub.map.length,
+          `${zone.id}/${sub.id} decor ${p.key} anchor on map`);
+        assert.ok(p.x + p.w <= w + 1 && p.y + p.h <= sub.map.length + 1,
+          `${zone.id}/${sub.id} decor ${p.key} not far off-map`);
       }
       // Placed monsters and loot must sit on floor and name real ids.
       for (const e of a.encounters) {

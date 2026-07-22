@@ -13,10 +13,12 @@ export function spritePath(key) {
 
 // Which strip the player token shows for each heading. The side strip faces
 // left natively; heading right flips it.
+// The new dragon art is a single side view, so every heading shows the same
+// wing-flap strip (flipped left/right by heading); there's no top/bottom pose.
 const DRAGON_FACING = {
-  side: { key: 'dragon-fly', frames: 'f4' },
-  down: { key: 'dragon-down', frames: 'f2' },
-  up: { key: 'dragon-up', frames: 'f2' },
+  side: { key: 'dragon-fly', frames: 'f2' },
+  down: { key: 'dragon-fly', frames: 'f2' },
+  up: { key: 'dragon-fly', frames: 'f2' },
 };
 
 // The overworld token is the dragon — or, on party-only delves, the party's

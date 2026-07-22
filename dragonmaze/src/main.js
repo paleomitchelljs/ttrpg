@@ -51,7 +51,7 @@ function renderRoster(state) {
   if (!run) { box.replaceChildren(); return; }
   const members = [];
   if (run.dragon) {
-    members.push({ key: 'dragon', name: 'Red Dragon', hp: run.dragon.hp, sprite: SPRITES['dragon-fly'], frames: 4 });
+    members.push({ key: 'dragon', name: 'Red Dragon', hp: run.dragon.hp, sprite: SPRITES['dragon-fly'], frames: 2 });
   }
   for (const slot of run.party) {
     const c = companionById(slot.id) ?? game.state.meta.customCharacters.find((h) => h.id === slot.id);
@@ -286,7 +286,7 @@ function sheetSubject(id) {
       name: `Red Dragon (${tier.label})`,
       blurb: `Hoard: ${game.state.meta.hoardGold.toLocaleString()} gold. The labyrinth's rightful owner.`,
       sprite: SPRITES['dragon-fly'],
-      frames: 4,
+      frames: 2,
       flip: true,
       ac: tier.ac,
       hp: runHp ? `${runHp.current} / ${runHp.max}` : `${tier.hpMax}`,
