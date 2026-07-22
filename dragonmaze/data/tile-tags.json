@@ -37,6 +37,234 @@
       280
     ]
   },
+  "courtyard-archway": {
+    "tags": [
+      "prop",
+      "door"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      149,
+      289,
+      66,
+      64
+    ]
+  },
+  "courtyard-broken-column": {
+    "tags": [
+      "prop"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      296,
+      289,
+      66,
+      64
+    ]
+  },
+  "courtyard-bush": {
+    "tags": [
+      "prop",
+      "plant"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      808,
+      433,
+      65,
+      64
+    ]
+  },
+  "courtyard-chest": {
+    "tags": [
+      "prop",
+      "treasure"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      881,
+      74,
+      66,
+      64
+    ]
+  },
+  "courtyard-door-plain": {
+    "tags": [
+      "prop",
+      "door"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      223,
+      289,
+      65,
+      64
+    ]
+  },
+  "courtyard-door-wood": {
+    "tags": [
+      "prop",
+      "door"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      76,
+      289,
+      65,
+      64
+    ]
+  },
+  "courtyard-gold-pile": {
+    "tags": [
+      "prop",
+      "treasure"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      515,
+      505,
+      64,
+      63
+    ]
+  },
+  "courtyard-grass": {
+    "tags": [
+      "floor",
+      "grass"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      76,
+      218,
+      65,
+      63
+    ]
+  },
+  "courtyard-grass-flower": {
+    "tags": [
+      "floor",
+      "grass"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      4,
+      218,
+      64,
+      63
+    ]
+  },
+  "courtyard-grass-palm": {
+    "tags": [
+      "floor",
+      "grass"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      443,
+      218,
+      64,
+      63
+    ]
+  },
+  "courtyard-grass-tuft": {
+    "tags": [
+      "floor",
+      "grass"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      149,
+      218,
+      66,
+      63
+    ]
+  },
+  "courtyard-rocks": {
+    "tags": [
+      "prop"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      881,
+      433,
+      66,
+      64
+    ]
+  },
+  "courtyard-stone-floor": {
+    "tags": [
+      "floor"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      661,
+      505,
+      65,
+      63
+    ]
+  },
+  "courtyard-wall-brick": {
+    "tags": [
+      "wall"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      149,
+      146,
+      66,
+      64
+    ]
+  },
+  "courtyard-wall-corner": {
+    "tags": [
+      "wall",
+      "corner"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      4,
+      4,
+      64,
+      62
+    ]
+  },
+  "courtyard-wall-gate": {
+    "tags": [
+      "wall",
+      "door"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      808,
+      4,
+      65,
+      62
+    ]
+  },
+  "courtyard-wall-top": {
+    "tags": [
+      "wall"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      76,
+      4,
+      65,
+      62
+    ]
+  },
+  "courtyard-well": {
+    "tags": [
+      "structure"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      808,
+      505,
+      65,
+      63
+    ]
+  },
   "gator-statue": {
     "tags": [
       "statue"
