@@ -90,6 +90,9 @@ async function presentEvent(els, ev) {
       );
       return delay(400);
     }
+    case 'lore':
+      appendLog(els.log, ev.known.length ? `You size up the foe: ${listNames(ev.known)}.` : "You can't quite place these creatures — a sharper mind would know more.", 'log-dim');
+      return delay(300);
     case 'initiative':
       appendLog(els.log, `Initiative: ${ev.order.map((o) => `${o.name} ${o.initiative}`).join(' · ')}`, 'log-dim');
       return delay(300);
@@ -689,13 +692,12 @@ export function renderCombat(els, state, handlers) {
       .filter((c) => c.kind === 'monster')
       .map((m) => {
         const unit = unitEl(m, 'enemy', activeId);
-        if (m.hp.current > 0 && !m.fled) {
-          if (m.id === targetId) unit.classList.add('targeted');
-          unit.addEventListener('click', () => {
-            targetId = m.id;
-            renderCombat(els, state, handlers);
-          });
-        }
+        if (m.hp.current > 0 && !m.fled && m.id === targetId) unit.classList.add('targeted');
+        // Tap any enemy to inspect it; a living one also becomes the target.
+        unit.addEventListener('click', () => {
+          if (m.hp.current > 0 && !m.fled) { targetId = m.id; renderCombat(els, state, handlers); }
+          handlers.onInspect?.(m.id);
+        });
         return unit;
       })
   );
@@ -707,11 +709,12 @@ export function renderCombat(els, state, handlers) {
   els.player.replaceChildren(
     ...heroesOf(combat).map((h) => {
       const unit = unitEl(h, 'hero', activeId);
-      if (h.hp.current > 0) {
-        if (h.id === heroTargetId) unit.classList.add('ally-targeted');
-        // Click a hero to aim heals at them — same gesture as tapping an enemy.
-        unit.addEventListener('click', () => { heroTargetId = h.id; renderCombat(els, state, handlers); });
-      }
+      if (h.hp.current > 0 && h.id === heroTargetId) unit.classList.add('ally-targeted');
+      // Tap a hero to inspect them; a living one also becomes the heal target.
+      unit.addEventListener('click', () => {
+        if (h.hp.current > 0) { heroTargetId = h.id; renderCombat(els, state, handlers); }
+        handlers.onInspect?.(h.id);
+      });
       return unit;
     })
   );
@@ -741,17 +744,15 @@ function unitEl(c, side, activeId) {
     unit.dataset.attack = spritePath(c.anim.attack);
   }
   const pct = Math.max(0, Math.round((100 * c.hp.current) / c.hp.max));
-  // Vertical card: name, HP numbers, portrait, then the bar — compact and narrow
-  // enough that the hero and enemy columns sit side by side on a phone.
+  // No name on the card — tap a unit to inspect it (enemy detail is gated by the
+  // party's knowledge roll). Keeps the cards compact for a full party on a phone.
   unit.innerHTML = `
-    <div class="unit-name">${c.name}</div>
     <div class="hp-num">${c.hp.current}/${c.hp.max}</div>
     ${faceHtml(c, dead)}
     ${c.fled
       ? '<div class="badge-flee">fled!</div>'
       : `<div class="hp-bar"><div class="hp-fill${pct <= 35 ? ' low' : ''}" style="width:${pct}%"></div></div>`}
-    ${!dead && !c.fled && c.panicked ? '<div class="badge-panic">panicked!</div>' : ''}
-    ${side === 'enemy' ? traitBadges(c) : ''}`;
+    ${!dead && !c.fled && c.panicked ? '<div class="badge-panic">panicked!</div>' : ''}`;
   return unit;
 }
 
@@ -791,6 +792,14 @@ function hpBar(c) {
 }
 
 // ---------------------------------------------------------------- actions
+// The name to show a foe by — its real name once the party has identified it
+// (lore tier >= 1), else a generic label.
+function foeName(c, combat) {
+  if (!c) return 'enemy';
+  if (c.kind !== 'monster') return c.name;
+  return (combat.lore?.[c.templateId] ?? 0) >= 1 ? c.name : 'creature';
+}
+
 function renderActions(els, combat, handlers, targetSpell) {
   if (combat.over || !isPlayerTurn(combat)) {
     const wait = document.createElement('div');
@@ -829,7 +838,7 @@ function renderActions(els, combat, handlers, targetSpell) {
   if (target) {
     const btn = document.createElement('button');
     btn.className = 'btn attack-btn';
-    btn.innerHTML = `${ICONS.fang}<span>${verb} the ${target.name}!${target.panicked ? ' (advantage!)' : ''}</span>`;
+    btn.innerHTML = `${ICONS.fang}<span>${verb} the ${foeName(target, combat)}!${target.panicked ? ' (advantage!)' : ''}</span>`;
     btn.addEventListener('click', () => handlers.onAttack(target.id));
     buttons.push(btn);
     if (livingMonsters(combat).length > 1) {
@@ -856,7 +865,7 @@ function renderActions(els, combat, handlers, targetSpell) {
   if (target) {
     const btn = document.createElement('button');
     btn.className = 'btn attack-btn intimidate-btn';
-    btn.innerHTML = `<span>Intimidate the ${target.name}</span>`;
+    btn.innerHTML = `<span>Intimidate the ${foeName(target, combat)}</span>`;
     btn.addEventListener('click', () => handlers.onIntimidate(target.id));
     buttons.push(btn);
   }

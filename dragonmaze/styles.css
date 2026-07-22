@@ -464,17 +464,17 @@ button { font: inherit; }
 .unit-name { font-weight: bold; font-size: 0.8rem; text-align: center; }
 
 .unit.active { filter: drop-shadow(0 0 9px #e8b93c66); border-color: var(--gold); background: #e8b93c14; }
-.unit.active .unit-name::before { content: '▶ '; color: var(--gold); }
+.unit.active .hp-num::before { content: '▶ '; color: var(--gold); }
 
 .unit.enemy:not(.dead):not(.fled) { cursor: pointer; }
 .unit.enemy:not(.dead):not(.fled):hover { border-color: #ffffff44; }
 .unit.enemy.targeted { border-color: var(--ember); }
-.unit.enemy.targeted .unit-name::before { content: '◆ '; color: var(--ember); }
+.unit.enemy.targeted .hp-num::before { content: '◆ '; color: var(--ember); }
 /* Heroes are tappable to aim heals, mirroring enemy targeting. */
 .unit.hero:not(.down):not(.dead) { cursor: pointer; }
 .unit.hero:not(.down):not(.dead):hover { border-color: #ffffff44; }
 .unit.hero.ally-targeted { border-color: #6cc0ff; }
-.unit.hero.ally-targeted .unit-name::before { content: '✚ '; color: #6cc0ff; }
+.unit.hero.ally-targeted .hp-num::before { content: '✚ '; color: #6cc0ff; }
 .unit.enemy.targeted .combat-sprite,
 .unit.enemy.targeted .enemy-face {
   outline: 2px dashed var(--ember);
