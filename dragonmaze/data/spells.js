@@ -29,7 +29,7 @@ export const SPELLS = [
     name: 'Smite',
     castDC: 11,
     target: 'enemy',
-    dice: '1d6',
+    dice: '1d8',
     school: 'radiant',
     tome: true,
     blurb: 'divine flame lashes one foe',

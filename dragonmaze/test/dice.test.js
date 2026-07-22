@@ -370,10 +370,10 @@ check('drain life steals at most half the damage', () => {
   const { combat } = createCombat([spawnee], [rat], () => 0.5);
   while (combat.order[combat.turnIndex].id !== spawnee.id)
     combat.turnIndex = (combat.turnIndex + 1) % combat.order.length;
-  const evs = playerSpell(combat, 'drain-life', rat.id, () => 0.99); // 1d8 -> 8 damage
+  const evs = playerSpell(combat, 'drain-life', rat.id, () => 0.99); // 1d8 (8) + CHA 2 = 10
   const hit = evs.find((e) => e.type === 'spell-hit');
-  assert.equal(hit.damage, 8);
-  assert.equal(hit.drained, 4, 'lifesteal capped at half of 8');
+  assert.equal(hit.damage, 10, 'spell damage adds the caster CHA modifier');
+  assert.equal(hit.drained, 5, 'lifesteal capped at half of 10');
 });
 
 check('resistances, abilities, familiars, and tomes hold together', () => {

@@ -504,7 +504,7 @@ function tickEnemies(run, events) {
 
 // ------------------------------------------------ the camp thief
 const bestPartyWis = (run) =>
-  (run.party ?? []).reduce((best, s) => Math.max(best, companionById(s.id)?.abilities?.wis ?? 0), 0);
+  (run.party ?? []).reduce((best, s) => Math.max(best, heroWithGrowth(s.id)?.abilities?.wis ?? 0), 0);
 
 // A floor tile a few steps off the party, clear of other encounters.
 function pickHeistSpawn(run) {
