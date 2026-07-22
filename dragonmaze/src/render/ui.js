@@ -43,12 +43,14 @@ export function updateTitle(state) {
   el('title-hoard').textContent = state.hasSave
     ? `Your hoard: ${state.meta.hoardGold.toLocaleString()} gold`
     : '';
-  // party summary + panel (all companions live in the panel now)
+  // party summary + panel (the dragon and all companions live in the panel now)
   const party = state.meta.party ?? [];
   const named = party.map((id) => allCompanions(state).find((c) => c.id === id)?.name ?? id);
-  el('party-summary').textContent = party.length
-    ? `Party: ${named.join(', ')}`
-    : 'No companions — the dragon delves alone.';
+  const withDragon = (state.meta.mode ?? 'dragon') === 'dragon';
+  const roster = withDragon ? ['Red Dragon', ...named] : named;
+  el('party-summary').textContent = roster.length
+    ? `Delving: ${roster.join(', ')}`
+    : 'The dragon delves alone.';
   renderPartyPanel(state);
 
   // zone picker
@@ -61,11 +63,6 @@ export function updateTitle(state) {
   el('zone-blurb').textContent = zone
     ? zone.blurb
     : 'An ever-changing maze, deeper and richer with every delve.';
-
-  // delve mode
-  for (const btn of document.querySelectorAll('.mode-btn')) {
-    btn.classList.toggle('selected', (state.meta.mode ?? 'dragon') === btn.dataset.mode);
-  }
 
   // familiar picker: only found familiars unlock; the rest stay mysteries
   const owned = state.meta.familiarsOwned ?? [];
@@ -103,10 +100,26 @@ function allCompanions(state) {
 /** The party-selection panel: every companion as a selectable card. */
 export function renderPartyPanel(state) {
   const party = state.meta.party ?? [];
-  const alone = state.meta.mode === 'party';
+  const withDragon = (state.meta.mode ?? 'dragon') === 'dragon';
   el('party-count').textContent =
-    `${party.length} / ${PARTY_CAP} chosen — ${alone ? 'the party delves without the dragon' : 'alongside the dragon'}`;
+    `${withDragon ? 'The dragon leads' : 'The party goes alone'} · ${party.length}/${PARTY_CAP} companions`;
+
+  // The dragon rides at the top of the same list as a togglable member.
+  const dragonCard = document.createElement('div');
+  dragonCard.className = 'party-card dragon-card' + (withDragon ? ' chosen' : '');
+  dragonCard.dataset.dragon = '1';
+  dragonCard.innerHTML = `
+    <span class="party-card-check">${withDragon ? '✓' : ''}</span>
+    <span class="party-card-face sprite f4 flip"><img src="${SPRITES['dragon-fly']}" alt=""></span>
+    <span class="party-card-info">
+      <span class="party-card-name">Red Dragon</span>
+      <span class="party-card-role">You, the wyrm — fire breath &amp; bite</span>
+      <span class="party-card-spells">Grows mightier as the hoard grows</span>
+    </span>
+    <button class="party-card-sheet zone-btn" data-sheet="dragon">Sheet</button>`;
+
   el('party-list').replaceChildren(
+    dragonCard,
     ...allCompanions(state).map((c) => {
       const chosen = party.includes(c.id);
       const card = document.createElement('div');

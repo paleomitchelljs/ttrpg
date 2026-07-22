@@ -43,10 +43,10 @@ function freshMeta() {
     tier: 'wyrmling',
     runsCompleted: 0,
     party: ['spawnee', 'dragonkin-spellblade'],
-    mode: 'dragon', // 'dragon' = dragon + party; 'party' = the party alone
+    mode: 'dragon', // 'dragon' = dragon joins the party; 'party' = party alone
     heroGrowth: {}, // charId -> { xp, level, pending, choices: [{type, spellId?}] }
     reputation: {}, // faction -> renown (kills of their enemies raise it)
-    zone: null, // null = procedural labyrinth; else { zoneId, subIndex }
+    zone: { zoneId: 'lost-temple', subIndex: 0 }, // default hunt; null = procedural
     familiar: null, // the active familiar (must be owned)
     familiarsOwned: [], // familiars are found in the dungeons, never bought
     tomeSpells: [], // spells the dragon has learned from found tomes

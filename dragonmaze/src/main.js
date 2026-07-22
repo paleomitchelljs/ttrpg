@@ -119,13 +119,19 @@ function showRetreatOverlay(ev) {
 }
 
 // ------------------------------------------------------------------ render
+let prevScreen = null;
 game.subscribe((state, events) => {
   ui.showScreen(state.screen);
 
   if (state.screen === 'title') {
+    // Arriving at the title (boot or quit) resets to the New/Continue menu;
+    // stay put while the player is mid-setup (party/zone toggles re-render here).
+    if (prevScreen !== 'title') showSetup(false);
     ui.updateTitle(state);
+    prevScreen = 'title';
     return;
   }
+  prevScreen = state.screen;
 
   const combatBatch = events.some((e) => COMBAT_EVENTS.has(e.type));
 
@@ -354,7 +360,14 @@ ui.el('party-overlay').addEventListener('click', (ev) => {
   const sheetBtn = ev.target.closest('.party-card-sheet');
   if (sheetBtn) { ev.stopPropagation(); openSheet(sheetBtn.dataset.sheet); return; }
   const card = ev.target.closest('.party-card');
-  if (card) game.toggleCompanion(card.dataset.cid);
+  if (!card) return;
+  // The dragon rides in the same list as a togglable member: on = it delves
+  // with the party (mode 'dragon'), off = the party goes alone (mode 'party').
+  if (card.dataset.dragon) {
+    game.setMode(game.state.meta.mode === 'dragon' ? 'party' : 'dragon');
+  } else {
+    game.toggleCompanion(card.dataset.cid);
+  }
 });
 ui.el('sheet-overlay').addEventListener('click', (ev) => {
   if (ev.target === ui.el('sheet-overlay')) ui.showOverlay('sheet-overlay', false);
@@ -406,7 +419,20 @@ for (const btn of document.querySelectorAll('.dpad-btn')) {
 }
 if ('ontouchstart' in window) document.body.classList.add('show-dpad');
 
-ui.el('btn-new').addEventListener('click', () => game.newGame(seedFromUrl()));
+// The title has two views: the New/Continue menu, then the new-game setup
+// (party + dungeon). "New" reveals setup; "Descend" actually starts it.
+function showSetup(on) {
+  ui.el('title-menu').hidden = on;
+  ui.el('new-setup').hidden = !on;
+}
+ui.el('btn-new').addEventListener('click', () => {
+  // Lost Temple is the default hunt; opening a fresh setup selects it (a prior
+  // save's remembered zone shouldn't shadow the intended default).
+  game.setZone('lost-temple');
+  showSetup(true);
+});
+ui.el('btn-setup-back').addEventListener('click', () => showSetup(false));
+ui.el('btn-begin').addEventListener('click', () => game.newGame(seedFromUrl()));
 ui.el('btn-continue').addEventListener('click', () => game.continueGame());
 ui.el('btn-quit').addEventListener('click', () => game.quitToTitle());
 
@@ -423,11 +449,6 @@ ui.el('import-file').addEventListener('change', async (ev) => {
     ui.logExplore('That file did not look like a hero export.', 'log-hurt');
   }
 });
-
-// Delve mode: the dragon with its party, or the party alone.
-for (const btn of document.querySelectorAll('.mode-btn')) {
-  btn.addEventListener('click', () => game.setMode(btn.dataset.mode));
-}
 
 // Familiar picker on the title screen (dynamic buttons; found-only).
 ui.el('familiar-buttons').addEventListener('click', (ev) => {

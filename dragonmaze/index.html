@@ -13,39 +13,41 @@
       <img class="title-dragon-img" src="./assets/dragon-fire.png" alt="A red dragon breathing fire">
       <h1>Red Dragon Labyrinth</h1>
       <p class="tagline">Raid the maze. Grow the hoard.</p>
-      <div class="menu">
-        <button id="btn-new" class="btn btn-big">New Game</button>
-        <button id="btn-continue" class="btn btn-big" hidden>Continue</button>
-      </div>
-      <div class="zone-select">
-        <p class="party-label">Who delves?</p>
-        <div class="zone-buttons" id="mode-buttons">
-          <button class="zone-btn mode-btn" data-mode="dragon">The Dragon &amp; Party</button>
-          <button class="zone-btn mode-btn" data-mode="party">The Party Alone</button>
+      <div id="title-menu">
+        <div class="menu">
+          <button id="btn-new" class="btn btn-big">New</button>
+          <button id="btn-continue" class="btn btn-big" hidden>Continue</button>
         </div>
-        <p class="party-label">Where will you hunt?</p>
-        <div class="zone-buttons" id="zone-buttons">
-          <button class="zone-btn" data-zone="">Procedural Labyrinth</button>
-          <button class="zone-btn" data-zone="upper-guk">Upper Guk</button>
-          <button class="zone-btn" data-zone="lower-guk">Lower Guk</button>
-          <button class="zone-btn" data-zone="lost-temple">Lost Temple</button>
-        </div>
-        <select id="zone-sub" class="spell-select" hidden></select>
-        <p id="zone-blurb" class="zone-blurb"></p>
+        <p id="title-hoard" class="title-hoard"></p>
       </div>
 
-      <div class="party-select">
-        <p class="party-label">Who joins the delve?</p>
-        <button id="btn-party" class="btn">Choose your party…</button>
-        <p id="party-summary" class="zone-blurb"></p>
-        <button class="zone-btn sheet-btn" data-sheet="dragon">View the dragon's sheet</button>
+      <div id="new-setup" hidden>
+        <div class="party-select">
+          <p class="party-label">Who joins the delve?</p>
+          <button id="btn-party" class="btn">Choose your party…</button>
+          <p id="party-summary" class="zone-blurb"></p>
+        </div>
+        <div class="zone-select">
+          <p class="party-label">Where will you hunt?</p>
+          <div class="zone-buttons" id="zone-buttons">
+            <button class="zone-btn" data-zone="lost-temple">Lost Temple</button>
+            <button class="zone-btn" data-zone="upper-guk">Upper Guk</button>
+            <button class="zone-btn" data-zone="lower-guk">Lower Guk</button>
+            <button class="zone-btn" data-zone="">Procedural Labyrinth</button>
+          </div>
+          <select id="zone-sub" class="spell-select" hidden></select>
+          <p id="zone-blurb" class="zone-blurb"></p>
+        </div>
+        <div class="party-select familiar-select">
+          <p class="party-label">Familiar:</p>
+          <div class="zone-buttons" id="familiar-buttons"></div>
+          <p id="familiar-blurb" class="zone-blurb"></p>
+        </div>
+        <div class="menu setup-actions">
+          <button id="btn-begin" class="btn btn-big">Descend</button>
+          <button id="btn-setup-back" class="btn btn-small">Back</button>
+        </div>
       </div>
-      <div class="party-select familiar-select">
-        <p class="party-label">Familiar:</p>
-        <div class="zone-buttons" id="familiar-buttons"></div>
-        <p id="familiar-blurb" class="zone-blurb"></p>
-      </div>
-      <p id="title-hoard" class="title-hoard"></p>
     </section>
 
     <section id="screen-game" class="screen" hidden>
