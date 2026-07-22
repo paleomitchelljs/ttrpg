@@ -110,7 +110,7 @@ export function renderPartyPanel(state) {
   dragonCard.dataset.dragon = '1';
   dragonCard.innerHTML = `
     <span class="party-card-check">${withDragon ? '✓' : ''}</span>
-    <span class="party-card-face sprite f2 flip"><img src="${SPRITES['dragon-fly']}" alt=""></span>
+    <span class="party-card-face sprite f4 flip"><img src="${SPRITES['dragon-fly']}" alt=""></span>
     <span class="party-card-info">
       <span class="party-card-name">Red Dragon</span>
       <span class="party-card-role">You, the wyrm — fire breath &amp; bite</span>

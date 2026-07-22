@@ -55,10 +55,9 @@ button { font: inherit; }
   letter-spacing: 0.03em;
 }
 
-.title-dragon-img {
-  width: clamp(140px, 28vw, 220px);
-  image-rendering: pixelated;
-  filter: drop-shadow(0 6px 14px #000c);
+.title-logo {
+  width: clamp(150px, 30vw, 240px);
+  filter: drop-shadow(0 6px 16px #000c);
   animation: title-bob 3.2s ease-in-out infinite;
 }
 

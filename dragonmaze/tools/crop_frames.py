@@ -28,6 +28,7 @@ SHEET_CELLS = {
     "skeleton-warrior-sheet.png": (113, 1024 / 9),
     "monsters-menagerie-sheet.png": (565 / 7, 1024 / 13),
     "turquoise-barbarian-sheet.png": (113, 1024 / 9),
+    "red-dragon-fly-sheet.png": (1206 / 4, 322),  # 4-frame flight strip on black
 }
 
 # Background keying tolerance per sheet: how close to a corner color a pixel
@@ -54,10 +55,10 @@ STRIPS = {
     # RIGHT, so `flip` mirrors them to the engine's left-native convention.
     # Movement + idle come from the six-pose sheet; the roaring attack from the
     # two-pose sheet (Jonathan's pick).
-    "dragon-fly": {  # overworld movement: wings-up + wings-down flap (side view)
-        "sheet": "red-dragon-poses-sheet.png",
-        "abs": [(117, 250, 382, 268), (126, 506, 422, 237)],
-        "flip": True,
+    "dragon-fly": {  # overworld movement: 4-frame wing-flap cycle (already left-facing)
+        "sheet": "red-dragon-fly-sheet.png",
+        "cells": [(1, 1), (2, 1), (3, 1), (4, 1)],
+        "box": (1, 60, 300, 205),
     },
     "dragon-idle": {  # combat idle: side rearing, wings folded back
         "sheet": "red-dragon-poses-sheet.png",
