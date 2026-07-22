@@ -914,6 +914,14 @@ export function intimidate(targetId) {
   resolvePlayerAction((combat) => playerIntimidate(combat, targetId, liveRNG));
 }
 
+/** Flee an unwinnable fight: you escape the labyrinth but drop the gold you were
+ *  carrying — the same cost as being downed. Banked hoard is safe. */
+export function flee() {
+  const run = state.run;
+  if (!run || run.phase !== 'combat' || !run.combat) return;
+  forcedRetreat([{ type: 'flee-combat' }]);
+}
+
 function resolvePlayerAction(act) {
   const run = state.run;
   if (!run || run.phase !== 'combat' || !run.combat) return;

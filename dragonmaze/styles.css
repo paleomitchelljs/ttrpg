@@ -674,6 +674,8 @@ button { font: inherit; }
 
 .btn-icon { width: 1em; height: 1em; flex: none; }
 
+.flee-btn { color: #ff9d8a; border-color: #6a383888; }
+
 .spell-select {
   font: inherit;
   font-size: 1.05rem;

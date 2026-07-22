@@ -217,6 +217,7 @@ game.subscribe((state, events) => {
     onBreath: () => game.breath(),
     onCast: (spellId, targetId) => game.cast(spellId, targetId),
     onIntimidate: (targetId) => game.intimidate(targetId),
+    onFlee: () => { if (confirm("Flee the fight? You'll escape but drop the gold you're carrying.")) game.flee(); },
     onSheet: (id) => openSheet(id),
     onBatchDone: (evts) => {
       const retreat = evts.find((e) => e.type === 'retreat');

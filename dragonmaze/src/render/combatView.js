@@ -300,6 +300,9 @@ async function presentEvent(els, ev) {
       if (ev.success && card) card.classList.add('hit-flash');
       return delay(500);
     }
+    case 'flee-combat':
+      appendLog(els.log, 'You break off and flee the fight — the gold you carried scatters behind you!', 'log-hurt');
+      return delay(500);
     case 'flee': {
       const card = cardOf(els, ev.id);
       if (card) card.classList.add('fleeing');
@@ -890,6 +893,12 @@ function renderActions(els, combat, handlers, targetSpell) {
     });
     buttons.push(sel);
   }
+  // Flee: bail on an unwinnable fight (costs the gold you're carrying).
+  const flee = document.createElement('button');
+  flee.className = 'btn btn-small flee-btn';
+  flee.textContent = 'Flee';
+  flee.addEventListener('click', () => handlers.onFlee());
+  buttons.push(flee);
   els.actions.replaceChildren(...buttons);
 }
 
