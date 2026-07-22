@@ -248,7 +248,7 @@ function showInspect(id) {
   }
   const tier = combat.lore?.[c.templateId] ?? 0;
   if (tier <= 0) {
-    ui.showResult({ title: 'Unknown creature', body: "Your party can't quite place it — a sharper eye (more INT) would reveal its name and nature.", actions: close });
+    ui.showResult({ title: 'Unknown creature', body: "Your party can't quite place this one — its name and nature are a mystery to you.", actions: close });
     return;
   }
   const parts = [`AC ${c.ac}`, hp];

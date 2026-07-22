@@ -868,20 +868,19 @@ function beginCombat(encounter) {
   }
   const monsters = encounter.monsterIds.map((id) => makeCombatant(monsterById(id)));
   const { combat, events } = createCombat(heroes, monsters, liveRNG, encounter.bossName ?? null);
-  // Knowledge check (Shadowdark lore): one party INT roll per kind of foe sizes
-  // it up. Higher totals reveal more in the inspect popup (name -> stats &
-  // weaknesses); a fail leaves it an unidentified "creature". Stored per type.
+  // Knowledge check (Shadowdark lore): one silent party INT roll per kind of foe
+  // sizes it up. Higher totals reveal more in the inspect popup (name -> stats &
+  // weaknesses) and in action labels; a fail leaves it an unidentified
+  // "creature". Stored per type, never announced -- the player only feels it
+  // through what info they can see.
   const bestInt = Math.max(0, ...heroes.map((h) => h.abilities?.int ?? 0));
   combat.lore = {};
-  const identified = [];
   for (const m of monsters) {
     if (m.templateId in combat.lore) continue;
     const dc = 10 + (monsterById(m.templateId)?.minDepth ?? 1);
     const margin = 1 + Math.floor(liveRNG() * 20) + bestInt - dc;
     combat.lore[m.templateId] = margin < 0 ? 0 : margin < 5 ? 1 : 2;
-    if (combat.lore[m.templateId] >= 1) identified.push(m.name);
   }
-  events.splice(1, 0, { type: 'lore', known: [...new Set(identified)] });
   // Can this pack be talked to? Mindless things can't; hated parties are
   // refused outright.
   const lead = monsterById(encounter.monsterIds[0]);

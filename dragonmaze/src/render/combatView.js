@@ -90,9 +90,6 @@ async function presentEvent(els, ev) {
       );
       return delay(400);
     }
-    case 'lore':
-      appendLog(els.log, ev.known.length ? `You size up the foe: ${listNames(ev.known)}.` : "You can't quite place these creatures — a sharper mind would know more.", 'log-dim');
-      return delay(300);
     case 'initiative':
       appendLog(els.log, `Initiative: ${ev.order.map((o) => `${o.name} ${o.initiative}`).join(' · ')}`, 'log-dim');
       return delay(300);
