@@ -298,22 +298,6 @@ export const PLACEMENTS = {
       },
       {
         "key": "courtyard-wall-top",
-        "x": 8,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "courtyard-wall-top",
-        "x": 9,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "courtyard-wall-top",
         "x": 10,
         "y": 0,
         "w": 1,
@@ -378,14 +362,6 @@ export const PLACEMENTS = {
       },
       {
         "key": "courtyard-wall-top",
-        "x": 2,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "courtyard-wall-top",
         "x": 1,
         "y": 0,
         "w": 1,
@@ -396,86 +372,6 @@ export const PLACEMENTS = {
         "key": "courtyard-wall-corner",
         "x": 0,
         "y": 0,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "courtyard-wall-brick",
-        "x": 0,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "courtyard-wall-brick",
-        "x": 0,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "courtyard-wall-brick",
-        "x": 0,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "courtyard-wall-brick",
-        "x": 0,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "courtyard-wall-brick",
-        "x": 0,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "courtyard-wall-brick",
-        "x": 0,
-        "y": 6,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "courtyard-wall-brick",
-        "x": 0,
-        "y": 7,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "courtyard-wall-brick",
-        "x": 0,
-        "y": 8,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "courtyard-wall-brick",
-        "x": 0,
-        "y": 9,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "courtyard-wall-brick",
-        "x": 0,
-        "y": 10,
         "w": 1,
         "h": 1,
         "rot": 0
@@ -500,6 +396,198 @@ export const PLACEMENTS = {
         "key": "courtyard-wall-gate",
         "x": 7,
         "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-b",
+        "x": 0,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-b",
+        "x": 0,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-b",
+        "x": 0,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-b",
+        "x": 0,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-b",
+        "x": 0,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-b",
+        "x": 0,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-b",
+        "x": 0,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-b",
+        "x": 0,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-b",
+        "x": 0,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-b",
+        "x": 0,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-vine2",
+        "x": 8,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-vine",
+        "x": 9,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-vine",
+        "x": 2,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-grass-flower",
+        "x": 1,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-grass",
+        "x": 1,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-grass",
+        "x": 1,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-grass",
+        "x": 2,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-grass",
+        "x": 1,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-grass",
+        "x": 1,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-grass-palm",
+        "x": 1,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-grass-tuft",
+        "x": 1,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-grass",
+        "x": 1,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-grass-flower",
+        "x": 1,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-bush",
+        "x": 1,
+        "y": 10,
         "w": 1,
         "h": 1,
         "rot": 0
@@ -530,18 +618,18 @@ export const PLACEMENTS = {
     "decor": [
       {
         "key": "snake-statue",
-        "x": 4,
-        "y": 3,
-        "w": 2,
-        "h": 3,
+        "x": 6,
+        "y": 3.5,
+        "w": 1,
+        "h": 2,
         "rot": 0
       },
       {
         "key": "gator-statue",
-        "x": 9,
-        "y": 3,
-        "w": 2,
-        "h": 3,
+        "x": 8,
+        "y": 4,
+        "w": 1,
+        "h": 1.5,
         "rot": 0
       },
       {
@@ -561,19 +649,259 @@ export const PLACEMENTS = {
         "rot": 0
       },
       {
-        "key": "courtyard-wall-gate",
+        "key": "courtyard-chest",
         "x": 7,
+        "y": 4.5,
+        "w": 0.9,
+        "h": 0.9,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-crack2",
+        "x": 2,
         "y": 0,
         "w": 1,
         "h": 1,
         "rot": 0
       },
       {
-        "key": "courtyard-chest",
-        "x": 6.55,
-        "y": 3.95,
-        "w": 0.9,
-        "h": 0.9,
+        "key": "courtyard-wall-crack2",
+        "x": 5,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-end-right",
+        "x": 6,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-a",
+        "x": 6,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-a",
+        "x": 6,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-fill-edge-b",
+        "x": 8,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-fill-edge-b",
+        "x": 8,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-end-left",
+        "x": 8,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-crack",
+        "x": 9,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-decor",
+        "x": 10,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-brick-top",
+        "x": 11,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-top",
+        "x": 12,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-top",
+        "x": 13,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-end-right",
+        "x": 14,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-a",
+        "x": 14,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-a",
+        "x": 14,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-a",
+        "x": 14,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-a",
+        "x": 14,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-a",
+        "x": 14,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-a",
+        "x": 14,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-a",
+        "x": 14,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-a",
+        "x": 14,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-a",
+        "x": 14,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-a",
+        "x": 14,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-top",
+        "x": 4,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-vine2",
+        "x": 3,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-vine",
+        "x": 1,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "wall-b",
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-broken-column",
+        "x": 4.5,
+        "y": 1.5,
+        "w": 1,
+        "h": 1.5,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 7,
+        "y": 1,
+        "w": 1,
+        "h": 1.5,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-gate",
+        "x": 7,
+        "y": 0,
+        "w": 1,
+        "h": 1.5,
         "rot": 0
       }
     ],
@@ -604,18 +932,18 @@ export const PLACEMENTS = {
     "decor": [
       {
         "key": "courtyard-well",
-        "x": 6.4,
-        "y": 6.9,
-        "w": 1.6,
-        "h": 1.6,
+        "x": 3,
+        "y": 8,
+        "w": 1.1,
+        "h": 1.1,
         "rot": 0
       },
       {
         "key": "round-hut",
-        "x": 4,
+        "x": 6.5,
         "y": 3,
-        "w": 2,
-        "h": 3,
+        "w": 1.5,
+        "h": 2.5,
         "rot": 0
       },
       {
@@ -624,6 +952,262 @@ export const PLACEMENTS = {
         "y": 2,
         "w": 1,
         "h": 2,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-side",
+        "x": 0,
+        "y": 0,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-side",
+        "x": 0,
+        "y": 1,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-side",
+        "x": 0,
+        "y": 2,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-side",
+        "x": 0,
+        "y": 3,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-side",
+        "x": 0,
+        "y": 4,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-side",
+        "x": 0,
+        "y": 5,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-side",
+        "x": 0,
+        "y": 6,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-side",
+        "x": 0,
+        "y": 7,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-side",
+        "x": 0,
+        "y": 8,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-side",
+        "x": 0,
+        "y": 9,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-side2",
+        "x": 0,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 270
+      },
+      {
+        "key": "courtyard-wall-crack",
+        "x": 1,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "key": "courtyard-wall-crack",
+        "x": 2,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "key": "courtyard-wall-crack",
+        "x": 3,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "key": "courtyard-wall-crack",
+        "x": 4,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "key": "courtyard-wall-crack",
+        "x": 5,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "key": "courtyard-wall-crack",
+        "x": 6,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "key": "courtyard-wall-crack",
+        "x": 7,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "key": "courtyard-wall-crack",
+        "x": 8,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "key": "courtyard-wall-crack",
+        "x": 9,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "key": "courtyard-wall-crack",
+        "x": 10,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "key": "courtyard-wall-crack",
+        "x": 11,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "key": "courtyard-wall-crack",
+        "x": 12,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "key": "courtyard-wall-crack",
+        "x": 13,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "key": "courtyard-wall-crack",
+        "x": 14,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "key": "snakestatue",
+        "x": 11,
+        "y": 7,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-rocks",
+        "x": 3,
+        "y": 5,
+        "w": 0.6000000000000001,
+        "h": 0.6000000000000001,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-grass-tuft",
+        "x": 2,
+        "y": 4,
+        "w": 0.6000000000000001,
+        "h": 0.6000000000000001,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-grass-palm",
+        "x": 7,
+        "y": 6,
+        "w": 0.6000000000000001,
+        "h": 0.6000000000000001,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-grass",
+        "x": 10,
+        "y": 1,
+        "w": 0.6000000000000001,
+        "h": 0.6000000000000001,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-grass-flower",
+        "x": 8,
+        "y": 1,
+        "w": 0.6000000000000001,
+        "h": 0.6000000000000001,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-gold-pile",
+        "x": 9,
+        "y": 3,
+        "w": 0.6000000000000001,
+        "h": 0.6000000000000001,
         "rot": 0
       }
     ],
@@ -640,12 +1224,6 @@ export const PLACEMENTS = {
         "x": 6,
         "y": 6
       }
-    ],
-    "loot": [
-      {
-        "x": 11,
-        "y": 3
-      }
     ]
   },
   "courtyard-se": {
@@ -661,7 +1239,7 @@ export const PLACEMENTS = {
       {
         "key": "stone-hut",
         "x": 3,
-        "y": 4,
+        "y": 3,
         "w": 2,
         "h": 3,
         "rot": 0
@@ -680,7 +1258,223 @@ export const PLACEMENTS = {
         "y": 5,
         "w": 1,
         "h": 1,
+        "rot": 90
+      },
+      {
+        "key": "courtyard-wall-grass-edge-a",
+        "x": 14,
+        "y": 4,
+        "w": 1,
+        "h": 1,
         "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-a",
+        "x": 14,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-a",
+        "x": 14,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-a",
+        "x": 14,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-a",
+        "x": 14,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-a",
+        "x": 14,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-a",
+        "x": 14,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-a",
+        "x": 14,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-grass-palm",
+        "x": 13,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-grass-flower",
+        "x": 3,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-grass-tuft",
+        "x": 4,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-a",
+        "x": 14,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-grass-edge-b",
+        "x": 13,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "key": "courtyard-wall-grass-edge-b",
+        "x": 12,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "key": "courtyard-wall-fill-edge-b",
+        "x": 11,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "key": "courtyard-wall-fill-edge-b",
+        "x": 10,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "key": "courtyard-wall-fill-edge-b",
+        "x": 9,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "key": "courtyard-wall-fill-edge-b",
+        "x": 8,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "key": "courtyard-wall-fill-edge-b",
+        "x": 7,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "key": "courtyard-wall-fill-edge-b",
+        "x": 6,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "key": "courtyard-wall-fill-edge-b",
+        "x": 5,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "key": "courtyard-wall-fill-edge-b",
+        "x": 4,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "key": "courtyard-wall-fill-edge-b",
+        "x": 3,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "key": "courtyard-wall-fill-edge-b",
+        "x": 2,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "key": "courtyard-wall-fill-edge-b",
+        "x": 1,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "key": "courtyard-wall-fill-edge-b",
+        "x": 0,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "key": "courtyard-wall-end-right",
+        "x": 14,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 90
       }
     ],
     "monsters": [
@@ -705,6 +1499,24 @@ export const PLACEMENTS = {
     ]
   },
   "throne-palace": {
+    "decor": [
+      {
+        "key": "courtyard-door-wood",
+        "x": 6,
+        "y": 0,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-door-plain",
+        "x": 14,
+        "y": 9,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 90
+      }
+    ],
     "monsters": [
       {
         "x": 7,

@@ -183,99 +183,173 @@
      decor    stone-hut (building) 1.5x2.5 rot0              @10,5
      decor    brazier1 (prop/light) 0.5x2 rot0               @5,1
      decor    brazier2 (prop/light) 0.5x2 rot0               @9,1
-     decor    wall-b (wall) 1x1 rot0                         @7,0
-     decor    wall-b (wall) 1x1 rot0                         @8,0
-     decor    wall-b (wall) 1x1 rot0                         @9,0
-     decor    wall-b (wall) 1x1 rot0                         @10,0
-     decor    wall-b (wall) 1x1 rot0                         @11,0
-     decor    wall-b (wall) 1x1 rot0                         @12,0
-     decor    wall-b (wall) 1x1 rot0                         @13,0
-     decor    wall-b (wall) 1x1 rot0                         @14,0
-     decor    wall-b (wall) 1x1 rot0                         @5,0
-     decor    wall-b (wall) 1x1 rot0                         @4,0
-     decor    wall-b (wall) 1x1 rot0                         @3,0
-     decor    wall-b (wall) 1x1 rot0                         @2,0
-     decor    wall-b (wall) 1x1 rot0                         @1,0
-     decor    wall-a (wall) 1x1 rot0                         @0,0
-     decor    wall-b (wall) 1x1 rot270                       @0,1
-     decor    wall-b (wall) 1x1 rot270                       @0,2
-     decor    wall-b (wall) 1x1 rot270                       @0,3
-     decor    wall-b (wall) 1x1 rot270                       @0,4
-     decor    wall-b (wall) 1x1 rot270                       @0,5
-     decor    wall-b (wall) 1x1 rot270                       @0,6
-     decor    wall-b (wall) 1x1 rot270                       @0,7
-     decor    wall-b (wall) 1x1 rot270                       @0,8
-     decor    wall-b (wall) 1x1 rot270                       @0,9
-     decor    wall-b (wall) 1x1 rot270                       @0,10
-     decor    wall-b (wall) 1x1 rot0                         @6,0
+     decor    courtyard-wall-top (wall) 1x1 rot0             @10,0
+     decor    courtyard-wall-top (wall) 1x1 rot0             @11,0
+     decor    courtyard-wall-top (wall) 1x1 rot0             @12,0
+     decor    courtyard-wall-top (wall) 1x1 rot0             @13,0
+     decor    courtyard-wall-top (wall) 1x1 rot0             @14,0
+     decor    courtyard-wall-top (wall) 1x1 rot0             @5,0
+     decor    courtyard-wall-top (wall) 1x1 rot0             @4,0
+     decor    courtyard-wall-top (wall) 1x1 rot0             @3,0
+     decor    courtyard-wall-top (wall) 1x1 rot0             @1,0
+     decor    courtyard-wall-corner (wall/corner) 1x1 rot0   @0,0
+     decor    courtyard-wall-top (wall) 1x1 rot0             @6,0
      decor    snake-statue (statue) 0.5x1 rot0               @7,4
+     decor    courtyard-wall-gate (wall/door) 1x1 rot0       @7,0
+     decor    courtyard-wall-grass-edge-b (wall) 1x1 rot0    @0,1
+     decor    courtyard-wall-grass-edge-b (wall) 1x1 rot0    @0,10
+     decor    courtyard-wall-grass-edge-b (wall) 1x1 rot0    @0,9
+     decor    courtyard-wall-grass-edge-b (wall) 1x1 rot0    @0,8
+     decor    courtyard-wall-grass-edge-b (wall) 1x1 rot0    @0,7
+     decor    courtyard-wall-grass-edge-b (wall) 1x1 rot0    @0,6
+     decor    courtyard-wall-grass-edge-b (wall) 1x1 rot0    @0,5
+     decor    courtyard-wall-grass-edge-b (wall) 1x1 rot0    @0,4
+     decor    courtyard-wall-grass-edge-b (wall) 1x1 rot0    @0,3
+     decor    courtyard-wall-grass-edge-b (wall) 1x1 rot0    @0,2
+     decor    courtyard-wall-vine2 (wall) 1x1 rot0           @8,0
+     decor    courtyard-wall-vine (wall) 1x1 rot0            @9,0
+     decor    courtyard-wall-vine (wall) 1x1 rot0            @2,0
+     decor    courtyard-grass-flower (floor/grass) 1x1 rot0  @1,1
+     decor    courtyard-grass (floor/grass) 1x1 rot0         @1,3
+     decor    courtyard-grass (floor/grass) 1x1 rot0         @1,2
+     decor    courtyard-grass (floor/grass) 1x1 rot0         @2,1
+     decor    courtyard-grass (floor/grass) 1x1 rot0         @1,4
+     decor    courtyard-grass (floor/grass) 1x1 rot0         @1,5
+     decor    courtyard-grass-palm (floor/grass) 1x1 rot0    @1,6
+     decor    courtyard-grass-tuft (floor/grass) 1x1 rot0    @1,7
+     decor    courtyard-grass (floor/grass) 1x1 rot0         @1,8
+     decor    courtyard-grass-flower (floor/grass) 1x1 rot0  @1,9
+     decor    courtyard-bush (prop/plant) 1x1 rot0           @1,10
      monster  roll (region table)                            @9,3
      monster  roll (region table)                            @4,4
      monster  roll (region table)                            @6,7
      loot     roll (gold/tome/den)                           @11,8
    grid (M monster · L loot · B boss · b mini · d decor anchor):
      ddddddddddddddd
-     d....d...d.....
-     d.S............
-     d........M.....
-     d..dM..d.......
-     d.........d....
-     d..............
-     d.....M........
-     d..........L...
-     d..............
-     d..............
+     ddd..d...d.....
+     ddS............
+     dd.......M.....
+     dd.dM..d.......
+     dd........d....
+     dd.............
+     dd....M........
+     dd.........L...
+     dd.............
+     dd.............
 
 == lost-temple / courtyard-ne  [The Palace Approach]
    15x11  theme grass  difficulty 2
    start 12,8 | door 3->throne-palace 7,0 | edges w:courtyard-nw s:courtyard-se
    table: lizardfolk-warrior(w3,≤2)  giant-spider(w2,≤2)  giant-rat(w1,≤3)
    objects (type · identity · @cell):
-     decor    snake-statue (statue) 2x3 rot0                 @4,3
-     decor    gator-statue (statue) 2x3 rot0                 @9,3
+     decor    snake-statue (statue) 1x2 rot0                 @6,3.5
+     decor    gator-statue (statue) 1x1.5 rot0               @8,4
      decor    brazier1 (prop/light) 1x2 rot0                 @2,4
      decor    brazier2 (prop/light) 1x2 rot0                 @12,4
+     decor    courtyard-chest (prop/treasure) 0.9x0.9 rot0   @7,4.5
+     decor    courtyard-wall-crack2 (wall) 1x1 rot0          @2,0
+     decor    courtyard-wall-crack2 (wall) 1x1 rot0          @5,0
+     decor    courtyard-wall-end-right (wall/corner) 1x1 rot0 @6,0
+     decor    courtyard-wall-grass-edge-a (wall) 1x1 rot0    @6,1
+     decor    courtyard-wall-grass-edge-a (wall) 1x1 rot0    @6,2
+     decor    courtyard-wall-fill-edge-b (wall) 1x1 rot0     @8,2
+     decor    courtyard-wall-fill-edge-b (wall) 1x1 rot0     @8,1
+     decor    courtyard-wall-end-left (wall/corner) 1x1 rot0 @8,0
+     decor    courtyard-wall-crack (wall) 1x1 rot0           @9,0
+     decor    courtyard-wall-decor (wall) 1x1 rot0           @10,0
+     decor    courtyard-wall-brick-top (wall) 1x1 rot0       @11,0
+     decor    courtyard-wall-top (wall) 1x1 rot0             @12,0
+     decor    courtyard-wall-top (wall) 1x1 rot0             @13,0
+     decor    courtyard-wall-end-right (wall/corner) 1x1 rot0 @14,0
+     decor    courtyard-wall-grass-edge-a (wall) 1x1 rot0    @14,1
+     decor    courtyard-wall-grass-edge-a (wall) 1x1 rot0    @14,2
+     decor    courtyard-wall-grass-edge-a (wall) 1x1 rot0    @14,3
+     decor    courtyard-wall-grass-edge-a (wall) 1x1 rot0    @14,4
+     decor    courtyard-wall-grass-edge-a (wall) 1x1 rot0    @14,5
+     decor    courtyard-wall-grass-edge-a (wall) 1x1 rot0    @14,6
+     decor    courtyard-wall-grass-edge-a (wall) 1x1 rot0    @14,7
+     decor    courtyard-wall-grass-edge-a (wall) 1x1 rot0    @14,8
+     decor    courtyard-wall-grass-edge-a (wall) 1x1 rot0    @14,9
+     decor    courtyard-wall-grass-edge-a (wall) 1x1 rot0    @14,10
+     decor    courtyard-wall-top (wall) 1x1 rot0             @4,0
+     decor    courtyard-wall-vine2 (wall) 1x1 rot0           @3,0
+     decor    courtyard-wall-vine (wall) 1x1 rot0            @1,0
+     decor    wall-b (wall) 1x1 rot0                         @0,0
+     decor    courtyard-broken-column (prop) 1x1.5 rot0      @4.5,1.5
+     decor    courtyard-stone-floor (floor) 1x1.5 rot0       @7,1
+     decor    courtyard-wall-gate (wall/door) 1x1.5 rot0     @7,0
      monster  roll (region table)                            @3,5
      monster  roll (region table)                            @11,6
      loot     roll (gold/tome/den)                           @4,8
      boss     The golem of the courtyard [stone-golem] drops thulian-claws @7,2
    grid (M monster · L loot · B boss · b mini · d decor anchor):
-     #######3#######
-     ......#.#.....#
-     ......#B#.....#
-     ....d....d....#
-     ..d.........d.#
-     ...M..........#
-     ...........M..#
-     ..............#
-     ....L.......S.#
-     ..............#
-     ..............#
+     ddddddddddddddd
+     ......ddd.....d
+     ......dBd.....d
+     ..............d
+     ..d.....d...d.d
+     ...M..........d
+     ...........M..d
+     ..............d
+     ....L.......S.d
+     ..............d
+     ..............d
 
 == lost-temple / courtyard-sw  [The Sunken Well]
    15x11  theme grass  difficulty 2
    start 3,8 | edges n:courtyard-nw e:courtyard-se | portal->sewers-gumdrop 7,8
    table: lizardfolk-warrior(w3,≤2)  giant-spider(w2,≤2)  giant-rat(w1,≤3)
    objects (type · identity · @cell):
-     decor    well (structure) 2x2 rot0                      @6,7
-     decor    round-hut (building) 2x3 rot0                  @4,3
+     decor    courtyard-well (structure) 1.1x1.1 rot0        @3,8
+     decor    round-hut (building) 1.5x2.5 rot0              @6.5,3
      decor    brazier1 (prop/light) 1x2 rot0                 @11,2
+     decor    courtyard-wall-side (wall/corner) 1.1x1.1 rot0 @0,0
+     decor    courtyard-wall-side (wall/corner) 1.1x1.1 rot0 @0,1
+     decor    courtyard-wall-side (wall/corner) 1.1x1.1 rot0 @0,2
+     decor    courtyard-wall-side (wall/corner) 1.1x1.1 rot0 @0,3
+     decor    courtyard-wall-side (wall/corner) 1.1x1.1 rot0 @0,4
+     decor    courtyard-wall-side (wall/corner) 1.1x1.1 rot0 @0,5
+     decor    courtyard-wall-side (wall/corner) 1.1x1.1 rot0 @0,6
+     decor    courtyard-wall-side (wall/corner) 1.1x1.1 rot0 @0,7
+     decor    courtyard-wall-side (wall/corner) 1.1x1.1 rot0 @0,8
+     decor    courtyard-wall-side (wall/corner) 1.1x1.1 rot0 @0,9
+     decor    courtyard-wall-side2 (wall) 1.1x1.1 rot270     @0,10
+     decor    courtyard-wall-crack (wall) 1.1x1.1 rot180     @1,10
+     decor    courtyard-wall-crack (wall) 1.1x1.1 rot180     @2,10
+     decor    courtyard-wall-crack (wall) 1.1x1.1 rot180     @3,10
+     decor    courtyard-wall-crack (wall) 1.1x1.1 rot180     @4,10
+     decor    courtyard-wall-crack (wall) 1.1x1.1 rot180     @5,10
+     decor    courtyard-wall-crack (wall) 1.1x1.1 rot180     @6,10
+     decor    courtyard-wall-crack (wall) 1.1x1.1 rot180     @7,10
+     decor    courtyard-wall-crack (wall) 1.1x1.1 rot180     @8,10
+     decor    courtyard-wall-crack (wall) 1.1x1.1 rot180     @9,10
+     decor    courtyard-wall-crack (wall) 1.1x1.1 rot180     @10,10
+     decor    courtyard-wall-crack (wall) 1.1x1.1 rot180     @11,10
+     decor    courtyard-wall-crack (wall) 1.1x1.1 rot180     @12,10
+     decor    courtyard-wall-crack (wall) 1.1x1.1 rot180     @13,10
+     decor    courtyard-wall-crack (wall) 1.1x1.1 rot180     @14,10
+     decor    snakestatue (statue) 1.1x1.1 rot0              @11,7
+     decor    courtyard-rocks (prop) 0.6000000000000001x0.6000000000000001 rot0 @3,5
+     decor    courtyard-grass-tuft (floor/grass) 0.6000000000000001x0.6000000000000001 rot0 @2,4
+     decor    courtyard-grass-palm (floor/grass) 0.6000000000000001x0.6000000000000001 rot0 @7,6
+     decor    courtyard-grass (floor/grass) 0.6000000000000001x0.6000000000000001 rot0 @10,1
+     decor    courtyard-grass-flower (floor/grass) 0.6000000000000001x0.6000000000000001 rot0 @8,1
+     decor    courtyard-gold-pile (prop/treasure) 0.6000000000000001x0.6000000000000001 rot0 @9,3
      monster  roll (region table)                            @4,3
      monster  roll (region table)                            @9,5
      monster  roll (region table)                            @6,6
-     loot     roll (gold/tome/den)                           @11,3
    grid (M monster · L loot · B boss · b mini · d decor anchor):
-     #..............
-     #..............
-     #..........d...
-     #...M......L...
-     #..............
-     #........M.....
-     #.....M........
-     #.....d........
-     #..S...........
-     #..............
-     ###############
+     d..............
+     d.......d.d....
+     d..........d...
+     d...M....d.....
+     d.d............
+     d..d.....M.....
+     d.....Md.......
+     d..........d...
+     d..d...........
+     d..............
+     ddddddddddddddd
 
 == lost-temple / courtyard-se  [The Maze Gate]
    15x11  theme grass  difficulty 2
@@ -283,30 +357,60 @@
    table: lizardfolk-warrior(w3,≤2)  giant-spider(w2,≤2)  giant-rat(w1,≤3)
    objects (type · identity · @cell):
      decor    building-snake (building) 3x4 rot0             @9,3
-     decor    stone-hut (building) 2x3 rot0                  @3,4
+     decor    stone-hut (building) 2x3 rot0                  @3,3
      decor    brazier1 (prop/light) 1x2 rot0                 @2,7
+     decor    courtyard-door-wood (prop/door) 1x1 rot90      @14,5
+     decor    courtyard-wall-grass-edge-a (wall) 1x1 rot0    @14,4
+     decor    courtyard-wall-grass-edge-a (wall) 1x1 rot0    @14,3
+     decor    courtyard-wall-grass-edge-a (wall) 1x1 rot0    @14,2
+     decor    courtyard-wall-grass-edge-a (wall) 1x1 rot0    @14,1
+     decor    courtyard-wall-grass-edge-a (wall) 1x1 rot0    @14,6
+     decor    courtyard-wall-grass-edge-a (wall) 1x1 rot0    @14,7
+     decor    courtyard-wall-grass-edge-a (wall) 1x1 rot0    @14,8
+     decor    courtyard-wall-grass-edge-a (wall) 1x1 rot0    @14,9
+     decor    courtyard-grass-palm (floor/grass) 1x1 rot0    @13,9
+     decor    courtyard-grass-flower (floor/grass) 1x1 rot0  @3,2
+     decor    courtyard-grass-tuft (floor/grass) 1x1 rot0    @4,8
+     decor    courtyard-wall-grass-edge-a (wall) 1x1 rot0    @14,0
+     decor    courtyard-wall-grass-edge-b (wall) 1x1 rot270  @13,10
+     decor    courtyard-wall-grass-edge-b (wall) 1x1 rot270  @12,10
+     decor    courtyard-wall-fill-edge-b (wall) 1x1 rot270   @11,10
+     decor    courtyard-wall-fill-edge-b (wall) 1x1 rot270   @10,10
+     decor    courtyard-wall-fill-edge-b (wall) 1x1 rot270   @9,10
+     decor    courtyard-wall-fill-edge-b (wall) 1x1 rot270   @8,10
+     decor    courtyard-wall-fill-edge-b (wall) 1x1 rot270   @7,10
+     decor    courtyard-wall-fill-edge-b (wall) 1x1 rot270   @6,10
+     decor    courtyard-wall-fill-edge-b (wall) 1x1 rot270   @5,10
+     decor    courtyard-wall-fill-edge-b (wall) 1x1 rot270   @4,10
+     decor    courtyard-wall-fill-edge-b (wall) 1x1 rot270   @3,10
+     decor    courtyard-wall-fill-edge-b (wall) 1x1 rot270   @2,10
+     decor    courtyard-wall-fill-edge-b (wall) 1x1 rot270   @1,10
+     decor    courtyard-wall-fill-edge-b (wall) 1x1 rot270   @0,10
+     decor    courtyard-wall-end-right (wall/corner) 1x1 rot90 @14,10
      monster  roll (region table)                            @9,3
      monster  roll (region table)                            @5,4
      monster  roll (region table)                            @6,7
      loot     roll (gold/tome/den)                           @3,6
    grid (M monster · L loot · B boss · b mini · d decor anchor):
-     ..............#
-     ..............#
-     ..............#
-     .........M....#
-     ...d.M........#
-     ..............2
-     ...L..........#
-     ..d...M.......#
-     .......S......#
-     ..............#
-     ###############
+     ..............d
+     ..............d
+     ...d..........d
+     ...d.....M....d
+     .....M........d
+     ..............d
+     ...L..........d
+     ..d...M.......d
+     ....d..S......d
+     .............dd
+     ddddddddddddddd
 
 == lost-temple / throne-palace  [The Temple-Palace]
    15x11  theme sand  difficulty 3
    start 1,1 | door 3->courtyard-ne 6,0 | door 4->temple-depths 14,9
    table: lizardfolk-warrior(w3,≤2)  sarnak-vampire(w1,≤1)  giant-spider(w1,≤2)
    objects (type · identity · @cell):
+     decor    courtyard-door-wood (prop/door) 1.1x1.1 rot0   @6,0
+     decor    courtyard-door-plain (prop/door) 1.1x1.1 rot90 @14,9
      monster  roll (region table)                            @7,3
      monster  roll (region table)                            @3,6
      monster  roll (region table)                            @11,6
@@ -314,7 +418,7 @@
      loot     roll (gold/tome/den)                           @6,6
      boss     The Tae Ew Templar [tae-ew-templar, lizardfolk-warrior] drops rubicite-greaves, lizardscale-cloak @7,9
    grid (M monster · L loot · B boss · b mini · d decor anchor):
-     ######3########
+     ######d########
      #S..#.....#..L#
      #.#.#.###.#.#.#
      #.#.#.#M#.#.#.#
@@ -323,7 +427,7 @@
      #..M.#L..#.M..#
      ##.#.#.#.#.#.##
      #..#.......#..#
-     #.....#B#.....4
+     #.....#B#.....d
      ###############
 
 == lost-temple / temple-depths  [The Temple Depths]

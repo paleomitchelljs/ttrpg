@@ -918,43 +918,7 @@
       },
       {
         "type": "decor",
-        "id": "wall-b",
-        "tags": [
-          "wall"
-        ],
-        "x": 7,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "wall-b",
-        "tags": [
-          "wall"
-        ],
-        "x": 8,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "wall-b",
-        "tags": [
-          "wall"
-        ],
-        "x": 9,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "wall-b",
+        "id": "courtyard-wall-top",
         "tags": [
           "wall"
         ],
@@ -966,7 +930,7 @@
       },
       {
         "type": "decor",
-        "id": "wall-b",
+        "id": "courtyard-wall-top",
         "tags": [
           "wall"
         ],
@@ -978,7 +942,7 @@
       },
       {
         "type": "decor",
-        "id": "wall-b",
+        "id": "courtyard-wall-top",
         "tags": [
           "wall"
         ],
@@ -990,7 +954,7 @@
       },
       {
         "type": "decor",
-        "id": "wall-b",
+        "id": "courtyard-wall-top",
         "tags": [
           "wall"
         ],
@@ -1002,7 +966,7 @@
       },
       {
         "type": "decor",
-        "id": "wall-b",
+        "id": "courtyard-wall-top",
         "tags": [
           "wall"
         ],
@@ -1014,7 +978,7 @@
       },
       {
         "type": "decor",
-        "id": "wall-b",
+        "id": "courtyard-wall-top",
         "tags": [
           "wall"
         ],
@@ -1026,7 +990,7 @@
       },
       {
         "type": "decor",
-        "id": "wall-b",
+        "id": "courtyard-wall-top",
         "tags": [
           "wall"
         ],
@@ -1038,7 +1002,7 @@
       },
       {
         "type": "decor",
-        "id": "wall-b",
+        "id": "courtyard-wall-top",
         "tags": [
           "wall"
         ],
@@ -1050,19 +1014,7 @@
       },
       {
         "type": "decor",
-        "id": "wall-b",
-        "tags": [
-          "wall"
-        ],
-        "x": 2,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "wall-b",
+        "id": "courtyard-wall-top",
         "tags": [
           "wall"
         ],
@@ -1074,9 +1026,10 @@
       },
       {
         "type": "decor",
-        "id": "wall-a",
+        "id": "courtyard-wall-corner",
         "tags": [
-          "wall"
+          "wall",
+          "corner"
         ],
         "x": 0,
         "y": 0,
@@ -1086,127 +1039,7 @@
       },
       {
         "type": "decor",
-        "id": "wall-b",
-        "tags": [
-          "wall"
-        ],
-        "x": 0,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "rot": 270
-      },
-      {
-        "type": "decor",
-        "id": "wall-b",
-        "tags": [
-          "wall"
-        ],
-        "x": 0,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 270
-      },
-      {
-        "type": "decor",
-        "id": "wall-b",
-        "tags": [
-          "wall"
-        ],
-        "x": 0,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 270
-      },
-      {
-        "type": "decor",
-        "id": "wall-b",
-        "tags": [
-          "wall"
-        ],
-        "x": 0,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 270
-      },
-      {
-        "type": "decor",
-        "id": "wall-b",
-        "tags": [
-          "wall"
-        ],
-        "x": 0,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 270
-      },
-      {
-        "type": "decor",
-        "id": "wall-b",
-        "tags": [
-          "wall"
-        ],
-        "x": 0,
-        "y": 6,
-        "w": 1,
-        "h": 1,
-        "rot": 270
-      },
-      {
-        "type": "decor",
-        "id": "wall-b",
-        "tags": [
-          "wall"
-        ],
-        "x": 0,
-        "y": 7,
-        "w": 1,
-        "h": 1,
-        "rot": 270
-      },
-      {
-        "type": "decor",
-        "id": "wall-b",
-        "tags": [
-          "wall"
-        ],
-        "x": 0,
-        "y": 8,
-        "w": 1,
-        "h": 1,
-        "rot": 270
-      },
-      {
-        "type": "decor",
-        "id": "wall-b",
-        "tags": [
-          "wall"
-        ],
-        "x": 0,
-        "y": 9,
-        "w": 1,
-        "h": 1,
-        "rot": 270
-      },
-      {
-        "type": "decor",
-        "id": "wall-b",
-        "tags": [
-          "wall"
-        ],
-        "x": 0,
-        "y": 10,
-        "w": 1,
-        "h": 1,
-        "rot": 270
-      },
-      {
-        "type": "decor",
-        "id": "wall-b",
+        "id": "courtyard-wall-top",
         "tags": [
           "wall"
         ],
@@ -1225,6 +1058,318 @@
         "x": 7,
         "y": 4,
         "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-gate",
+        "tags": [
+          "wall",
+          "door"
+        ],
+        "x": 7,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 0,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 0,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 0,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 0,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 0,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 0,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 0,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 0,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 0,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 0,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-vine2",
+        "tags": [
+          "wall"
+        ],
+        "x": 8,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-vine",
+        "tags": [
+          "wall"
+        ],
+        "x": 9,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-vine",
+        "tags": [
+          "wall"
+        ],
+        "x": 2,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-grass-flower",
+        "tags": [
+          "floor",
+          "grass"
+        ],
+        "x": 1,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-grass",
+        "tags": [
+          "floor",
+          "grass"
+        ],
+        "x": 1,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-grass",
+        "tags": [
+          "floor",
+          "grass"
+        ],
+        "x": 1,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-grass",
+        "tags": [
+          "floor",
+          "grass"
+        ],
+        "x": 2,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-grass",
+        "tags": [
+          "floor",
+          "grass"
+        ],
+        "x": 1,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-grass",
+        "tags": [
+          "floor",
+          "grass"
+        ],
+        "x": 1,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-grass-palm",
+        "tags": [
+          "floor",
+          "grass"
+        ],
+        "x": 1,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-grass-tuft",
+        "tags": [
+          "floor",
+          "grass"
+        ],
+        "x": 1,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-grass",
+        "tags": [
+          "floor",
+          "grass"
+        ],
+        "x": 1,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-grass-flower",
+        "tags": [
+          "floor",
+          "grass"
+        ],
+        "x": 1,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-bush",
+        "tags": [
+          "prop",
+          "plant"
+        ],
+        "x": 1,
+        "y": 10,
+        "w": 1,
         "h": 1,
         "rot": 0
       },
@@ -1316,10 +1461,10 @@
         "tags": [
           "statue"
         ],
-        "x": 4,
-        "y": 3,
-        "w": 2,
-        "h": 3,
+        "x": 6,
+        "y": 3.5,
+        "w": 1,
+        "h": 2,
         "rot": 0
       },
       {
@@ -1328,10 +1473,10 @@
         "tags": [
           "statue"
         ],
-        "x": 9,
-        "y": 3,
-        "w": 2,
-        "h": 3,
+        "x": 8,
+        "y": 4,
+        "w": 1,
+        "h": 1.5,
         "rot": 0
       },
       {
@@ -1358,6 +1503,395 @@
         "y": 4,
         "w": 1,
         "h": 2,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-chest",
+        "tags": [
+          "prop",
+          "treasure"
+        ],
+        "x": 7,
+        "y": 4.5,
+        "w": 0.9,
+        "h": 0.9,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-crack2",
+        "tags": [
+          "wall"
+        ],
+        "x": 2,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-crack2",
+        "tags": [
+          "wall"
+        ],
+        "x": 5,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-end-right",
+        "tags": [
+          "wall",
+          "corner"
+        ],
+        "x": 6,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-a",
+        "tags": [
+          "wall"
+        ],
+        "x": 6,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-a",
+        "tags": [
+          "wall"
+        ],
+        "x": 6,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-fill-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 8,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-fill-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 8,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-end-left",
+        "tags": [
+          "wall",
+          "corner"
+        ],
+        "x": 8,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-crack",
+        "tags": [
+          "wall"
+        ],
+        "x": 9,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-decor",
+        "tags": [
+          "wall"
+        ],
+        "x": 10,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-brick-top",
+        "tags": [
+          "wall"
+        ],
+        "x": 11,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-top",
+        "tags": [
+          "wall"
+        ],
+        "x": 12,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-top",
+        "tags": [
+          "wall"
+        ],
+        "x": 13,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-end-right",
+        "tags": [
+          "wall",
+          "corner"
+        ],
+        "x": 14,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-a",
+        "tags": [
+          "wall"
+        ],
+        "x": 14,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-a",
+        "tags": [
+          "wall"
+        ],
+        "x": 14,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-a",
+        "tags": [
+          "wall"
+        ],
+        "x": 14,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-a",
+        "tags": [
+          "wall"
+        ],
+        "x": 14,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-a",
+        "tags": [
+          "wall"
+        ],
+        "x": 14,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-a",
+        "tags": [
+          "wall"
+        ],
+        "x": 14,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-a",
+        "tags": [
+          "wall"
+        ],
+        "x": 14,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-a",
+        "tags": [
+          "wall"
+        ],
+        "x": 14,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-a",
+        "tags": [
+          "wall"
+        ],
+        "x": 14,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-a",
+        "tags": [
+          "wall"
+        ],
+        "x": 14,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-top",
+        "tags": [
+          "wall"
+        ],
+        "x": 4,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-vine2",
+        "tags": [
+          "wall"
+        ],
+        "x": 3,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-vine",
+        "tags": [
+          "wall"
+        ],
+        "x": 1,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "wall-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 0,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-broken-column",
+        "tags": [
+          "prop"
+        ],
+        "x": 4.5,
+        "y": 1.5,
+        "w": 1,
+        "h": 1.5,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-stone-floor",
+        "tags": [
+          "floor"
+        ],
+        "x": 7,
+        "y": 1,
+        "w": 1,
+        "h": 1.5,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-gate",
+        "tags": [
+          "wall",
+          "door"
+        ],
+        "x": 7,
+        "y": 0,
+        "w": 1,
+        "h": 1.5,
         "rot": 0
       },
       {
@@ -1442,14 +1976,14 @@
     "objects": [
       {
         "type": "decor",
-        "id": "well",
+        "id": "courtyard-well",
         "tags": [
           "structure"
         ],
-        "x": 6,
-        "y": 7,
-        "w": 2,
-        "h": 2,
+        "x": 3,
+        "y": 8,
+        "w": 1.1,
+        "h": 1.1,
         "rot": 0
       },
       {
@@ -1458,10 +1992,10 @@
         "tags": [
           "building"
         ],
-        "x": 4,
+        "x": 6.5,
         "y": 3,
-        "w": 2,
-        "h": 3,
+        "w": 1.5,
+        "h": 2.5,
         "rot": 0
       },
       {
@@ -1475,6 +2009,405 @@
         "y": 2,
         "w": 1,
         "h": 2,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-side",
+        "tags": [
+          "wall",
+          "corner"
+        ],
+        "x": 0,
+        "y": 0,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-side",
+        "tags": [
+          "wall",
+          "corner"
+        ],
+        "x": 0,
+        "y": 1,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-side",
+        "tags": [
+          "wall",
+          "corner"
+        ],
+        "x": 0,
+        "y": 2,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-side",
+        "tags": [
+          "wall",
+          "corner"
+        ],
+        "x": 0,
+        "y": 3,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-side",
+        "tags": [
+          "wall",
+          "corner"
+        ],
+        "x": 0,
+        "y": 4,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-side",
+        "tags": [
+          "wall",
+          "corner"
+        ],
+        "x": 0,
+        "y": 5,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-side",
+        "tags": [
+          "wall",
+          "corner"
+        ],
+        "x": 0,
+        "y": 6,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-side",
+        "tags": [
+          "wall",
+          "corner"
+        ],
+        "x": 0,
+        "y": 7,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-side",
+        "tags": [
+          "wall",
+          "corner"
+        ],
+        "x": 0,
+        "y": 8,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-side",
+        "tags": [
+          "wall",
+          "corner"
+        ],
+        "x": 0,
+        "y": 9,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-side2",
+        "tags": [
+          "wall"
+        ],
+        "x": 0,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 270
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-crack",
+        "tags": [
+          "wall"
+        ],
+        "x": 1,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-crack",
+        "tags": [
+          "wall"
+        ],
+        "x": 2,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-crack",
+        "tags": [
+          "wall"
+        ],
+        "x": 3,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-crack",
+        "tags": [
+          "wall"
+        ],
+        "x": 4,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-crack",
+        "tags": [
+          "wall"
+        ],
+        "x": 5,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-crack",
+        "tags": [
+          "wall"
+        ],
+        "x": 6,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-crack",
+        "tags": [
+          "wall"
+        ],
+        "x": 7,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-crack",
+        "tags": [
+          "wall"
+        ],
+        "x": 8,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-crack",
+        "tags": [
+          "wall"
+        ],
+        "x": 9,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-crack",
+        "tags": [
+          "wall"
+        ],
+        "x": 10,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-crack",
+        "tags": [
+          "wall"
+        ],
+        "x": 11,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-crack",
+        "tags": [
+          "wall"
+        ],
+        "x": 12,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-crack",
+        "tags": [
+          "wall"
+        ],
+        "x": 13,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-crack",
+        "tags": [
+          "wall"
+        ],
+        "x": 14,
+        "y": 10,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 180
+      },
+      {
+        "type": "decor",
+        "id": "snakestatue",
+        "tags": [
+          "statue"
+        ],
+        "x": 11,
+        "y": 7,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-rocks",
+        "tags": [
+          "prop"
+        ],
+        "x": 3,
+        "y": 5,
+        "w": 0.6000000000000001,
+        "h": 0.6000000000000001,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-grass-tuft",
+        "tags": [
+          "floor",
+          "grass"
+        ],
+        "x": 2,
+        "y": 4,
+        "w": 0.6000000000000001,
+        "h": 0.6000000000000001,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-grass-palm",
+        "tags": [
+          "floor",
+          "grass"
+        ],
+        "x": 7,
+        "y": 6,
+        "w": 0.6000000000000001,
+        "h": 0.6000000000000001,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-grass",
+        "tags": [
+          "floor",
+          "grass"
+        ],
+        "x": 10,
+        "y": 1,
+        "w": 0.6000000000000001,
+        "h": 0.6000000000000001,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-grass-flower",
+        "tags": [
+          "floor",
+          "grass"
+        ],
+        "x": 8,
+        "y": 1,
+        "w": 0.6000000000000001,
+        "h": 0.6000000000000001,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-gold-pile",
+        "tags": [
+          "prop",
+          "treasure"
+        ],
+        "x": 9,
+        "y": 3,
+        "w": 0.6000000000000001,
+        "h": 0.6000000000000001,
         "rot": 0
       },
       {
@@ -1493,12 +2426,6 @@
         "type": "monster",
         "x": 6,
         "y": 6,
-        "roll": true
-      },
-      {
-        "type": "loot",
-        "x": 11,
-        "y": 3,
         "roll": true
       }
     ]
@@ -1570,7 +2497,7 @@
           "building"
         ],
         "x": 3,
-        "y": 4,
+        "y": 3,
         "w": 2,
         "h": 3,
         "rot": 0
@@ -1587,6 +2514,347 @@
         "w": 1,
         "h": 2,
         "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-door-wood",
+        "tags": [
+          "prop",
+          "door"
+        ],
+        "x": 14,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 90
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-a",
+        "tags": [
+          "wall"
+        ],
+        "x": 14,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-a",
+        "tags": [
+          "wall"
+        ],
+        "x": 14,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-a",
+        "tags": [
+          "wall"
+        ],
+        "x": 14,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-a",
+        "tags": [
+          "wall"
+        ],
+        "x": 14,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-a",
+        "tags": [
+          "wall"
+        ],
+        "x": 14,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-a",
+        "tags": [
+          "wall"
+        ],
+        "x": 14,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-a",
+        "tags": [
+          "wall"
+        ],
+        "x": 14,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-a",
+        "tags": [
+          "wall"
+        ],
+        "x": 14,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-grass-palm",
+        "tags": [
+          "floor",
+          "grass"
+        ],
+        "x": 13,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-grass-flower",
+        "tags": [
+          "floor",
+          "grass"
+        ],
+        "x": 3,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-grass-tuft",
+        "tags": [
+          "floor",
+          "grass"
+        ],
+        "x": 4,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-a",
+        "tags": [
+          "wall"
+        ],
+        "x": 14,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 13,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-grass-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 12,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-fill-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 11,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-fill-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 10,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-fill-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 9,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-fill-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 8,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-fill-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 7,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-fill-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 6,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-fill-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 5,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-fill-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 4,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-fill-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 3,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-fill-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 2,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-fill-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 1,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-fill-edge-b",
+        "tags": [
+          "wall"
+        ],
+        "x": 0,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 270
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-wall-end-right",
+        "tags": [
+          "wall",
+          "corner"
+        ],
+        "x": 14,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 90
       },
       {
         "type": "monster",
@@ -1675,6 +2943,32 @@
     },
     "miniboss": null,
     "objects": [
+      {
+        "type": "decor",
+        "id": "courtyard-door-wood",
+        "tags": [
+          "prop",
+          "door"
+        ],
+        "x": 6,
+        "y": 0,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-door-plain",
+        "tags": [
+          "prop",
+          "door"
+        ],
+        "x": 14,
+        "y": 9,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 90
+      },
       {
         "type": "monster",
         "x": 7,
