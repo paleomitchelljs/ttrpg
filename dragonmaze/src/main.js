@@ -66,13 +66,13 @@ function renderRoster(state) {
       // face + HP so it stays compact on a phone.
       row.title = m.name;
       row.setAttribute('aria-label', `${m.name}, ${m.hp.current} of ${m.hp.max} HP`);
+      // A compact vertical card: sprite on top, HP (number + bar) below. Cards
+      // sit in a horizontal row (see .party-roster).
       row.innerHTML = `
         <span class="roster-face sprite f${m.frames} flip"><img src="${m.sprite}" alt=""></span>
-        <span class="roster-info">
-          ${m.pending ? '<span class="roster-levelup">level up!</span>' : ''}
-          <span class="hp-bar"><span class="hp-fill${pct <= 35 ? ' low' : ''}" style="width:${pct}%"></span></span>
-        </span>
-        <span class="roster-hp">${m.hp.current}/${m.hp.max}</span>`;
+        <span class="roster-hp">${m.hp.current}/${m.hp.max}</span>
+        <span class="hp-bar"><span class="hp-fill${pct <= 35 ? ' low' : ''}" style="width:${pct}%"></span></span>
+        ${m.pending ? '<span class="roster-levelup">level up!</span>' : ''}`;
       return row;
     })
   );
