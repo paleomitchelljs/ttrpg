@@ -80,6 +80,11 @@ site rebuilds and copies `public/dragon.html` out. Give it a couple of minutes.
   connected (all floor reachable from `S`). If you painted layout, run `npm test`
   before pushing — it flood-fills every map and checks those counts. (Heads-up:
   `courtyard-sw` currently has no Treasure — drop one in with the Treasure brush.)
+- **Triggers aren't decor.** A well's "Descend", a door's travel, and edge exits
+  are defined by coordinate in `zones.js` (`sub.portals` / `sub.doors` / `sub.edges`),
+  **not** in the editor. If you move the *art* for one, update its coordinate in
+  `zones.js` too, or the trigger orphans onto a bare tile. (This is exactly how the
+  SW well's Descend broke.)
 - **Repo is in Dropbox** — if `git` hangs, look for a stale `.git/index.lock` and
   keep `git add` scoped to the specific files above.
 - Full editor reference (data model, endpoints, internals): [`editor-guide.md`](editor-guide.md).

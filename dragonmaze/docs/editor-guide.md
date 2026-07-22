@@ -169,6 +169,13 @@ or it 400s and writes nothing. An identity save is byte-identical.
   `freshPlacements`) so the regenerated dumps reflect the just-saved geometry
   without a server restart. `dump-map`'s `renderText`/`manifests` take an optional
   `zones` arg for exactly this.
+- **Triggers are decoupled from their art.** Portals (`sub.portals`, e.g. the
+  well's Descend), doors (`sub.doors`), and edge exits (`sub.edges`) are fixed by
+  coordinate in `zones.js` and are **not** editable in the editor; the matching
+  decor is placed separately in `placements.js`. Moving the decor does **not** move
+  the trigger — realign the `zones.js` coordinate by hand (the SW well's Descend
+  broke exactly this way). A future improvement would be to surface portals as an
+  editable marker kind.
 - **`no-store` dev server** — never "fix" caching by removing it; it prevents the
   mixed-module bug.
 - **Repo lives in Dropbox CloudStorage** — `git` can hang on the File Provider and
