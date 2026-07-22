@@ -737,16 +737,18 @@ function unitEl(c, side, activeId) {
     unit.dataset.idle = spritePath(c.anim.idle);
     unit.dataset.attack = spritePath(c.anim.attack);
   }
-  const plate = `
-    <div class="plate">
-      <div class="unit-name">${c.name}</div>
-      ${c.fled ? '<div class="badge-flee">fled!</div>' : hpBar(c)}
-      ${!dead && !c.fled && c.panicked ? '<div class="badge-panic">panicked!</div>' : ''}
-      ${side === 'enemy' ? traitBadges(c) : ''}
-    </div>`;
-  const face = faceHtml(c, dead);
-  // heroes: sprite then plate; enemies: plate then sprite (mirrored layout)
-  unit.innerHTML = side === 'hero' ? face + plate : plate + face;
+  const pct = Math.max(0, Math.round((100 * c.hp.current) / c.hp.max));
+  // Vertical card: name, HP numbers, portrait, then the bar — compact and narrow
+  // enough that the hero and enemy columns sit side by side on a phone.
+  unit.innerHTML = `
+    <div class="unit-name">${c.name}</div>
+    <div class="hp-num">${c.hp.current}/${c.hp.max}</div>
+    ${faceHtml(c, dead)}
+    ${c.fled
+      ? '<div class="badge-flee">fled!</div>'
+      : `<div class="hp-bar"><div class="hp-fill${pct <= 35 ? ' low' : ''}" style="width:${pct}%"></div></div>`}
+    ${!dead && !c.fled && c.panicked ? '<div class="badge-panic">panicked!</div>' : ''}
+    ${side === 'enemy' ? traitBadges(c) : ''}`;
   return unit;
 }
 
