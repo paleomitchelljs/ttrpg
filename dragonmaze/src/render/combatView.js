@@ -127,7 +127,9 @@ async function presentEvent(els, ev) {
         els.log,
         ev.success
           ? `${ev.caster} casts ${ev.name}! ${math}`
-          : `${ev.caster}'s ${ev.name} fizzles… the spell is spent for this fight. ${math}`,
+          : ev.recovered
+            ? `${ev.caster}'s ${ev.name} gutters — but Arcane Recovery keeps it ready to try again! ${math}`
+            : `${ev.caster}'s ${ev.name} fizzles… the spell is spent for this fight. ${math}`,
         ev.success ? 'log-start' : 'log-miss'
       );
       return delay(200);
@@ -202,6 +204,25 @@ async function presentEvent(els, ev) {
         await delay(160);
       }
       await delay(300);
+      for (const card of els.enemies.querySelectorAll('.hit-flash')) card.classList.remove('hit-flash');
+      return;
+    }
+    case 'sweep': {
+      appendLog(els.log, `${ev.actor} sweeps through the enemies!`, 'log-start');
+      for (const r of ev.results) {
+        const card = cardOf(els, r.id);
+        if (card && r.hit) {
+          card.classList.add('hit-flash');
+          updateCardHp(card, r.hpAfter);
+        }
+        appendLog(
+          els.log,
+          r.hit ? `The ${r.name} is cut for ${r.damage}!` : `The ${r.name} slips the blow.`,
+          r.hit ? 'log-hit' : 'log-miss'
+        );
+        await delay(140);
+      }
+      await delay(250);
       for (const card of els.enemies.querySelectorAll('.hit-flash')) card.classList.remove('hit-flash');
       return;
     }
@@ -875,6 +896,16 @@ function renderActions(els, combat, handlers, view) {
     if (target.panicked) strike.classList.add('has-edge');
     strike.addEventListener('click', () => handlers.onAttack(target.id));
     row.appendChild(strike);
+  }
+
+  // Cleave (talent): a Sweep hitting every foe.
+  if (target && actor.talents?.includes('cleave')) {
+    const btn = document.createElement('button');
+    btn.className = 'btn act-btn sweep-btn';
+    btn.textContent = 'Sweep';
+    btn.title = 'Strike every enemy for half your weapon damage';
+    btn.addEventListener('click', () => handlers.onSweep());
+    row.appendChild(btn);
   }
 
   // The dragon's breath weapon and a caster's spellbook share the middle slot.

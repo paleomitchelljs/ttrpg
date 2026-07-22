@@ -14,6 +14,7 @@ import { ITEMS, itemById } from '../../data/items.js';
 import { parseHeroExport } from './importHero.js';
 import { bumpDamage, resolveParleyCheck } from '../engine/rules.js';
 import { SPELLS } from '../../data/spells.js';
+import { talentById } from '../../data/talents.js';
 import { makeCombatant, makeDragonCombatant } from '../engine/entities.js';
 import {
   createCombat,
@@ -21,6 +22,7 @@ import {
   playerAttack,
   playerBreath,
   playerSpell,
+  playerSweep,
   playerIntimidate,
   isPlayerTurn,
   heroesOf,
@@ -31,6 +33,9 @@ import {
   victoryDropChance,
   levelForXp,
   hpPerLevel,
+  asiEarned,
+  talentEarned,
+  ABILITY_CAP,
   FACTION_ENEMIES,
   parleyDC,
   dispositionLabel,
@@ -164,38 +169,86 @@ export function heroWithGrowth(id) {
     abilities: { ...base.abilities },
     attacks: base.attacks.map((a) => ({ ...a })),
     spells: [...base.spells],
+    talents: [...(base.talents ?? [])],
     spellPower: base.spellPower ?? 0,
   };
-  // Automatic toughness: every level past 1st adds class+CON HP.
-  hero.hpMax += hpPerLevel(base) * (level - 1);
-  for (const choice of g.choices) {
-    if (choice.type === 'attack') hero.attacks.forEach((a) => (a.toHit += 1));
-    if (choice.type === 'damage') hero.attacks.forEach((a) => (a.damage = bumpDamage(a.damage, 1)));
-    if (choice.type === 'spellpower') hero.spellPower += 1;
-    if (choice.type === 'spell' && choice.spellId && !hero.spells.includes(choice.spellId)) {
-      hero.spells.push(choice.spellId);
+
+  // Ability score increases (even levels), capped at +5 (score 20). STR gives
+  // hit + damage, DEX gives hit + AC; CON feeds HP/level; the rest raise
+  // abilities the engine already reads (casting, parley, intimidate).
+  const asi = {};
+  for (const c of g.choices) if (c.type === 'asi' && c.ability) asi[c.ability] = (asi[c.ability] ?? 0) + 1;
+  let strGain = 0;
+  let dexGain = 0;
+  for (const ab of Object.keys(asi)) {
+    const capped = Math.min(ABILITY_CAP, (base.abilities[ab] ?? 0) + asi[ab]);
+    const delta = capped - (base.abilities[ab] ?? 0);
+    hero.abilities[ab] = capped;
+    if (ab === 'str') strGain = delta;
+    if (ab === 'dex') dexGain = delta;
+  }
+  hero.attacks.forEach((a) => {
+    a.toHit += strGain + dexGain;
+    if (strGain) a.damage = bumpDamage(a.damage, strGain);
+  });
+  hero.ac += dexGain;
+
+  // Automatic toughness: every level past 1st adds class + (grown) CON HP.
+  hero.hpMax += hpPerLevel(hero) * (level - 1);
+
+  // Talents (odd levels) and learned spells.
+  for (const c of g.choices) {
+    if (c.type === 'talent' && c.talentId) {
+      if (c.talentId === 'armor') hero.ac += 1; // repeatable defensive pick
+      else if (!hero.talents.includes(c.talentId)) hero.talents.push(c.talentId);
     }
-    // Legacy picks from older saves (HP/AC are no longer offered).
-    if (choice.type === 'hp') hero.hpMax += 2;
-    if (choice.type === 'ac') hero.ac += 1;
+    if (c.type === 'spell' && c.spellId && !hero.spells.includes(c.spellId)) hero.spells.push(c.spellId);
+    // Legacy picks from earlier systems (no longer offered, kept for old saves).
+    if (c.type === 'attack') hero.attacks.forEach((a) => (a.toHit += 1));
+    if (c.type === 'damage') hero.attacks.forEach((a) => (a.damage = bumpDamage(a.damage, 1)));
+    if (c.type === 'spellpower') hero.spellPower += 1;
+    if (c.type === 'hp') hero.hpMax += 2;
+    if (c.type === 'ac') hero.ac += 1;
   }
   return hero;
 }
 
-/** Spend a pending level-up on an advance. */
-export function chooseAdvance(charId, type, spellId = null) {
+/** Unspent advances, derived from level and past choices (spells share the
+ *  talent slot). */
+export function pendingAdvances(id) {
+  const g = state.meta.heroGrowth?.[id];
+  if (!g) return { asi: 0, talent: 0, total: 0 };
+  const asiChosen = g.choices.filter((c) => c.type === 'asi').length;
+  const talentChosen = g.choices.filter((c) => c.type === 'talent' || c.type === 'spell').length;
+  const asi = Math.max(0, asiEarned(g.level) - asiChosen);
+  const talent = Math.max(0, talentEarned(g.level) - talentChosen);
+  return { asi, talent, total: asi + talent };
+}
+
+/** Spend a pending advance. `arg` is the ability (ASI), talentId, or spellId. */
+export function chooseAdvance(charId, type, arg = null) {
   const g = growthFor(charId);
-  if (g.pending <= 0) return;
-  // HP is automatic now; AC no longer scales (it ran away). Picks buff offense.
-  if (!['attack', 'damage', 'spell', 'spellpower'].includes(type)) return;
-  if (type === 'spellpower' && !heroById(charId)?.castStat) return;
-  if (type === 'spell') {
-    const spell = SPELLS.find((sp) => sp.id === spellId && sp.tome !== false);
-    const known = heroWithGrowth(charId)?.spells ?? [];
-    if (!spell || known.includes(spellId)) return;
+  const pend = pendingAdvances(charId);
+  if (type === 'asi') {
+    if (pend.asi <= 0) return;
+    if (!['str', 'dex', 'con', 'int', 'wis', 'cha'].includes(arg)) return;
+    if ((heroWithGrowth(charId)?.abilities?.[arg] ?? 0) >= ABILITY_CAP) return; // 20 cap
+    g.choices.push({ type: 'asi', ability: arg });
+  } else if (type === 'talent') {
+    if (pend.talent <= 0) return;
+    const t = talentById(arg);
+    if (!t) return;
+    if (t.caster && !heroById(charId)?.castStat) return;
+    if (!t.repeatable && g.choices.some((c) => c.type === 'talent' && c.talentId === arg)) return;
+    g.choices.push({ type: 'talent', talentId: arg });
+  } else if (type === 'spell') {
+    if (pend.talent <= 0) return; // learning a spell spends a talent slot
+    const spell = SPELLS.find((sp) => sp.id === arg && sp.tome !== false);
+    if (!spell || (heroWithGrowth(charId)?.spells ?? []).includes(arg)) return;
+    g.choices.push({ type: 'spell', spellId: arg });
+  } else {
+    return;
   }
-  g.choices.push(type === 'spell' ? { type, spellId } : { type });
-  g.pending -= 1;
   persist(state);
   emit([{ type: 'advance-chosen', charId }]);
 }
@@ -761,10 +814,10 @@ function grantBankingXp(amount) {
     const newLevel = levelForXp(g.xp);
     if (newLevel > g.level) {
       const gained = newLevel - g.level;
-      g.pending += gained;
-      g.level = newLevel;
-      // Automatic HP: each new level raises this hero's live pool right away.
-      const hp = hpPerLevel(heroById(slot.id)) * gained;
+      g.level = newLevel; // pending advances are derived from level (see pendingAdvances)
+      // Automatic HP: each new level raises this hero's live pool right away,
+      // scaled by class + the hero's (possibly ASI-raised) CON.
+      const hp = hpPerLevel(heroWithGrowth(slot.id)) * gained;
       slot.hp.max += hp;
       slot.hp.current += hp;
       events.push({ type: 'level-up', charId: slot.id, who: heroById(slot.id)?.name ?? slot.id, level: newLevel });
@@ -822,9 +875,12 @@ function checkTierUp(events) {
 // ----------------------------------------------------- parley (before a fight)
 // The best talker the party can field.
 function bestFace(run) {
-  let cha = run.dragon ? 2 : 0;
-  for (const slot of run.party) cha = Math.max(cha, companionById(slot.id)?.abilities?.cha ?? 0);
-  return { abilities: { cha } };
+  let face = { abilities: { cha: run.dragon ? 2 : 0 }, talents: [] };
+  for (const slot of run.party) {
+    const h = heroWithGrowth(slot.id);
+    if ((h?.abilities?.cha ?? -99) > (face.abilities.cha ?? -99)) face = h;
+  }
+  return face;
 }
 
 // Will this pack talk, and on what terms? Computed without building the fight.
@@ -861,7 +917,8 @@ export function resolveEncounter(mode) {
   run.pendingParley = null;
   run.phase = 'explore';
   if (mode === 'fight' || !mode) { beginCombat(encounter); return; }
-  const check = resolveParleyCheck(bestFace(run), offer.dc, liveRNG);
+  const face = bestFace(run);
+  const check = resolveParleyCheck(face, offer.dc, liveRNG, { advantage: face.talents?.includes('silver-tongue') });
   const events = [{ type: 'parley-outcome', mode, success: check.success, total: check.total, dc: offer.dc }];
   if (!check.success) { emit(events); beginCombat(encounter); return; }
   if (mode === 'barter') { run.unbankedGold = Math.max(0, run.unbankedGold - offer.barterCost); events.push({ type: 'parley-paid', cost: offer.barterCost }); }
@@ -963,6 +1020,10 @@ export function cast(spellId, targetId = null) {
 /** Cow the highlighted enemy mid-fight: a CHA check to panic it into fleeing. */
 export function intimidate(targetId) {
   resolvePlayerAction((combat) => playerIntimidate(combat, targetId, liveRNG));
+}
+
+export function sweep() {
+  resolvePlayerAction((combat) => playerSweep(combat, liveRNG));
 }
 
 /** Flee an unwinnable fight: you escape the labyrinth but drop the gold you were

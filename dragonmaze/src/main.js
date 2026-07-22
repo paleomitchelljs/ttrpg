@@ -12,6 +12,7 @@ import { COMPANIONS, companionById } from '../data/party.js';
 import { itemById } from '../data/items.js';
 import { familiarById } from '../data/familiars.js';
 import { spellById, SPELLS as SPELLS_ALL } from '../data/spells.js';
+import { TALENTS, talentById, focusTalentsFor } from '../data/talents.js';
 import * as rulesRef from './engine/rules.js';
 import { SPRITES } from './assets-manifest.js';
 
@@ -27,7 +28,7 @@ const combatEls = {
 const COMBAT_EVENTS = new Set([
   'combat-start', 'initiative', 'round', 'attack', 'breath', 'morale',
   'flee', 'recharge', 'death', 'hero-down', 'victory', 'defeat', 'retreat',
-  'spell-cast', 'spell-hit', 'spell-heal', 'spell-wave', 'item-drop',
+  'spell-cast', 'spell-hit', 'spell-heal', 'spell-wave', 'sweep', 'item-drop',
   'dominated', 'dominate-resisted', 'bane',
   'parley', 'parley-rout', 'parley-peace', 'parley-paid', 'quest-received', 'quest-complete',
 ]);
@@ -54,7 +55,7 @@ function renderRoster(state) {
   }
   for (const slot of run.party) {
     const c = companionById(slot.id) ?? game.state.meta.customCharacters.find((h) => h.id === slot.id);
-    if (c) members.push({ key: slot.id, name: c.name, hp: slot.hp, sprite: SPRITES[c.anim.idle], frames: 2, pending: game.state.meta.heroGrowth?.[slot.id]?.pending ?? 0 });
+    if (c) members.push({ key: slot.id, name: c.name, hp: slot.hp, sprite: SPRITES[c.anim.idle], frames: 2, pending: game.pendingAdvances(slot.id).total });
   }
   box.replaceChildren(
     ...members.map((m) => {
@@ -259,6 +260,7 @@ game.subscribe((state, events) => {
   presentCombat(combatEls, state, events, {
     onAttack: (targetId) => game.attack(targetId),
     onBreath: () => game.breath(),
+    onSweep: () => game.sweep(),
     onCast: (spellId, targetId) => game.cast(spellId, targetId),
     onIntimidate: (targetId) => game.intimidate(targetId),
     onFlee: () => { if (confirm("Flee the fight? You'll escape but drop the gold you're carrying.")) game.flee(); },
@@ -321,16 +323,33 @@ function sheetSubject(id) {
     spells: c.spells.map((sid) => spellById(sid)).filter(Boolean),
     castStat: c.castStat ?? 'cha',
     traits: c.abilityLabel ? [c.abilityLabel] : [],
-    growth: {
-      level: g.level,
-      xp: g.xp,
-      pending: g.pending,
-      next: nextLevelXp(g.level),
-      learnable: learnableSpells(id),
-      caster: !!c.castStat,
-      hpPerLevel: rulesRef.hpPerLevel(c),
-    },
+    growth: growthInfo(id, c, g),
     equip: equipInfo(id),
+  };
+}
+
+// The growth panel's data: level, auto-HP, and — when advances are pending —
+// the ability-increase and talent options (talents drawn from the fixed pool
+// plus a Focus per school the caster knows; casters can also learn a spell).
+function growthInfo(id, c, g) {
+  const pend = game.pendingAdvances(id);
+  const chosen = c.talents ?? [];
+  const talentOptions = [...TALENTS, ...focusTalentsFor(c.spells)]
+    .filter((t) => (!t.caster || c.castStat) && (t.repeatable || !chosen.includes(t.id)))
+    .map((t) => ({ id: t.id, name: t.name, blurb: t.blurb }));
+  return {
+    level: g.level,
+    xp: g.xp,
+    next: nextLevelXp(g.level),
+    pendingAsi: pend.asi,
+    pendingTalent: pend.talent,
+    caster: !!c.castStat,
+    hpPerLevel: rulesRef.hpPerLevel(c),
+    abilities: c.abilities,
+    abilityCap: rulesRef.ABILITY_CAP,
+    talentOptions,
+    learnable: c.castStat ? learnableSpells(id) : [],
+    talents: chosen.filter((tid) => tid !== 'armor').map((tid) => talentById(tid)?.name ?? tid),
   };
 }
 
@@ -378,7 +397,9 @@ ui.el('sheet-body').addEventListener('change', (ev) => {
 ui.el('sheet-body').addEventListener('click', (ev) => {
   const btn = ev.target.closest('.advance-btn');
   if (!btn || !openSheetId) return;
-  game.chooseAdvance(openSheetId, btn.dataset.advance, btn.dataset.spell ?? null);
+  const type = btn.dataset.advance; // 'asi' | 'talent' | 'spell'
+  const arg = btn.dataset.ability ?? btn.dataset.talent ?? btn.dataset.spell ?? null;
+  game.chooseAdvance(openSheetId, type, arg);
   openSheet(openSheetId);
 });
 

@@ -35,6 +35,8 @@ export function makeCombatant(data) {
     spells: [...(data.spells ?? [])],
     castStat: data.castStat ?? 'cha', // which ability powers this caster's spells
     spellPower: data.spellPower ?? 0, // bonus damage added to this caster's spells
+    talents: [...(data.talents ?? [])], // chosen level-up talents (Cleave, Flurry, …)
+    recoveredThisCombat: false, // Arcane Recovery: one saved fizzle per fight
     burned: [],
     goldValue: data.goldValue ?? 0,
     morale: data.morale ?? null,

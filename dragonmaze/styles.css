@@ -713,6 +713,7 @@ button { font: inherit; }
 .act-btn.has-edge { border-color: var(--gold); box-shadow: 0 3px 0 #00000066, 0 0 10px #e8b93c88; }
 .spell-btn { background: #6a4bbf; }       /* caster purple */
 .intimidate-btn { background: #8a4a5a; }  /* muted threat red */
+.sweep-btn { background: #5f7d3a; }        /* martial green */
 
 .btn-icon { width: 1em; height: 1em; flex: none; }
 

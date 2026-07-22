@@ -34,6 +34,8 @@ import {
   createCombat,
   runMonsterTurns,
   playerSpell,
+  playerAttack,
+  playerSweep,
   isPlayerTurn,
   livingMonsters,
 } from '../src/engine/combat.js';
@@ -632,35 +634,98 @@ check('gold-as-XP levels follow the thresholds', () => {
   assert.equal(levelForXp(999999), LEVEL_XP.length);
 });
 
-check('growth choices fold into the hero template', () => {
+check('ASI and talent advances fold into the hero template', () => {
   const game = gameState;
+  const base = companionById('spawnee');
+  // Level 6: 3 ASIs earned (2/4/6), 2 talents earned (3/5). Spend a STR and a
+  // DEX ASI, a Cleave talent and a +1 AC talent, and a legacy HP pick.
   game.state.meta.heroGrowth = {
-    spawnee: { xp: 200, level: 3, pending: 0, choices: [{ type: 'attack' }, { type: 'damage' }, { type: 'spellpower' }, { type: 'spell', spellId: 'ember-bolt' }, { type: 'hp' }, { type: 'ac' }] },
+    spawnee: {
+      xp: 700, level: 6, choices: [
+        { type: 'asi', ability: 'str' },
+        { type: 'asi', ability: 'dex' },
+        { type: 'talent', talentId: 'cleave' },
+        { type: 'talent', talentId: 'armor' },
+        { type: 'hp' },
+      ],
+    },
   };
   const grown = game.heroWithGrowth('spawnee');
-  const base = companionById('spawnee');
-  // Auto HP: +hpPerLevel for each level past 1st (level 3 = 2 levels), plus a
-  // legacy +2 HP pick from an old save.
-  assert.equal(grown.hpMax, base.hpMax + hpPerLevel(base) * 2 + 2);
-  assert.equal(grown.ac, base.ac + 1, 'legacy AC pick still folds');
-  assert.equal(grown.attacks[0].toHit, base.attacks[0].toHit + 1);
-  assert.equal(grown.attacks[0].damage, bumpDamage(base.attacks[0].damage, 1), '+1 damage pick');
-  assert.equal(grown.spellPower, 1, 'spell might raises spell damage');
-  assert.ok(grown.spells.includes('ember-bolt'));
-  assert.ok(grown.spells.includes('drain-life'), 'base spells kept');
+  assert.equal(grown.abilities.str, base.abilities.str + 1, 'STR ASI raises the score');
+  assert.equal(grown.abilities.dex, base.abilities.dex + 1, 'DEX ASI raises the score');
+  // STR gives hit+dmg, DEX gives hit+AC; armor talent adds a further +1 AC.
+  assert.equal(grown.attacks[0].toHit, base.attacks[0].toHit + 2, 'STR + DEX both add to hit');
+  assert.equal(grown.attacks[0].damage, bumpDamage(base.attacks[0].damage, 1), 'STR adds damage');
+  assert.equal(grown.ac, base.ac + 2, 'DEX ASI +1 and the +1 AC talent');
+  assert.ok(grown.talents.includes('cleave'), 'Cleave talent recorded');
+  // Auto HP uses the (unchanged) CON: +hpPerLevel * 5 levels, plus legacy +2.
+  assert.equal(grown.hpMax, base.hpMax + hpPerLevel(grown) * 5 + 2);
 
-  // chooseAdvance guards: no pending -> no change; HP/AC are no longer picks;
-  // vampire spells unlearnable.
-  const startLen = game.state.meta.heroGrowth.spawnee.choices.length;
-  game.chooseAdvance('spawnee', 'attack');
-  assert.equal(game.state.meta.heroGrowth.spawnee.choices.length, startLen, 'no pending -> no change');
-  game.state.meta.heroGrowth.spawnee.pending = 1;
-  game.chooseAdvance('spawnee', 'hp');
-  assert.equal(game.state.meta.heroGrowth.spawnee.pending, 1, 'HP is automatic, not a pick');
-  game.chooseAdvance('spawnee', 'spell', 'dominate-undead');
-  assert.equal(game.state.meta.heroGrowth.spawnee.pending, 1, 'vampire powers cannot be chosen');
-  game.chooseAdvance('spawnee', 'spell', 'healing-word');
-  assert.equal(game.state.meta.heroGrowth.spawnee.pending, 0);
+  // pendingAdvances: 3 ASI - 2 chosen = 1; 2 talents - 2 chosen = 0.
+  const pend = game.pendingAdvances('spawnee');
+  assert.equal(pend.asi, 1);
+  assert.equal(pend.talent, 0);
+
+  // Guards: talent slot is spent, so a spell can't be learned; the last ASI
+  // can still be placed, and abilities cap at +5.
+  game.chooseAdvance('spawnee', 'spell', 'ember-bolt');
+  assert.ok(!game.heroWithGrowth('spawnee').spells.includes('ember-bolt'), 'no talent slot left for a spell');
+  game.chooseAdvance('spawnee', 'asi', 'con');
+  assert.equal(game.pendingAdvances('spawnee').asi, 0, 'the third ASI is spent');
+  assert.equal(game.heroWithGrowth('spawnee').abilities.con, base.abilities.con + 1);
+});
+
+check('CON ASIs feed HP, and ability modifiers cap at +5', () => {
+  const game = gameState;
+  const base = companionById('spawnee');
+  game.state.meta.heroGrowth = {
+    spawnee: { xp: 2500, level: 10, choices: [
+      { type: 'asi', ability: 'con' }, { type: 'asi', ability: 'con' },
+      { type: 'asi', ability: 'dex' }, { type: 'asi', ability: 'dex' }, { type: 'asi', ability: 'dex' },
+    ] },
+  };
+  const grown = game.heroWithGrowth('spawnee');
+  // base con 2 + 2 ASIs = 4; HP uses the grown con.
+  assert.equal(grown.abilities.con, base.abilities.con + 2);
+  assert.equal(grown.hpMax, base.hpMax + hpPerLevel(grown) * 9);
+  // base dex 2 + 3 ASIs would be 5 -> exactly the cap.
+  assert.equal(grown.abilities.dex, 5, 'modifier caps at +5 (score 20)');
+});
+
+check('talents drive combat: flurry strikes twice, cleave hits all', () => {
+  const hero = makeCombatant(companionById('dragonkin-swashbuckler'));
+  hero.talents = ['flurry'];
+  const r1 = makeCombatant(monsterById('giant-rat'));
+  const r2 = makeCombatant(monsterById('giant-rat'));
+  const { combat } = createCombat([hero], [r1, r2], () => 0.5);
+  combat.turnIndex = combat.order.findIndex((c) => c.id === hero.id);
+  const ev = playerAttack(combat, r1.id, () => 0.95); // high rolls -> hits
+  assert.equal(ev.filter((e) => e.type === 'attack').length, 2, 'flurry = two strikes');
+
+  const hero2 = makeCombatant(companionById('dragonkin-swashbuckler'));
+  hero2.talents = ['cleave'];
+  const a = makeCombatant(monsterById('giant-rat'));
+  const b = makeCombatant(monsterById('giant-rat'));
+  const c2 = createCombat([hero2], [a, b], () => 0.5).combat;
+  c2.turnIndex = c2.order.findIndex((c) => c.id === hero2.id);
+  const sweep = playerSweep(c2, () => 0.95).find((e) => e.type === 'sweep');
+  assert.ok(sweep && sweep.results.length === 2, 'sweep touches every enemy');
+  assert.ok(sweep.results.every((r) => r.hit), 'high rolls hit both');
+});
+
+check('arcane recovery saves the first fizzle each combat', () => {
+  const caster = makeCombatant(companionById('dragonkin-spellblade'));
+  caster.talents = ['arcane-recovery'];
+  const rat = makeCombatant(monsterById('giant-rat'));
+  const { combat } = createCombat([caster], [rat], () => 0.5);
+  combat.turnIndex = combat.order.findIndex((c) => c.id === caster.id);
+  const cast = playerSpell(combat, 'ember-bolt', rat.id, () => 0).find((e) => e.type === 'spell-cast');
+  assert.equal(cast.success, false, 'a natural 1 fizzles');
+  assert.equal(cast.recovered, true, 'recovery keeps it ready');
+  assert.ok(!caster.burned.includes('ember-bolt'), 'not burned the first time');
+  combat.turnIndex = combat.order.findIndex((c) => c.id === caster.id);
+  playerSpell(combat, 'ember-bolt', rat.id, () => 0);
+  assert.ok(caster.burned.includes('ember-bolt'), 'the second fizzle is spent');
 });
 
 check('a party without the dragon loses only when everyone is down', () => {

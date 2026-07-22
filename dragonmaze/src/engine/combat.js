@@ -235,32 +235,40 @@ export function playerAttack(combat, targetId, rng = Math.random) {
   const events = [];
   if (!isPlayerTurn(combat)) return events;
   const actor = currentCombatant(combat);
-  const target =
-    combat.order.find((c) => c.id === targetId && isMonster(c) && alive(c)) ??
-    livingMonsters(combat)[0];
-  if (!target) return events;
-  const res = resolveAttack(actor, actor.attacks[0], target, rng, {
-    advantage: !!target.panicked,
-  });
-  if (res.hit) {
-    if (actor.bane === 'undead' && target.undead) {
-      res.damage += 2;
-      events.push({ type: 'bane', attacker: actor.name, who: target.name });
+  // Flurry (talent) strikes twice in one turn; each swing re-picks a live foe.
+  const strikes = actor.talents?.includes('flurry') ? 2 : 1;
+  let acted = false;
+  for (let i = 0; i < strikes; i++) {
+    const target =
+      combat.order.find((c) => c.id === targetId && isMonster(c) && alive(c)) ??
+      livingMonsters(combat)[0];
+    if (!target) break;
+    acted = true;
+    const res = resolveAttack(actor, actor.attacks[0], target, rng, {
+      advantage: !!target.panicked,
+    });
+    if (res.hit) {
+      if (actor.bane === 'undead' && target.undead) {
+        res.damage += 2;
+        events.push({ type: 'bane', attacker: actor.name, who: target.name });
+      }
+      res.damage = applyDamage(target, res.damage, 'physical', events);
     }
-    res.damage = applyDamage(target, res.damage, 'physical', events);
+    events.push({
+      type: 'attack',
+      attackerId: actor.id,
+      attacker: actor.name,
+      attackerKind: actor.kind,
+      targetId: target.id,
+      target: target.name,
+      targetKind: target.kind,
+      targetHpAfter: target.hp.current,
+      ...res,
+    });
+    afterDamage(combat, target, rng, events);
+    if (!livingMonsters(combat).length) break;
   }
-  events.push({
-    type: 'attack',
-    attackerId: actor.id,
-    attacker: actor.name,
-    attackerKind: actor.kind,
-    targetId: target.id,
-    target: target.name,
-    targetKind: target.kind,
-    targetHpAfter: target.hp.current,
-    ...res,
-  });
-  afterDamage(combat, target, rng, events);
+  if (!acted) return events;
   if (!checkVictory(combat, events)) advanceTurn(combat, events);
   return events;
 }
@@ -286,6 +294,30 @@ export function playerBreath(combat, rng = Math.random) {
     results.push({ id: m.id, name: m.name, hpAfter: m.hp.current, ...res });
   }
   events.push({ type: 'breath', total, rolls: dmg.rolls, dc: spec.dc, results });
+  for (const m of targets) afterDamage(combat, m, rng, events);
+  if (!checkVictory(combat, events)) advanceTurn(combat, events);
+  return events;
+}
+
+/**
+ * Sweep (Cleave talent): one attack roll against every living monster, each hit
+ * dealing half the weapon's damage. Counts as the hero's whole turn.
+ */
+export function playerSweep(combat, rng = Math.random) {
+  const events = [];
+  if (!isPlayerTurn(combat)) return events;
+  const actor = currentCombatant(combat);
+  if (!actor.talents?.includes('cleave')) return events;
+  const targets = livingMonsters(combat);
+  if (!targets.length) return events;
+  const results = [];
+  for (const m of targets) {
+    const res = resolveAttack(actor, actor.attacks[0], m, rng, {});
+    let dealt = 0;
+    if (res.hit) dealt = applyDamage(m, Math.max(1, Math.floor(res.damage / 2)), 'physical', events);
+    results.push({ id: m.id, name: m.name, hit: res.hit, damage: dealt, hpAfter: m.hp.current });
+  }
+  events.push({ type: 'sweep', actor: actor.name, actorId: actor.id, results });
   for (const m of targets) afterDamage(combat, m, rng, events);
   if (!checkVictory(combat, events)) advanceTurn(combat, events);
   return events;
@@ -342,7 +374,7 @@ export function playerIntimidate(combat, targetId, rng = Math.random) {
     return events;
   }
   const dc = 12 + target.morale;
-  const check = resolveParleyCheck(actor, dc, rng);
+  const check = resolveParleyCheck(actor, dc, rng, { advantage: actor.talents?.includes('silver-tongue') });
   events.push({ type: 'intimidate', actor: actor.name, target: target.name, targetId: target.id, ...check });
   if (check.success) {
     target.panicked = true;
@@ -373,7 +405,13 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
     ...cast,
   });
   if (!cast.success) {
-    caster.burned.push(spellId);
+    // Arcane Recovery (talent): the first fizzle each combat isn't burned.
+    if (caster.talents?.includes('arcane-recovery') && !caster.recoveredThisCombat) {
+      caster.recoveredThisCombat = true;
+      events[events.length - 1].recovered = true;
+    } else {
+      caster.burned.push(spellId);
+    }
     advanceTurn(combat, events);
     return events;
   }

@@ -181,25 +181,35 @@ export function showCharacterSheet(subject) {
   showOverlay('sheet-overlay', true);
 }
 
+const ABILITY_ORDER = [['str', 'STR'], ['dex', 'DEX'], ['con', 'CON'], ['int', 'INT'], ['wis', 'WIS'], ['cha', 'CHA']];
+
 function growthHtml(subject) {
   if (!subject.growth) return '';
   const g = subject.growth;
   let html = `<h3>Level ${g.level}</h3><p class="sheet-blurb">${g.xp} XP${g.next ? ` — next level at ${g.next}` : ' — at the summit'} · +${g.hpPerLevel} HP each level (automatic)</p>`;
-  if (g.pending > 0) {
-    const spellOpts = g.learnable
+  if (g.talents.length) html += `<p class="sheet-blurb">Talents: ${g.talents.join(', ')}</p>`;
+
+  if (g.pendingAsi > 0) {
+    const abil = ABILITY_ORDER.map(([k, label]) => {
+      const v = g.abilities[k] ?? 0;
+      const atCap = v >= g.abilityCap;
+      return `<button class="zone-btn advance-btn" data-advance="asi" data-ability="${k}"${atCap ? ' disabled' : ''}>${label} ${v >= 0 ? '+' : ''}${v}${atCap ? ' (max)' : ` → +${v + 1}`}</button>`;
+    }).join('');
+    html += `
+      <p class="sheet-blurb">Ability increase${g.pendingAsi > 1 ? ` ×${g.pendingAsi}` : ''} — raise one (STR: hit+dmg · DEX: hit+AC · CON: HP · INT/WIS/CHA: casting/talk):</p>
+      <div class="zone-buttons">${abil}</div>`;
+  }
+
+  if (g.pendingTalent > 0) {
+    const talents = g.talentOptions
+      .map((t) => `<button class="zone-btn advance-btn" data-advance="talent" data-talent="${t.id}" title="${t.blurb}">${t.name}</button>`)
+      .join('');
+    const spells = g.learnable
       .map((sp) => `<button class="zone-btn advance-btn" data-advance="spell" data-spell="${sp.id}">Learn ${sp.name}</button>`)
       .join('');
-    const mightOpt = g.caster
-      ? '<button class="zone-btn advance-btn" data-advance="spellpower">+1 spell damage</button>'
-      : '';
     html += `
-      <p class="sheet-blurb">Level up! Choose ${g.pending} advance${g.pending > 1 ? 's' : ''}:</p>
-      <div class="zone-buttons">
-        <button class="zone-btn advance-btn" data-advance="attack">+1 to hit</button>
-        <button class="zone-btn advance-btn" data-advance="damage">+1 damage</button>
-        ${mightOpt}
-        ${spellOpts}
-      </div>`;
+      <p class="sheet-blurb">Talent${g.pendingTalent > 1 ? ` ×${g.pendingTalent}` : ''} — choose one:</p>
+      <div class="zone-buttons">${talents}${spells}</div>`;
   }
   return html;
 }

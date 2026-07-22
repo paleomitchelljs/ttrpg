@@ -142,20 +142,32 @@ export function hpPerLevel(hero) {
   return Math.max(1, classBase + con);
 }
 
+// Level cadence: an ability score increase at 2/4/6/8/10, a talent at 3/5/7/9.
+// Ability modifiers cap at +5 (a score of 20) without magic items.
+export const ABILITY_CAP = 5;
+export function asiEarned(level) {
+  return Math.max(0, Math.floor(level / 2)); // count of 2,4,6,8,10 <= level
+}
+export function talentEarned(level) {
+  return Math.min(4, Math.max(0, Math.floor((level - 1) / 2))); // 3,5,7,9 <= level
+}
+
 // ---------------------------------------------------------------- spells
 /**
  * Casting check: d20 + CHA vs the spell's castDC. Natural 20 always works,
  * natural 1 always fizzles. A fizzled spell burns out for the combat.
  */
 export function resolveSpellCast(caster, spell, rng = Math.random) {
-  const die = d20({ rng });
+  // Spell Focus (talent) grants advantage on casting a matched school.
+  const focused = !!(spell.school && caster.talents?.includes(`focus-${spell.school}`));
+  const die = d20({ rng, advantage: focused });
   // Casting keys off the caster's spellcasting ability (Shadowdark: wizards
   // INT, priests WIS; our dragon and vampire cast on CHA). Defaults to CHA.
   const stat = caster.castStat ?? 'cha';
   const bonus = caster.abilities?.[stat] ?? 0;
   const total = die.total + bonus;
   const success = die.total !== 1 && (die.total === 20 || total >= spell.castDC);
-  return { natural: die.total, bonus, stat, total, dc: spell.castDC, success };
+  return { natural: die.total, bonus, stat, total, dc: spell.castDC, success, focused };
 }
 
 // ---------------------------------------------------------------- parley & renown
@@ -188,8 +200,9 @@ export function dispositionLabel(rep) {
 }
 
 /** A CHA check to talk instead of fight. Nat 20 always lands, nat 1 never. */
-export function resolveParleyCheck(actor, dc, rng = Math.random) {
-  const die = d20({ rng });
+export function resolveParleyCheck(actor, dc, rng = Math.random, opts = {}) {
+  // Silver Tongue (talent) grants advantage on CHA social checks.
+  const die = d20({ rng, advantage: !!opts.advantage });
   const bonus = actor.abilities?.cha ?? 0;
   const total = die.total + bonus;
   const success = die.total !== 1 && (die.total === 20 || total >= dc);
