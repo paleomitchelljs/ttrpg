@@ -519,9 +519,15 @@ export function move(dx, dy) {
   // on it. Checked before the wall block below.
   const door = d.doors?.find((dr) => dr.x === x && dr.y === y);
   if (door) {
+    if (door.to === 'surface') {
+      // In a zone the exit is the entrance gate — don't end the delve outright.
+      // Let the player stash what they carry and keep exploring, or leave.
+      if (run.dungeon.zone) { emit([{ type: 'surface-prompt', carried: run.unbankedGold }]); return; }
+      bankAndWin([]);
+      return;
+    }
     const events = [];
-    if (door.to === 'surface') bankAndWin(events);
-    else travelThrough(door, events);
+    travelThrough(door, events);
     return;
   }
 
@@ -743,19 +749,13 @@ export function moveTo(x, y) {
   if (Math.abs(dx) + Math.abs(dy) === 1) move(dx, dy);
 }
 
-function bankAndWin(events) {
-  const run = state.run;
-  // In zones, the surface door sits by the entrance: no free exit bonus
-  // for stepping in and straight back out.
-  const earned = !run.dungeon.zone || (run.encountersCleared ?? 0) > 0;
-  const bonus = earned ? endOfRunBonus(run.dungeon.depth) : 0;
-  const banked = run.unbankedGold + bonus;
-  state.meta.hoardGold += banked;
-  state.meta.runsCompleted += 1;
-  // Gold is XP: everyone on the delve grows by what was banked.
-  for (const slot of run.party) {
+// Gold is XP: everyone on the delve grows by what was just secured. Returns any
+// level-up events to fold into the batch.
+function grantBankingXp(amount) {
+  const events = [];
+  for (const slot of state.run.party) {
     const g = growthFor(slot.id);
-    g.xp += banked;
+    g.xp += amount;
     const newLevel = levelForXp(g.xp);
     if (newLevel > g.level) {
       g.pending += newLevel - g.level;
@@ -763,12 +763,43 @@ function bankAndWin(events) {
       events.push({ type: 'level-up', charId: slot.id, who: heroById(slot.id)?.name ?? slot.id, level: newLevel });
     }
   }
+  return events;
+}
+
+function bankAndWin(events) {
+  const run = state.run;
+  // Zones exit through their entrance gate, so there's no "reached the exit"
+  // bonus — only procedural depths reward the climb back out.
+  const bonus = run.dungeon.zone ? 0 : endOfRunBonus(run.dungeon.depth);
+  const banked = run.unbankedGold + bonus;
+  state.meta.hoardGold += banked;
+  state.meta.runsCompleted += 1;
+  events.push(...grantBankingXp(banked));
   run.phase = 'won';
   run.lastResult = { banked, bonus, hoard: state.meta.hoardGold, depth: run.dungeon.depth };
   events.push({ type: 'banked', ...run.lastResult });
   checkTierUp(events);
   persist(state);
   emit(events);
+}
+
+/** Stash carried gold into the safe hoard but keep delving (zone exit gate). */
+export function stashHoard() {
+  const run = state.run;
+  if (!run || run.phase !== 'explore') return;
+  const stashed = run.unbankedGold;
+  run.unbankedGold = 0;
+  state.meta.hoardGold += stashed;
+  const events = grantBankingXp(stashed);
+  checkTierUp(events);
+  events.push({ type: 'stashed', stashed, hoard: state.meta.hoardGold });
+  persist(state);
+  emit(events);
+}
+
+/** Leave through the zone gate: bank everything and end the delve. */
+export function surfaceExit() {
+  if (state.run?.phase === 'explore') bankAndWin([]);
 }
 
 /** Hoard-gated growth: crossing a threshold at banking time grows the dragon. */

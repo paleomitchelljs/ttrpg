@@ -98,7 +98,7 @@ function showBankedOverlay(ev, events) {
             `${tierUp.to.hpMax} HP, armor ${tierUp.to.ac}, bite ${tierUp.to.attacks[0].damage}, breath ${tierUp.to.breath.damage}.`,
         }
       : null,
-    body: `You escaped ${inZone ? game.state.run.dungeon.zone.sub : `depth ${ev.depth}`} with ${ev.banked} gold (${ev.bonus} bonus for reaching the exit). Your hoard is now ${ev.hoard.toLocaleString()} gold.` +
+    body: `You escaped ${inZone ? game.state.run.dungeon.zone.sub : `depth ${ev.depth}`} with ${ev.banked} gold${ev.bonus > 0 ? ` (${ev.bonus} bonus for reaching the exit)` : ''}. Your hoard is now ${ev.hoard.toLocaleString()} gold.` +
       events.filter((e) => e.type === 'level-up').map((e) => ` ${e.who} reaches level ${e.level}!`).join(''),
     actions,
   });
@@ -212,6 +212,39 @@ game.subscribe((state, events) => {
           : `You wake to a lighter purse: a thief lifted ${ev.gold} gold while you slept.`,
         actions: [{ label: 'Blast!', onClick: () => ui.showOverlay('result-overlay', false) }],
       });
+    }
+    if (ev.type === 'surface-prompt') {
+      const close = () => ui.showOverlay('result-overlay', false);
+      const actions = ev.carried > 0
+        ? [{ label: `Stash ${ev.carried} gold & keep exploring`, onClick: () => { close(); game.stashHoard(); } }]
+        : [{ label: 'Keep exploring', onClick: close }];
+      actions.push({ label: 'Leave the temple', onClick: () => { close(); game.surfaceExit(); } });
+      ui.showResult({
+        title: 'The gate to the surface',
+        body: ev.carried > 0
+          ? `The broken gate opens on the daylit world above. You're carrying ${ev.carried} gold — stash it safe and keep delving, or head home.`
+          : 'The broken gate opens on the daylit world above.',
+        actions,
+      });
+    }
+    if (ev.type === 'stashed') {
+      ui.logExplore(
+        ev.stashed > 0
+          ? `You stash ${ev.stashed} gold through the gate. Your hoard is now ${ev.hoard.toLocaleString()} gold — safe.`
+          : 'Nothing to stash yet.',
+        'log-hit'
+      );
+      const tierUp = events.find((e) => e.type === 'tier-up');
+      if (tierUp) {
+        ui.showResult({
+          title: 'You have GROWN!',
+          growth: {
+            img: './assets/dragon-fire.png',
+            text: `Your hoard's warmth changes you… you are now a ${tierUp.to.label.toUpperCase()}!`,
+          },
+          actions: [{ label: 'Keep exploring', onClick: () => ui.showOverlay('result-overlay', false) }],
+        });
+      }
     }
     if (ev.type === 'banked') showBankedOverlay(ev, events);
   }
