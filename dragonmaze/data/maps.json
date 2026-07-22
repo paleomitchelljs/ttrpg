@@ -1948,7 +1948,7 @@
     },
     "portals": [
       {
-        "x": 7,
+        "x": 3,
         "y": 8,
         "to": "sewers-gumdrop",
         "label": "A dark shaft plunges into the sewers below. Climb down into the well?"

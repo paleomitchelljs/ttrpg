@@ -298,7 +298,7 @@ export const ZONES = [
         doors: {},
         edges: { n: 'courtyard-nw', e: 'courtyard-se' },
         portals: [
-          { x: 7, y: 8, to: 'sewers-gumdrop', label: 'A dark shaft plunges into the sewers below. Climb down into the well?' },
+          { x: 3, y: 8, to: 'sewers-gumdrop', label: 'A dark shaft plunges into the sewers below. Climb down into the well?' },
         ],
         table: [
           { id: 'lizardfolk-warrior', weight: 3, packMax: 2 },

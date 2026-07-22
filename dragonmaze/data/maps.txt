@@ -297,7 +297,7 @@
 
 == lost-temple / courtyard-sw  [The Sunken Well]
    15x11  theme grass  difficulty 2
-   start 3,8 | edges n:courtyard-nw e:courtyard-se | portal->sewers-gumdrop 7,8
+   start 3,8 | edges n:courtyard-nw e:courtyard-se | portal->sewers-gumdrop 3,8
    table: lizardfolk-warrior(w3,≤2)  giant-spider(w2,≤2)  giant-rat(w1,≤3)
    objects (type · identity · @cell):
      decor    courtyard-well (structure) 1.1x1.1 rot0        @3,8
