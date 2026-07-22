@@ -115,7 +115,9 @@ function renderProps(container, run) {
   const frag = document.createDocumentFragment();
   for (const p of d.props ?? []) {
     const src = TILES[p.key];
-    if (!src || !run.explored[`${p.x},${p.y}`]) continue;
+    // Anchor on the cell the prop sits in, so fractionally-positioned props
+    // (fine-nudged decor) still reveal with their tile.
+    if (!src || !run.explored[`${Math.floor(p.x)},${Math.floor(p.y)}`]) continue;
     const el = document.createElement('div');
     el.className = 'map-prop';
     el.style.left = `calc(var(--tile) * ${p.x})`;
@@ -155,7 +157,13 @@ function fillTile(tile, run, x, y) {
     return;
   }
   if (d.loot.some((l) => l.x === x && l.y === y)) {
-    tile.textContent = '💰';
+    // In the grass courtyard, a loot tile shows the loose-coins art; elsewhere
+    // it's the coin glyph.
+    if (d.theme === 'grass' && TILES['courtyard-gold-pile']) {
+      tile.innerHTML = `<div class="tile-loot"><img src="${TILES['courtyard-gold-pile']}" alt="gold"></div>`;
+    } else {
+      tile.textContent = '💰';
+    }
   }
 }
 

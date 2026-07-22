@@ -297,15 +297,7 @@ export const PLACEMENTS = {
         "rot": 0
       },
       {
-        "key": "wall-b",
-        "x": 7,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "wall-b",
+        "key": "courtyard-wall-top",
         "x": 8,
         "y": 0,
         "w": 1,
@@ -313,7 +305,7 @@ export const PLACEMENTS = {
         "rot": 0
       },
       {
-        "key": "wall-b",
+        "key": "courtyard-wall-top",
         "x": 9,
         "y": 0,
         "w": 1,
@@ -321,7 +313,7 @@ export const PLACEMENTS = {
         "rot": 0
       },
       {
-        "key": "wall-b",
+        "key": "courtyard-wall-top",
         "x": 10,
         "y": 0,
         "w": 1,
@@ -329,7 +321,7 @@ export const PLACEMENTS = {
         "rot": 0
       },
       {
-        "key": "wall-b",
+        "key": "courtyard-wall-top",
         "x": 11,
         "y": 0,
         "w": 1,
@@ -337,7 +329,7 @@ export const PLACEMENTS = {
         "rot": 0
       },
       {
-        "key": "wall-b",
+        "key": "courtyard-wall-top",
         "x": 12,
         "y": 0,
         "w": 1,
@@ -345,7 +337,7 @@ export const PLACEMENTS = {
         "rot": 0
       },
       {
-        "key": "wall-b",
+        "key": "courtyard-wall-top",
         "x": 13,
         "y": 0,
         "w": 1,
@@ -353,7 +345,7 @@ export const PLACEMENTS = {
         "rot": 0
       },
       {
-        "key": "wall-b",
+        "key": "courtyard-wall-top",
         "x": 14,
         "y": 0,
         "w": 1,
@@ -361,7 +353,7 @@ export const PLACEMENTS = {
         "rot": 0
       },
       {
-        "key": "wall-b",
+        "key": "courtyard-wall-top",
         "x": 5,
         "y": 0,
         "w": 1,
@@ -369,7 +361,7 @@ export const PLACEMENTS = {
         "rot": 0
       },
       {
-        "key": "wall-b",
+        "key": "courtyard-wall-top",
         "x": 4,
         "y": 0,
         "w": 1,
@@ -377,7 +369,7 @@ export const PLACEMENTS = {
         "rot": 0
       },
       {
-        "key": "wall-b",
+        "key": "courtyard-wall-top",
         "x": 3,
         "y": 0,
         "w": 1,
@@ -385,7 +377,7 @@ export const PLACEMENTS = {
         "rot": 0
       },
       {
-        "key": "wall-b",
+        "key": "courtyard-wall-top",
         "x": 2,
         "y": 0,
         "w": 1,
@@ -393,7 +385,7 @@ export const PLACEMENTS = {
         "rot": 0
       },
       {
-        "key": "wall-b",
+        "key": "courtyard-wall-top",
         "x": 1,
         "y": 0,
         "w": 1,
@@ -401,7 +393,7 @@ export const PLACEMENTS = {
         "rot": 0
       },
       {
-        "key": "wall-a",
+        "key": "courtyard-wall-corner",
         "x": 0,
         "y": 0,
         "w": 1,
@@ -409,87 +401,87 @@ export const PLACEMENTS = {
         "rot": 0
       },
       {
-        "key": "wall-b",
+        "key": "courtyard-wall-brick",
         "x": 0,
         "y": 1,
         "w": 1,
         "h": 1,
-        "rot": 270
+        "rot": 0
       },
       {
-        "key": "wall-b",
+        "key": "courtyard-wall-brick",
         "x": 0,
         "y": 2,
         "w": 1,
         "h": 1,
-        "rot": 270
+        "rot": 0
       },
       {
-        "key": "wall-b",
+        "key": "courtyard-wall-brick",
         "x": 0,
         "y": 3,
         "w": 1,
         "h": 1,
-        "rot": 270
+        "rot": 0
       },
       {
-        "key": "wall-b",
+        "key": "courtyard-wall-brick",
         "x": 0,
         "y": 4,
         "w": 1,
         "h": 1,
-        "rot": 270
+        "rot": 0
       },
       {
-        "key": "wall-b",
+        "key": "courtyard-wall-brick",
         "x": 0,
         "y": 5,
         "w": 1,
         "h": 1,
-        "rot": 270
+        "rot": 0
       },
       {
-        "key": "wall-b",
+        "key": "courtyard-wall-brick",
         "x": 0,
         "y": 6,
         "w": 1,
         "h": 1,
-        "rot": 270
+        "rot": 0
       },
       {
-        "key": "wall-b",
+        "key": "courtyard-wall-brick",
         "x": 0,
         "y": 7,
         "w": 1,
         "h": 1,
-        "rot": 270
+        "rot": 0
       },
       {
-        "key": "wall-b",
+        "key": "courtyard-wall-brick",
         "x": 0,
         "y": 8,
         "w": 1,
         "h": 1,
-        "rot": 270
+        "rot": 0
       },
       {
-        "key": "wall-b",
+        "key": "courtyard-wall-brick",
         "x": 0,
         "y": 9,
         "w": 1,
         "h": 1,
-        "rot": 270
+        "rot": 0
       },
       {
-        "key": "wall-b",
+        "key": "courtyard-wall-brick",
         "x": 0,
         "y": 10,
         "w": 1,
         "h": 1,
-        "rot": 270
+        "rot": 0
       },
       {
-        "key": "wall-b",
+        "key": "courtyard-wall-top",
         "x": 6,
         "y": 0,
         "w": 1,
@@ -501,6 +493,14 @@ export const PLACEMENTS = {
         "x": 7,
         "y": 4,
         "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-wall-gate",
+        "x": 7,
+        "y": 0,
+        "w": 1,
         "h": 1,
         "rot": 0
       }
@@ -559,6 +559,22 @@ export const PLACEMENTS = {
         "w": 1,
         "h": 2,
         "rot": 0
+      },
+      {
+        "key": "courtyard-wall-gate",
+        "x": 7,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-chest",
+        "x": 6.55,
+        "y": 3.95,
+        "w": 0.9,
+        "h": 0.9,
+        "rot": 0
       }
     ],
     "monsters": [
@@ -587,11 +603,11 @@ export const PLACEMENTS = {
   "courtyard-sw": {
     "decor": [
       {
-        "key": "well",
-        "x": 6,
-        "y": 7,
-        "w": 2,
-        "h": 2,
+        "key": "courtyard-well",
+        "x": 6.4,
+        "y": 6.9,
+        "w": 1.6,
+        "h": 1.6,
         "rot": 0
       },
       {
@@ -656,6 +672,14 @@ export const PLACEMENTS = {
         "y": 7,
         "w": 1,
         "h": 2,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-door-wood",
+        "x": 14,
+        "y": 5,
+        "w": 1,
+        "h": 1,
         "rot": 0
       }
     ],
