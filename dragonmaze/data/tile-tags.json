@@ -191,6 +191,18 @@
       64
     ]
   },
+  "courtyard-stone-cracked": {
+    "tags": [
+      "floor"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      515,
+      433,
+      64,
+      64
+    ]
+  },
   "courtyard-stone-floor": {
     "tags": [
       "floor"
@@ -215,6 +227,18 @@
       64
     ]
   },
+  "courtyard-wall-brick-top": {
+    "tags": [
+      "wall"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      587,
+      74,
+      66,
+      64
+    ]
+  },
   "courtyard-wall-corner": {
     "tags": [
       "wall",
@@ -226,6 +250,105 @@
       4,
       64,
       62
+    ]
+  },
+  "courtyard-wall-corner-bottom": {
+    "tags": [
+      "wall",
+      "corner"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      4,
+      289,
+      64,
+      64
+    ]
+  },
+  "courtyard-wall-crack": {
+    "tags": [
+      "wall"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      76,
+      74,
+      65,
+      64
+    ]
+  },
+  "courtyard-wall-crack2": {
+    "tags": [
+      "wall"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      149,
+      74,
+      66,
+      64
+    ]
+  },
+  "courtyard-wall-decor": {
+    "tags": [
+      "wall"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      223,
+      74,
+      65,
+      64
+    ]
+  },
+  "courtyard-wall-end-left": {
+    "tags": [
+      "wall",
+      "corner"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      515,
+      4,
+      64,
+      62
+    ]
+  },
+  "courtyard-wall-end-right": {
+    "tags": [
+      "wall",
+      "corner"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      443,
+      4,
+      64,
+      62
+    ]
+  },
+  "courtyard-wall-fill-edge-a": {
+    "tags": [
+      "wall"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      443,
+      146,
+      64,
+      64
+    ]
+  },
+  "courtyard-wall-fill-edge-b": {
+    "tags": [
+      "wall"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      515,
+      146,
+      64,
+      64
     ]
   },
   "courtyard-wall-gate": {
@@ -241,6 +364,55 @@
       62
     ]
   },
+  "courtyard-wall-grass-edge-a": {
+    "tags": [
+      "wall"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      443,
+      74,
+      64,
+      64
+    ]
+  },
+  "courtyard-wall-grass-edge-b": {
+    "tags": [
+      "wall"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      515,
+      74,
+      64,
+      64
+    ]
+  },
+  "courtyard-wall-side": {
+    "tags": [
+      "wall",
+      "corner"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      4,
+      74,
+      64,
+      64
+    ]
+  },
+  "courtyard-wall-side2": {
+    "tags": [
+      "wall"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      515,
+      289,
+      64,
+      64
+    ]
+  },
   "courtyard-wall-top": {
     "tags": [
       "wall"
@@ -251,6 +423,30 @@
       4,
       65,
       62
+    ]
+  },
+  "courtyard-wall-vine": {
+    "tags": [
+      "wall"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      296,
+      74,
+      66,
+      64
+    ]
+  },
+  "courtyard-wall-vine2": {
+    "tags": [
+      "wall"
+    ],
+    "sheet": "courtyard-sheet.png",
+    "box": [
+      370,
+      74,
+      65,
+      64
     ]
   },
   "courtyard-well": {
