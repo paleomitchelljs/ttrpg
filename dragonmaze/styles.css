@@ -797,6 +797,17 @@ button { font: inherit; }
   .combat-actions .attack-btn,
   .combat-actions .spell-select { min-height: 3rem; justify-content: center; }
   .btn-big { min-width: 0; width: 100%; }
+  /* Compact combat cards: shrink the portraits (and bar/text) so they don't
+     crowd or overrun the name and HP on a phone. */
+  .unit { gap: 0.05rem; }
+  .unit .combat-sprite { width: 44px; }
+  .unit.hero .combat-sprite { width: 50px; }
+  .unit.dragon .combat-sprite { width: 62px; }
+  .enemy-face { font-size: 1.5rem; width: 44px; }
+  .hp-bar { width: 3.4rem; height: 7px; }
+  .unit-name { font-size: 0.72rem; }
+  .hp-num { font-size: 0.68rem; }
+  .battle-stage { min-height: 0; padding: 0.6rem 0.7rem; }
 }
 
 body.show-dpad #dpad { display: grid; }
