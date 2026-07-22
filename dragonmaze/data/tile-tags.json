@@ -54,12 +54,12 @@
     "tags": [
       "prop"
     ],
-    "sheet": "courtyard-sheet.png",
+    "sheet": "decor-clean-sheet.png",
     "box": [
-      296,
-      289,
-      66,
-      64
+      80,
+      104,
+      168,
+      292
     ]
   },
   "courtyard-bush": {
@@ -80,12 +80,12 @@
       "prop",
       "treasure"
     ],
-    "sheet": "courtyard-sheet.png",
+    "sheet": "decor-clean-sheet.png",
     "box": [
-      881,
-      74,
-      66,
-      64
+      404,
+      184,
+      216,
+      192
     ]
   },
   "courtyard-door-plain": {
@@ -453,12 +453,12 @@
     "tags": [
       "structure"
     ],
-    "sheet": "courtyard-sheet.png",
+    "sheet": "decor-clean-sheet.png",
     "box": [
-      808,
-      505,
-      65,
-      63
+      744,
+      164,
+      224,
+      232
     ]
   },
   "gator-statue": {
