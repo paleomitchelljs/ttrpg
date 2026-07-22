@@ -393,7 +393,7 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
       if (!checkVictory(combat, events)) advanceTurn(combat, events);
       return events;
     }
-    const dmg = roll(spell.dice, rng).total + (spell.drain ? 0 : fireBonus(combat));
+    const dmg = roll(spell.dice, rng).total + (caster.spellPower ?? 0) + (spell.drain ? 0 : fireBonus(combat));
     const dealt = applyDamage(target, dmg, spell.drain ? 'physical' : 'fire', events);
     let drained = 0;
     if (spell.drain && dealt > 0 && caster.hp.current < caster.hp.max) {
@@ -428,7 +428,7 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
       hpAfter: target.hp.current,
     });
   } else if (spell.target === 'all-enemies') {
-    const total = roll(spell.dice, rng).total + fireBonus(combat);
+    const total = roll(spell.dice, rng).total + (caster.spellPower ?? 0) + fireBonus(combat);
     const targets = livingMonsters(combat);
     const results = [];
     for (const m of targets) {

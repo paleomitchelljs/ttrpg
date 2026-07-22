@@ -723,21 +723,12 @@ button { font: inherit; }
 .spell-menu {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.3rem;
   width: 100%;
-  max-width: 24rem;
+  max-width: 16rem;
 }
-.spell-choice {
-  display: flex;
-  align-items: center;
-  gap: 0.7rem;
-  text-align: left;
-  padding: 0.5em 0.9em;
-}
-.spell-choice .btn-icon { width: 1.4rem; height: 1.4rem; }
-.spell-choice-text { display: flex; flex-direction: column; line-height: 1.2; }
-.spell-choice-name { font-weight: bold; }
-.spell-choice-blurb { font-size: 0.8rem; font-weight: normal; opacity: 0.85; }
+.spell-choice { justify-content: center; text-align: center; min-height: 2.3rem; }
+.spell-back { align-self: center; opacity: 0.85; }
 
 /* Styled <select> — used by the character-sheet spell-slot pickers. */
 .spell-select {

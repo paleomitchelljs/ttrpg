@@ -840,24 +840,23 @@ function renderActions(els, combat, handlers, view) {
   if (view === SPELL_MENU) {
     const menu = document.createElement('div');
     menu.className = 'spell-menu';
+    // A plain list of names in small buttons — no blurbs (they overran the box
+    // on a phone). Back sits at the top so it's reachable without scrolling.
+    const back = document.createElement('button');
+    back.className = 'btn btn-small spell-back';
+    back.textContent = '← Back';
+    back.addEventListener('click', () => renderActions(els, combat, handlers, null));
+    menu.appendChild(back);
     for (const id of actor.spells) {
       const s = spellById(id);
       const burned = actor.burned.includes(id);
       const btn = document.createElement('button');
-      btn.className = 'btn spell-choice';
+      btn.className = 'btn btn-small spell-choice';
       btn.disabled = burned;
-      btn.innerHTML =
-        `${ICONS.spark}<span class="spell-choice-text">` +
-        `<span class="spell-choice-name">${s.name}${burned ? ' · spent' : ''}</span>` +
-        `<span class="spell-choice-blurb">${s.blurb}</span></span>`;
+      btn.textContent = burned ? `${s.name} · spent` : s.name;
       btn.addEventListener('click', () => castSpell(combat, handlers, s));
       menu.appendChild(btn);
     }
-    const back = document.createElement('button');
-    back.className = 'btn btn-small';
-    back.textContent = '← Back';
-    back.addEventListener('click', () => renderActions(els, combat, handlers, null));
-    menu.appendChild(back);
     els.actions.replaceChildren(menu);
     return;
   }

@@ -327,6 +327,8 @@ function sheetSubject(id) {
       pending: g.pending,
       next: nextLevelXp(g.level),
       learnable: learnableSpells(id),
+      caster: !!c.castStat,
+      hpPerLevel: rulesRef.hpPerLevel(c),
     },
     equip: equipInfo(id),
   };

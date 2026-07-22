@@ -184,17 +184,20 @@ export function showCharacterSheet(subject) {
 function growthHtml(subject) {
   if (!subject.growth) return '';
   const g = subject.growth;
-  let html = `<h3>Level ${g.level}</h3><p class="sheet-blurb">${g.xp} XP${g.next ? ` — next level at ${g.next}` : ' — at the summit'}</p>`;
+  let html = `<h3>Level ${g.level}</h3><p class="sheet-blurb">${g.xp} XP${g.next ? ` — next level at ${g.next}` : ' — at the summit'} · +${g.hpPerLevel} HP each level (automatic)</p>`;
   if (g.pending > 0) {
     const spellOpts = g.learnable
       .map((sp) => `<button class="zone-btn advance-btn" data-advance="spell" data-spell="${sp.id}">Learn ${sp.name}</button>`)
       .join('');
+    const mightOpt = g.caster
+      ? '<button class="zone-btn advance-btn" data-advance="spellpower">+1 spell damage</button>'
+      : '';
     html += `
       <p class="sheet-blurb">Level up! Choose ${g.pending} advance${g.pending > 1 ? 's' : ''}:</p>
       <div class="zone-buttons">
-        <button class="zone-btn advance-btn" data-advance="hp">+2 max HP</button>
         <button class="zone-btn advance-btn" data-advance="attack">+1 to hit</button>
-        <button class="zone-btn advance-btn" data-advance="ac">+1 AC</button>
+        <button class="zone-btn advance-btn" data-advance="damage">+1 damage</button>
+        ${mightOpt}
         ${spellOpts}
       </div>`;
   }

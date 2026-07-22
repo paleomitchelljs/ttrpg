@@ -30,6 +30,7 @@ import {
   tierAfterBanking,
   victoryDropChance,
   levelForXp,
+  hpPerLevel,
   FACTION_ENEMIES,
   parleyDC,
   dispositionLabel,
@@ -156,20 +157,27 @@ export function heroWithGrowth(id) {
   const base = heroById(id);
   if (!base) return null;
   const g = state.meta.heroGrowth[id];
-  if (!g || !g.choices.length) return base;
+  const level = g?.level ?? 1;
+  if (!g || (level <= 1 && !g.choices.length)) return base;
   const hero = {
     ...base,
     abilities: { ...base.abilities },
     attacks: base.attacks.map((a) => ({ ...a })),
     spells: [...base.spells],
+    spellPower: base.spellPower ?? 0,
   };
+  // Automatic toughness: every level past 1st adds class+CON HP.
+  hero.hpMax += hpPerLevel(base) * (level - 1);
   for (const choice of g.choices) {
-    if (choice.type === 'hp') hero.hpMax += 2;
-    if (choice.type === 'ac') hero.ac += 1;
     if (choice.type === 'attack') hero.attacks.forEach((a) => (a.toHit += 1));
+    if (choice.type === 'damage') hero.attacks.forEach((a) => (a.damage = bumpDamage(a.damage, 1)));
+    if (choice.type === 'spellpower') hero.spellPower += 1;
     if (choice.type === 'spell' && choice.spellId && !hero.spells.includes(choice.spellId)) {
       hero.spells.push(choice.spellId);
     }
+    // Legacy picks from older saves (HP/AC are no longer offered).
+    if (choice.type === 'hp') hero.hpMax += 2;
+    if (choice.type === 'ac') hero.ac += 1;
   }
   return hero;
 }
@@ -178,7 +186,9 @@ export function heroWithGrowth(id) {
 export function chooseAdvance(charId, type, spellId = null) {
   const g = growthFor(charId);
   if (g.pending <= 0) return;
-  if (!['hp', 'ac', 'attack', 'spell'].includes(type)) return;
+  // HP is automatic now; AC no longer scales (it ran away). Picks buff offense.
+  if (!['attack', 'damage', 'spell', 'spellpower'].includes(type)) return;
+  if (type === 'spellpower' && !heroById(charId)?.castStat) return;
   if (type === 'spell') {
     const spell = SPELLS.find((sp) => sp.id === spellId && sp.tome !== false);
     const known = heroWithGrowth(charId)?.spells ?? [];
@@ -186,14 +196,6 @@ export function chooseAdvance(charId, type, spellId = null) {
   }
   g.choices.push(type === 'spell' ? { type, spellId } : { type });
   g.pending -= 1;
-  // an HP advance helps immediately if this hero is mid-run
-  if (type === 'hp') {
-    const slot = state.run?.party.find((pm) => pm.id === charId);
-    if (slot) {
-      slot.hp.max += 2;
-      slot.hp.current += 2;
-    }
-  }
   persist(state);
   emit([{ type: 'advance-chosen', charId }]);
 }
@@ -758,8 +760,13 @@ function grantBankingXp(amount) {
     g.xp += amount;
     const newLevel = levelForXp(g.xp);
     if (newLevel > g.level) {
-      g.pending += newLevel - g.level;
+      const gained = newLevel - g.level;
+      g.pending += gained;
       g.level = newLevel;
+      // Automatic HP: each new level raises this hero's live pool right away.
+      const hp = hpPerLevel(heroById(slot.id)) * gained;
+      slot.hp.max += hp;
+      slot.hp.current += hp;
       events.push({ type: 'level-up', charId: slot.id, who: heroById(slot.id)?.name ?? slot.id, level: newLevel });
     }
   }

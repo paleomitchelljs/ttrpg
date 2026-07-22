@@ -23,7 +23,7 @@ import { ZONES } from '../data/zones.js';
 import { buildZoneDungeon } from '../src/world/zones.js';
 import { FAMILIARS } from '../data/familiars.js';
 import { ITEMS } from '../data/items.js';
-import { bumpDamage, victoryDropChance, levelForXp, LEVEL_XP } from '../src/engine/rules.js';
+import { bumpDamage, victoryDropChance, levelForXp, LEVEL_XP, hpPerLevel } from '../src/engine/rules.js';
 import * as gameState from '../src/state/gameState.js';
 import { portalToCompanion } from '../src/state/importHero.js';
 import { COMPANIONS, companionById } from '../data/party.js';
@@ -635,20 +635,28 @@ check('gold-as-XP levels follow the thresholds', () => {
 check('growth choices fold into the hero template', () => {
   const game = gameState;
   game.state.meta.heroGrowth = {
-    spawnee: { xp: 200, level: 3, pending: 0, choices: [{ type: 'hp' }, { type: 'hp' }, { type: 'ac' }, { type: 'attack' }, { type: 'spell', spellId: 'ember-bolt' }] },
+    spawnee: { xp: 200, level: 3, pending: 0, choices: [{ type: 'attack' }, { type: 'damage' }, { type: 'spellpower' }, { type: 'spell', spellId: 'ember-bolt' }, { type: 'hp' }, { type: 'ac' }] },
   };
   const grown = game.heroWithGrowth('spawnee');
   const base = companionById('spawnee');
-  assert.equal(grown.hpMax, base.hpMax + 4);
-  assert.equal(grown.ac, base.ac + 1);
+  // Auto HP: +hpPerLevel for each level past 1st (level 3 = 2 levels), plus a
+  // legacy +2 HP pick from an old save.
+  assert.equal(grown.hpMax, base.hpMax + hpPerLevel(base) * 2 + 2);
+  assert.equal(grown.ac, base.ac + 1, 'legacy AC pick still folds');
   assert.equal(grown.attacks[0].toHit, base.attacks[0].toHit + 1);
+  assert.equal(grown.attacks[0].damage, bumpDamage(base.attacks[0].damage, 1), '+1 damage pick');
+  assert.equal(grown.spellPower, 1, 'spell might raises spell damage');
   assert.ok(grown.spells.includes('ember-bolt'));
   assert.ok(grown.spells.includes('drain-life'), 'base spells kept');
 
-  // chooseAdvance guards: no pending -> no change; vampire spells unlearnable
-  game.chooseAdvance('spawnee', 'hp');
-  assert.equal(game.state.meta.heroGrowth.spawnee.choices.length, 5);
+  // chooseAdvance guards: no pending -> no change; HP/AC are no longer picks;
+  // vampire spells unlearnable.
+  const startLen = game.state.meta.heroGrowth.spawnee.choices.length;
+  game.chooseAdvance('spawnee', 'attack');
+  assert.equal(game.state.meta.heroGrowth.spawnee.choices.length, startLen, 'no pending -> no change');
   game.state.meta.heroGrowth.spawnee.pending = 1;
+  game.chooseAdvance('spawnee', 'hp');
+  assert.equal(game.state.meta.heroGrowth.spawnee.pending, 1, 'HP is automatic, not a pick');
   game.chooseAdvance('spawnee', 'spell', 'dominate-undead');
   assert.equal(game.state.meta.heroGrowth.spawnee.pending, 1, 'vampire powers cannot be chosen');
   game.chooseAdvance('spawnee', 'spell', 'healing-word');

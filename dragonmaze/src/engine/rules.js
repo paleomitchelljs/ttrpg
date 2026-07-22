@@ -133,6 +133,15 @@ export function levelForXp(xp) {
   return level;
 }
 
+// HP gained automatically per level, by class and CON: martials get a bigger
+// hit die than casters, plus their Constitution modifier (min 1). Applied on
+// every level-up so toughness scales without spending a pick on it.
+export function hpPerLevel(hero) {
+  const con = hero?.abilities?.con ?? 0;
+  const classBase = hero?.castStat ? 2 : 3; // casters d4-ish, martials d6-ish
+  return Math.max(1, classBase + con);
+}
+
 // ---------------------------------------------------------------- spells
 /**
  * Casting check: d20 + CHA vs the spell's castDC. Natural 20 always works,
