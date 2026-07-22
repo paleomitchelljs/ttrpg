@@ -25,6 +25,7 @@ import { FAMILIARS } from '../data/familiars.js';
 import { ITEMS } from '../data/items.js';
 import { bumpDamage, victoryDropChance, levelForXp, LEVEL_XP, hpPerLevel } from '../src/engine/rules.js';
 import * as gameState from '../src/state/gameState.js';
+import { migrate, SAVE_VERSION } from '../src/state/save.js';
 import { portalToCompanion } from '../src/state/importHero.js';
 import { COMPANIONS, companionById } from '../data/party.js';
 import { resolveSpellCast } from '../src/engine/rules.js';
@@ -752,6 +753,33 @@ check('companion walk strips exist for overworld duty', () => {
   for (const c of COMPANIONS) {
     assert.ok(c.walk && SPRITES[c.walk], `${c.id} walk strip`);
   }
+});
+
+check('persistent world state: migration, boss keys, flags, export round-trip', () => {
+  // v1 saves gain the new persistent fields
+  const m = migrate({ version: 1, meta: { hoardGold: 10 }, run: null });
+  assert.equal(m.version, SAVE_VERSION);
+  assert.deepEqual(m.meta.defeatedBosses, []);
+  assert.deepEqual(m.meta.flags, {});
+
+  // bosses carry a stable key for the no-respawn set
+  const zone = ZONES.find((z) => z.id === 'lost-temple');
+  let bossEnc = null;
+  for (let i = 0; i < zone.subregions.length && !bossEnc; i++) {
+    bossEnc = buildZoneDungeon('lost-temple', i, 'boss-seed').encounters.find((e) => e.bossKey);
+  }
+  assert.ok(bossEnc, 'some subregion places a boss with a bossKey');
+  assert.match(bossEnc.bossKey, /^lost-temple:.+:(boss|miniboss)$/);
+
+  // flags persist and survive an export -> import
+  const game = gameState;
+  game.setFlag('sealed-the-rift', true);
+  assert.equal(game.getFlag('sealed-the-rift'), true);
+  const code = game.exportSave();
+  game.setFlag('sealed-the-rift', false);
+  assert.ok(game.importSave(code), 'a valid save imports');
+  assert.equal(game.getFlag('sealed-the-rift'), true, 'flag restored from the save');
+  assert.ok(!game.importSave('not a save'), 'garbage is rejected');
 });
 
 console.log(`\n${passed} checks passed.`);

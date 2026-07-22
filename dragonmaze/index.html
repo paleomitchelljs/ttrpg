@@ -19,6 +19,7 @@
           <button id="btn-continue" class="btn btn-big" hidden>Continue</button>
         </div>
         <p id="title-hoard" class="title-hoard"></p>
+        <button id="btn-savedata" class="btn btn-small">Save data — export / import</button>
       </div>
 
       <div id="new-setup" hidden>
@@ -139,6 +140,31 @@
         <input id="import-file" type="file" accept=".json,application/json" hidden>
       </div>
       <div class="menu"><button id="party-close" class="btn">Done</button></div>
+    </div>
+  </div>
+  <div id="savedata-overlay" class="overlay" hidden>
+    <div class="result-box savedata-box">
+      <h2>Save data</h2>
+      <p class="sheet-blurb">Your progress — level-ups, items, hoard, and beaten bosses. Copy it somewhere safe, or paste one in to restore.</p>
+      <div class="savedata-section">
+        <p class="party-label">Export</p>
+        <textarea id="export-box" class="savedata-text" readonly rows="4"></textarea>
+        <div class="sheet-row">
+          <button id="btn-copy-save" class="zone-btn">Copy</button>
+          <button id="btn-download-save" class="zone-btn">Download file</button>
+        </div>
+      </div>
+      <div class="savedata-section">
+        <p class="party-label">Import</p>
+        <textarea id="import-box" class="savedata-text" rows="4" placeholder="Paste a save here…"></textarea>
+        <div class="sheet-row">
+          <button id="btn-import-save" class="zone-btn">Load pasted save</button>
+          <button id="btn-upload-save" class="zone-btn">Load file…</button>
+          <input id="import-save-file" type="file" accept=".json,application/json,text/plain" hidden>
+        </div>
+      </div>
+      <p id="savedata-status" class="zone-blurb"></p>
+      <div class="menu"><button id="savedata-close" class="btn">Done</button></div>
     </div>
   </div>
   <div id="dice-cinematic" class="dice-overlay" hidden></div>

@@ -509,6 +509,26 @@ button { font: inherit; }
 /* ------------------------------------------------------------- party panel */
 .party-box { text-align: left; max-width: min(560px, 96vw); }
 .party-box h2 { margin: 0 0 0.2rem; color: var(--gold); }
+
+/* Save-data export/import overlay */
+.savedata-box { text-align: left; width: min(560px, 94vw); }
+.savedata-box h2 { margin: 0 0 0.3rem; color: var(--gold); }
+.savedata-section { margin: 0.5rem 0; }
+.savedata-section .party-label { margin: 0.2rem 0; }
+.savedata-text {
+  width: 100%;
+  box-sizing: border-box;
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.7rem;
+  line-height: 1.35;
+  background: var(--panel-2);
+  color: var(--ink);
+  border: 2px solid #00000088;
+  border-radius: 8px;
+  padding: 0.5rem;
+  resize: vertical;
+}
+#savedata-status { min-height: 1.1rem; text-align: center; }
 .party-list { display: flex; flex-direction: column; gap: 0.4rem; margin: 0.6rem 0; max-height: 60vh; overflow-y: auto; }
 .party-card {
   display: flex;

@@ -59,6 +59,7 @@ export function buildZoneDungeon(zoneId, subIndex, seedString, partySize = 1) {
       monsterIds: [...sub.boss.monsterIds],
       bossName: sub.boss.name,
       bossDrops: [...(sub.boss.drops ?? [])],
+      bossKey: `${zoneId}:${sub.id}:boss`, // stable across rebuilds — for no-respawn
     });
   });
   (place.miniboss ?? []).forEach((b) => {
@@ -68,6 +69,7 @@ export function buildZoneDungeon(zoneId, subIndex, seedString, partySize = 1) {
       monsterIds: [...sub.miniboss.monsterIds],
       bossName: sub.miniboss.name,
       bossDrops: [...(sub.miniboss.drops ?? [])],
+      bossKey: `${zoneId}:${sub.id}:miniboss`,
     });
   });
   const loot = (place.loot ?? []).map((l, i) => ({

@@ -41,7 +41,7 @@ import {
   dispositionLabel,
 } from '../engine/rules.js';
 import { liveRNG } from '../engine/rng.js';
-import { loadSave, persist, clearSave } from './save.js';
+import { loadSave, persist, clearSave, exportJSON, importJSON } from './save.js';
 
 function freshMeta() {
   return {
@@ -59,6 +59,8 @@ function freshMeta() {
     inventory: [], // equippable items found in gleaming caches
     equipment: {}, // charKey -> { weapon, armor, trinket }
     customCharacters: [], // heroes imported from the portal's generator
+    defeatedBosses: [], // stable boss keys (zone:sub:role) that stay dead
+    flags: {}, // persistent world-state flags for quest progress
     settings: { hardcore: false, sound: false },
   };
 }
@@ -136,6 +138,8 @@ function normalizeMeta(meta) {
   meta.inventory ??= [];
   meta.equipment ??= {};
   meta.customCharacters ??= [];
+  meta.defeatedBosses ??= [];
+  meta.flags ??= {};
   if (meta.familiar && !meta.familiarsOwned.includes(meta.familiar)) meta.familiar = null;
   meta.inventory = meta.inventory.filter((id) => itemById(id));
   for (const slots of Object.values(meta.equipment)) {
@@ -346,6 +350,26 @@ export function continueGame() {
   }
 }
 
+/** The whole save as a portable string (persistent meta + an in-progress
+ *  delve). Paste it back via importSave to move a game between devices. */
+export function exportSave() {
+  return exportJSON(state);
+}
+
+/** Load a pasted/exported save string. Returns true on success. */
+export function importSave(raw) {
+  let data = null;
+  try { data = importJSON(raw); } catch { return false; }
+  if (!data || !data.meta || typeof data.meta.hoardGold !== 'number') return false;
+  state.meta = normalizeMeta(data.meta);
+  state.run = data.run && data.run.phase === 'explore' ? { ...data.run, combat: null } : null;
+  state.hasSave = true;
+  state.screen = 'title';
+  persist(state);
+  emit([{ type: 'imported' }]);
+  return true;
+}
+
 /** Most companions that may join the dragon on one delve. */
 export const PARTY_CAP = 4;
 
@@ -374,14 +398,49 @@ export function setParty(companionIds) {
   emit([{ type: 'party-changed' }]);
 }
 
+// Bosses already beaten stay beaten: strip their encounters from a freshly
+// built dungeon (keyed by the stable bossKey). Procedural mazes have no keys,
+// so this is a no-op there.
+function pruneDefeated(dungeon) {
+  const dead = new Set(state.meta.defeatedBosses ?? []);
+  if (dead.size) dungeon.encounters = dungeon.encounters.filter((e) => !(e.bossKey && dead.has(e.bossKey)));
+  return dungeon;
+}
+
+// ---------------------------------------------------------------- world flags
+// Persistent, exported-with-the-save booleans/values for quest progress. Set
+// them from quest completion or scripted events; read them anywhere to change
+// the world.
+export function getFlag(name) {
+  return state.meta.flags?.[name];
+}
+export function setFlag(name, value = true) {
+  state.meta.flags ??= {};
+  state.meta.flags[name] = value;
+  persist(state);
+  emit([{ type: 'flag-set', name, value }]);
+}
+
+// EXTENSION POINT: quest flags can weaken a specific boss right before its fight
+// (called from beginCombat with the boss's freshly-built combatants + its
+// encounter, whose `bossKey` identifies it). No rules are wired yet — add them
+// here, e.g.:
+//   if (encounter.bossKey === 'lost-temple:summoning-chamber:boss'
+//       && getFlag('sealed-the-rift')) {
+//     for (const m of monsters) { m.hp.max = Math.round(m.hp.max * 0.7); m.hp.current = m.hp.max; m.ability = null; }
+//   }
+function applyWorldFlags(monsters, encounter) {
+  void monsters; void encounter; // no world rules wired yet
+}
+
 export function enterLabyrinth(seed) {
   const depth = state.meta.runsCompleted + 1;
   const tier = tierByName(state.meta.tier);
   const partyIds = (state.meta.party ?? []).filter((id) => heroById(id));
   const zonePick = state.meta.zone;
-  const dungeon = zonePick
+  const dungeon = pruneDefeated(zonePick
     ? buildZoneDungeon(zonePick.zoneId, 0, seed, 1 + partyIds.length)
-    : generateDungeon(seed, depth, 1 + partyIds.length);
+    : generateDungeon(seed, depth, 1 + partyIds.length));
   // The party can delve alone, on the dragon's behalf — but never empty.
   const partyMode = state.meta.mode === 'party' && partyIds.length > 0;
   const dragonMax = tier.hpMax + equipmentMod('dragon', 'hpMax');
@@ -668,7 +727,7 @@ function travelThrough(originDoor, events) {
   const fromSub = run.dungeon.subId;
   const idx = zone.subregions.findIndex((sr) => sr.id === originDoor.to);
   if (idx < 0) return;
-  const dungeon = buildZoneDungeon(zone.id, idx, run.dungeon.seed, 1 + run.party.length);
+  const dungeon = pruneDefeated(buildZoneDungeon(zone.id, idx, run.dungeon.seed, 1 + run.party.length));
   run.dungeon = dungeon;
   const back = dungeon.doors.find((dd) => dd.to === fromSub);
   run.playerPos = back ? { ...back.entry } : { ...dungeon.start };
@@ -691,7 +750,7 @@ export function usePortal(to) {
   const fromSub = run.dungeon.subId;
   const idx = zone.subregions.findIndex((sr) => sr.id === to);
   if (idx < 0) return;
-  const dungeon = buildZoneDungeon(zone.id, idx, run.dungeon.seed, 1 + run.party.length);
+  const dungeon = pruneDefeated(buildZoneDungeon(zone.id, idx, run.dungeon.seed, 1 + run.party.length));
   run.dungeon = dungeon;
   const back = dungeon.doors.find((dd) => dd.to === fromSub);
   run.playerPos = back ? { ...back.entry } : { ...dungeon.start };
@@ -723,7 +782,7 @@ function travelEdge(dir, destSubId, lane, events) {
   if (!zone) return;
   const idx = zone.subregions.findIndex((sr) => sr.id === destSubId);
   if (idx < 0) return;
-  const dungeon = buildZoneDungeon(zone.id, idx, run.dungeon.seed, 1 + run.party.length);
+  const dungeon = pruneDefeated(buildZoneDungeon(zone.id, idx, run.dungeon.seed, 1 + run.party.length));
   run.dungeon = dungeon;
   run.playerPos = arrivalTile(dungeon, dir, lane);
   run.explored = {};
@@ -962,6 +1021,7 @@ function beginCombat(encounter) {
     heroes.push(c);
   }
   const monsters = encounter.monsterIds.map((id) => makeCombatant(monsterById(id)));
+  applyWorldFlags(monsters, encounter); // quest flags may weaken a specific boss
   const { combat, events } = createCombat(heroes, monsters, liveRNG, encounter.bossName ?? null);
   // Knowledge check (Shadowdark lore): one silent party INT roll per kind of foe
   // sizes it up. Higher totals reveal more in the inspect popup (name -> stats &
@@ -1105,6 +1165,10 @@ function finishCombat(events) {
       const enc = run.dungeon.encounters[idx];
       bossName = enc.bossName ?? null;
       bossDrops = enc.bossDrops ?? null;
+      // A named boss stays dead across future visits.
+      if (enc.bossKey && !state.meta.defeatedBosses.includes(enc.bossKey)) {
+        state.meta.defeatedBosses.push(enc.bossKey);
+      }
       run.dungeon.encounters.splice(idx, 1);
       run.playerPos = { x: enc.x, y: enc.y };
       reveal(run);

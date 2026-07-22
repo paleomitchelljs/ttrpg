@@ -4,13 +4,19 @@
 // resumes from just before the fight.
 
 const KEY = 'red-dragon-labyrinth';
-export const SAVE_VERSION = 1;
+export const SAVE_VERSION = 2;
 
 export function migrate(data) {
   if (!data || typeof data !== 'object') return null;
   if (typeof data.version !== 'number') return null;
+  // v1 -> v2: add the persistent world-state fields (defeated bosses + flags).
+  if (data.version === 1 && data.meta) {
+    data.meta.defeatedBosses ??= [];
+    data.meta.flags ??= {};
+    data.version = 2;
+  }
   if (data.version === SAVE_VERSION) return data;
-  // Future: step old versions forward here. Unknown versions start fresh.
+  // Future: step older versions forward above. Unknown versions start fresh.
   return null;
 }
 

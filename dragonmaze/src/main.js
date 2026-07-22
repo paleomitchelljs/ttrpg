@@ -428,6 +428,61 @@ ui.el('party-overlay').addEventListener('click', (ev) => {
 ui.el('sheet-overlay').addEventListener('click', (ev) => {
   if (ev.target === ui.el('sheet-overlay')) ui.showOverlay('sheet-overlay', false);
 });
+
+// ---- save data: export (copy / download) + import (paste / file)
+const savedataStatus = (msg, ok = true) => {
+  const el = ui.el('savedata-status');
+  el.textContent = msg;
+  el.style.color = ok ? '' : '#ff9d8a';
+};
+ui.el('btn-savedata').addEventListener('click', () => {
+  ui.el('export-box').value = game.exportSave();
+  ui.el('import-box').value = '';
+  savedataStatus('');
+  ui.showOverlay('savedata-overlay', true);
+});
+ui.el('savedata-close').addEventListener('click', () => ui.showOverlay('savedata-overlay', false));
+ui.el('savedata-overlay').addEventListener('click', (ev) => {
+  if (ev.target === ui.el('savedata-overlay')) ui.showOverlay('savedata-overlay', false);
+});
+ui.el('btn-copy-save').addEventListener('click', async () => {
+  const box = ui.el('export-box');
+  box.select();
+  try {
+    await navigator.clipboard.writeText(box.value);
+    savedataStatus('Copied to clipboard.');
+  } catch {
+    try { document.execCommand('copy'); savedataStatus('Copied.'); }
+    catch { savedataStatus('Select the text above and copy it manually.', false); }
+  }
+});
+ui.el('btn-download-save').addEventListener('click', () => {
+  const blob = new Blob([ui.el('export-box').value], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'red-dragon-save.json';
+  a.click();
+  URL.revokeObjectURL(url);
+  savedataStatus('Saved red-dragon-save.json.');
+});
+const doImportSave = (raw) => {
+  if (raw && game.importSave(raw)) {
+    savedataStatus('Save loaded! Your hoard and progress are restored.');
+    setTimeout(() => ui.showOverlay('savedata-overlay', false), 900);
+  } else {
+    savedataStatus("That doesn't look like a valid save.", false);
+  }
+};
+ui.el('btn-import-save').addEventListener('click', () => doImportSave(ui.el('import-box').value.trim()));
+ui.el('btn-upload-save').addEventListener('click', () => ui.el('import-save-file').click());
+ui.el('import-save-file').addEventListener('change', async (ev) => {
+  const file = ev.target.files?.[0];
+  ev.target.value = '';
+  if (!file) return;
+  try { doImportSave((await file.text()).trim()); }
+  catch { savedataStatus('Could not read that file.', false); }
+});
 ui.el('hud-tier').addEventListener('click', () => openSheet('dragon'));
 ui.el('hud-tier').style.cursor = 'pointer';
 
