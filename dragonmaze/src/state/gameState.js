@@ -648,7 +648,7 @@ export function move(dx, dy) {
   // A portal (the well): walking into it asks before it whisks you away.
   const portal = d.portals?.find((p) => p.x === x && p.y === y);
   if (portal) {
-    emit([{ type: 'portal-prompt', to: portal.to, label: portal.label }]);
+    emit([{ type: 'portal-prompt', to: portal.to, title: portal.title, label: portal.label }]);
     return;
   }
 

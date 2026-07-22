@@ -2,9 +2,11 @@
 // placed on a map, keyed by subregion id:
 //   { subId: { decor:  [{ key, x, y, w, h, rot }],
 //              monsters:[{ x, y, id? }],   loot:    [{ x, y, item? }],
-//              boss:    [{ x, y }],        miniboss:[{ x, y }] } }
+//              boss:    [{ x, y }],        miniboss:[{ x, y }],
+//              portals: [{ x, y, to, title?, label? }] } }
 // A monster/loot with no id/item rolls from the region table at load; a
-// pinned id/item is authored here. decor is cosmetic. Safe to hand-edit.
+// pinned id/item is authored here. A portal is a walk-onto tile that prompts
+// travel to `to` (another subregion). decor is cosmetic. Safe to hand-edit.
 export const PLACEMENTS = {
   "sunken-gate": {
     "monsters": [
@@ -1223,6 +1225,15 @@ export const PLACEMENTS = {
       {
         "x": 6,
         "y": 6
+      }
+    ],
+    "portals": [
+      {
+        "x": 3,
+        "y": 8,
+        "to": "sewers-gumdrop",
+        "title": "The Sunken Well",
+        "label": "A dark shaft plunges into the sewers below. Climb down into the well?"
       }
     ]
   },

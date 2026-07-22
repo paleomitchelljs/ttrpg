@@ -41,6 +41,8 @@ function manifest(zone, sub, i, placements) {
     objects.push({ type: 'monster', x: m.x, y: m.y, ...(m.id ? { id: m.id, name: monsterById(m.id)?.name ?? null } : { roll: true }) });
   for (const l of P.loot ?? [])
     objects.push({ type: 'loot', x: l.x, y: l.y, ...(l.item ? { id: l.item, name: itemById(l.item)?.name ?? null } : { roll: true }) });
+  for (const p of P.portals ?? [])
+    objects.push({ type: 'portal', x: p.x, y: p.y, to: p.to ?? null, title: p.title ?? null });
   for (const b of P.boss ?? [])
     objects.push({ type: 'boss', x: b.x, y: b.y, name: sub.boss?.name ?? null, pack: sub.boss?.monsterIds ?? [], drops: sub.boss?.drops ?? [] });
   for (const b of P.miniboss ?? [])
@@ -48,14 +50,14 @@ function manifest(zone, sub, i, placements) {
   return {
     zone: zone.id, sub: sub.id, name: sub.name, index: i,
     size: { w: W, h: H }, theme: sub.theme ?? null, difficulty: sub.difficulty,
-    start, doors, edges: sub.edges ?? null, portals: sub.portals ?? [],
+    start, doors, edges: sub.edges ?? null, portals: P.portals ?? sub.portals ?? [],
     table: (sub.table ?? []).map((t) => ({ id: t.id, weight: t.weight, packMax: t.packMax ?? 1 })),
     boss: sub.boss ?? null, miniboss: sub.miniboss ?? null,
     objects,
   };
 }
 
-const MARK = { monster: 'M', loot: 'L', boss: 'B', miniboss: 'b', decor: 'd' };
+const MARK = { monster: 'M', loot: 'L', boss: 'B', miniboss: 'b', decor: 'd', portal: 'P' };
 
 // geometry ASCII with placements stamped back onto their cells
 function grid(sub, m) {
@@ -68,6 +70,7 @@ function ident(o) {
   if (o.type === 'decor') return `${o.id} (${o.tags.join('/') || 'untagged'}) ${o.w}x${o.h} rot${o.rot}`;
   if (o.type === 'monster') return o.roll ? 'roll (region table)' : `${o.id} — ${o.name ?? '??'}`;
   if (o.type === 'loot') return o.roll ? 'roll (gold/tome/den)' : `${o.id} — ${o.name ?? '??'}`;
+  if (o.type === 'portal') return `→ ${o.to ?? '(no destination)'}${o.title ? ` "${o.title}"` : ''}`;
   if (o.type === 'boss') return `${o.name ?? '(none defined)'} [${o.pack.join(', ')}]${o.drops.length ? ' drops ' + o.drops.join(', ') : ''}`;
   return `${o.name ?? '(none defined)'} [${o.pack.join(', ')}]`;
 }

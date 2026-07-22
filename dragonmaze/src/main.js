@@ -155,8 +155,8 @@ game.subscribe((state, events) => {
     }
     if (ev.type === 'portal-prompt') {
       ui.showResult({
-        title: 'The Sunken Well',
-        body: ev.label,
+        title: ev.title ?? 'The Sunken Well',
+        body: ev.label ?? 'A dark shaft plunges below. Descend?',
         actions: [
           { label: 'Descend', onClick: () => { ui.showOverlay('result-overlay', false); game.usePortal(ev.to); } },
           { label: 'Not now', onClick: () => ui.showOverlay('result-overlay', false) },

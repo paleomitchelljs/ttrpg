@@ -297,9 +297,8 @@ export const ZONES = [
         theme: 'grass',
         doors: {},
         edges: { n: 'courtyard-nw', e: 'courtyard-se' },
-        portals: [
-          { x: 3, y: 8, to: 'sewers-gumdrop', label: 'A dark shaft plunges into the sewers below. Climb down into the well?' },
-        ],
+        // The well's Descend portal now lives in placements.js (editor-managed), so
+        // it stays put with the well art. See data/placements.js → courtyard-sw.portals.
         table: [
           { id: 'lizardfolk-warrior', weight: 3, packMax: 2 },
           { id: 'giant-spider', weight: 2, packMax: 2 },

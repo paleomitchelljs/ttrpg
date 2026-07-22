@@ -30,13 +30,14 @@ const dirtyMaps = new Set(); // sub ids whose ASCII geometry changed → saved t
 
 // The five placement lists per subregion. 'decor' is free (w/h/rot, half-tile
 // snap); the four marker kinds are 1×1 cells snapped to the grid.
-const KINDS = ['decor', 'monsters', 'loot', 'boss', 'miniboss'];
-const MARKER_KINDS = ['monsters', 'loot', 'boss', 'miniboss'];
+const KINDS = ['decor', 'monsters', 'loot', 'boss', 'miniboss', 'portals'];
+const MARKER_KINDS = ['monsters', 'loot', 'boss', 'miniboss', 'portals'];
 const MARKERS = [
   { kind: 'monsters', label: '👹 Monster' },
   { kind: 'loot', label: '💰 Treasure' },
   { kind: 'boss', label: '💀 Boss' },
   { kind: 'miniboss', label: '👺 Mini' },
+  { kind: 'portals', label: '🕳️ Portal' },
 ];
 // Base-map cells you can paint — the ASCII geometry in zones.js ('.' floor,
 // '#' wall, 'S' start, 'E' surface exit). Door digits are appended per region
@@ -218,11 +219,13 @@ function objEl(t, i) {
 function markerIcon(kind, m) {
   if (kind === 'monsters') return (m.id && monsterById(m.id)?.emoji) || '👹';
   if (kind === 'loot') return m.item ? '💎' : '💰';
+  if (kind === 'portals') return '🕳️';
   return kind === 'boss' ? '💀' : '👺';
 }
 function markerCap(kind, m) {
   if (kind === 'monsters') return m.id ? (monsterById(m.id)?.name ?? m.id) : 'roll';
   if (kind === 'loot') return m.item ? (itemById(m.item)?.name ?? m.item) : 'roll';
+  if (kind === 'portals') return m.to ? (subById(m.to)?.name ?? m.to) : '⚠ set dest';
   if (kind === 'boss') return sub.boss ? 'boss' : '⚠ none';
   return sub.miniboss ? 'mini' : '⚠ none';
 }
@@ -345,6 +348,20 @@ function inspector() {
       </select></div>
       <div class="hint">Random rolls gold or a rare find. Pin a magic item to make this a fixed reward.</div>
       <button class="bigbtn del" data-a="del">Delete treasure</button>`;
+  } else if (sel.kind === 'portals') {
+    box.innerHTML = `
+      <h3>🕳️ Portal</h3>
+      ${xyRows(o)}
+      <div class="row"><label>To</label><select id="pdest">
+        <option value="">⚠ set destination</option>
+        ${zone.subregions.map((s) => `<option value="${s.id}" ${o.to === s.id ? 'selected' : ''}>${s.name ?? s.id}</option>`).join('')}
+      </select></div>
+      <div class="row"><label>Title</label><input id="ptitle" placeholder="The Sunken Well"></div>
+      <div class="row"><label>Prompt</label><input id="plabel" placeholder="Climb down into the well?"></div>
+      <div class="hint">Walking onto this tile asks the player before travelling to the chosen region — put it under the well/stairs art so the two move together.</div>
+      <button class="bigbtn del" data-a="del">Delete portal</button>`;
+    box.querySelector('#ptitle').value = o.title ?? '';
+    box.querySelector('#plabel').value = o.label ?? '';
   } else {
     const def = sel.kind === 'boss' ? sub.boss : sub.miniboss;
     box.innerHTML = `
@@ -363,6 +380,12 @@ function inspector() {
   if (pin) pin.onchange = () => { if (sel.kind === 'monsters') o.id = pin.value || undefined; else o.item = pin.value || undefined; render(); };
   const swap = box.querySelector('#tileSwap');
   if (swap) swap.onchange = () => { o.key = swap.value; render(); };
+  const dest = box.querySelector('#pdest');
+  if (dest) dest.onchange = () => { o.to = dest.value || undefined; render(); };
+  const ptitle = box.querySelector('#ptitle');
+  if (ptitle) ptitle.oninput = () => { o.title = ptitle.value.trim() || undefined; };
+  const plabel = box.querySelector('#plabel');
+  if (plabel) plabel.oninput = () => { o.label = plabel.value.trim() || undefined; };
 }
 function xyRows(o) {
   return `<div class="row"><label>X</label><input type="number" step="1" value="${o.x}" data-a="x"></div>

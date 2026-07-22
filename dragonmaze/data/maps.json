@@ -1951,6 +1951,7 @@
         "x": 3,
         "y": 8,
         "to": "sewers-gumdrop",
+        "title": "The Sunken Well",
         "label": "A dark shaft plunges into the sewers below. Climb down into the well?"
       }
     ],
@@ -2427,6 +2428,13 @@
         "x": 6,
         "y": 6,
         "roll": true
+      },
+      {
+        "type": "portal",
+        "x": 3,
+        "y": 8,
+        "to": "sewers-gumdrop",
+        "title": "The Sunken Well"
       }
     ]
   },

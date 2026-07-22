@@ -116,7 +116,10 @@ export function buildZoneDungeon(zoneId, subIndex, seedString, partySize = 1) {
     doors,
     edges: sub.edges ?? null, // { n|s|e|w: neighbouring subId } — walk off an edge
     props: (place.decor ?? []).map((p) => ({ ...p })), // hand-placed decor from data/placements.js
-    portals: (sub.portals ?? []).map((p) => ({ ...p })), // walk-into tiles that prompt to travel (e.g. the well)
+    // Walk-into tiles that prompt to travel (e.g. the well). Editor-placed portals
+    // live in placements.js (kept in sync with their decor); any authored the old
+    // way in zones.js still work as a fallback.
+    portals: (place.portals ?? sub.portals ?? []).map((p) => ({ ...p })),
     subId: sub.id,
     theme: sub.theme ?? null,
     zone: {
