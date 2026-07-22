@@ -59,7 +59,8 @@ subregion (`sub`) holds the geometry and the identity tables:
 { subId: { decor:  [{ key, x, y, w, h, rot }],   // cosmetic tiles (TILES[key])
            monsters:[{ x, y, id? }],              // id pinned, else rolls the region table
            loot:    [{ x, y, item? }],            // item pinned, else rolls gold/tome/den
-           boss:    [{ x, y }], miniboss:[{ x, y }] } }  // spawns sub.boss / sub.miniboss
+           boss:    [{ x, y }], miniboss:[{ x, y }],  // spawns sub.boss / sub.miniboss
+           portals: [{ x, y, to, title?, label? }] } }  // walk-onto travel trigger → sub `to`
 ```
 
 A monster/loot with **no** `id`/`item` rolls on the seeded world RNG at load (so
@@ -91,9 +92,12 @@ in `sub.doors`. Click a cell to paint it; **drag to paint a run**. Painting `Sta
 moves the single `S` (clears the old one). Painted regions are flagged dirty and
 written back to `zones.js` on **Save** (via `/save-map`).
 
-**Add to map** (`#markerbar`) — the four marker brushes: 👹 Monster · 💰 Treasure ·
-💀 Boss · 👺 Mini. Click a brush, then click the map to drop one. This is how you
-**add** monsters/treasure (not just move/delete them).
+**Add to map** (`#markerbar`) — the marker brushes: 👹 Monster · 💰 Treasure ·
+💀 Boss · 👺 Mini · 🕳️ Portal. Click a brush, then click the map to drop one. This
+is how you **add** monsters/treasure (not just move/delete them). A **Portal** is a
+walk-onto travel trigger (the well's Descend): drop it *under* the well/stairs art,
+then set its destination region (and optional title/prompt) in the inspector —
+because it's a placement now, it moves with the decor instead of orphaning.
 
 **Decor** (`#tagfilter` + `#swatches`) — tag-filtered tile swatches. Click one to
 arm it, click the map to place. New decor inherits the **last size & rotation** you
@@ -169,13 +173,12 @@ or it 400s and writes nothing. An identity save is byte-identical.
   `freshPlacements`) so the regenerated dumps reflect the just-saved geometry
   without a server restart. `dump-map`'s `renderText`/`manifests` take an optional
   `zones` arg for exactly this.
-- **Triggers are decoupled from their art.** Portals (`sub.portals`, e.g. the
-  well's Descend), doors (`sub.doors`), and edge exits (`sub.edges`) are fixed by
-  coordinate in `zones.js` and are **not** editable in the editor; the matching
-  decor is placed separately in `placements.js`. Moving the decor does **not** move
-  the trigger — realign the `zones.js` coordinate by hand (the SW well's Descend
-  broke exactly this way). A future improvement would be to surface portals as an
-  editable marker kind.
+- **Triggers vs their art.** **Portals** are now an editable marker (`placements.js`
+  → `portals`), so they move with their decor — place the Portal marker under the
+  well/stairs art. But **doors** (`sub.doors` + the map digit) and **edge exits**
+  (`sub.edges`) are still fixed in `zones.js` and are *not* editor-editable; if you
+  move a door's art, realign its `zones.js` coordinate by hand. (The SW well's
+  Descend broke this way before portals became editable.)
 - **`no-store` dev server** — never "fix" caching by removing it; it prevents the
   mixed-module bug.
 - **Repo lives in Dropbox CloudStorage** — `git` can hang on the File Provider and
