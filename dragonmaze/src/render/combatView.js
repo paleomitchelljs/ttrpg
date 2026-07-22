@@ -23,8 +23,8 @@ const DRAGON_FLY_STRIP = SPRITES['dragon-fly'];
 
 const delay = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// sentinel for the parley submenu inside renderActions
-const PARLEY_MENU = Symbol('parley');
+// sentinel: "Spell" was chosen, so renderActions shows the spellbook submenu
+const SPELL_MENU = Symbol('spell-menu');
 
 // ---------------------------------------------------------------- queue
 const batches = [];
@@ -673,6 +673,9 @@ function renderRoster(els, state) {
     ...combat.order.filter((c) => c.kind === 'monster').map((m) => unitEl(m, 'enemy', null))
   );
   els.player.replaceChildren(...heroesOf(combat).map((h) => unitEl(h, 'hero', null)));
+  // The target info strip is only meaningful while the player is choosing an
+  // action; keep it empty during the opening beats and enemy turns.
+  if (els.targetInfo) els.targetInfo.innerHTML = '';
 }
 
 export function renderCombat(els, state, handlers) {
@@ -690,10 +693,10 @@ export function renderCombat(els, state, handlers) {
       .map((m) => {
         const unit = unitEl(m, 'enemy', activeId);
         if (m.hp.current > 0 && !m.fled && m.id === targetId) unit.classList.add('targeted');
-        // Tap any enemy to inspect it; a living one also becomes the target.
+        // Tap a living enemy to make it the target; the info strip below the
+        // log then shows what the party knows about it (no popup to dismiss).
         unit.addEventListener('click', () => {
           if (m.hp.current > 0 && !m.fled) { targetId = m.id; renderCombat(els, state, handlers); }
-          handlers.onInspect?.(m.id);
         });
         return unit;
       })
@@ -707,15 +710,15 @@ export function renderCombat(els, state, handlers) {
     ...heroesOf(combat).map((h) => {
       const unit = unitEl(h, 'hero', activeId);
       if (h.hp.current > 0 && h.id === heroTargetId) unit.classList.add('ally-targeted');
-      // Tap a hero to inspect them; a living one also becomes the heal target.
+      // Tap a living hero to make them the heal target.
       unit.addEventListener('click', () => {
         if (h.hp.current > 0) { heroTargetId = h.id; renderCombat(els, state, handlers); }
-        handlers.onInspect?.(h.id);
       });
       return unit;
     })
   );
 
+  if (els.targetInfo) els.targetInfo.innerHTML = targetInfoHtml(combat);
   renderActions(els, combat, handlers, null);
 }
 
@@ -797,7 +800,31 @@ function foeName(c, combat) {
   return (combat.lore?.[c.templateId] ?? 0) >= 1 ? c.name : 'creature';
 }
 
-function renderActions(els, combat, handlers, targetSpell) {
+const ABILITY_TEXT = {
+  regenerate: 'regenerates',
+  relentless: 'shrugs off killing blows',
+  lifedrain: 'drains life',
+};
+
+// One-line readout of the current target, gated by the party's knowledge roll:
+// nothing identified -> "Unknown creature"; identified -> name + AC; a strong
+// roll (tier 2) also reveals weaknesses, resistances, and special tricks. Shows
+// in a strip by the action buttons so switching targets never opens a popup.
+function targetInfoHtml(combat) {
+  const t = combat.order.find((u) => u.id === targetId);
+  if (!t || t.kind !== 'monster' || t.hp.current <= 0 || t.fled) return '';
+  const tier = combat.lore?.[t.templateId] ?? 0;
+  if (tier <= 0) return '<span class="ti-name">Unknown creature</span>';
+  const parts = [`AC ${t.ac}`];
+  if (tier >= 2) {
+    if (t.vulnerable?.length) parts.push(`<span class="ti-weak">weak: ${t.vulnerable.join(', ')}</span>`);
+    if (t.resist?.length) parts.push(`resists ${t.resist.join(', ')}`);
+    if (t.ability && ABILITY_TEXT[t.ability]) parts.push(ABILITY_TEXT[t.ability]);
+  }
+  return `<span class="ti-name">${t.name}</span> · ${parts.join(' · ')}`;
+}
+
+function renderActions(els, combat, handlers, view) {
   if (combat.over || !isPlayerTurn(combat)) {
     const wait = document.createElement('div');
     wait.className = 'turn-note';
@@ -807,105 +834,113 @@ function renderActions(els, combat, handlers, targetSpell) {
   }
   const actor = currentCombatant(combat);
 
-  // Second step of casting: pick the spell's target. (PARLEY_MENU is handled
-  // in the parley block below, not here.)
-  if (targetSpell && targetSpell !== PARLEY_MENU) {
-    const buttons = [];
-    const targets =
-      targetSpell.target === 'enemy' ? livingMonsters(combat) : heroesOf(combat);
-    for (const t of targets) {
+  // "Spell" was chosen: swap the row for the actor's spellbook. A menu (rather
+  // than a cramped button label) has room for each spell's blurb and scales as
+  // the book grows — later it can group or sort by school.
+  if (view === SPELL_MENU) {
+    const menu = document.createElement('div');
+    menu.className = 'spell-menu';
+    for (const id of actor.spells) {
+      const s = spellById(id);
+      const burned = actor.burned.includes(id);
       const btn = document.createElement('button');
-      btn.className = 'btn attack-btn spell-btn';
-      btn.innerHTML = `${ICONS.spark}<span>${targetSpell.name} → ${t.name}</span>`;
-      btn.addEventListener('click', () => handlers.onCast(targetSpell.id, t.id));
-      buttons.push(btn);
+      btn.className = 'btn spell-choice';
+      btn.disabled = burned;
+      btn.innerHTML =
+        `${ICONS.spark}<span class="spell-choice-text">` +
+        `<span class="spell-choice-name">${s.name}${burned ? ' · spent' : ''}</span>` +
+        `<span class="spell-choice-blurb">${s.blurb}</span></span>`;
+      btn.addEventListener('click', () => castSpell(combat, handlers, s));
+      menu.appendChild(btn);
     }
-    const cancel = document.createElement('button');
-    cancel.className = 'btn btn-small';
-    cancel.textContent = 'Cancel';
-    cancel.addEventListener('click', () => renderActions(els, combat, handlers, null));
-    buttons.push(cancel);
-    els.actions.replaceChildren(...buttons);
+    const back = document.createElement('button');
+    back.className = 'btn btn-small';
+    back.textContent = '← Back';
+    back.addEventListener('click', () => renderActions(els, combat, handlers, null));
+    menu.appendChild(back);
+    els.actions.replaceChildren(menu);
     return;
   }
 
-  const buttons = [];
-  const verb = actor.kind === 'dragon' ? 'Bite' : 'Strike';
+  // Main action row: compact, uniform verbs. Which foe they hit is shown by the
+  // ◆ target marker and the info strip, so the labels stay short.
   const target = livingMonsters(combat).find((m) => m.id === targetId) ?? livingMonsters(combat)[0];
+  const row = document.createElement('div');
+  row.className = 'action-row';
+
   if (target) {
-    const btn = document.createElement('button');
-    btn.className = 'btn attack-btn';
-    btn.innerHTML = `${ICONS.fang}<span>${verb} the ${foeName(target, combat)}!${target.panicked ? ' (advantage!)' : ''}</span>`;
-    btn.addEventListener('click', () => handlers.onAttack(target.id));
-    buttons.push(btn);
-    if (livingMonsters(combat).length > 1) {
-      const note = document.createElement('div');
-      note.className = 'target-note';
-      note.textContent = 'tap an enemy to change target';
-      buttons.push(note);
-    }
+    const strike = document.createElement('button');
+    strike.className = 'btn act-btn';
+    strike.textContent = actor.kind === 'dragon' ? 'Bite' : 'Strike';
+    strike.title = `Attack the ${foeName(target, combat)}${target.panicked ? ' — panicked, advantage!' : ''}`;
+    if (target.panicked) strike.classList.add('has-edge');
+    strike.addEventListener('click', () => handlers.onAttack(target.id));
+    row.appendChild(strike);
   }
+
+  // The dragon's breath weapon and a caster's spellbook share the middle slot.
   if (actor.kind === 'dragon' && actor.breath) {
     const btn = document.createElement('button');
-    btn.className = 'btn attack-btn breath-btn';
+    btn.className = 'btn act-btn breath-btn';
+    btn.textContent = 'Breath';
     if (combat.breathReady) {
-      btn.innerHTML = `${ICONS.flame}<span>Fire Breath!</span>`;
-      btn.title = `${actor.breath.damage} fire damage to every enemy — they save vs DC ${actor.breath.dc} for half`;
+      btn.title = `${actor.breath.damage} fire to every enemy — they save vs DC ${actor.breath.dc} for half`;
       btn.addEventListener('click', () => handlers.onBreath());
     } else {
-      btn.innerHTML = `${ICONS.flame}<span>Recharging…</span>`;
+      btn.title = 'Recharging…';
       btn.disabled = true;
     }
-    buttons.push(btn);
-  }
-  // Intimidate the highlighted enemy: a CHA check to panic it into fleeing.
-  if (target) {
-    const btn = document.createElement('button');
-    btn.className = 'btn attack-btn intimidate-btn';
-    btn.innerHTML = `<span>Intimidate the ${foeName(target, combat)}</span>`;
-    btn.addEventListener('click', () => handlers.onIntimidate(target.id));
-    buttons.push(btn);
+    row.appendChild(btn);
   }
   if (actor.spells.length) {
-    const sel = document.createElement('select');
-    sel.className = 'spell-select';
-    sel.innerHTML =
-      `<option value="">Cast a spell…</option>` +
-      actor.spells
-        .map((id) => {
-          const s = spellById(id);
-          const burned = actor.burned.includes(id);
-          return `<option value="${id}" ${burned ? 'disabled' : ''}>${s.name}${burned ? ' (spent)' : ''}</option>`;
-        })
-        .join('');
-    sel.addEventListener('change', () => {
-      const spell = spellById(sel.value);
-      if (!spell) return;
-      sel.value = '';
-      if (spell.target === 'enemy') {
-        // single-target spells hit the highlighted enemy, same as attacks
-        const target = livingMonsters(combat).find((m) => m.id === targetId) ?? livingMonsters(combat)[0];
-        handlers.onCast(spell.id, target?.id ?? null);
-        return;
-      }
-      const targets = heroesOf(combat);
-      if (spell.target === 'all-enemies' || targets.length <= 1) {
-        handlers.onCast(spell.id, targets[0]?.id ?? null);
-      } else {
-        // Heal-style spell: cast on the highlighted ally (default: most wounded).
-        // Tap a hero on the stage to change who, like tapping an enemy.
-        handlers.onCast(spell.id, heroTargetId ?? targets[0]?.id ?? null);
-      }
-    });
-    buttons.push(sel);
+    const btn = document.createElement('button');
+    btn.className = 'btn act-btn spell-btn';
+    btn.textContent = 'Spell';
+    btn.addEventListener('click', () => renderActions(els, combat, handlers, SPELL_MENU));
+    row.appendChild(btn);
   }
-  // Flee: bail on an unwinnable fight (costs the gold you're carrying).
+
+  if (target) {
+    const btn = document.createElement('button');
+    btn.className = 'btn act-btn intimidate-btn';
+    btn.textContent = 'Intimidate';
+    btn.title = `A CHA check to panic the ${foeName(target, combat)} into fleeing`;
+    btn.addEventListener('click', () => handlers.onIntimidate(target.id));
+    row.appendChild(btn);
+  }
+
+  els.actions.replaceChildren(row);
+
+  if (target && livingMonsters(combat).length > 1) {
+    const note = document.createElement('div');
+    note.className = 'target-note';
+    note.textContent = 'tap an enemy to change target';
+    els.actions.appendChild(note);
+  }
+
+  // Flee: bail on an unwinnable fight (costs the gold you're carrying). Kept
+  // small and set apart so it isn't fat-fingered.
   const flee = document.createElement('button');
   flee.className = 'btn btn-small flee-btn';
   flee.textContent = 'Flee';
   flee.addEventListener('click', () => handlers.onFlee());
-  buttons.push(flee);
-  els.actions.replaceChildren(...buttons);
+  els.actions.appendChild(flee);
+}
+
+// Cast straight from the menu: single-target spells use the current target /
+// heal target the same way an attack does, so there's no extra targeting step.
+function castSpell(combat, handlers, spell) {
+  if (spell.target === 'enemy') {
+    const t = livingMonsters(combat).find((m) => m.id === targetId) ?? livingMonsters(combat)[0];
+    handlers.onCast(spell.id, t?.id ?? null);
+    return;
+  }
+  const allies = heroesOf(combat);
+  if (spell.target === 'all-enemies' || allies.length <= 1) {
+    handlers.onCast(spell.id, allies[0]?.id ?? null);
+  } else {
+    handlers.onCast(spell.id, heroTargetId ?? allies[0]?.id ?? null);
+  }
 }
 
 function appendLog(logEl, text, cls = '') {

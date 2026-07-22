@@ -18,6 +18,7 @@ import { SPRITES } from './assets-manifest.js';
 const combatEls = {
   enemies: ui.el('combat-enemies'),
   player: ui.el('combat-player'),
+  targetInfo: ui.el('combat-target-info'),
   actions: ui.el('combat-actions'),
   log: ui.el('combat-log'),
   overlay: ui.el('combat-overlay'),
@@ -61,10 +62,14 @@ function renderRoster(state) {
       const row = document.createElement('button');
       row.className = 'roster-row';
       row.dataset.sheet = m.key;
+      // Name lives on the character sheet (tap the row); the roster is just
+      // face + HP so it stays compact on a phone.
+      row.title = m.name;
+      row.setAttribute('aria-label', `${m.name}, ${m.hp.current} of ${m.hp.max} HP`);
       row.innerHTML = `
         <span class="roster-face sprite f${m.frames} flip"><img src="${m.sprite}" alt=""></span>
         <span class="roster-info">
-          <span class="roster-name">${m.name}${m.pending ? ' <span class="roster-levelup">level up!</span>' : ''}</span>
+          ${m.pending ? '<span class="roster-levelup">level up!</span>' : ''}
           <span class="hp-bar"><span class="hp-fill${pct <= 35 ? ' low' : ''}" style="width:${pct}%"></span></span>
         </span>
         <span class="roster-hp">${m.hp.current}/${m.hp.max}</span>`;
@@ -218,7 +223,6 @@ game.subscribe((state, events) => {
     onCast: (spellId, targetId) => game.cast(spellId, targetId),
     onIntimidate: (targetId) => game.intimidate(targetId),
     onFlee: () => { if (confirm("Flee the fight? You'll escape but drop the gold you're carrying.")) game.flee(); },
-    onInspect: (id) => showInspect(id),
     onSheet: (id) => openSheet(id),
     onBatchDone: (evts) => {
       const retreat = evts.find((e) => e.type === 'retreat');
@@ -231,35 +235,6 @@ game.subscribe((state, events) => {
     },
   });
 });
-
-// Tap a combatant to inspect it. Your own party is fully known; a foe reveals
-// as much as the party's knowledge roll earned (name -> stats & weaknesses).
-const ABILITY_TEXT = { regenerate: 'regenerates each turn', relentless: 'relentless (survives a killing blow)', lifedrain: 'drains life on a hit' };
-function showInspect(id) {
-  const combat = game.state.run?.combat?.combat;
-  const c = combat?.order.find((u) => u.id === id);
-  if (!c) return;
-  const close = [{ label: 'Close', onClick: () => ui.showOverlay('result-overlay', false) }];
-  const hp = `HP ${Math.max(0, c.hp.current)}/${c.hp.max}`;
-  const attacks = (c.attacks ?? []).map((a) => `${a.name} (${a.damage})`).join(', ');
-  if (c.kind !== 'monster') {
-    ui.showResult({ title: c.name, body: `AC ${c.ac} · ${hp}${attacks ? ` · ${attacks}` : ''}`, actions: close });
-    return;
-  }
-  const tier = combat.lore?.[c.templateId] ?? 0;
-  if (tier <= 0) {
-    ui.showResult({ title: 'Unknown creature', body: "Your party can't quite place this one — its name and nature are a mystery to you.", actions: close });
-    return;
-  }
-  const parts = [`AC ${c.ac}`, hp];
-  if (tier >= 2) {
-    if (attacks) parts.push(attacks);
-    if (c.resist?.length) parts.push(`resists ${c.resist.join(', ')}`);
-    if (c.vulnerable?.length) parts.push(`weak to ${c.vulnerable.join(', ')}`);
-    if (c.ability) parts.push(ABILITY_TEXT[c.ability] ?? c.ability);
-  }
-  ui.showResult({ title: c.name, body: parts.join(' · '), actions: close });
-}
 
 // ------------------------------------------------------------------ sheets
 function sheetSubject(id) {
