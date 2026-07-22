@@ -32,6 +32,35 @@ const runSlicer = (args) =>
   });
 const safeName = (s) => String(s).replace(/[^a-z0-9-]/gi, '').toLowerCase();
 
+// serve.mjs statically imports ZONES/PLACEMENTS via dump-map.mjs, and Node caches
+// that import — so after we rewrite a data file on disk we re-import it with a
+// cache-busting query to read the fresh version back (used to keep maps.txt/json
+// in step after a geometry edit, no server restart needed).
+const freshZones = async () => (await import('./data/zones.js?v=' + Date.now())).ZONES;
+const freshPlacements = async () => (await import('./data/placements.js?v=' + Date.now())).PLACEMENTS;
+
+// Surgically swap one subregion's `map: [...]` array in the zones.js source,
+// leaving every other line (comments, tables, bosses) byte-for-byte intact.
+// zones.js is hand-authored, so this validates hard and never partially writes:
+// rows must be equal-length strings of legal map chars with exactly one start.
+const MAP_ROW = /^[#.SE1-9]+$/;
+function rewriteZonesMap(source, subId, rows) {
+  if (!Array.isArray(rows) || rows.length === 0) throw new Error(`${subId}: empty map`);
+  const w = rows[0].length;
+  for (const r of rows) {
+    if (typeof r !== 'string' || r.length !== w) throw new Error(`${subId}: map rows must be equal-length strings`);
+    if (!MAP_ROW.test(r)) throw new Error(`${subId}: illegal character in row "${r}"`);
+  }
+  const starts = rows.join('').match(/S/g)?.length ?? 0;
+  if (starts !== 1) throw new Error(`${subId}: map needs exactly one S (found ${starts})`);
+  const esc = subId.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  // map strings contain no ']', so [\s\S]*? runs to the array's closing bracket.
+  const re = new RegExp(`(id:\\s*['"]${esc}['"][\\s\\S]*?map:\\s*\\[)[\\s\\S]*?(\\])`);
+  if (!re.test(source)) throw new Error(`${subId}: could not locate its map[] in zones.js`);
+  const block = '\n' + rows.map((r) => `          '${r}',`).join('\n') + '\n        ';
+  return source.replace(re, (_, open, close) => open + block + close);
+}
+
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
   '.js': 'text/javascript; charset=utf-8',
@@ -59,9 +88,30 @@ createServer(async (req, res) => {
         '// pinned id/item is authored here. decor is cosmetic. Safe to hand-edit.\n' +
         `export const PLACEMENTS = ${JSON.stringify(data, null, 2)};\n`;
       await writeFile(join(root, 'data', 'placements.js'), body);
-      // Keep the readable dump in step with every save, from the just-saved data.
-      await writeFile(join(root, 'data', 'maps.txt'), renderText(data) + '\n');
-      await writeFile(join(root, 'data', 'maps.json'), JSON.stringify(manifests(data), null, 2) + '\n');
+      // Keep the readable dump in step with every save, from the just-saved
+      // placements and the current (possibly edited-this-session) geometry.
+      const zones = await freshZones();
+      await writeFile(join(root, 'data', 'maps.txt'), renderText(data, null, zones) + '\n');
+      await writeFile(join(root, 'data', 'maps.json'), JSON.stringify(manifests(data, null, zones), null, 2) + '\n');
+      return json(res, { ok: true, regions: Object.keys(data).length });
+    }
+    // Persist base-map geometry edits (paint mode) back into zones.js — the one
+    // source of truth for map layout. Body is { subId: [rowString, …] }.
+    if (req.method === 'POST' && url.pathname === '/save-map') {
+      const data = await readBody(req);
+      const zonesPath = join(root, 'data', 'zones.js');
+      try {
+        let source = await readFile(zonesPath, 'utf8');
+        for (const id of Object.keys(data)) source = rewriteZonesMap(source, id, data[id]);
+        await writeFile(zonesPath, source);
+      } catch (e) {
+        return json(res, { ok: false, error: String(e.message || e) }, 400);
+      }
+      // Re-read the freshly written geometry + current placements for the dumps.
+      const zones = await freshZones();
+      const placements = await freshPlacements();
+      await writeFile(join(root, 'data', 'maps.txt'), renderText(placements, null, zones) + '\n');
+      await writeFile(join(root, 'data', 'maps.json'), JSON.stringify(manifests(placements, null, zones), null, 2) + '\n');
       return json(res, { ok: true, regions: Object.keys(data).length });
     }
     if (req.method === 'GET' && url.pathname === '/sheets') {

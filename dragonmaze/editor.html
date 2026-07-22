@@ -34,15 +34,35 @@
   .cell.door { background: #9a723c; box-shadow: inset 0 0 0 2px #d9b877; }
   .cell.edge { box-shadow: inset 0 0 0 2px #e7d27a; }
   .cell.mark { outline: 1px dashed #ffffff33; outline-offset: -3px; }
+  .cell.selcell { outline: 2px solid #ffd24a; outline-offset: -2px; box-shadow: inset 0 0 0 200px #ffd24a2e; z-index: 500; }
+  /* Theme-faithful base tiles: undecorated cells use the same art the game
+     renders (styles.css), so an empty grass tile is pixel-identical to placed
+     grass decor. Mirrors #map[data-theme] in styles.css. */
+  #stage[data-theme] .cell.floor, #stage[data-theme] .cell.wall { image-rendering: pixelated; }
+  #stage[data-theme='grass'] .cell.floor { background: url('./assets/tiles/courtyard-grass.png') 0 0 / 100% 100%; }
+  #stage[data-theme='grass'] .cell.wall  { background: url('./assets/tiles/courtyard-wall-brick.png') 0 0 / 100% 100%; }
+  #stage[data-theme='sand'] .cell.floor  { background: url('./assets/worldtiles/atlas/sand.png') 0 0 / 100% 100%; }
+  #stage[data-theme='sand'] .cell.wall   { background: url('./assets/worldtiles/atlas/sand_dark2.png') 0 0 / 100% 100%; box-shadow: inset 0 0 10px #00000066; }
+  #stage[data-theme='swamp'] .cell.floor { background: url('./assets/worldtiles/atlas/swamp_ground.png') 0 0 / 100% 100%; }
+  #stage[data-theme='swamp'] .cell.wall  { background: url('./assets/worldtiles/atlas/stone.png') 0 0 / 100% 100%; filter: brightness(0.7); }
+  #stage[data-theme='dark'] .cell.floor  { background: url('./assets/worldtiles/atlas/cave_floor.png') 0 0 / 100% 100%; }
+  #stage[data-theme='dark'] .cell.wall   { background: url('./assets/worldtiles/atlas/cave_floor_solid.png') 0 0 / 100% 100%; filter: brightness(0.55); }
   .obj { position: absolute; cursor: move; }
   .obj img { width: 100%; height: 100%; object-fit: contain; image-rendering: pixelated; display: block; pointer-events: none; transform-origin: center; }
   .obj.sel { outline: 2px solid #6cc0ff; outline-offset: 1px; }
+  /* palette section labels + the paint-tiles bar */
+  .palgroup { margin-bottom: 10px; }
+  .pallabel { font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: #8a86a0; margin: 0 0 4px; }
+  #tilebar { display: flex; flex-wrap: wrap; gap: 4px; }
+  #tilebar button { font-size: 11px; padding: 3px 8px; border-radius: 6px; background: #2e2b38; color: #d8d3e9; border: 1px solid #43404f; cursor: pointer; }
+  #tilebar button.on { background: #4a5a8a; border-color: #6c86d0; color: #fff; }
   /* marker brushes + tokens (monsters, loot, bosses) */
-  #markerbar { display: flex; flex-wrap: wrap; gap: 4px; margin-bottom: 8px; }
+  #markerbar { display: flex; flex-wrap: wrap; gap: 4px; }
   #markerbar button { font-size: 11px; padding: 3px 8px; border-radius: 6px; background: #2e2b38; color: #d8d3e9; border: 1px solid #43404f; cursor: pointer; }
   #markerbar button.on { background: #8a5a4a; border-color: #d0866c; color: #fff; }
   .marker { position: absolute; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: move; overflow: hidden; }
   .marker .ico { font-size: 20px; line-height: 1; filter: drop-shadow(0 1px 1px #000); pointer-events: none; }
+  .marker .ico-img { width: 84%; height: 84%; object-fit: contain; image-rendering: pixelated; filter: drop-shadow(0 1px 1px #000); pointer-events: none; }
   .marker .cap { font-size: 8px; line-height: 1.2; color: #e8e4ef; background: #0009; border-radius: 3px; padding: 0 3px; max-width: 100%; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; pointer-events: none; }
   .marker.monsters .cap { color: #ffd0c8; }
   .marker.loot .cap { color: #ffe6a0; }
@@ -77,7 +97,7 @@
   <span class="maponly">
     <label>Zone <select id="zoneSel"></select></label>
     <label>Region <select id="regionSel"></select></label>
-    <button class="primary" id="saveBtn">Save placements</button>
+    <button class="primary" id="saveBtn">Save</button>
     <button id="scaleDown">−</button><button id="scaleUp">+</button>
   </span>
   <span class="sheetonly" style="display:none">
@@ -88,9 +108,13 @@
 </header>
 <main>
   <div id="palette">
-    <div id="markerbar"></div>
-    <div id="tagfilter"></div>
-    <div id="swatches"></div>
+    <div class="palgroup"><div class="pallabel">Paint base tile</div><div id="tilebar"></div></div>
+    <div class="palgroup"><div class="pallabel">Add to map</div><div id="markerbar"></div></div>
+    <div class="palgroup">
+      <div class="pallabel">Decor</div>
+      <div id="tagfilter"></div>
+      <div id="swatches"></div>
+    </div>
   </div>
   <div id="stagewrap"><div id="stage"></div></div>
   <div id="sheetview"><div id="sheetwrap"><img id="sheetimg" alt=""></div></div>

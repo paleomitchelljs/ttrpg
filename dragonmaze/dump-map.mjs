@@ -91,10 +91,13 @@ function text(m, sub) {
   return L.join('\n');
 }
 
-// select subs matching an optional zone/sub id substring
-function pick(filter) {
+// select subs matching an optional zone/sub id substring. `zones` defaults to
+// the statically-imported ZONES, but serve.mjs passes a freshly re-imported
+// module after a geometry save so the dumps reflect edited map arrays without a
+// server restart (Node caches the static import).
+function pick(filter, zones = ZONES) {
   const out = [];
-  for (const zone of ZONES)
+  for (const zone of zones)
     for (let i = 0; i < zone.subregions.length; i++) {
       const sub = zone.subregions[i];
       if (filter && !`${zone.id}/${sub.id}`.includes(filter) && !zone.id.includes(filter) && !sub.id.includes(filter)) continue;
@@ -103,11 +106,11 @@ function pick(filter) {
   return out;
 }
 
-export function manifests(placements = PLACEMENTS, filter = null) {
-  return pick(filter).map(([z, s, i]) => manifest(z, s, i, placements));
+export function manifests(placements = PLACEMENTS, filter = null, zones = ZONES) {
+  return pick(filter, zones).map(([z, s, i]) => manifest(z, s, i, placements));
 }
-export function renderText(placements = PLACEMENTS, filter = null) {
-  return pick(filter).map(([z, s, i]) => text(manifest(z, s, i, placements), s)).join('\n\n');
+export function renderText(placements = PLACEMENTS, filter = null, zones = ZONES) {
+  return pick(filter, zones).map(([z, s, i]) => text(manifest(z, s, i, placements), s)).join('\n\n');
 }
 
 // CLI only when run directly (not when serve.mjs imports us)
