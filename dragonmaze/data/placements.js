@@ -1231,7 +1231,7 @@ export const PLACEMENTS = {
       {
         "x": 3,
         "y": 8,
-        "to": "sewers-gumdrop",
+        "to": "courtyard-sewer",
         "title": "The Sunken Well",
         "label": "A dark shaft plunges into the sewers below. Climb down into the well?"
       }
@@ -1667,42 +1667,6 @@ export const PLACEMENTS = {
       }
     ]
   },
-  "sewers-gumdrop": {
-    "monsters": [
-      {
-        "x": 7,
-        "y": 3
-      },
-      {
-        "x": 11,
-        "y": 4
-      },
-      {
-        "x": 3,
-        "y": 5
-      }
-    ],
-    "loot": [
-      {
-        "x": 12,
-        "y": 1
-      },
-      {
-        "x": 8,
-        "y": 6
-      },
-      {
-        "x": 4,
-        "y": 8
-      }
-    ],
-    "boss": [
-      {
-        "x": 10,
-        "y": 9
-      }
-    ]
-  },
   "summoning-chamber": {
     "monsters": [
       {
@@ -1744,6 +1708,805 @@ export const PLACEMENTS = {
       {
         "x": 7,
         "y": 8
+      }
+    ]
+  },
+  "courtyard-sewer": {
+    "decor": [
+      {
+        "key": "sewer-grate",
+        "x": 13,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-grate",
+        "x": 13,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "torch-lit",
+        "x": 2,
+        "y": 2,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "torch-lit",
+        "x": 11,
+        "y": 2,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "torch-lit",
+        "x": 2,
+        "y": 8,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "torch-lit",
+        "x": 11,
+        "y": 8,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-canal",
+        "x": 7,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-canal",
+        "x": 7,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-water",
+        "x": 4,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-water-edge",
+        "x": 10,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-column",
+        "x": 5,
+        "y": 4,
+        "w": 1,
+        "h": 1.6,
+        "rot": 0
+      },
+      {
+        "key": "sewer-column",
+        "x": 9,
+        "y": 4,
+        "w": 1,
+        "h": 1.6,
+        "rot": 0
+      },
+      {
+        "key": "sewer-slime",
+        "x": 9,
+        "y": 5,
+        "w": 0.9,
+        "h": 0.8,
+        "rot": 0
+      },
+      {
+        "key": "sewer-slime",
+        "x": 3,
+        "y": 9,
+        "w": 0.9,
+        "h": 0.8,
+        "rot": 0
+      },
+      {
+        "key": "sewer-mushrooms",
+        "x": 5,
+        "y": 7,
+        "w": 0.8,
+        "h": 0.8,
+        "rot": 0
+      },
+      {
+        "key": "sewer-skulls",
+        "x": 1,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "gargoyle-statue",
+        "x": 8,
+        "y": 5,
+        "w": 1,
+        "h": 1.4,
+        "rot": 0
+      },
+      {
+        "key": "rune-altar",
+        "x": 10,
+        "y": 7,
+        "w": 1.4,
+        "h": 1,
+        "rot": 0
+      }
+    ],
+    "monsters": [
+      {
+        "x": 3,
+        "y": 1
+      },
+      {
+        "x": 10,
+        "y": 3
+      },
+      {
+        "x": 4,
+        "y": 7
+      },
+      {
+        "x": 11,
+        "y": 7
+      }
+    ],
+    "boss": [
+      {
+        "x": 7,
+        "y": 3
+      }
+    ],
+    "loot": [
+      {
+        "x": 2,
+        "y": 9
+      },
+      {
+        "x": 12,
+        "y": 5
+      }
+    ],
+    "portals": [
+      {
+        "x": 13,
+        "y": 1,
+        "to": "under-palace-sewer",
+        "title": "A shaft to the palace drains",
+        "label": "A rusted ladder climbs toward the palace sump. Go up?"
+      },
+      {
+        "x": 13,
+        "y": 9,
+        "to": "under-maze-sewer",
+        "title": "A drop to the maze drains",
+        "label": "A broken drain falls away toward the maze cisterns. Climb down?"
+      }
+    ]
+  },
+  "under-maze-sewer": {
+    "decor": [
+      {
+        "key": "sewer-grate",
+        "x": 2,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-grate",
+        "x": 13,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "torch-lit",
+        "x": 3,
+        "y": 2,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "torch-lit",
+        "x": 11,
+        "y": 2,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "torch-lit",
+        "x": 3,
+        "y": 8,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "torch-lit",
+        "x": 11,
+        "y": 8,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-water",
+        "x": 5,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-water",
+        "x": 9,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-canal",
+        "x": 7,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-canal",
+        "x": 7,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-water-edge",
+        "x": 5,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-slime",
+        "x": 9,
+        "y": 7,
+        "w": 0.9,
+        "h": 0.8,
+        "rot": 0
+      },
+      {
+        "key": "sewer-slime",
+        "x": 5,
+        "y": 9,
+        "w": 0.9,
+        "h": 0.8,
+        "rot": 0
+      },
+      {
+        "key": "sewer-mushrooms",
+        "x": 11,
+        "y": 3,
+        "w": 0.8,
+        "h": 0.8,
+        "rot": 0
+      },
+      {
+        "key": "sewer-mushrooms",
+        "x": 3,
+        "y": 5,
+        "w": 0.8,
+        "h": 0.8,
+        "rot": 0
+      },
+      {
+        "key": "sewer-skulls",
+        "x": 1,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "crates",
+        "x": 13,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-skeleton",
+        "x": 9,
+        "y": 9,
+        "w": 1.1,
+        "h": 0.7,
+        "rot": 0
+      }
+    ],
+    "monsters": [
+      {
+        "x": 5,
+        "y": 3
+      },
+      {
+        "x": 9,
+        "y": 3
+      },
+      {
+        "x": 3,
+        "y": 7
+      },
+      {
+        "x": 11,
+        "y": 7
+      }
+    ],
+    "boss": [
+      {
+        "x": 7,
+        "y": 5
+      }
+    ],
+    "loot": [
+      {
+        "x": 11,
+        "y": 1
+      },
+      {
+        "x": 3,
+        "y": 9
+      }
+    ],
+    "portals": [
+      {
+        "x": 2,
+        "y": 1,
+        "to": "courtyard-sewer",
+        "title": "A ladder up to the courtyard drains",
+        "label": "A ladder rises toward the courtyard sump. Go up?"
+      },
+      {
+        "x": 13,
+        "y": 5,
+        "to": "under-pyramid-sewer",
+        "title": "A channel to the pyramid drains",
+        "label": "The channel pours east toward the pyramid cisterns. Follow it down?"
+      }
+    ]
+  },
+  "under-pyramid-sewer": {
+    "decor": [
+      {
+        "key": "sewer-grate",
+        "x": 1,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-grate",
+        "x": 12,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "torch-lit",
+        "x": 2,
+        "y": 2,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "torch-lit",
+        "x": 11,
+        "y": 2,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "torch-lit",
+        "x": 2,
+        "y": 8,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "torch-lit",
+        "x": 11,
+        "y": 8,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-water",
+        "x": 7,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-water",
+        "x": 7,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-canal",
+        "x": 4,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-canal",
+        "x": 10,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-water-edge",
+        "x": 7,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "pyramid-capstone",
+        "x": 10,
+        "y": 5,
+        "w": 1.2,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "panel-croc",
+        "x": 5,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "panel-mask",
+        "x": 9,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-slime",
+        "x": 3,
+        "y": 7,
+        "w": 0.9,
+        "h": 0.8,
+        "rot": 0
+      },
+      {
+        "key": "sewer-mushrooms",
+        "x": 12,
+        "y": 3,
+        "w": 0.8,
+        "h": 0.8,
+        "rot": 0
+      },
+      {
+        "key": "sewer-skulls",
+        "x": 1,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "gargoyle-statue",
+        "x": 5,
+        "y": 7,
+        "w": 1,
+        "h": 1.4,
+        "rot": 0
+      }
+    ],
+    "monsters": [
+      {
+        "x": 3,
+        "y": 1
+      },
+      {
+        "x": 10,
+        "y": 1
+      },
+      {
+        "x": 4,
+        "y": 7
+      },
+      {
+        "x": 11,
+        "y": 9
+      }
+    ],
+    "boss": [
+      {
+        "x": 7,
+        "y": 7
+      }
+    ],
+    "loot": [
+      {
+        "x": 2,
+        "y": 3
+      },
+      {
+        "x": 12,
+        "y": 7
+      }
+    ],
+    "portals": [
+      {
+        "x": 1,
+        "y": 5,
+        "to": "under-maze-sewer",
+        "title": "A channel back to the maze drains",
+        "label": "The current runs west, back toward the maze cisterns. Wade in?"
+      },
+      {
+        "x": 12,
+        "y": 1,
+        "to": "under-palace-sewer",
+        "title": "A shaft up to the palace drains",
+        "label": "A shaft climbs north toward the palace sump. Go up?"
+      }
+    ]
+  },
+  "under-palace-sewer": {
+    "decor": [
+      {
+        "key": "sewer-grate",
+        "x": 1,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-grate",
+        "x": 7,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "green-font",
+        "x": 12,
+        "y": 5,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "key": "altar-skulls",
+        "x": 12,
+        "y": 3,
+        "w": 1.2,
+        "h": 0.9,
+        "rot": 0
+      },
+      {
+        "key": "rune-altar",
+        "x": 12,
+        "y": 7,
+        "w": 1.4,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "torch-lit",
+        "x": 3,
+        "y": 2,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "torch-lit",
+        "x": 11,
+        "y": 2,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "torch-lit",
+        "x": 3,
+        "y": 8,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "torch-lit",
+        "x": 11,
+        "y": 8,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-water",
+        "x": 5,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-water",
+        "x": 9,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-canal",
+        "x": 7,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-canal",
+        "x": 7,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-slime",
+        "x": 5,
+        "y": 3,
+        "w": 0.9,
+        "h": 0.8,
+        "rot": 0
+      },
+      {
+        "key": "sewer-skulls",
+        "x": 9,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer-skeleton",
+        "x": 3,
+        "y": 7,
+        "w": 1.1,
+        "h": 0.7,
+        "rot": 0
+      },
+      {
+        "key": "throne",
+        "x": 3,
+        "y": 5,
+        "w": 1,
+        "h": 1.3,
+        "rot": 0
+      },
+      {
+        "key": "panel-snake",
+        "x": 5,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      }
+    ],
+    "monsters": [
+      {
+        "x": 3,
+        "y": 3
+      },
+      {
+        "x": 9,
+        "y": 3
+      },
+      {
+        "x": 5,
+        "y": 7
+      },
+      {
+        "x": 11,
+        "y": 7
+      }
+    ],
+    "boss": [
+      {
+        "x": 11,
+        "y": 5
+      }
+    ],
+    "loot": [
+      {
+        "x": 3,
+        "y": 9
+      },
+      {
+        "x": 11,
+        "y": 1
+      }
+    ],
+    "portals": [
+      {
+        "x": 1,
+        "y": 9,
+        "to": "courtyard-sewer",
+        "title": "A long ladder up to the courtyard",
+        "label": "A long ladder rises all the way to the courtyard sump. Climb it?"
+      },
+      {
+        "x": 7,
+        "y": 9,
+        "to": "under-pyramid-sewer",
+        "title": "A shaft down to the pyramid drains",
+        "label": "A shaft drops south toward the pyramid cisterns. Descend?"
+      },
+      {
+        "x": 13,
+        "y": 5,
+        "to": "summoning-chamber",
+        "title": "The way to the summoning chamber",
+        "label": "Green light seeps from a doorway ahead — the summoning of the Avatar. Enter?"
       }
     ]
   }

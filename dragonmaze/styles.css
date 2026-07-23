@@ -180,6 +180,8 @@ button { font: inherit; }
 #map[data-theme='swamp'] .tile.wall { background: url('./assets/worldtiles/atlas/stone.png') 0 0 / 100% 100%; filter: brightness(0.7); }
 #map[data-theme='dark'] .tile.floor { background: url('./assets/worldtiles/atlas/cave_floor.png') 0 0 / 100% 100%; }
 #map[data-theme='dark'] .tile.wall { background: url('./assets/worldtiles/atlas/cave_floor_solid.png') 0 0 / 100% 100%; filter: brightness(0.55); }
+#map[data-theme='sewer'] .tile.floor { background: url('./assets/tiles/sewer-floor.png') 0 0 / 100% 100%; }
+#map[data-theme='sewer'] .tile.wall { background: url('./assets/tiles/sewer-wall.png') 0 0 / 100% 100%; }
 
 .tile.door-tile {
   cursor: pointer;

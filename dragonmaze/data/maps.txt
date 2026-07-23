@@ -297,7 +297,7 @@
 
 == lost-temple / courtyard-sw  [The Sunken Well]
    15x11  theme grass  difficulty 2
-   start 3,8 | edges n:courtyard-nw e:courtyard-se | portal->sewers-gumdrop 3,8
+   start 3,8 | edges n:courtyard-nw e:courtyard-se | portal->courtyard-sewer 3,8
    table: lizardfolk-warrior(w3,≤2)  giant-spider(w2,≤2)  giant-rat(w1,≤3)
    objects (type · identity · @cell):
      decor    courtyard-well (structure) 1.1x1.1 rot0        @3,8
@@ -339,7 +339,7 @@
      monster  roll (region table)                            @9,5
      monster  roll (region table)                            @6,6
      loot     roll (gold/tome/den)                           @11,2
-     portal   → sewers-gumdrop "The Sunken Well"             @3,8
+     portal   → courtyard-sewer "The Sunken Well"            @3,8
    grid (M monster · L loot · B boss · b mini · d decor anchor):
      d..............
      d.......d.d....
@@ -483,7 +483,7 @@
 
 == lost-temple / archon-pyramid  [The Archon Pyramid]
    15x11  theme sand  difficulty 4
-   start 1,1 | door 6->maze-of-doors 1,0 | door 7->sewers-gumdrop 14,9
+   start 1,1 | door 6->maze-of-doors 1,0 | door 7->under-pyramid-sewer 14,9
    table: lizardman-crusader(w2,≤1)  giant-snake(w2,≤2)  gargoyle(w1,≤1)
    objects (type · identity · @cell):
      monster  roll (region table)                            @8,7
@@ -505,29 +505,185 @@
      #####.B..L....7
      ###############
 
-== lost-temple / sewers-gumdrop  [The Sewers & the Iron Golem]
-   15x11  theme dark  difficulty 4
-   start 1,1 | door 1->courtyard-sw 1,0 | door 5->summoning-chamber 14,1
+== lost-temple / courtyard-sewer  [The Courtyard Drains]
+   15x11  theme sewer  difficulty 4
+   start 7,5 | exit(surface) 6,0 | portal->under-palace-sewer 13,1 | portal->under-maze-sewer 13,9
    table: alligator(w3,≤2)  green-slime(w2,≤2)  giant-rat(w2,≤3)  giant-snake(w1,≤2)
    objects (type · identity · @cell):
-     monster  roll (region table)                            @7,3
-     monster  roll (region table)                            @11,4
-     monster  roll (region table)                            @3,5
-     loot     roll (gold/tome/den)                           @12,1
-     loot     roll (gold/tome/den)                           @8,6
-     loot     roll (gold/tome/den)                           @4,8
-     boss     The Iron Golem of the Drains [iron-golem] drops idol-of-thule @10,9
+     decor    sewer-grate (floor/prop) 1x1 rot0              @13,1
+     decor    sewer-grate (floor/prop) 1x1 rot0              @13,9
+     decor    torch-lit (light/prop) 0.5x1 rot0              @2,2
+     decor    torch-lit (light/prop) 0.5x1 rot0              @11,2
+     decor    torch-lit (light/prop) 0.5x1 rot0              @2,8
+     decor    torch-lit (light/prop) 0.5x1 rot0              @11,8
+     decor    sewer-canal (floor/water) 1x1 rot0             @7,1
+     decor    sewer-canal (floor/water) 1x1 rot0             @7,9
+     decor    sewer-water (floor/water) 1x1 rot0             @4,3
+     decor    sewer-water-edge (floor/water) 1x1 rot0        @10,3
+     decor    sewer-column (structure) 1x1.6 rot0            @5,4
+     decor    sewer-column (structure) 1x1.6 rot0            @9,4
+     decor    sewer-slime (prop) 0.9x0.8 rot0                @9,5
+     decor    sewer-slime (prop) 0.9x0.8 rot0                @3,9
+     decor    sewer-mushrooms (plant) 0.8x0.8 rot0           @5,7
+     decor    sewer-skulls (prop) 1x1 rot0                   @1,7
+     decor    gargoyle-statue (statue/structure) 1x1.4 rot0  @8,5
+     decor    rune-altar (structure/prop) 1.4x1 rot0         @10,7
+     monster  roll (region table)                            @3,1
+     monster  roll (region table)                            @10,3
+     monster  roll (region table)                            @4,7
+     monster  roll (region table)                            @11,7
+     loot     roll (gold/tome/den)                           @2,9
+     loot     roll (gold/tome/den)                           @12,5
+     portal   → under-palace-sewer "A shaft to the palace drains" @13,1
+     portal   → under-maze-sewer "A drop to the maze drains" @13,9
+     boss     The Iron Golem of the Drains [iron-golem] drops idol-of-thule @7,3
    grid (M monster · L loot · B boss · b mini · d decor anchor):
-     #1#############
-     #S...#....#.L.5
-     #.##.#..##...##
-     #.#..##M....#.#
-     #.#.##..#..M..#
-     #..M#..#..##.##
-     ##.#..##L#....#
-     #..#.##.##.##.#
-     #.##L#...#..#.#
-     #......#.#B...#
+     ######E########
+     #..M...d.....P#
+     #.d#.##.##.d#.#
+     #...d..B..M...#
+     #.##.d#.#d.##.#
+     #......Sdd..L.#
+     #.##.##.##.##.#
+     #d..Md....dM..#
+     #.d#.##.##.d#.#
+     #.Ld...d.....P#
+     ###############
+
+== lost-temple / under-maze-sewer  [The Maze Drains]
+   15x11  theme sewer  difficulty 4
+   start 1,1 | portal->courtyard-sewer 2,1 | portal->under-pyramid-sewer 13,5
+   table: giant-rat(w3,≤3)  green-slime(w2,≤2)  fungus-man(w2,≤2)  giant-spider(w1,≤2)
+   objects (type · identity · @cell):
+     decor    sewer-grate (floor/prop) 1x1 rot0              @2,1
+     decor    sewer-grate (floor/prop) 1x1 rot0              @13,5
+     decor    torch-lit (light/prop) 0.5x1 rot0              @3,2
+     decor    torch-lit (light/prop) 0.5x1 rot0              @11,2
+     decor    torch-lit (light/prop) 0.5x1 rot0              @3,8
+     decor    torch-lit (light/prop) 0.5x1 rot0              @11,8
+     decor    sewer-water (floor/water) 1x1 rot0             @5,5
+     decor    sewer-water (floor/water) 1x1 rot0             @9,5
+     decor    sewer-canal (floor/water) 1x1 rot0             @7,3
+     decor    sewer-canal (floor/water) 1x1 rot0             @7,7
+     decor    sewer-water-edge (floor/water) 1x1 rot0        @5,7
+     decor    sewer-slime (prop) 0.9x0.8 rot0                @9,7
+     decor    sewer-slime (prop) 0.9x0.8 rot0                @5,9
+     decor    sewer-mushrooms (plant) 0.8x0.8 rot0           @11,3
+     decor    sewer-mushrooms (plant) 0.8x0.8 rot0           @3,5
+     decor    sewer-skulls (prop) 1x1 rot0                   @1,9
+     decor    crates (prop) 1x1 rot0                         @13,9
+     decor    sewer-skeleton (prop) 1.1x0.7 rot0             @9,9
+     monster  roll (region table)                            @5,3
+     monster  roll (region table)                            @9,3
+     monster  roll (region table)                            @3,7
+     monster  roll (region table)                            @11,7
+     loot     roll (gold/tome/den)                           @11,1
+     loot     roll (gold/tome/den)                           @3,9
+     portal   → courtyard-sewer "A ladder up to the courtyard drains" @2,1
+     portal   → under-pyramid-sewer "A channel to the pyramid drains" @13,5
+     boss     The Rat King [giant-rat, giant-rat, green-slime] @7,5
+   grid (M monster · L loot · B boss · b mini · d decor anchor):
+     ###############
+     #SP........L..#
+     #.#d#.###.#d#.#
+     #....M.d.M.d..#
+     #.###.###.###.#
+     #..d.d.B.d...P#
+     #.###.###.###.#
+     #..M.d.d.d.M..#
+     #.#d#.###.#d#.#
+     #d.L.d...d...d#
+     ###############
+
+== lost-temple / under-pyramid-sewer  [The Pyramid Drains]
+   15x11  theme sewer  difficulty 5
+   start 7,5 | door 7->archon-pyramid 7,0 | portal->under-maze-sewer 1,5 | portal->under-palace-sewer 12,1
+   table: lizardfolk-warrior(w3,≤2)  giant-snake(w2,≤2)  alligator(w2,≤2)  gargoyle(w1,≤1)
+   objects (type · identity · @cell):
+     decor    sewer-grate (floor/prop) 1x1 rot0              @1,5
+     decor    sewer-grate (floor/prop) 1x1 rot0              @12,1
+     decor    torch-lit (light/prop) 0.5x1 rot0              @2,2
+     decor    torch-lit (light/prop) 0.5x1 rot0              @11,2
+     decor    torch-lit (light/prop) 0.5x1 rot0              @2,8
+     decor    torch-lit (light/prop) 0.5x1 rot0              @11,8
+     decor    sewer-water (floor/water) 1x1 rot0             @7,1
+     decor    sewer-water (floor/water) 1x1 rot0             @7,9
+     decor    sewer-canal (floor/water) 1x1 rot0             @4,3
+     decor    sewer-canal (floor/water) 1x1 rot0             @10,3
+     decor    sewer-water-edge (floor/water) 1x1 rot0        @7,3
+     decor    pyramid-capstone (prop/structure) 1.2x1 rot0   @10,5
+     decor    panel-croc (wall/prop) 1x1 rot0                @5,2
+     decor    panel-mask (wall/statue) 1x1 rot0              @9,2
+     decor    sewer-slime (prop) 0.9x0.8 rot0                @3,7
+     decor    sewer-mushrooms (plant) 0.8x0.8 rot0           @12,3
+     decor    sewer-skulls (prop) 1x1 rot0                   @1,9
+     decor    gargoyle-statue (statue/structure) 1x1.4 rot0  @5,7
+     monster  roll (region table)                            @3,1
+     monster  roll (region table)                            @10,1
+     monster  roll (region table)                            @4,7
+     monster  roll (region table)                            @11,9
+     loot     roll (gold/tome/den)                           @2,3
+     loot     roll (gold/tome/den)                           @12,7
+     portal   → under-maze-sewer "A channel back to the maze drains" @1,5
+     portal   → under-palace-sewer "A shaft up to the palace drains" @12,1
+     boss     The Drowned Golem [clay-golem]                 @7,7
+   grid (M monster · L loot · B boss · b mini · d decor anchor):
+     #######7#######
+     #..M...d..M.P.#
+     #.d#.d#.#d.d#.#
+     #.L.d..d..d.d.#
+     #.##.##.##.##.#
+     #P.....S..d...#
+     #.##.##.##.##.#
+     #..dMd.B....L.#
+     #.d#.##.##.d#.#
+     #d.....d...M..#
+     ###############
+
+== lost-temple / under-palace-sewer  [The Palace Drains]
+   15x11  theme sewer  difficulty 5
+   start 6,1 | portal->courtyard-sewer 1,9 | portal->under-pyramid-sewer 7,9 | portal->summoning-chamber 13,5
+   table: bone-wraith(w2,≤1)  lizardfolk-warrior(w2,≤2)  gargoyle(w2,≤1)  green-slime(w1,≤2)
+   objects (type · identity · @cell):
+     decor    sewer-grate (floor/prop) 1x1 rot0              @1,9
+     decor    sewer-grate (floor/prop) 1x1 rot0              @7,9
+     decor    green-font (structure/prop) 1.1x1.1 rot0       @12,5
+     decor    altar-skulls (prop/structure) 1.2x0.9 rot0     @12,3
+     decor    rune-altar (structure/prop) 1.4x1 rot0         @12,7
+     decor    torch-lit (light/prop) 0.5x1 rot0              @3,2
+     decor    torch-lit (light/prop) 0.5x1 rot0              @11,2
+     decor    torch-lit (light/prop) 0.5x1 rot0              @3,8
+     decor    torch-lit (light/prop) 0.5x1 rot0              @11,8
+     decor    sewer-water (floor/water) 1x1 rot0             @5,5
+     decor    sewer-water (floor/water) 1x1 rot0             @9,5
+     decor    sewer-canal (floor/water) 1x1 rot0             @7,3
+     decor    sewer-canal (floor/water) 1x1 rot0             @7,7
+     decor    sewer-slime (prop) 0.9x0.8 rot0                @5,3
+     decor    sewer-skulls (prop) 1x1 rot0                   @9,7
+     decor    sewer-skeleton (prop) 1.1x0.7 rot0             @3,7
+     decor    throne (structure) 1x1.3 rot0                  @3,5
+     decor    panel-snake (wall/prop) 1x1 rot0               @5,2
+     monster  roll (region table)                            @3,3
+     monster  roll (region table)                            @9,3
+     monster  roll (region table)                            @5,7
+     monster  roll (region table)                            @11,7
+     loot     roll (gold/tome/den)                           @3,9
+     loot     roll (gold/tome/den)                           @11,1
+     portal   → courtyard-sewer "A long ladder up to the courtyard" @1,9
+     portal   → under-pyramid-sewer "A shaft down to the pyramid drains" @7,9
+     portal   → summoning-chamber "The way to the summoning chamber" @13,5
+     boss     The Fear-Touched Gargoyles [gargoyle, gargoyle, bone-wraith] drops rubicite-breastplate @11,5
+   grid (M monster · L loot · B boss · b mini · d decor anchor):
+     ###############
+     #.....S....L..#
+     #.#d#d###.#d#.#
+     #..M.d.d.M..d.#
+     #.###.###.###.#
+     #..d.d...d.BdP#
+     #.###.###.###.#
+     #..d.M.d.d.Md.#
+     #.#d#.###.#d#.#
+     #P.L...P......#
      ###############
 
 == lost-temple / summoning-chamber  [The Summoning Chamber of the Avatar]

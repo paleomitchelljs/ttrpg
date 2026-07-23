@@ -1950,7 +1950,7 @@
       {
         "x": 3,
         "y": 8,
-        "to": "sewers-gumdrop",
+        "to": "courtyard-sewer",
         "title": "The Sunken Well",
         "label": "A dark shaft plunges into the sewers below. Climb down into the well?"
       }
@@ -2439,7 +2439,7 @@
         "type": "portal",
         "x": 3,
         "y": 8,
-        "to": "sewers-gumdrop",
+        "to": "courtyard-sewer",
         "title": "The Sunken Well"
       }
     ]
@@ -3274,7 +3274,7 @@
         "ch": "7",
         "x": 14,
         "y": 9,
-        "to": "sewers-gumdrop"
+        "to": "under-pyramid-sewer"
       }
     ],
     "edges": null,
@@ -3365,35 +3365,44 @@
   },
   {
     "zone": "lost-temple",
-    "sub": "sewers-gumdrop",
-    "name": "The Sewers & the Iron Golem",
+    "sub": "courtyard-sewer",
+    "name": "The Courtyard Drains",
     "index": 8,
     "size": {
       "w": 15,
       "h": 11
     },
-    "theme": "dark",
+    "theme": "sewer",
     "difficulty": 4,
     "start": {
-      "x": 1,
-      "y": 1
+      "x": 7,
+      "y": 5
     },
     "doors": [
       {
-        "ch": "1",
-        "x": 1,
+        "ch": "E",
+        "x": 6,
         "y": 0,
-        "to": "courtyard-sw"
-      },
-      {
-        "ch": "5",
-        "x": 14,
-        "y": 1,
-        "to": "summoning-chamber"
+        "to": "surface"
       }
     ],
     "edges": null,
-    "portals": [],
+    "portals": [
+      {
+        "x": 13,
+        "y": 1,
+        "to": "under-palace-sewer",
+        "title": "A shaft to the palace drains",
+        "label": "A rusted ladder climbs toward the palace sump. Go up?"
+      },
+      {
+        "x": 13,
+        "y": 9,
+        "to": "under-maze-sewer",
+        "title": "A drop to the maze drains",
+        "label": "A broken drain falls away toward the maze cisterns. Climb down?"
+      }
+    ],
     "table": [
       {
         "id": "alligator",
@@ -3428,45 +3437,287 @@
     "miniboss": null,
     "objects": [
       {
-        "type": "monster",
+        "type": "decor",
+        "id": "sewer-grate",
+        "tags": [
+          "floor",
+          "prop"
+        ],
+        "x": 13,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-grate",
+        "tags": [
+          "floor",
+          "prop"
+        ],
+        "x": 13,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "torch-lit",
+        "tags": [
+          "light",
+          "prop"
+        ],
+        "x": 2,
+        "y": 2,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "torch-lit",
+        "tags": [
+          "light",
+          "prop"
+        ],
+        "x": 11,
+        "y": 2,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "torch-lit",
+        "tags": [
+          "light",
+          "prop"
+        ],
+        "x": 2,
+        "y": 8,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "torch-lit",
+        "tags": [
+          "light",
+          "prop"
+        ],
+        "x": 11,
+        "y": 8,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-canal",
+        "tags": [
+          "floor",
+          "water"
+        ],
         "x": 7,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-canal",
+        "tags": [
+          "floor",
+          "water"
+        ],
+        "x": 7,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-water",
+        "tags": [
+          "floor",
+          "water"
+        ],
+        "x": 4,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-water-edge",
+        "tags": [
+          "floor",
+          "water"
+        ],
+        "x": 10,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-column",
+        "tags": [
+          "structure"
+        ],
+        "x": 5,
+        "y": 4,
+        "w": 1,
+        "h": 1.6,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-column",
+        "tags": [
+          "structure"
+        ],
+        "x": 9,
+        "y": 4,
+        "w": 1,
+        "h": 1.6,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-slime",
+        "tags": [
+          "prop"
+        ],
+        "x": 9,
+        "y": 5,
+        "w": 0.9,
+        "h": 0.8,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-slime",
+        "tags": [
+          "prop"
+        ],
+        "x": 3,
+        "y": 9,
+        "w": 0.9,
+        "h": 0.8,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-mushrooms",
+        "tags": [
+          "plant"
+        ],
+        "x": 5,
+        "y": 7,
+        "w": 0.8,
+        "h": 0.8,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-skulls",
+        "tags": [
+          "prop"
+        ],
+        "x": 1,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "gargoyle-statue",
+        "tags": [
+          "statue",
+          "structure"
+        ],
+        "x": 8,
+        "y": 5,
+        "w": 1,
+        "h": 1.4,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "rune-altar",
+        "tags": [
+          "structure",
+          "prop"
+        ],
+        "x": 10,
+        "y": 7,
+        "w": 1.4,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "monster",
+        "x": 3,
+        "y": 1,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 10,
         "y": 3,
         "roll": true
       },
       {
         "type": "monster",
-        "x": 11,
-        "y": 4,
+        "x": 4,
+        "y": 7,
         "roll": true
       },
       {
         "type": "monster",
-        "x": 3,
-        "y": 5,
+        "x": 11,
+        "y": 7,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 2,
+        "y": 9,
         "roll": true
       },
       {
         "type": "loot",
         "x": 12,
+        "y": 5,
+        "roll": true
+      },
+      {
+        "type": "portal",
+        "x": 13,
         "y": 1,
-        "roll": true
+        "to": "under-palace-sewer",
+        "title": "A shaft to the palace drains"
       },
       {
-        "type": "loot",
-        "x": 8,
-        "y": 6,
-        "roll": true
-      },
-      {
-        "type": "loot",
-        "x": 4,
-        "y": 8,
-        "roll": true
+        "type": "portal",
+        "x": 13,
+        "y": 9,
+        "to": "under-maze-sewer",
+        "title": "A drop to the maze drains"
       },
       {
         "type": "boss",
-        "x": 10,
-        "y": 9,
+        "x": 7,
+        "y": 3,
         "name": "The Iron Golem of the Drains",
         "pack": [
           "iron-golem"
@@ -3479,9 +3730,1106 @@
   },
   {
     "zone": "lost-temple",
+    "sub": "under-maze-sewer",
+    "name": "The Maze Drains",
+    "index": 9,
+    "size": {
+      "w": 15,
+      "h": 11
+    },
+    "theme": "sewer",
+    "difficulty": 4,
+    "start": {
+      "x": 1,
+      "y": 1
+    },
+    "doors": [],
+    "edges": null,
+    "portals": [
+      {
+        "x": 2,
+        "y": 1,
+        "to": "courtyard-sewer",
+        "title": "A ladder up to the courtyard drains",
+        "label": "A ladder rises toward the courtyard sump. Go up?"
+      },
+      {
+        "x": 13,
+        "y": 5,
+        "to": "under-pyramid-sewer",
+        "title": "A channel to the pyramid drains",
+        "label": "The channel pours east toward the pyramid cisterns. Follow it down?"
+      }
+    ],
+    "table": [
+      {
+        "id": "giant-rat",
+        "weight": 3,
+        "packMax": 3
+      },
+      {
+        "id": "green-slime",
+        "weight": 2,
+        "packMax": 2
+      },
+      {
+        "id": "fungus-man",
+        "weight": 2,
+        "packMax": 2
+      },
+      {
+        "id": "giant-spider",
+        "weight": 1,
+        "packMax": 2
+      }
+    ],
+    "boss": {
+      "name": "The Rat King",
+      "monsterIds": [
+        "giant-rat",
+        "giant-rat",
+        "green-slime"
+      ]
+    },
+    "miniboss": null,
+    "objects": [
+      {
+        "type": "decor",
+        "id": "sewer-grate",
+        "tags": [
+          "floor",
+          "prop"
+        ],
+        "x": 2,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-grate",
+        "tags": [
+          "floor",
+          "prop"
+        ],
+        "x": 13,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "torch-lit",
+        "tags": [
+          "light",
+          "prop"
+        ],
+        "x": 3,
+        "y": 2,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "torch-lit",
+        "tags": [
+          "light",
+          "prop"
+        ],
+        "x": 11,
+        "y": 2,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "torch-lit",
+        "tags": [
+          "light",
+          "prop"
+        ],
+        "x": 3,
+        "y": 8,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "torch-lit",
+        "tags": [
+          "light",
+          "prop"
+        ],
+        "x": 11,
+        "y": 8,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-water",
+        "tags": [
+          "floor",
+          "water"
+        ],
+        "x": 5,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-water",
+        "tags": [
+          "floor",
+          "water"
+        ],
+        "x": 9,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-canal",
+        "tags": [
+          "floor",
+          "water"
+        ],
+        "x": 7,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-canal",
+        "tags": [
+          "floor",
+          "water"
+        ],
+        "x": 7,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-water-edge",
+        "tags": [
+          "floor",
+          "water"
+        ],
+        "x": 5,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-slime",
+        "tags": [
+          "prop"
+        ],
+        "x": 9,
+        "y": 7,
+        "w": 0.9,
+        "h": 0.8,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-slime",
+        "tags": [
+          "prop"
+        ],
+        "x": 5,
+        "y": 9,
+        "w": 0.9,
+        "h": 0.8,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-mushrooms",
+        "tags": [
+          "plant"
+        ],
+        "x": 11,
+        "y": 3,
+        "w": 0.8,
+        "h": 0.8,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-mushrooms",
+        "tags": [
+          "plant"
+        ],
+        "x": 3,
+        "y": 5,
+        "w": 0.8,
+        "h": 0.8,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-skulls",
+        "tags": [
+          "prop"
+        ],
+        "x": 1,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "crates",
+        "tags": [
+          "prop"
+        ],
+        "x": 13,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-skeleton",
+        "tags": [
+          "prop"
+        ],
+        "x": 9,
+        "y": 9,
+        "w": 1.1,
+        "h": 0.7,
+        "rot": 0
+      },
+      {
+        "type": "monster",
+        "x": 5,
+        "y": 3,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 9,
+        "y": 3,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 3,
+        "y": 7,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 11,
+        "y": 7,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 11,
+        "y": 1,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 3,
+        "y": 9,
+        "roll": true
+      },
+      {
+        "type": "portal",
+        "x": 2,
+        "y": 1,
+        "to": "courtyard-sewer",
+        "title": "A ladder up to the courtyard drains"
+      },
+      {
+        "type": "portal",
+        "x": 13,
+        "y": 5,
+        "to": "under-pyramid-sewer",
+        "title": "A channel to the pyramid drains"
+      },
+      {
+        "type": "boss",
+        "x": 7,
+        "y": 5,
+        "name": "The Rat King",
+        "pack": [
+          "giant-rat",
+          "giant-rat",
+          "green-slime"
+        ],
+        "drops": []
+      }
+    ]
+  },
+  {
+    "zone": "lost-temple",
+    "sub": "under-pyramid-sewer",
+    "name": "The Pyramid Drains",
+    "index": 10,
+    "size": {
+      "w": 15,
+      "h": 11
+    },
+    "theme": "sewer",
+    "difficulty": 5,
+    "start": {
+      "x": 7,
+      "y": 5
+    },
+    "doors": [
+      {
+        "ch": "7",
+        "x": 7,
+        "y": 0,
+        "to": "archon-pyramid"
+      }
+    ],
+    "edges": null,
+    "portals": [
+      {
+        "x": 1,
+        "y": 5,
+        "to": "under-maze-sewer",
+        "title": "A channel back to the maze drains",
+        "label": "The current runs west, back toward the maze cisterns. Wade in?"
+      },
+      {
+        "x": 12,
+        "y": 1,
+        "to": "under-palace-sewer",
+        "title": "A shaft up to the palace drains",
+        "label": "A shaft climbs north toward the palace sump. Go up?"
+      }
+    ],
+    "table": [
+      {
+        "id": "lizardfolk-warrior",
+        "weight": 3,
+        "packMax": 2
+      },
+      {
+        "id": "giant-snake",
+        "weight": 2,
+        "packMax": 2
+      },
+      {
+        "id": "alligator",
+        "weight": 2,
+        "packMax": 2
+      },
+      {
+        "id": "gargoyle",
+        "weight": 1,
+        "packMax": 1
+      }
+    ],
+    "boss": {
+      "name": "The Drowned Golem",
+      "monsterIds": [
+        "clay-golem"
+      ]
+    },
+    "miniboss": null,
+    "objects": [
+      {
+        "type": "decor",
+        "id": "sewer-grate",
+        "tags": [
+          "floor",
+          "prop"
+        ],
+        "x": 1,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-grate",
+        "tags": [
+          "floor",
+          "prop"
+        ],
+        "x": 12,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "torch-lit",
+        "tags": [
+          "light",
+          "prop"
+        ],
+        "x": 2,
+        "y": 2,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "torch-lit",
+        "tags": [
+          "light",
+          "prop"
+        ],
+        "x": 11,
+        "y": 2,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "torch-lit",
+        "tags": [
+          "light",
+          "prop"
+        ],
+        "x": 2,
+        "y": 8,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "torch-lit",
+        "tags": [
+          "light",
+          "prop"
+        ],
+        "x": 11,
+        "y": 8,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-water",
+        "tags": [
+          "floor",
+          "water"
+        ],
+        "x": 7,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-water",
+        "tags": [
+          "floor",
+          "water"
+        ],
+        "x": 7,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-canal",
+        "tags": [
+          "floor",
+          "water"
+        ],
+        "x": 4,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-canal",
+        "tags": [
+          "floor",
+          "water"
+        ],
+        "x": 10,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-water-edge",
+        "tags": [
+          "floor",
+          "water"
+        ],
+        "x": 7,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "pyramid-capstone",
+        "tags": [
+          "prop",
+          "structure"
+        ],
+        "x": 10,
+        "y": 5,
+        "w": 1.2,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "panel-croc",
+        "tags": [
+          "wall",
+          "prop"
+        ],
+        "x": 5,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "panel-mask",
+        "tags": [
+          "wall",
+          "statue"
+        ],
+        "x": 9,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-slime",
+        "tags": [
+          "prop"
+        ],
+        "x": 3,
+        "y": 7,
+        "w": 0.9,
+        "h": 0.8,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-mushrooms",
+        "tags": [
+          "plant"
+        ],
+        "x": 12,
+        "y": 3,
+        "w": 0.8,
+        "h": 0.8,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-skulls",
+        "tags": [
+          "prop"
+        ],
+        "x": 1,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "gargoyle-statue",
+        "tags": [
+          "statue",
+          "structure"
+        ],
+        "x": 5,
+        "y": 7,
+        "w": 1,
+        "h": 1.4,
+        "rot": 0
+      },
+      {
+        "type": "monster",
+        "x": 3,
+        "y": 1,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 10,
+        "y": 1,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 4,
+        "y": 7,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 11,
+        "y": 9,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 2,
+        "y": 3,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 12,
+        "y": 7,
+        "roll": true
+      },
+      {
+        "type": "portal",
+        "x": 1,
+        "y": 5,
+        "to": "under-maze-sewer",
+        "title": "A channel back to the maze drains"
+      },
+      {
+        "type": "portal",
+        "x": 12,
+        "y": 1,
+        "to": "under-palace-sewer",
+        "title": "A shaft up to the palace drains"
+      },
+      {
+        "type": "boss",
+        "x": 7,
+        "y": 7,
+        "name": "The Drowned Golem",
+        "pack": [
+          "clay-golem"
+        ],
+        "drops": []
+      }
+    ]
+  },
+  {
+    "zone": "lost-temple",
+    "sub": "under-palace-sewer",
+    "name": "The Palace Drains",
+    "index": 11,
+    "size": {
+      "w": 15,
+      "h": 11
+    },
+    "theme": "sewer",
+    "difficulty": 5,
+    "start": {
+      "x": 6,
+      "y": 1
+    },
+    "doors": [],
+    "edges": null,
+    "portals": [
+      {
+        "x": 1,
+        "y": 9,
+        "to": "courtyard-sewer",
+        "title": "A long ladder up to the courtyard",
+        "label": "A long ladder rises all the way to the courtyard sump. Climb it?"
+      },
+      {
+        "x": 7,
+        "y": 9,
+        "to": "under-pyramid-sewer",
+        "title": "A shaft down to the pyramid drains",
+        "label": "A shaft drops south toward the pyramid cisterns. Descend?"
+      },
+      {
+        "x": 13,
+        "y": 5,
+        "to": "summoning-chamber",
+        "title": "The way to the summoning chamber",
+        "label": "Green light seeps from a doorway ahead — the summoning of the Avatar. Enter?"
+      }
+    ],
+    "table": [
+      {
+        "id": "bone-wraith",
+        "weight": 2,
+        "packMax": 1
+      },
+      {
+        "id": "lizardfolk-warrior",
+        "weight": 2,
+        "packMax": 2
+      },
+      {
+        "id": "gargoyle",
+        "weight": 2,
+        "packMax": 1
+      },
+      {
+        "id": "green-slime",
+        "weight": 1,
+        "packMax": 2
+      }
+    ],
+    "boss": {
+      "name": "The Fear-Touched Gargoyles",
+      "monsterIds": [
+        "gargoyle",
+        "gargoyle",
+        "bone-wraith"
+      ],
+      "drops": [
+        "rubicite-breastplate"
+      ]
+    },
+    "miniboss": null,
+    "objects": [
+      {
+        "type": "decor",
+        "id": "sewer-grate",
+        "tags": [
+          "floor",
+          "prop"
+        ],
+        "x": 1,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-grate",
+        "tags": [
+          "floor",
+          "prop"
+        ],
+        "x": 7,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "green-font",
+        "tags": [
+          "structure",
+          "prop"
+        ],
+        "x": 12,
+        "y": 5,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "altar-skulls",
+        "tags": [
+          "prop",
+          "structure"
+        ],
+        "x": 12,
+        "y": 3,
+        "w": 1.2,
+        "h": 0.9,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "rune-altar",
+        "tags": [
+          "structure",
+          "prop"
+        ],
+        "x": 12,
+        "y": 7,
+        "w": 1.4,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "torch-lit",
+        "tags": [
+          "light",
+          "prop"
+        ],
+        "x": 3,
+        "y": 2,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "torch-lit",
+        "tags": [
+          "light",
+          "prop"
+        ],
+        "x": 11,
+        "y": 2,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "torch-lit",
+        "tags": [
+          "light",
+          "prop"
+        ],
+        "x": 3,
+        "y": 8,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "torch-lit",
+        "tags": [
+          "light",
+          "prop"
+        ],
+        "x": 11,
+        "y": 8,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-water",
+        "tags": [
+          "floor",
+          "water"
+        ],
+        "x": 5,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-water",
+        "tags": [
+          "floor",
+          "water"
+        ],
+        "x": 9,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-canal",
+        "tags": [
+          "floor",
+          "water"
+        ],
+        "x": 7,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-canal",
+        "tags": [
+          "floor",
+          "water"
+        ],
+        "x": 7,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-slime",
+        "tags": [
+          "prop"
+        ],
+        "x": 5,
+        "y": 3,
+        "w": 0.9,
+        "h": 0.8,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-skulls",
+        "tags": [
+          "prop"
+        ],
+        "x": 9,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer-skeleton",
+        "tags": [
+          "prop"
+        ],
+        "x": 3,
+        "y": 7,
+        "w": 1.1,
+        "h": 0.7,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "throne",
+        "tags": [
+          "structure"
+        ],
+        "x": 3,
+        "y": 5,
+        "w": 1,
+        "h": 1.3,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "panel-snake",
+        "tags": [
+          "wall",
+          "prop"
+        ],
+        "x": 5,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "monster",
+        "x": 3,
+        "y": 3,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 9,
+        "y": 3,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 5,
+        "y": 7,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 11,
+        "y": 7,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 3,
+        "y": 9,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 11,
+        "y": 1,
+        "roll": true
+      },
+      {
+        "type": "portal",
+        "x": 1,
+        "y": 9,
+        "to": "courtyard-sewer",
+        "title": "A long ladder up to the courtyard"
+      },
+      {
+        "type": "portal",
+        "x": 7,
+        "y": 9,
+        "to": "under-pyramid-sewer",
+        "title": "A shaft down to the pyramid drains"
+      },
+      {
+        "type": "portal",
+        "x": 13,
+        "y": 5,
+        "to": "summoning-chamber",
+        "title": "The way to the summoning chamber"
+      },
+      {
+        "type": "boss",
+        "x": 11,
+        "y": 5,
+        "name": "The Fear-Touched Gargoyles",
+        "pack": [
+          "gargoyle",
+          "gargoyle",
+          "bone-wraith"
+        ],
+        "drops": [
+          "rubicite-breastplate"
+        ]
+      }
+    ]
+  },
+  {
+    "zone": "lost-temple",
     "sub": "summoning-chamber",
     "name": "The Summoning Chamber of the Avatar",
-    "index": 9,
+    "index": 12,
     "size": {
       "w": 15,
       "h": 11

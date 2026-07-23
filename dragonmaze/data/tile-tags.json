@@ -606,5 +606,455 @@
       244,
       268
     ]
+  },
+  "sewer-wall": {
+    "tags": [
+      "wall"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      1125,
+      45,
+      162,
+      159
+    ]
+  },
+  "sewer-floor": {
+    "tags": [
+      "floor"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      198,
+      213,
+      171,
+      171
+    ]
+  },
+  "sewer-floor-dirt": {
+    "tags": [
+      "floor"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      1125,
+      267,
+      162,
+      159
+    ]
+  },
+  "sewer-floor-moss": {
+    "tags": [
+      "floor"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      1308,
+      267,
+      159,
+      162
+    ]
+  },
+  "sewer-archway": {
+    "tags": [
+      "door",
+      "structure"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      1551,
+      288,
+      132,
+      132
+    ]
+  },
+  "sewer-gate": {
+    "tags": [
+      "door"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      1710,
+      288,
+      129,
+      132
+    ]
+  },
+  "sewer-column": {
+    "tags": [
+      "structure"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      813,
+      630,
+      69,
+      159
+    ]
+  },
+  "sewer-waterfall": {
+    "tags": [
+      "water"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      915,
+      678,
+      171,
+      282
+    ]
+  },
+  "sewer-water": {
+    "tags": [
+      "floor",
+      "water"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      12,
+      801,
+      150,
+      159
+    ]
+  },
+  "sewer-sludge": {
+    "tags": [
+      "floor",
+      "water"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      189,
+      801,
+      150,
+      159
+    ]
+  },
+  "sewer-canal": {
+    "tags": [
+      "floor",
+      "water"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      366,
+      801,
+      147,
+      159
+    ]
+  },
+  "sewer-canal-bend": {
+    "tags": [
+      "floor",
+      "water"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      537,
+      801,
+      150,
+      159
+    ]
+  },
+  "sewer-water-edge": {
+    "tags": [
+      "floor",
+      "water"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      714,
+      801,
+      174,
+      159
+    ]
+  },
+  "sewer-grate": {
+    "tags": [
+      "floor",
+      "prop"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      1125,
+      852,
+      96,
+      102
+    ]
+  },
+  "sewer-rune": {
+    "tags": [
+      "prop"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      1374,
+      852,
+      96,
+      102
+    ]
+  },
+  "torch-lit": {
+    "tags": [
+      "light",
+      "prop"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      1248,
+      675,
+      96,
+      102
+    ]
+  },
+  "torch-out": {
+    "tags": [
+      "light",
+      "prop"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      1125,
+      675,
+      96,
+      102
+    ]
+  },
+  "sewer-skulls": {
+    "tags": [
+      "prop"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      1374,
+      675,
+      96,
+      102
+    ]
+  },
+  "crate": {
+    "tags": [
+      "prop"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      1572,
+      690,
+      72,
+      90
+    ]
+  },
+  "crates": {
+    "tags": [
+      "prop"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      1677,
+      669,
+      126,
+      111
+    ]
+  },
+  "sewer-slime": {
+    "tags": [
+      "prop"
+    ],
+    "sheet": "sewer-decor-a-sheet.png",
+    "box": [
+      6,
+      51,
+      186,
+      129
+    ]
+  },
+  "sewer-lever": {
+    "tags": [
+      "prop"
+    ],
+    "sheet": "sewer-decor-a-sheet.png",
+    "box": [
+      231,
+      15,
+      147,
+      171
+    ]
+  },
+  "sewer-mushrooms": {
+    "tags": [
+      "plant"
+    ],
+    "sheet": "sewer-decor-a-sheet.png",
+    "box": [
+      414,
+      36,
+      174,
+      135
+    ]
+  },
+  "sewer-bone": {
+    "tags": [
+      "prop"
+    ],
+    "sheet": "sewer-decor-a-sheet.png",
+    "box": [
+      630,
+      45,
+      138,
+      129
+    ]
+  },
+  "sewer-brazier": {
+    "tags": [
+      "light",
+      "prop"
+    ],
+    "sheet": "sewer-decor-a-sheet.png",
+    "box": [
+      843,
+      6,
+      123,
+      180
+    ]
+  },
+  "throne": {
+    "tags": [
+      "structure"
+    ],
+    "sheet": "sewer-decor-a-sheet.png",
+    "box": [
+      1044,
+      0,
+      120,
+      186
+    ]
+  },
+  "altar-skulls": {
+    "tags": [
+      "prop",
+      "structure"
+    ],
+    "sheet": "sewer-decor-a-sheet.png",
+    "box": [
+      1215,
+      18,
+      183,
+      168
+    ]
+  },
+  "gold-hoard": {
+    "tags": [
+      "treasure"
+    ],
+    "sheet": "sewer-loot-sheet.png",
+    "box": [
+      24,
+      39,
+      345,
+      303
+    ]
+  },
+  "green-font": {
+    "tags": [
+      "structure",
+      "prop"
+    ],
+    "sheet": "sewer-loot-sheet.png",
+    "box": [
+      408,
+      0,
+      357,
+      342
+    ]
+  },
+  "pyramid-capstone": {
+    "tags": [
+      "prop",
+      "structure"
+    ],
+    "sheet": "sewer-loot-sheet.png",
+    "box": [
+      822,
+      18,
+      306,
+      324
+    ]
+  },
+  "gargoyle-statue": {
+    "tags": [
+      "statue",
+      "structure"
+    ],
+    "sheet": "sewer-decor-b-sheet.png",
+    "box": [
+      21,
+      27,
+      81,
+      117
+    ]
+  },
+  "rune-altar": {
+    "tags": [
+      "structure",
+      "prop"
+    ],
+    "sheet": "sewer-decor-b-sheet.png",
+    "box": [
+      132,
+      39,
+      165,
+      105
+    ]
+  },
+  "sewer-skeleton": {
+    "tags": [
+      "prop"
+    ],
+    "sheet": "sewer-decor-b-sheet.png",
+    "box": [
+      870,
+      78,
+      90,
+      60
+    ]
+  },
+  "panel-croc": {
+    "tags": [
+      "wall",
+      "prop"
+    ],
+    "sheet": "temple-panels-sheet.png",
+    "box": [
+      9,
+      6,
+      141,
+      156
+    ]
+  },
+  "panel-snake": {
+    "tags": [
+      "wall",
+      "prop"
+    ],
+    "sheet": "temple-panels-sheet.png",
+    "box": [
+      312,
+      6,
+      141,
+      156
+    ]
+  },
+  "panel-mask": {
+    "tags": [
+      "wall",
+      "statue"
+    ],
+    "sheet": "temple-panels-sheet.png",
+    "box": [
+      615,
+      6,
+      141,
+      156
+    ]
   }
 }
