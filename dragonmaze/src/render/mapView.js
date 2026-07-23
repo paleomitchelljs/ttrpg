@@ -32,16 +32,15 @@ const AUTOTILE = {
   sewer: {
     floor: ['sat-floor-0-0', 'sat-floor-1-0', 'sat-floor-2-0'],
     accent: ['sat-floor-3-0', 'sat-floor-4-0'], // occasional moss / crack
-    // floor-neighbour mask -> wall piece. Only the strongly-read cases are
-    // mapped (south front-faces + corners + side walls); the rest fall back to
-    // solid fill. Tunable — add the richer corner pieces to extend it.
+    // Wall pieces named by role (verified against the sheet):
+    //   h  solid horizontal wall (top / bottom / interior fill)
+    //   l/r  side walls (l has floor to the east, r mirrored)
+    //   nw/ne/sw/se  corners, named for which corner of the wall is SOLID —
+    //     nw opens toward SE, ne→SW, sw→NE, se→NW.
     wall: {
-      0: 'sat-wall-6-0',   // interior / no floor neighbour: solid
-      4: 'sat-wall-9-2',   // floor S: front face
-      6: 'sat-wall-6-2',   // floor S+E: outer corner (wall in NW)
-      12: 'sat-wall-8-2',  // floor S+W: outer corner (wall in NE)
-      2: 'sat-wall-0-3',   // floor E: west-side wall
-      8: 'sat-wall-w',     // floor W: east-side wall (mirror)
+      h: 'sat-wall-6-0',
+      l: 'sat-wall-left', r: 'sat-wall-right',
+      nw: 'sat-wall-0-3', ne: 'sat-wall-1-3', sw: 'sat-wall-cor-sw', se: 'sat-wall-cor-se',
     },
     fallback: 'sat-wall-6-0',
   },
@@ -51,17 +50,25 @@ function floorVariant(cfg, x, y) {
   if (cfg.accent?.length && (x * 131 + y * 197) % 100 < 12) return cfg.accent[(x + y) % cfg.accent.length];
   return cfg.floor[(x * 3 + y) % cfg.floor.length];
 }
-function wallMask(d, x, y) {
-  const isFloor = (xx, yy) => yy >= 0 && yy < d.height && xx >= 0 && xx < d.width && d.tiles[yy][xx] === 1;
-  return (isFloor(x, y - 1) ? 1 : 0) | (isFloor(x + 1, y) ? 2 : 0) | (isFloor(x, y + 1) ? 4 : 0) | (isFloor(x - 1, y) ? 8 : 0);
-}
 function paintFloor(tile, cfg, x, y) {
   tile.style.backgroundImage = bg([floorVariant(cfg, x, y)]);
   tile.style.backgroundSize = '100% 100%';
 }
+// Pick a wall piece from the 8 neighbours: inner corners (two adjacent floor
+// edges) first, then straight edges, then outer corners (only a diagonal is
+// floor — e.g. the map's own corners), else solid.
+function wallKey(cfg, d, x, y) {
+  const f = (xx, yy) => yy >= 0 && yy < d.height && xx >= 0 && xx < d.width && d.tiles[yy][xx] === 1;
+  const N = f(x, y - 1), E = f(x + 1, y), S = f(x, y + 1), W = f(x - 1, y);
+  const NE = f(x + 1, y - 1), SE = f(x + 1, y + 1), SW = f(x - 1, y + 1), NW = f(x - 1, y - 1);
+  const w = cfg.wall;
+  if (S && E) return w.nw; if (S && W) return w.ne; if (N && E) return w.sw; if (N && W) return w.se;
+  if (S || N) return w.h; if (E) return w.l; if (W) return w.r;
+  if (SE) return w.nw; if (SW) return w.ne; if (NE) return w.sw; if (NW) return w.se;
+  return cfg.fallback;
+}
 function paintWall(tile, cfg, d, x, y) {
-  const wall = cfg.wall[wallMask(d, x, y)] ?? cfg.fallback;
-  tile.style.backgroundImage = bg([wall, floorVariant(cfg, x, y)]); // wall over floor
+  tile.style.backgroundImage = bg([wallKey(cfg, d, x, y), floorVariant(cfg, x, y)]); // wall over floor
   tile.style.backgroundSize = '100% 100%, 100% 100%';
 }
 

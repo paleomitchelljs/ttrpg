@@ -1519,5 +1519,37 @@
     ],
     "sheet": "sewer-autotile-sheet.png",
     "box": "mirror sat-wall-0-3"
+  },
+  "sat-wall-left": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": "derived"
+  },
+  "sat-wall-right": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": "derived"
+  },
+  "sat-wall-cor-sw": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": "derived"
+  },
+  "sat-wall-cor-se": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": "derived"
   }
 }
