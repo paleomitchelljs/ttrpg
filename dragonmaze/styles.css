@@ -303,6 +303,8 @@ button { font: inherit; }
   image-rendering: pixelated;
   filter: drop-shadow(0 3px 4px rgba(0, 0, 0, 0.55));
 }
+/* Flat ground decor (grass, floor slabs) lies in the plane — no cast shadow. */
+.map-prop.flat img { filter: none; }
 
 /* a floor tile that's really a walk-off passage into the next sub-area */
 .tile.edge-exit { position: relative; }

@@ -6,6 +6,17 @@
 import { monsterById } from '../../data/monsters.js';
 import { companionById } from '../../data/party.js';
 import { SPRITES, TILES } from '../assets-manifest.js';
+import TILE_TAGS from '../../data/tile-tags.json' with { type: 'json' };
+
+// Flat ground decor (grass, floor slabs) must NOT cast the raised-prop drop
+// shadow — a shadow only reads right for things standing up off the ground
+// (huts, statues, walls). Keyed off the tile's tags so newly sliced ground
+// tiles are covered automatically.
+const FLAT_KEYS = new Set(
+  Object.entries(TILE_TAGS)
+    .filter(([, v]) => (v.tags || []).some((t) => t === 'floor' || t === 'grass'))
+    .map(([k]) => k),
+);
 
 export function spritePath(key) {
   return SPRITES[key];
@@ -121,7 +132,7 @@ function renderProps(container, run) {
     // (fine-nudged decor) still reveal with their tile.
     if (!src || !run.explored[`${Math.floor(p.x)},${Math.floor(p.y)}`]) continue;
     const el = document.createElement('div');
-    el.className = 'map-prop';
+    el.className = 'map-prop' + (FLAT_KEYS.has(p.key) ? ' flat' : '');
     el.style.left = `calc(var(--tile) * ${p.x})`;
     el.style.top = `calc(var(--tile) * ${p.y})`;
     el.style.width = `calc(var(--tile) * ${p.w})`;
