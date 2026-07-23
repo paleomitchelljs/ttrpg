@@ -22,6 +22,49 @@ export function spritePath(key) {
   return SPRITES[key];
 }
 
+// ---- autotiling ---------------------------------------------------------
+// Some themes replace the flat "one wall + one floor" CSS background with a
+// per-cell tileset: floor cells pick a floor variant, and wall cells pick a
+// wall piece from a bitmask of which orthogonal neighbours are FLOOR, then
+// draw that piece OVER a floor layer (the piece's floor-facing parts are
+// transparent, so corners blend into the room). Bits: N=1 E=2 S=4 W=8.
+const AUTOTILE = {
+  sewer: {
+    floor: ['sat-floor-0-0', 'sat-floor-1-0', 'sat-floor-2-0'],
+    accent: ['sat-floor-3-0', 'sat-floor-4-0'], // occasional moss / crack
+    // floor-neighbour mask -> wall piece. Only the strongly-read cases are
+    // mapped (south front-faces + corners + side walls); the rest fall back to
+    // solid fill. Tunable — add the richer corner pieces to extend it.
+    wall: {
+      0: 'sat-wall-6-0',   // interior / no floor neighbour: solid
+      4: 'sat-wall-9-2',   // floor S: front face
+      6: 'sat-wall-6-2',   // floor S+E: outer corner (wall in NW)
+      12: 'sat-wall-8-2',  // floor S+W: outer corner (wall in NE)
+      2: 'sat-wall-0-3',   // floor E: west-side wall
+      8: 'sat-wall-w',     // floor W: east-side wall (mirror)
+    },
+    fallback: 'sat-wall-6-0',
+  },
+};
+const bg = (keys) => keys.map((k) => `url("${TILES[k]}")`).join(', ');
+function floorVariant(cfg, x, y) {
+  if (cfg.accent?.length && (x * 131 + y * 197) % 100 < 12) return cfg.accent[(x + y) % cfg.accent.length];
+  return cfg.floor[(x * 3 + y) % cfg.floor.length];
+}
+function wallMask(d, x, y) {
+  const isFloor = (xx, yy) => yy >= 0 && yy < d.height && xx >= 0 && xx < d.width && d.tiles[yy][xx] === 1;
+  return (isFloor(x, y - 1) ? 1 : 0) | (isFloor(x + 1, y) ? 2 : 0) | (isFloor(x, y + 1) ? 4 : 0) | (isFloor(x - 1, y) ? 8 : 0);
+}
+function paintFloor(tile, cfg, x, y) {
+  tile.style.backgroundImage = bg([floorVariant(cfg, x, y)]);
+  tile.style.backgroundSize = '100% 100%';
+}
+function paintWall(tile, cfg, d, x, y) {
+  const wall = cfg.wall[wallMask(d, x, y)] ?? cfg.fallback;
+  tile.style.backgroundImage = bg([wall, floorVariant(cfg, x, y)]); // wall over floor
+  tile.style.backgroundSize = '100% 100%, 100% 100%';
+}
+
 // Which strip the player token shows for each heading. The side strip faces
 // left natively; heading right flips it.
 // The new dragon art is a single side view, so every heading shows the same
@@ -62,6 +105,7 @@ export function renderMap(container, state) {
   const { x: px, y: py } = run.playerPos;
   container.dataset.theme = d.theme ?? 'none';
   grid.style.gridTemplateColumns = `repeat(${d.width}, var(--tile))`;
+  const auto = AUTOTILE[d.theme]; // per-cell tileset for this theme, if any
 
   const frag = document.createDocumentFragment();
   for (let y = 0; y < d.height; y++) {
@@ -90,8 +134,10 @@ export function renderMap(container, state) {
       } else if (d.tiles[y][x] !== 1) {
         if (dim) tile.classList.add('fog-dim');
         tile.classList.add('wall');
+        if (auto) paintWall(tile, auto, d, x, y);
       } else {
         tile.classList.add('floor');
+        if (auto) paintFloor(tile, auto, x, y);
         if (dim) {
           tile.classList.add('fog-dim');
         } else {

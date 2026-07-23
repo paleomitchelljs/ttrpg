@@ -1056,5 +1056,468 @@
       141,
       156
     ]
+  },
+  "sat-floor-0-0": {
+    "tags": [
+      "floor",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      18,
+      22,
+      126,
+      132
+    ]
+  },
+  "sat-floor-1-0": {
+    "tags": [
+      "floor",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      132,
+      22,
+      240,
+      132
+    ]
+  },
+  "sat-floor-2-0": {
+    "tags": [
+      "floor",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      246,
+      22,
+      354,
+      132
+    ]
+  },
+  "sat-floor-3-0": {
+    "tags": [
+      "floor",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      360,
+      22,
+      468,
+      132
+    ]
+  },
+  "sat-floor-4-0": {
+    "tags": [
+      "floor",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      474,
+      22,
+      582,
+      132
+    ]
+  },
+  "sat-floor-5-0": {
+    "tags": [
+      "floor",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      588,
+      22,
+      696,
+      132
+    ]
+  },
+  "sat-floor-0-1": {
+    "tags": [
+      "floor",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      18,
+      142,
+      126,
+      252
+    ]
+  },
+  "sat-floor-1-1": {
+    "tags": [
+      "floor",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      132,
+      142,
+      240,
+      252
+    ]
+  },
+  "sat-floor-2-1": {
+    "tags": [
+      "floor",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      246,
+      142,
+      354,
+      252
+    ]
+  },
+  "sat-floor-3-1": {
+    "tags": [
+      "floor",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      360,
+      142,
+      468,
+      252
+    ]
+  },
+  "sat-floor-4-1": {
+    "tags": [
+      "floor",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      474,
+      142,
+      582,
+      252
+    ]
+  },
+  "sat-wall-6-0": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      702,
+      22,
+      810,
+      132
+    ]
+  },
+  "sat-wall-7-0": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      816,
+      22,
+      924,
+      132
+    ]
+  },
+  "sat-wall-8-0": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      930,
+      22,
+      1038,
+      132
+    ]
+  },
+  "sat-wall-9-0": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      1044,
+      22,
+      1152,
+      132
+    ]
+  },
+  "sat-wall-10-0": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      1158,
+      22,
+      1266,
+      132
+    ]
+  },
+  "sat-wall-11-0": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      1272,
+      22,
+      1380,
+      132
+    ]
+  },
+  "sat-wall-6-1": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      702,
+      142,
+      810,
+      252
+    ]
+  },
+  "sat-wall-7-1": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      816,
+      142,
+      924,
+      252
+    ]
+  },
+  "sat-wall-8-1": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      930,
+      142,
+      1038,
+      252
+    ]
+  },
+  "sat-wall-9-1": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      1044,
+      142,
+      1152,
+      252
+    ]
+  },
+  "sat-wall-10-1": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      1158,
+      142,
+      1266,
+      252
+    ]
+  },
+  "sat-wall-6-2": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      702,
+      262,
+      810,
+      372
+    ]
+  },
+  "sat-wall-7-2": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      816,
+      262,
+      924,
+      372
+    ]
+  },
+  "sat-wall-8-2": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      930,
+      262,
+      1038,
+      372
+    ]
+  },
+  "sat-wall-9-2": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      1044,
+      262,
+      1152,
+      372
+    ]
+  },
+  "sat-wall-0-3": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      18,
+      382,
+      126,
+      492
+    ]
+  },
+  "sat-wall-1-3": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      132,
+      382,
+      240,
+      492
+    ]
+  },
+  "sat-wall-2-3": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      246,
+      382,
+      354,
+      492
+    ]
+  },
+  "sat-wall-3-3": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      360,
+      382,
+      468,
+      492
+    ]
+  },
+  "sat-wall-4-3": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      474,
+      382,
+      582,
+      492
+    ]
+  },
+  "sat-wall-5-3": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      588,
+      382,
+      696,
+      492
+    ]
+  },
+  "sat-wall-0-4": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      18,
+      502,
+      126,
+      612
+    ]
+  },
+  "sat-wall-1-4": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      132,
+      502,
+      240,
+      612
+    ]
+  },
+  "sat-wall-2-4": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      246,
+      502,
+      354,
+      612
+    ]
+  },
+  "sat-wall-w": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": "mirror sat-wall-0-3"
   }
 }
