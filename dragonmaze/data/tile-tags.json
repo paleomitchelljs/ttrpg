@@ -1429,7 +1429,7 @@
       "wall",
       "autotile"
     ],
-    "sheet": "sewer2-ci-ne.png",
+    "sheet": "toprep1.png",
     "box": "derived"
   },
   "sewer2-ci-nw": {
@@ -1437,7 +1437,7 @@
       "wall",
       "autotile"
     ],
-    "sheet": "sewer2-ci-nw.png",
+    "sheet": "toprep2.png",
     "box": "derived"
   },
   "sewer2-ci-se": {
@@ -1445,16 +1445,16 @@
       "wall",
       "autotile"
     ],
-    "sheet": "sewer2-ci-se.png",
-    "box": "derived"
+    "sheet": "toprep1.png",
+    "box": "derived (vertical flip)"
   },
   "sewer2-ci-sw": {
     "tags": [
       "wall",
       "autotile"
     ],
-    "sheet": "sewer2-ci-sw.png",
-    "box": "derived"
+    "sheet": "toprep2.png",
+    "box": "derived (vertical flip)"
   },
   "sewer2-fill": {
     "tags": [

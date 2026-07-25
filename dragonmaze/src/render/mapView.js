@@ -45,10 +45,11 @@ const AUTOTILE = {
       2: 'sw-str-h', 8: 'sw-str-h', 1: 'sw-str-v', 4: 'sw-str-v', // ends -> straight
     },
     // Wall pieces named by which edge/corner is SOLID (so nw = wall in the NW,
-    // opening toward the SE floor, etc.). Outer corners (c-*) are the convex
-    // room corners — mostly floor, an L of wall. Inner corners (ci-*) are the
-    // concave ones — mostly wall, with a floor bevel — keyed by the floor
-    // diagonal they open onto (iSE = floor nicked out of the SE corner).
+    // opening toward the SE floor, etc.). Outer corners (c-*) are the map's own
+    // boundary corners — a thin L of wall, mostly floor. Inner corners (ci-*)
+    // are the wall-island / concave corners — a chunky wall nub jutting into
+    // the room (ci-nw = the nub sits in the NW), used when two adjacent edges
+    // are floor.
     wall: {
       top: 'sewer2-w-top', bottom: 'sewer2-w-bottom', left: 'sewer2-w-left', right: 'sewer2-w-right',
       nw: 'sewer2-c-nw', ne: 'sewer2-c-ne', sw: 'sewer2-c-sw', se: 'sewer2-c-se',
@@ -72,18 +73,18 @@ function paintFloor(tile, cfg, d, x, y) {
   tile.style.backgroundImage = bg([key]);
   tile.style.backgroundSize = '100% 100%';
 }
-// Pick a wall piece from the 8 neighbours: outer (convex) corners where two
-// adjacent edges are floor first, then straight edges, then inner (concave)
-// corners where only a diagonal is floor — a wall nub jutting into the room,
-// e.g. the map's own corners — else solid fill.
+// Pick a wall piece from the 8 neighbours: inner corners (two adjacent edges
+// are floor — a wall nub jutting into the room, e.g. a wall-island corner)
+// first, then straight edges, then outer corners (only a diagonal is floor —
+// the map's own boundary corners), else solid fill.
 function wallKey(cfg, d, x, y) {
   const f = (xx, yy) => yy >= 0 && yy < d.height && xx >= 0 && xx < d.width && d.tiles[yy][xx] === 1;
   const N = f(x, y - 1), E = f(x + 1, y), S = f(x, y + 1), W = f(x - 1, y);
   const NE = f(x + 1, y - 1), SE = f(x + 1, y + 1), SW = f(x - 1, y + 1), NW = f(x - 1, y - 1);
   const w = cfg.wall;
-  if (S && E) return w.nw; if (S && W) return w.ne; if (N && E) return w.sw; if (N && W) return w.se;
+  if (S && E) return w.iNW; if (S && W) return w.iNE; if (N && E) return w.iSW; if (N && W) return w.iSE;
   if (S) return w.top; if (N) return w.bottom; if (E) return w.left; if (W) return w.right;
-  if (SE) return w.iSE; if (SW) return w.iSW; if (NE) return w.iNE; if (NW) return w.iNW;
+  if (SE) return w.nw; if (SW) return w.ne; if (NE) return w.sw; if (NW) return w.se;
   return cfg.fallback;
 }
 function paintWall(tile, cfg, d, x, y) {
