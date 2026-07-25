@@ -30,19 +30,17 @@ export function spritePath(key) {
 // transparent, so corners blend into the room). Bits: N=1 E=2 S=4 W=8.
 const AUTOTILE = {
   sewer: {
-    floor: ['sat-floor-0-0', 'sat-floor-1-0', 'sat-floor-2-0'],
-    accent: ['sat-floor-3-0', 'sat-floor-4-0'], // occasional moss / crack
-    // Wall pieces named by role (verified against the sheet):
-    //   h  solid horizontal wall (top / bottom / interior fill)
-    //   l/r  side walls (l has floor to the east, r mirrored)
-    //   nw/ne/sw/se  corners, named for which corner of the wall is SOLID —
-    //     nw opens toward SE, ne→SW, sw→NE, se→NW.
+    // Opaque rotation-based set: one corner + one wall from the HD sheet, each
+    // pre-rotated to all four orientations, plus a plain floor and a solid fill.
+    floor: ['sewer2-floor'],
+    accent: [],
+    // Wall pieces named by which edge/corner is SOLID (so nw = wall in the NW,
+    // opening toward the SE floor, etc.).
     wall: {
-      h: 'sat-wall-6-0',
-      l: 'sat-wall-left', r: 'sat-wall-right',
-      nw: 'sat-wall-0-3', ne: 'sat-wall-1-3', sw: 'sat-wall-cor-sw', se: 'sat-wall-cor-se',
+      top: 'sewer2-w-top', bottom: 'sewer2-w-bottom', left: 'sewer2-w-left', right: 'sewer2-w-right',
+      nw: 'sewer2-c-nw', ne: 'sewer2-c-ne', sw: 'sewer2-c-sw', se: 'sewer2-c-se',
     },
-    fallback: 'sat-wall-6-0',
+    fallback: 'sewer2-fill',
   },
 };
 const bg = (keys) => keys.map((k) => `url("${TILES[k]}")`).join(', ');
@@ -56,20 +54,20 @@ function paintFloor(tile, cfg, x, y) {
 }
 // Pick a wall piece from the 8 neighbours: inner corners (two adjacent floor
 // edges) first, then straight edges, then outer corners (only a diagonal is
-// floor — e.g. the map's own corners), else solid.
+// floor — e.g. the map's own corners), else solid fill.
 function wallKey(cfg, d, x, y) {
   const f = (xx, yy) => yy >= 0 && yy < d.height && xx >= 0 && xx < d.width && d.tiles[yy][xx] === 1;
   const N = f(x, y - 1), E = f(x + 1, y), S = f(x, y + 1), W = f(x - 1, y);
   const NE = f(x + 1, y - 1), SE = f(x + 1, y + 1), SW = f(x - 1, y + 1), NW = f(x - 1, y - 1);
   const w = cfg.wall;
   if (S && E) return w.nw; if (S && W) return w.ne; if (N && E) return w.sw; if (N && W) return w.se;
-  if (S || N) return w.h; if (E) return w.l; if (W) return w.r;
+  if (S) return w.top; if (N) return w.bottom; if (E) return w.left; if (W) return w.right;
   if (SE) return w.nw; if (SW) return w.ne; if (NE) return w.sw; if (NW) return w.se;
   return cfg.fallback;
 }
 function paintWall(tile, cfg, d, x, y) {
-  tile.style.backgroundImage = bg([wallKey(cfg, d, x, y), floorVariant(cfg, x, y)]); // wall over floor
-  tile.style.backgroundSize = '100% 100%, 100% 100%';
+  tile.style.backgroundImage = bg([wallKey(cfg, d, x, y)]); // opaque: floor baked in
+  tile.style.backgroundSize = '100% 100%';
 }
 
 // Which strip the player token shows for each heading. The side strip faces

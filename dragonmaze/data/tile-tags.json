@@ -1551,5 +1551,90 @@
     ],
     "sheet": "sewer-autotile-sheet.png",
     "box": "derived"
+  },
+  "sewer2-c-nw": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sewer2-c-ne": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sewer2-c-se": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sewer2-c-sw": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sewer2-w-top": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sewer2-w-left": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sewer2-w-bottom": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sewer2-w-right": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sewer2-fill": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sewer2-floor": {
+    "tags": [
+      "floor",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": [
+      360,
+      560,
+      256,
+      256
+    ]
   }
 }
