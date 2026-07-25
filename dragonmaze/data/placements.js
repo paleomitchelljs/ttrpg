@@ -2146,22 +2146,6 @@ export const PLACEMENTS = {
         "rot": 0
       },
       {
-        "key": "sewer2-c-nw",
-        "x": 10,
-        "y": 7,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer2-c-ne",
-        "x": 11,
-        "y": 7,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
         "key": "sewer2-w-left",
         "x": 11,
         "y": 8,
@@ -2261,22 +2245,6 @@ export const PLACEMENTS = {
         "key": "sewer2-w-top",
         "x": 12,
         "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer2-c-sw",
-        "x": 11,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer2-c-nw",
-        "x": 11,
-        "y": 4,
         "w": 1,
         "h": 1,
         "rot": 0
@@ -2402,14 +2370,6 @@ export const PLACEMENTS = {
         "rot": 0
       },
       {
-        "key": "sewer2-c-nw",
-        "x": 6,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
         "key": "sewer2-floor",
         "x": 3,
         "y": 1,
@@ -2428,30 +2388,6 @@ export const PLACEMENTS = {
       {
         "key": "sewer2-w-right",
         "x": 6,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer2-w-right",
-        "x": 3,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer2-c-ne",
-        "x": 3,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer2-c-se",
-        "x": 3,
         "y": 4,
         "w": 1,
         "h": 1,
@@ -2674,22 +2610,6 @@ export const PLACEMENTS = {
         "rot": 0
       },
       {
-        "key": "sewer2-c-sw",
-        "x": 6,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer2-c-se",
-        "x": 7,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
         "key": "sewer2-w-left",
         "x": 7,
         "y": 4,
@@ -2714,14 +2634,6 @@ export const PLACEMENTS = {
         "rot": 0
       },
       {
-        "key": "sewer2-c-se",
-        "x": 9,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
         "key": "sewer2-c-nw",
         "x": 9,
         "y": 2,
@@ -2732,14 +2644,6 @@ export const PLACEMENTS = {
       {
         "key": "sewer2-w-top",
         "x": 10,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer2-c-se",
-        "x": 11,
         "y": 2,
         "w": 1,
         "h": 1,
@@ -2866,14 +2770,6 @@ export const PLACEMENTS = {
         "rot": 0
       },
       {
-        "key": "sewer2-c-ne",
-        "x": 6,
-        "y": 7,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
         "key": "sewer2-w-top",
         "x": 4,
         "y": 8,
@@ -2884,14 +2780,6 @@ export const PLACEMENTS = {
       {
         "key": "sewer2-w-top",
         "x": 5,
-        "y": 8,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer2-c-se",
-        "x": 6,
         "y": 8,
         "w": 1,
         "h": 1,
@@ -3032,6 +2920,118 @@ export const PLACEMENTS = {
         "w": 1,
         "h": 1,
         "rot": 0
+      },
+      {
+        "key": "sewer2-ci-sw",
+        "x": 3,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer2-ci-se",
+        "x": 3,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 180
+      },
+      {
+        "key": "sewer2-w-right",
+        "x": 3,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 180
+      },
+      {
+        "key": "sewer2-ci-sw",
+        "x": 11,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer2-ci-se",
+        "x": 10,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer2-ci-nw",
+        "x": 11,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer2-ci-nw",
+        "x": 9,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer2-ci-nw",
+        "x": 6,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer2-ci-sw",
+        "x": 6,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer2-ci-se",
+        "x": 11,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer2-ci-ne",
+        "x": 11,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer2-ci-se",
+        "x": 6,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer2-ci-ne",
+        "x": 6,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "sewer2-ci-nw",
+        "x": 7,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
       }
     ],
     "monsters": [
@@ -3064,8 +3064,8 @@ export const PLACEMENTS = {
     ],
     "boss": [
       {
-        "x": 5,
-        "y": 4
+        "x": 13,
+        "y": 2
       }
     ],
     "portals": [
