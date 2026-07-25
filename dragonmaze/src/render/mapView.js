@@ -34,7 +34,16 @@ const AUTOTILE = {
     // pre-rotated to all four orientations, plus a plain floor and a solid fill.
     floor: ['sewer2-floor'],
     accent: [],
-    water: 'sewer2-water', // '~' cells (walkable stream)
+    water: 'sewer2-water', // fallback for isolated water cells
+    // Water-channel autotile: bitmask of which orthogonal neighbours are also
+    // water (N=1 E=2 S=4 W=8) -> a rotated channel piece with stone banks.
+    waterTiles: {
+      15: 'sw-cross',
+      14: 'sw-tee-esw', 7: 'sw-tee-nes', 11: 'sw-tee-new', 13: 'sw-tee-nsw',
+      10: 'sw-str-h', 5: 'sw-str-v',
+      9: 'sw-cor-nw', 3: 'sw-cor-ne', 6: 'sw-cor-se', 12: 'sw-cor-sw',
+      2: 'sw-str-h', 8: 'sw-str-h', 1: 'sw-str-v', 4: 'sw-str-v', // ends -> straight
+    },
     // Wall pieces named by which edge/corner is SOLID (so nw = wall in the NW,
     // opening toward the SE floor, etc.).
     wall: {
@@ -49,8 +58,13 @@ function floorVariant(cfg, x, y) {
   if (cfg.accent?.length && (x * 131 + y * 197) % 100 < 12) return cfg.accent[(x + y) % cfg.accent.length];
   return cfg.floor[(x * 3 + y) % cfg.floor.length];
 }
+function waterKey(cfg, d, x, y) {
+  const w = (xx, yy) => yy >= 0 && yy < d.height && xx >= 0 && xx < d.width && d.water?.[yy]?.[xx];
+  const mask = (w(x, y - 1) ? 1 : 0) | (w(x + 1, y) ? 2 : 0) | (w(x, y + 1) ? 4 : 0) | (w(x - 1, y) ? 8 : 0);
+  return cfg.waterTiles?.[mask] ?? cfg.water; // 0 (isolated) -> plain water pool
+}
 function paintFloor(tile, cfg, d, x, y) {
-  const key = cfg.water && d.water?.[y]?.[x] ? cfg.water : floorVariant(cfg, x, y);
+  const key = d.water?.[y]?.[x] && cfg.waterTiles ? waterKey(cfg, d, x, y) : floorVariant(cfg, x, y);
   tile.style.backgroundImage = bg([key]);
   tile.style.backgroundSize = '100% 100%';
 }

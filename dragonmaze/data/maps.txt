@@ -564,18 +564,18 @@
      loot     roll (gold/tome/den)                           @11,9
      portal   → courtyard-sewer "A ladder up to the courtyard drains" @2,1
      portal   → under-pyramid-sewer "A channel to the pyramid drains" @13,4
-     boss     The Rat King [giant-rat, giant-rat, green-slime] @7,4
+     boss     The Rat King [giant-rat, giant-rat, green-slime] @9,4
    grid (M monster · L loot · B boss · b mini · d decor anchor):
      ###############
      #.P....S.d.d..#
-     #.###.....###.#
-     #.###.....###.#
-     #..M...B...M.P#
+     #.###..~..###.#
+     #.###..~..###.#
+     #..M...~.B.M.P#
      #~~~~~~~~~~~~~#
-     #d.M.......M.d#
-     #.###.....###.#
-     #.###.....###.#
-     #..L.d.....L..#
+     #d.M...~...M.d#
+     #.###..~..###.#
+     #.###..~..###.#
+     #..L.d.~...L..#
      ###############
 
 == lost-temple / under-pyramid-sewer  [The Pyramid Drains]

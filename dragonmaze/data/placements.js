@@ -1940,7 +1940,7 @@ export const PLACEMENTS = {
     ],
     "boss": [
       {
-        "x": 7,
+        "x": 9,
         "y": 4
       }
     ],

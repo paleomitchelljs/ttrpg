@@ -1650,5 +1650,104 @@
       130,
       130
     ]
+  },
+  "sw-str-h": {
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sw-str-v": {
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sw-cor-nw": {
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sw-cor-sw": {
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sw-cor-se": {
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sw-cor-ne": {
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sw-tee-esw": {
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sw-tee-nes": {
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sw-tee-new": {
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sw-tee-nsw": {
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sw-cross": {
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
   }
 }
