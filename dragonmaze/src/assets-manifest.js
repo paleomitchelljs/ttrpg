@@ -194,6 +194,7 @@ export const TILES = {
   'sewer2-w-left': './assets/tiles/sewer2-w-left.png',
   'sewer2-w-right': './assets/tiles/sewer2-w-right.png',
   'sewer2-w-top': './assets/tiles/sewer2-w-top.png',
+  'sewer2-water': './assets/tiles/sewer2-water.png',
   'snake-statue': './assets/tiles/snake-statue.png',
   'snakestatue': './assets/tiles/snakestatue.png',
   'snakewall': './assets/tiles/snakewall.png',

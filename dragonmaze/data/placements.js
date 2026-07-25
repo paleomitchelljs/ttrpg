@@ -1731,95 +1731,47 @@ export const PLACEMENTS = {
       },
       {
         "key": "torch-lit",
-        "x": 2,
-        "y": 2,
-        "w": 0.5,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "torch-lit",
-        "x": 11,
-        "y": 2,
-        "w": 0.5,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "torch-lit",
-        "x": 2,
-        "y": 8,
-        "w": 0.5,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "torch-lit",
-        "x": 11,
-        "y": 8,
-        "w": 0.5,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer-canal",
-        "x": 7,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer-canal",
-        "x": 7,
-        "y": 9,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer-water",
-        "x": 4,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer-water-edge",
-        "x": 10,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer-column",
-        "x": 5,
+        "x": 1,
         "y": 4,
-        "w": 1,
-        "h": 1.6,
+        "w": 0.5,
+        "h": 1,
         "rot": 0
       },
       {
-        "key": "sewer-column",
-        "x": 9,
+        "key": "torch-lit",
+        "x": 13,
         "y": 4,
-        "w": 1,
-        "h": 1.6,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "torch-lit",
+        "x": 1,
+        "y": 6,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "torch-lit",
+        "x": 13,
+        "y": 6,
+        "w": 0.5,
+        "h": 1,
         "rot": 0
       },
       {
         "key": "sewer-slime",
-        "x": 9,
-        "y": 5,
+        "x": 5,
+        "y": 1,
         "w": 0.9,
         "h": 0.8,
         "rot": 0
       },
       {
         "key": "sewer-slime",
-        "x": 3,
+        "x": 9,
         "y": 9,
         "w": 0.9,
         "h": 0.8,
@@ -1827,33 +1779,17 @@ export const PLACEMENTS = {
       },
       {
         "key": "sewer-mushrooms",
-        "x": 5,
-        "y": 7,
+        "x": 3,
+        "y": 9,
         "w": 0.8,
         "h": 0.8,
         "rot": 0
       },
       {
         "key": "sewer-skulls",
-        "x": 1,
-        "y": 7,
+        "x": 11,
+        "y": 1,
         "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "gargoyle-statue",
-        "x": 8,
-        "y": 5,
-        "w": 1,
-        "h": 1.4,
-        "rot": 0
-      },
-      {
-        "key": "rune-altar",
-        "x": 10,
-        "y": 7,
-        "w": 1.4,
         "h": 1,
         "rot": 0
       }
@@ -1865,21 +1801,21 @@ export const PLACEMENTS = {
       },
       {
         "x": 10,
-        "y": 3
+        "y": 1
       },
       {
-        "x": 4,
-        "y": 7
+        "x": 3,
+        "y": 6
       },
       {
-        "x": 11,
-        "y": 7
+        "x": 10,
+        "y": 6
       }
     ],
     "boss": [
       {
         "x": 7,
-        "y": 3
+        "y": 4
       }
     ],
     "loot": [
@@ -1889,7 +1825,7 @@ export const PLACEMENTS = {
       },
       {
         "x": 12,
-        "y": 5
+        "y": 9
       }
     ],
     "portals": [
@@ -1922,15 +1858,23 @@ export const PLACEMENTS = {
       {
         "key": "sewer-grate",
         "x": 13,
-        "y": 5,
+        "y": 4,
         "w": 1,
         "h": 1,
         "rot": 0
       },
       {
         "key": "torch-lit",
-        "x": 3,
-        "y": 2,
+        "x": 1,
+        "y": 6,
+        "w": 0.5,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "torch-lit",
+        "x": 13,
+        "y": 6,
         "w": 0.5,
         "h": 1,
         "rot": 0
@@ -1938,73 +1882,9 @@ export const PLACEMENTS = {
       {
         "key": "torch-lit",
         "x": 11,
-        "y": 2,
+        "y": 1,
         "w": 0.5,
         "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "torch-lit",
-        "x": 3,
-        "y": 8,
-        "w": 0.5,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "torch-lit",
-        "x": 11,
-        "y": 8,
-        "w": 0.5,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer-water",
-        "x": 5,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer-water",
-        "x": 9,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer-canal",
-        "x": 7,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer-canal",
-        "x": 7,
-        "y": 7,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer-water-edge",
-        "x": 5,
-        "y": 7,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer-slime",
-        "x": 9,
-        "y": 7,
-        "w": 0.9,
-        "h": 0.8,
         "rot": 0
       },
       {
@@ -2017,76 +1897,60 @@ export const PLACEMENTS = {
       },
       {
         "key": "sewer-mushrooms",
-        "x": 11,
-        "y": 3,
-        "w": 0.8,
-        "h": 0.8,
-        "rot": 0
-      },
-      {
-        "key": "sewer-mushrooms",
         "x": 3,
-        "y": 5,
+        "y": 6,
         "w": 0.8,
         "h": 0.8,
         "rot": 0
       },
       {
         "key": "sewer-skulls",
-        "x": 1,
-        "y": 9,
+        "x": 9,
+        "y": 1,
         "w": 1,
         "h": 1,
         "rot": 0
       },
       {
         "key": "crates",
-        "x": 13,
+        "x": 11,
         "y": 9,
         "w": 1,
         "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer-skeleton",
-        "x": 9,
-        "y": 9,
-        "w": 1.1,
-        "h": 0.7,
         "rot": 0
       }
     ],
     "monsters": [
       {
-        "x": 5,
-        "y": 3
-      },
-      {
-        "x": 9,
-        "y": 3
-      },
-      {
         "x": 3,
-        "y": 7
+        "y": 4
       },
       {
         "x": 11,
-        "y": 7
+        "y": 4
+      },
+      {
+        "x": 3,
+        "y": 6
+      },
+      {
+        "x": 11,
+        "y": 6
       }
     ],
     "boss": [
       {
         "x": 7,
-        "y": 5
+        "y": 4
       }
     ],
     "loot": [
       {
-        "x": 11,
-        "y": 1
+        "x": 3,
+        "y": 9
       },
       {
-        "x": 3,
+        "x": 11,
         "y": 9
       }
     ],
@@ -2100,7 +1964,7 @@ export const PLACEMENTS = {
       },
       {
         "x": 13,
-        "y": 5,
+        "y": 4,
         "to": "under-pyramid-sewer",
         "title": "A channel to the pyramid drains",
         "label": "The channel pours east toward the pyramid cisterns. Follow it down?"
@@ -2112,7 +1976,7 @@ export const PLACEMENTS = {
       {
         "key": "sewer-grate",
         "x": 1,
-        "y": 5,
+        "y": 4,
         "w": 1,
         "h": 1,
         "rot": 0
@@ -2127,130 +1991,58 @@ export const PLACEMENTS = {
       },
       {
         "key": "torch-lit",
-        "x": 2,
-        "y": 2,
+        "x": 1,
+        "y": 6,
         "w": 0.5,
         "h": 1,
         "rot": 0
       },
       {
         "key": "torch-lit",
-        "x": 11,
-        "y": 2,
+        "x": 13,
+        "y": 6,
         "w": 0.5,
         "h": 1,
         "rot": 0
       },
       {
         "key": "torch-lit",
-        "x": 2,
-        "y": 8,
+        "x": 13,
+        "y": 4,
         "w": 0.5,
         "h": 1,
         "rot": 0
       },
       {
-        "key": "torch-lit",
-        "x": 11,
-        "y": 8,
-        "w": 0.5,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer-water",
+        "key": "gargoyle-statue",
         "x": 7,
-        "y": 1,
+        "y": 4,
         "w": 1,
-        "h": 1,
+        "h": 1.4,
         "rot": 0
       },
       {
-        "key": "sewer-water",
-        "x": 7,
+        "key": "sewer-skulls",
+        "x": 3,
         "y": 9,
         "w": 1,
         "h": 1,
         "rot": 0
       },
       {
-        "key": "sewer-canal",
-        "x": 4,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer-canal",
-        "x": 10,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer-water-edge",
-        "x": 7,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "pyramid-capstone",
-        "x": 10,
-        "y": 5,
-        "w": 1.2,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "panel-croc",
-        "x": 5,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "panel-mask",
-        "x": 9,
-        "y": 2,
+        "key": "sewer-bone",
+        "x": 11,
+        "y": 9,
         "w": 1,
         "h": 1,
         "rot": 0
       },
       {
         "key": "sewer-slime",
-        "x": 3,
-        "y": 7,
+        "x": 9,
+        "y": 1,
         "w": 0.9,
         "h": 0.8,
-        "rot": 0
-      },
-      {
-        "key": "sewer-mushrooms",
-        "x": 12,
-        "y": 3,
-        "w": 0.8,
-        "h": 0.8,
-        "rot": 0
-      },
-      {
-        "key": "sewer-skulls",
-        "x": 1,
-        "y": 9,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "gargoyle-statue",
-        "x": 5,
-        "y": 7,
-        "w": 1,
-        "h": 1.4,
         "rot": 0
       }
     ],
@@ -2264,34 +2056,34 @@ export const PLACEMENTS = {
         "y": 1
       },
       {
-        "x": 4,
-        "y": 7
+        "x": 3,
+        "y": 6
       },
       {
-        "x": 11,
-        "y": 9
+        "x": 10,
+        "y": 6
       }
     ],
     "boss": [
       {
         "x": 7,
-        "y": 7
+        "y": 6
       }
     ],
     "loot": [
       {
         "x": 2,
-        "y": 3
+        "y": 9
       },
       {
         "x": 12,
-        "y": 7
+        "y": 9
       }
     ],
     "portals": [
       {
         "x": 1,
-        "y": 5,
+        "y": 4,
         "to": "under-maze-sewer",
         "title": "A channel back to the maze drains",
         "label": "The current runs west, back toward the maze cisterns. Wade in?"
@@ -2325,165 +2117,93 @@ export const PLACEMENTS = {
       },
       {
         "key": "green-font",
-        "x": 12,
-        "y": 5,
+        "x": 13,
+        "y": 4,
         "w": 1.1,
         "h": 1.1,
         "rot": 0
       },
       {
         "key": "altar-skulls",
-        "x": 12,
-        "y": 3,
+        "x": 11,
+        "y": 4,
         "w": 1.2,
         "h": 0.9,
         "rot": 0
       },
       {
         "key": "rune-altar",
-        "x": 12,
-        "y": 7,
+        "x": 3,
+        "y": 4,
         "w": 1.4,
         "h": 1,
         "rot": 0
       },
       {
         "key": "torch-lit",
-        "x": 3,
-        "y": 2,
+        "x": 1,
+        "y": 6,
         "w": 0.5,
         "h": 1,
         "rot": 0
       },
       {
         "key": "torch-lit",
-        "x": 11,
-        "y": 2,
+        "x": 13,
+        "y": 6,
         "w": 0.5,
         "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "torch-lit",
-        "x": 3,
-        "y": 8,
-        "w": 0.5,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "torch-lit",
-        "x": 11,
-        "y": 8,
-        "w": 0.5,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer-water",
-        "x": 5,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer-water",
-        "x": 9,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer-canal",
-        "x": 7,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer-canal",
-        "x": 7,
-        "y": 7,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer-slime",
-        "x": 5,
-        "y": 3,
-        "w": 0.9,
-        "h": 0.8,
         "rot": 0
       },
       {
         "key": "sewer-skulls",
         "x": 9,
-        "y": 7,
+        "y": 9,
         "w": 1,
         "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer-skeleton",
-        "x": 3,
-        "y": 7,
-        "w": 1.1,
-        "h": 0.7,
         "rot": 0
       },
       {
         "key": "throne",
         "x": 3,
-        "y": 5,
+        "y": 6,
         "w": 1,
         "h": 1.3,
-        "rot": 0
-      },
-      {
-        "key": "panel-snake",
-        "x": 5,
-        "y": 2,
-        "w": 1,
-        "h": 1,
         "rot": 0
       }
     ],
     "monsters": [
       {
         "x": 3,
-        "y": 3
-      },
-      {
-        "x": 9,
-        "y": 3
-      },
-      {
-        "x": 5,
-        "y": 7
-      },
-      {
-        "x": 11,
-        "y": 7
-      }
-    ],
-    "boss": [
-      {
-        "x": 11,
-        "y": 5
-      }
-    ],
-    "loot": [
-      {
-        "x": 3,
-        "y": 9
+        "y": 1
       },
       {
         "x": 11,
         "y": 1
+      },
+      {
+        "x": 3,
+        "y": 6
+      },
+      {
+        "x": 11,
+        "y": 6
+      }
+    ],
+    "boss": [
+      {
+        "x": 7,
+        "y": 6
+      }
+    ],
+    "loot": [
+      {
+        "x": 11,
+        "y": 9
+      },
+      {
+        "x": 12,
+        "y": 4
       }
     ],
     "portals": [
@@ -2503,7 +2223,7 @@ export const PLACEMENTS = {
       },
       {
         "x": 13,
-        "y": 5,
+        "y": 4,
         "to": "summoning-chamber",
         "title": "The way to the summoning chamber",
         "label": "Green light seeps from a doorway ahead — the summoning of the Avatar. Enter?"

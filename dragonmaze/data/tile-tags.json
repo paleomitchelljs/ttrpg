@@ -1636,5 +1636,19 @@
       256,
       256
     ]
+  },
+  "sewer2-water": {
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": [
+      300,
+      570,
+      130,
+      130
+    ]
   }
 }

@@ -34,6 +34,7 @@ const AUTOTILE = {
     // pre-rotated to all four orientations, plus a plain floor and a solid fill.
     floor: ['sewer2-floor'],
     accent: [],
+    water: 'sewer2-water', // '~' cells (walkable stream)
     // Wall pieces named by which edge/corner is SOLID (so nw = wall in the NW,
     // opening toward the SE floor, etc.).
     wall: {
@@ -48,8 +49,9 @@ function floorVariant(cfg, x, y) {
   if (cfg.accent?.length && (x * 131 + y * 197) % 100 < 12) return cfg.accent[(x + y) % cfg.accent.length];
   return cfg.floor[(x * 3 + y) % cfg.floor.length];
 }
-function paintFloor(tile, cfg, x, y) {
-  tile.style.backgroundImage = bg([floorVariant(cfg, x, y)]);
+function paintFloor(tile, cfg, d, x, y) {
+  const key = cfg.water && d.water?.[y]?.[x] ? cfg.water : floorVariant(cfg, x, y);
+  tile.style.backgroundImage = bg([key]);
   tile.style.backgroundSize = '100% 100%';
 }
 // Pick a wall piece from the 8 neighbours: inner corners (two adjacent floor
@@ -142,7 +144,7 @@ export function renderMap(container, state) {
         if (auto) paintWall(tile, auto, d, x, y);
       } else {
         tile.classList.add('floor');
-        if (auto) paintFloor(tile, auto, x, y);
+        if (auto) paintFloor(tile, auto, d, x, y);
         if (dim) {
           tile.classList.add('fog-dim');
         } else {

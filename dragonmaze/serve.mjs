@@ -43,7 +43,7 @@ const freshPlacements = async () => (await import('./data/placements.js?v=' + Da
 // leaving every other line (comments, tables, bosses) byte-for-byte intact.
 // zones.js is hand-authored, so this validates hard and never partially writes:
 // rows must be equal-length strings of legal map chars with exactly one start.
-const MAP_ROW = /^[#.SE1-9]+$/;
+const MAP_ROW = /^[#.~SE1-9]+$/;
 function rewriteZonesMap(source, subId, rows) {
   if (!Array.isArray(rows) || rows.length === 0) throw new Error(`${subId}: empty map`);
   const w = rows[0].length;

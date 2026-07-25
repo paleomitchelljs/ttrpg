@@ -26,6 +26,8 @@ export function buildZoneDungeon(zoneId, subIndex, seedString, partySize = 1) {
   // NOT walkable floor; you walk *into* them from the adjacent floor tile.
   const isDoorCh = (ch) => ch === 'E' || (ch >= '1' && ch <= '9');
   const tiles = rows.map((r) => [...r].map((ch) => (ch === '#' || isDoorCh(ch) ? 0 : 1)));
+  // '~' is walkable (a shallow sewer stream) but drawn as water, not stone floor.
+  const water = rows.map((r) => [...r].map((ch) => ch === '~'));
   const floorAt = (x, y) => x >= 0 && x < width && y >= 0 && y < height && tiles[y][x] === 1;
 
   // Geometry pass: the map yields only the start and the border-wall doors.
@@ -109,6 +111,7 @@ export function buildZoneDungeon(zoneId, subIndex, seedString, partySize = 1) {
     width,
     height,
     tiles,
+    water,
     start,
     exit: doors.find((d) => d.to === 'surface') ?? null,
     encounters,
