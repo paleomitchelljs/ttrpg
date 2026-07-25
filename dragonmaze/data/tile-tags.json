@@ -1,4 +1,17 @@
 {
+  "altar-skulls": {
+    "tags": [
+      "prop",
+      "structure"
+    ],
+    "sheet": "sewer-decor-a-sheet.png",
+    "box": [
+      1215,
+      18,
+      183,
+      168
+    ]
+  },
   "brazier1": {
     "tags": [
       "prop",
@@ -461,6 +474,43 @@
       232
     ]
   },
+  "crate": {
+    "tags": [
+      "prop"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      1572,
+      690,
+      72,
+      90
+    ]
+  },
+  "crates": {
+    "tags": [
+      "prop"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      1677,
+      669,
+      126,
+      111
+    ]
+  },
+  "gargoyle-statue": {
+    "tags": [
+      "statue",
+      "structure"
+    ],
+    "sheet": "sewer-decor-b-sheet.png",
+    "box": [
+      21,
+      27,
+      81,
+      117
+    ]
+  },
   "gator-statue": {
     "tags": [
       "statue"
@@ -473,6 +523,83 @@
       172
     ]
   },
+  "gold-hoard": {
+    "tags": [
+      "treasure"
+    ],
+    "sheet": "sewer-loot-sheet.png",
+    "box": [
+      24,
+      39,
+      345,
+      303
+    ]
+  },
+  "green-font": {
+    "tags": [
+      "structure",
+      "prop"
+    ],
+    "sheet": "sewer-loot-sheet.png",
+    "box": [
+      408,
+      0,
+      357,
+      342
+    ]
+  },
+  "panel-croc": {
+    "tags": [
+      "wall",
+      "prop"
+    ],
+    "sheet": "temple-panels-sheet.png",
+    "box": [
+      9,
+      6,
+      141,
+      156
+    ]
+  },
+  "panel-mask": {
+    "tags": [
+      "wall",
+      "statue"
+    ],
+    "sheet": "temple-panels-sheet.png",
+    "box": [
+      615,
+      6,
+      141,
+      156
+    ]
+  },
+  "panel-snake": {
+    "tags": [
+      "wall",
+      "prop"
+    ],
+    "sheet": "temple-panels-sheet.png",
+    "box": [
+      312,
+      6,
+      141,
+      156
+    ]
+  },
+  "pyramid-capstone": {
+    "tags": [
+      "prop",
+      "structure"
+    ],
+    "sheet": "sewer-loot-sheet.png",
+    "box": [
+      822,
+      18,
+      306,
+      324
+    ]
+  },
   "round-hut": {
     "tags": [
       "building"
@@ -483,6 +610,930 @@
       708,
       228,
       284
+    ]
+  },
+  "rune-altar": {
+    "tags": [
+      "structure",
+      "prop"
+    ],
+    "sheet": "sewer-decor-b-sheet.png",
+    "box": [
+      132,
+      39,
+      165,
+      105
+    ]
+  },
+  "sat-floor-0-0": {
+    "tags": [
+      "floor",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      18,
+      22,
+      126,
+      132
+    ]
+  },
+  "sat-floor-0-1": {
+    "tags": [
+      "floor",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      18,
+      142,
+      126,
+      252
+    ]
+  },
+  "sat-floor-1-0": {
+    "tags": [
+      "floor",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      132,
+      22,
+      240,
+      132
+    ]
+  },
+  "sat-floor-1-1": {
+    "tags": [
+      "floor",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      132,
+      142,
+      240,
+      252
+    ]
+  },
+  "sat-floor-2-0": {
+    "tags": [
+      "floor",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      246,
+      22,
+      354,
+      132
+    ]
+  },
+  "sat-floor-2-1": {
+    "tags": [
+      "floor",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      246,
+      142,
+      354,
+      252
+    ]
+  },
+  "sat-floor-3-0": {
+    "tags": [
+      "floor",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      360,
+      22,
+      468,
+      132
+    ]
+  },
+  "sat-floor-3-1": {
+    "tags": [
+      "floor",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      360,
+      142,
+      468,
+      252
+    ]
+  },
+  "sat-floor-4-0": {
+    "tags": [
+      "floor",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      474,
+      22,
+      582,
+      132
+    ]
+  },
+  "sat-floor-4-1": {
+    "tags": [
+      "floor",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      474,
+      142,
+      582,
+      252
+    ]
+  },
+  "sat-floor-5-0": {
+    "tags": [
+      "floor",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      588,
+      22,
+      696,
+      132
+    ]
+  },
+  "sat-wall-0-3": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      18,
+      382,
+      126,
+      492
+    ]
+  },
+  "sat-wall-0-4": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      18,
+      502,
+      126,
+      612
+    ]
+  },
+  "sat-wall-1-3": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      132,
+      382,
+      240,
+      492
+    ]
+  },
+  "sat-wall-1-4": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      132,
+      502,
+      240,
+      612
+    ]
+  },
+  "sat-wall-10-0": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      1158,
+      22,
+      1266,
+      132
+    ]
+  },
+  "sat-wall-10-1": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      1158,
+      142,
+      1266,
+      252
+    ]
+  },
+  "sat-wall-11-0": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      1272,
+      22,
+      1380,
+      132
+    ]
+  },
+  "sat-wall-2-3": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      246,
+      382,
+      354,
+      492
+    ]
+  },
+  "sat-wall-2-4": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      246,
+      502,
+      354,
+      612
+    ]
+  },
+  "sat-wall-3-3": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      360,
+      382,
+      468,
+      492
+    ]
+  },
+  "sat-wall-4-3": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      474,
+      382,
+      582,
+      492
+    ]
+  },
+  "sat-wall-5-3": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      588,
+      382,
+      696,
+      492
+    ]
+  },
+  "sat-wall-6-0": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      702,
+      22,
+      810,
+      132
+    ]
+  },
+  "sat-wall-6-1": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      702,
+      142,
+      810,
+      252
+    ]
+  },
+  "sat-wall-6-2": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      702,
+      262,
+      810,
+      372
+    ]
+  },
+  "sat-wall-7-0": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      816,
+      22,
+      924,
+      132
+    ]
+  },
+  "sat-wall-7-1": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      816,
+      142,
+      924,
+      252
+    ]
+  },
+  "sat-wall-7-2": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      816,
+      262,
+      924,
+      372
+    ]
+  },
+  "sat-wall-8-0": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      930,
+      22,
+      1038,
+      132
+    ]
+  },
+  "sat-wall-8-1": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      930,
+      142,
+      1038,
+      252
+    ]
+  },
+  "sat-wall-8-2": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      930,
+      262,
+      1038,
+      372
+    ]
+  },
+  "sat-wall-9-0": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      1044,
+      22,
+      1152,
+      132
+    ]
+  },
+  "sat-wall-9-1": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      1044,
+      142,
+      1152,
+      252
+    ]
+  },
+  "sat-wall-9-2": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": [
+      1044,
+      262,
+      1152,
+      372
+    ]
+  },
+  "sat-wall-cor-se": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": "derived"
+  },
+  "sat-wall-cor-sw": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": "derived"
+  },
+  "sat-wall-left": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": "derived"
+  },
+  "sat-wall-right": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": "derived"
+  },
+  "sat-wall-w": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "box": "mirror sat-wall-0-3"
+  },
+  "sewer-archway": {
+    "tags": [
+      "door",
+      "structure"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      1551,
+      288,
+      132,
+      132
+    ]
+  },
+  "sewer-bone": {
+    "tags": [
+      "prop"
+    ],
+    "sheet": "sewer-decor-a-sheet.png",
+    "box": [
+      630,
+      45,
+      138,
+      129
+    ]
+  },
+  "sewer-brazier": {
+    "tags": [
+      "light",
+      "prop"
+    ],
+    "sheet": "sewer-decor-a-sheet.png",
+    "box": [
+      843,
+      6,
+      123,
+      180
+    ]
+  },
+  "sewer-canal": {
+    "tags": [
+      "floor",
+      "water"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      366,
+      801,
+      147,
+      159
+    ]
+  },
+  "sewer-canal-bend": {
+    "tags": [
+      "floor",
+      "water"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      537,
+      801,
+      150,
+      159
+    ]
+  },
+  "sewer-column": {
+    "tags": [
+      "structure"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      813,
+      630,
+      69,
+      159
+    ]
+  },
+  "sewer-floor": {
+    "tags": [
+      "floor"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      198,
+      213,
+      171,
+      171
+    ]
+  },
+  "sewer-floor-dirt": {
+    "tags": [
+      "floor"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      1125,
+      267,
+      162,
+      159
+    ]
+  },
+  "sewer-floor-moss": {
+    "tags": [
+      "floor"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      1308,
+      267,
+      159,
+      162
+    ]
+  },
+  "sewer-gate": {
+    "tags": [
+      "door"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      1710,
+      288,
+      129,
+      132
+    ]
+  },
+  "sewer-grate": {
+    "tags": [
+      "floor",
+      "prop"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      1125,
+      852,
+      96,
+      102
+    ]
+  },
+  "sewer-lever": {
+    "tags": [
+      "prop"
+    ],
+    "sheet": "sewer-decor-a-sheet.png",
+    "box": [
+      231,
+      15,
+      147,
+      171
+    ]
+  },
+  "sewer-mushrooms": {
+    "tags": [
+      "plant"
+    ],
+    "sheet": "sewer-decor-a-sheet.png",
+    "box": [
+      414,
+      36,
+      174,
+      135
+    ]
+  },
+  "sewer-rune": {
+    "tags": [
+      "prop"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      1374,
+      852,
+      96,
+      102
+    ]
+  },
+  "sewer-skeleton": {
+    "tags": [
+      "prop"
+    ],
+    "sheet": "sewer-decor-b-sheet.png",
+    "box": [
+      870,
+      78,
+      90,
+      60
+    ]
+  },
+  "sewer-skulls": {
+    "tags": [
+      "prop"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      1374,
+      675,
+      96,
+      102
+    ]
+  },
+  "sewer-slime": {
+    "tags": [
+      "prop"
+    ],
+    "sheet": "sewer-decor-a-sheet.png",
+    "box": [
+      6,
+      51,
+      186,
+      129
+    ]
+  },
+  "sewer-sludge": {
+    "tags": [
+      "floor",
+      "water"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      189,
+      801,
+      150,
+      159
+    ]
+  },
+  "sewer-wall": {
+    "tags": [
+      "wall"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      1125,
+      45,
+      162,
+      159
+    ]
+  },
+  "sewer-water": {
+    "tags": [
+      "floor",
+      "water"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      12,
+      801,
+      150,
+      159
+    ]
+  },
+  "sewer-water-edge": {
+    "tags": [
+      "floor",
+      "water"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      714,
+      801,
+      174,
+      159
+    ]
+  },
+  "sewer-waterfall": {
+    "tags": [
+      "water"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      915,
+      678,
+      171,
+      282
+    ]
+  },
+  "sewer2-c-ne": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sewer2-c-nw": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sewer2-c-se": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sewer2-c-sw": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sewer2-ci-ne": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer2-ci-ne.png",
+    "box": "derived"
+  },
+  "sewer2-ci-nw": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer2-ci-nw.png",
+    "box": "derived"
+  },
+  "sewer2-ci-se": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer2-ci-se.png",
+    "box": "derived"
+  },
+  "sewer2-ci-sw": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer2-ci-sw.png",
+    "box": "derived"
+  },
+  "sewer2-fill": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sewer2-floor": {
+    "tags": [
+      "floor",
+      "autotile"
+    ],
+    "sheet": "sewer2-floor.png",
+    "box": [
+      0,
+      0,
+      256,
+      256
+    ]
+  },
+  "sewer2-floor2": {
+    "tags": [
+      "floor",
+      "autotile"
+    ],
+    "sheet": "sewer2-floor2.png",
+    "box": [
+      0,
+      0,
+      256,
+      256
+    ]
+  },
+  "sewer2-w-bottom": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sewer2-w-left": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sewer2-w-right": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sewer2-w-top": {
+    "tags": [
+      "wall",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sewer2-water": {
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": [
+      300,
+      570,
+      130,
+      130
     ]
   },
   "snake-statue": {
@@ -531,6 +1582,143 @@
       716,
       252,
       276
+    ]
+  },
+  "sw-cor-ne": {
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sw-cor-nw": {
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sw-cor-se": {
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sw-cor-sw": {
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sw-cross": {
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sw-str-h": {
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sw-str-v": {
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sw-tee-esw": {
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sw-tee-nes": {
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sw-tee-new": {
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "sw-tee-nsw": {
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "box": "derived"
+  },
+  "throne": {
+    "tags": [
+      "structure"
+    ],
+    "sheet": "sewer-decor-a-sheet.png",
+    "box": [
+      1044,
+      0,
+      120,
+      186
+    ]
+  },
+  "torch-lit": {
+    "tags": [
+      "light",
+      "prop"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      1248,
+      675,
+      96,
+      102
+    ]
+  },
+  "torch-out": {
+    "tags": [
+      "light",
+      "prop"
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "box": [
+      1125,
+      675,
+      96,
+      102
     ]
   },
   "wall-a": {
@@ -606,1148 +1794,5 @@
       244,
       268
     ]
-  },
-  "sewer-wall": {
-    "tags": [
-      "wall"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      1125,
-      45,
-      162,
-      159
-    ]
-  },
-  "sewer-floor": {
-    "tags": [
-      "floor"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      198,
-      213,
-      171,
-      171
-    ]
-  },
-  "sewer-floor-dirt": {
-    "tags": [
-      "floor"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      1125,
-      267,
-      162,
-      159
-    ]
-  },
-  "sewer-floor-moss": {
-    "tags": [
-      "floor"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      1308,
-      267,
-      159,
-      162
-    ]
-  },
-  "sewer-archway": {
-    "tags": [
-      "door",
-      "structure"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      1551,
-      288,
-      132,
-      132
-    ]
-  },
-  "sewer-gate": {
-    "tags": [
-      "door"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      1710,
-      288,
-      129,
-      132
-    ]
-  },
-  "sewer-column": {
-    "tags": [
-      "structure"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      813,
-      630,
-      69,
-      159
-    ]
-  },
-  "sewer-waterfall": {
-    "tags": [
-      "water"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      915,
-      678,
-      171,
-      282
-    ]
-  },
-  "sewer-water": {
-    "tags": [
-      "floor",
-      "water"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      12,
-      801,
-      150,
-      159
-    ]
-  },
-  "sewer-sludge": {
-    "tags": [
-      "floor",
-      "water"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      189,
-      801,
-      150,
-      159
-    ]
-  },
-  "sewer-canal": {
-    "tags": [
-      "floor",
-      "water"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      366,
-      801,
-      147,
-      159
-    ]
-  },
-  "sewer-canal-bend": {
-    "tags": [
-      "floor",
-      "water"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      537,
-      801,
-      150,
-      159
-    ]
-  },
-  "sewer-water-edge": {
-    "tags": [
-      "floor",
-      "water"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      714,
-      801,
-      174,
-      159
-    ]
-  },
-  "sewer-grate": {
-    "tags": [
-      "floor",
-      "prop"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      1125,
-      852,
-      96,
-      102
-    ]
-  },
-  "sewer-rune": {
-    "tags": [
-      "prop"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      1374,
-      852,
-      96,
-      102
-    ]
-  },
-  "torch-lit": {
-    "tags": [
-      "light",
-      "prop"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      1248,
-      675,
-      96,
-      102
-    ]
-  },
-  "torch-out": {
-    "tags": [
-      "light",
-      "prop"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      1125,
-      675,
-      96,
-      102
-    ]
-  },
-  "sewer-skulls": {
-    "tags": [
-      "prop"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      1374,
-      675,
-      96,
-      102
-    ]
-  },
-  "crate": {
-    "tags": [
-      "prop"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      1572,
-      690,
-      72,
-      90
-    ]
-  },
-  "crates": {
-    "tags": [
-      "prop"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      1677,
-      669,
-      126,
-      111
-    ]
-  },
-  "sewer-slime": {
-    "tags": [
-      "prop"
-    ],
-    "sheet": "sewer-decor-a-sheet.png",
-    "box": [
-      6,
-      51,
-      186,
-      129
-    ]
-  },
-  "sewer-lever": {
-    "tags": [
-      "prop"
-    ],
-    "sheet": "sewer-decor-a-sheet.png",
-    "box": [
-      231,
-      15,
-      147,
-      171
-    ]
-  },
-  "sewer-mushrooms": {
-    "tags": [
-      "plant"
-    ],
-    "sheet": "sewer-decor-a-sheet.png",
-    "box": [
-      414,
-      36,
-      174,
-      135
-    ]
-  },
-  "sewer-bone": {
-    "tags": [
-      "prop"
-    ],
-    "sheet": "sewer-decor-a-sheet.png",
-    "box": [
-      630,
-      45,
-      138,
-      129
-    ]
-  },
-  "sewer-brazier": {
-    "tags": [
-      "light",
-      "prop"
-    ],
-    "sheet": "sewer-decor-a-sheet.png",
-    "box": [
-      843,
-      6,
-      123,
-      180
-    ]
-  },
-  "throne": {
-    "tags": [
-      "structure"
-    ],
-    "sheet": "sewer-decor-a-sheet.png",
-    "box": [
-      1044,
-      0,
-      120,
-      186
-    ]
-  },
-  "altar-skulls": {
-    "tags": [
-      "prop",
-      "structure"
-    ],
-    "sheet": "sewer-decor-a-sheet.png",
-    "box": [
-      1215,
-      18,
-      183,
-      168
-    ]
-  },
-  "gold-hoard": {
-    "tags": [
-      "treasure"
-    ],
-    "sheet": "sewer-loot-sheet.png",
-    "box": [
-      24,
-      39,
-      345,
-      303
-    ]
-  },
-  "green-font": {
-    "tags": [
-      "structure",
-      "prop"
-    ],
-    "sheet": "sewer-loot-sheet.png",
-    "box": [
-      408,
-      0,
-      357,
-      342
-    ]
-  },
-  "pyramid-capstone": {
-    "tags": [
-      "prop",
-      "structure"
-    ],
-    "sheet": "sewer-loot-sheet.png",
-    "box": [
-      822,
-      18,
-      306,
-      324
-    ]
-  },
-  "gargoyle-statue": {
-    "tags": [
-      "statue",
-      "structure"
-    ],
-    "sheet": "sewer-decor-b-sheet.png",
-    "box": [
-      21,
-      27,
-      81,
-      117
-    ]
-  },
-  "rune-altar": {
-    "tags": [
-      "structure",
-      "prop"
-    ],
-    "sheet": "sewer-decor-b-sheet.png",
-    "box": [
-      132,
-      39,
-      165,
-      105
-    ]
-  },
-  "sewer-skeleton": {
-    "tags": [
-      "prop"
-    ],
-    "sheet": "sewer-decor-b-sheet.png",
-    "box": [
-      870,
-      78,
-      90,
-      60
-    ]
-  },
-  "panel-croc": {
-    "tags": [
-      "wall",
-      "prop"
-    ],
-    "sheet": "temple-panels-sheet.png",
-    "box": [
-      9,
-      6,
-      141,
-      156
-    ]
-  },
-  "panel-snake": {
-    "tags": [
-      "wall",
-      "prop"
-    ],
-    "sheet": "temple-panels-sheet.png",
-    "box": [
-      312,
-      6,
-      141,
-      156
-    ]
-  },
-  "panel-mask": {
-    "tags": [
-      "wall",
-      "statue"
-    ],
-    "sheet": "temple-panels-sheet.png",
-    "box": [
-      615,
-      6,
-      141,
-      156
-    ]
-  },
-  "sat-floor-0-0": {
-    "tags": [
-      "floor",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      18,
-      22,
-      126,
-      132
-    ]
-  },
-  "sat-floor-1-0": {
-    "tags": [
-      "floor",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      132,
-      22,
-      240,
-      132
-    ]
-  },
-  "sat-floor-2-0": {
-    "tags": [
-      "floor",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      246,
-      22,
-      354,
-      132
-    ]
-  },
-  "sat-floor-3-0": {
-    "tags": [
-      "floor",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      360,
-      22,
-      468,
-      132
-    ]
-  },
-  "sat-floor-4-0": {
-    "tags": [
-      "floor",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      474,
-      22,
-      582,
-      132
-    ]
-  },
-  "sat-floor-5-0": {
-    "tags": [
-      "floor",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      588,
-      22,
-      696,
-      132
-    ]
-  },
-  "sat-floor-0-1": {
-    "tags": [
-      "floor",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      18,
-      142,
-      126,
-      252
-    ]
-  },
-  "sat-floor-1-1": {
-    "tags": [
-      "floor",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      132,
-      142,
-      240,
-      252
-    ]
-  },
-  "sat-floor-2-1": {
-    "tags": [
-      "floor",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      246,
-      142,
-      354,
-      252
-    ]
-  },
-  "sat-floor-3-1": {
-    "tags": [
-      "floor",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      360,
-      142,
-      468,
-      252
-    ]
-  },
-  "sat-floor-4-1": {
-    "tags": [
-      "floor",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      474,
-      142,
-      582,
-      252
-    ]
-  },
-  "sat-wall-6-0": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      702,
-      22,
-      810,
-      132
-    ]
-  },
-  "sat-wall-7-0": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      816,
-      22,
-      924,
-      132
-    ]
-  },
-  "sat-wall-8-0": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      930,
-      22,
-      1038,
-      132
-    ]
-  },
-  "sat-wall-9-0": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      1044,
-      22,
-      1152,
-      132
-    ]
-  },
-  "sat-wall-10-0": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      1158,
-      22,
-      1266,
-      132
-    ]
-  },
-  "sat-wall-11-0": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      1272,
-      22,
-      1380,
-      132
-    ]
-  },
-  "sat-wall-6-1": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      702,
-      142,
-      810,
-      252
-    ]
-  },
-  "sat-wall-7-1": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      816,
-      142,
-      924,
-      252
-    ]
-  },
-  "sat-wall-8-1": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      930,
-      142,
-      1038,
-      252
-    ]
-  },
-  "sat-wall-9-1": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      1044,
-      142,
-      1152,
-      252
-    ]
-  },
-  "sat-wall-10-1": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      1158,
-      142,
-      1266,
-      252
-    ]
-  },
-  "sat-wall-6-2": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      702,
-      262,
-      810,
-      372
-    ]
-  },
-  "sat-wall-7-2": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      816,
-      262,
-      924,
-      372
-    ]
-  },
-  "sat-wall-8-2": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      930,
-      262,
-      1038,
-      372
-    ]
-  },
-  "sat-wall-9-2": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      1044,
-      262,
-      1152,
-      372
-    ]
-  },
-  "sat-wall-0-3": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      18,
-      382,
-      126,
-      492
-    ]
-  },
-  "sat-wall-1-3": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      132,
-      382,
-      240,
-      492
-    ]
-  },
-  "sat-wall-2-3": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      246,
-      382,
-      354,
-      492
-    ]
-  },
-  "sat-wall-3-3": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      360,
-      382,
-      468,
-      492
-    ]
-  },
-  "sat-wall-4-3": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      474,
-      382,
-      582,
-      492
-    ]
-  },
-  "sat-wall-5-3": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      588,
-      382,
-      696,
-      492
-    ]
-  },
-  "sat-wall-0-4": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      18,
-      502,
-      126,
-      612
-    ]
-  },
-  "sat-wall-1-4": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      132,
-      502,
-      240,
-      612
-    ]
-  },
-  "sat-wall-2-4": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      246,
-      502,
-      354,
-      612
-    ]
-  },
-  "sat-wall-w": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": "mirror sat-wall-0-3"
-  },
-  "sat-wall-left": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": "derived"
-  },
-  "sat-wall-right": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": "derived"
-  },
-  "sat-wall-cor-sw": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": "derived"
-  },
-  "sat-wall-cor-se": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": "derived"
-  },
-  "sewer2-c-nw": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sewer2-c-ne": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sewer2-c-se": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sewer2-c-sw": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sewer2-w-top": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sewer2-w-left": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sewer2-w-bottom": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sewer2-w-right": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sewer2-fill": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sewer2-floor": {
-    "tags": [
-      "floor",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": [
-      360,
-      560,
-      256,
-      256
-    ]
-  },
-  "sewer2-water": {
-    "tags": [
-      "floor",
-      "water",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": [
-      300,
-      570,
-      130,
-      130
-    ]
-  },
-  "sw-str-h": {
-    "tags": [
-      "floor",
-      "water",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sw-str-v": {
-    "tags": [
-      "floor",
-      "water",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sw-cor-nw": {
-    "tags": [
-      "floor",
-      "water",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sw-cor-sw": {
-    "tags": [
-      "floor",
-      "water",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sw-cor-se": {
-    "tags": [
-      "floor",
-      "water",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sw-cor-ne": {
-    "tags": [
-      "floor",
-      "water",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sw-tee-esw": {
-    "tags": [
-      "floor",
-      "water",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sw-tee-nes": {
-    "tags": [
-      "floor",
-      "water",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sw-tee-new": {
-    "tags": [
-      "floor",
-      "water",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sw-tee-nsw": {
-    "tags": [
-      "floor",
-      "water",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sw-cross": {
-    "tags": [
-      "floor",
-      "water",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
   }
 }
