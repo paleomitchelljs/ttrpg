@@ -71,7 +71,7 @@ const TYPES = {
   '.svg': 'image/svg+xml',
 };
 
-createServer(async (req, res) => {
+const server = createServer(async (req, res) => {
   try {
     const url = new URL(req.url, 'http://localhost');
 
@@ -157,12 +157,51 @@ createServer(async (req, res) => {
     res.writeHead(404, { 'Content-Type': 'text/plain' });
     res.end('not found');
   }
-}).listen(port, '127.0.0.1', () => {
-  console.log(`Red Dragon Labyrinth dev server: http://localhost:${port}/ (caching disabled, localhost-only)`);
+});
+
+// Announce (and --open) once, on the port we actually bind. Registered on the
+// server itself rather than passed to listen(): a failed listen() leaves its
+// callback registered but never fired, so passing it per-attempt double-fires
+// the banner (and the browser opener) when a later port succeeds.
+let announced = false;
+server.on('listening', () => {
+  if (announced) return;
+  announced = true;
+  const bound = server.address().port;
+  console.log(`Red Dragon Labyrinth dev server: http://localhost:${bound}/ (caching disabled, localhost-only)`);
   if (process.argv.includes('--open')) {
-    const url = `http://localhost:${port}/editor.html`;
+    const url = `http://localhost:${bound}/editor.html`;
     const opener = process.platform === 'darwin' ? 'open' : process.platform === 'win32' ? 'start' : 'xdg-open';
     try { spawn(opener, [url], { stdio: 'ignore', detached: true }).unref(); } catch {}
     console.log(`opening the tile editor → ${url}`);
   }
 });
+
+// Bind, but if the preferred port is taken (a stale editor server, a second dev
+// instance) walk up to the next free one instead of crashing with an EADDRINUSE
+// stack trace. Capped so a genuinely wedged machine still fails loudly.
+function start(p, attempts = 10) {
+  server.once('error', (err) => {
+    if (err.code === 'EADDRINUSE' && attempts > 0) {
+      console.log(`port ${p} in use — trying ${p + 1}…`);
+      start(p + 1, attempts - 1);
+    } else {
+      console.error(err.message || err);
+      process.exit(1);
+    }
+  });
+  server.listen(p, '127.0.0.1');
+}
+start(port);
+
+// Shut down cleanly on Ctrl-C / kill so we never leave an orphaned listener
+// holding the port — which is exactly the stale-server situation that caused
+// the EADDRINUSE above. The unref'd timeout is a backstop if a lingering
+// keep-alive socket keeps server.close() from resolving.
+for (const sig of ['SIGINT', 'SIGTERM']) {
+  process.on(sig, () => {
+    console.log(`\n${sig} — shutting down dev server`);
+    server.close(() => process.exit(0));
+    setTimeout(() => process.exit(0), 500).unref();
+  });
+}
