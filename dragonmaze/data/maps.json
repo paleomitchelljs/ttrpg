@@ -3401,6 +3401,11 @@
         "to": "under-maze-sewer",
         "title": "A drop to the maze drains",
         "label": "A broken drain falls away toward the maze cisterns. Climb down?"
+      },
+      {
+        "x": 6,
+        "y": 1,
+        "to": "courtyard-nw"
       }
     ],
     "table": [
@@ -3463,106 +3468,6 @@
       },
       {
         "type": "decor",
-        "id": "torch-lit",
-        "tags": [
-          "light",
-          "prop"
-        ],
-        "x": 1,
-        "y": 4,
-        "w": 0.5,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "torch-lit",
-        "tags": [
-          "light",
-          "prop"
-        ],
-        "x": 13,
-        "y": 4,
-        "w": 0.5,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "torch-lit",
-        "tags": [
-          "light",
-          "prop"
-        ],
-        "x": 1,
-        "y": 6,
-        "w": 0.5,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "torch-lit",
-        "tags": [
-          "light",
-          "prop"
-        ],
-        "x": 13,
-        "y": 6,
-        "w": 0.5,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer-slime",
-        "tags": [
-          "prop"
-        ],
-        "x": 5,
-        "y": 1,
-        "w": 0.9,
-        "h": 0.8,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer-slime",
-        "tags": [
-          "prop"
-        ],
-        "x": 8.5,
-        "y": 9,
-        "w": 0.9,
-        "h": 0.8,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer-mushrooms",
-        "tags": [
-          "plant"
-        ],
-        "x": 4,
-        "y": 9,
-        "w": 0.8,
-        "h": 0.8,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer-skulls",
-        "tags": [
-          "prop"
-        ],
-        "x": 11.5,
-        "y": 0.5,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
         "id": "sewer2-w-top",
         "tags": [
           "wall",
@@ -3589,403 +3494,13 @@
       },
       {
         "type": "decor",
-        "id": "sewer2-w-top",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 2,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-top",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 1,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-top",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 7,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-top",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 5,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-c-nw",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 0,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 2,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 1,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 4,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 5,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 6,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-left",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 0,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
         "id": "sewer2-c-sw",
         "tags": [
           "wall",
           "autotile"
         ],
         "x": 0,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 1,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 2,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 4,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 5,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 7,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 4,
         "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 5,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 5,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 4,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 4,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 4,
-        "y": 6,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 2,
-        "y": 6,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 1,
-        "y": 6,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 1,
-        "y": 9,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 4,
-        "y": 9,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 5,
-        "y": 9,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 6,
-        "y": 9,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 7,
-        "y": 9,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 1,
-        "y": 10,
         "w": 1,
         "h": 1,
         "rot": 0
@@ -4103,58 +3618,6 @@
         ],
         "x": 10,
         "y": 10,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-right",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 10,
-        "y": 9,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-right",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 10,
-        "y": 8,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-left",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 11,
-        "y": 8,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-left",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 11,
-        "y": 9,
         "w": 1,
         "h": 1,
         "rot": 0
@@ -4278,58 +3741,6 @@
       },
       {
         "type": "decor",
-        "id": "sewer2-w-top",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 13,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-top",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 12,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 12,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 13,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
         "id": "sewer2-c-se",
         "tags": [
           "wall",
@@ -4434,136 +3845,6 @@
       },
       {
         "type": "decor",
-        "id": "sewer2-w-left",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 11,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-c-ne",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 8,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-right",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 8,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-c-se",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 8,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 7,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 3,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-right",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 6,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-right",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 6,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-top",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 2,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-top",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 1,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
         "id": "sewer2-c-nw",
         "tags": [
           "wall",
@@ -4597,409 +3878,6 @@
         ],
         "x": 0,
         "y": 6,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-c-sw",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 0,
-        "y": 7,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 12,
-        "y": 8,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 13,
-        "y": 8,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 13,
-        "y": 7,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 12,
-        "y": 7,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 12,
-        "y": 6,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 13,
-        "y": 6,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 11,
-        "y": 6,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 10,
-        "y": 6,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 8,
-        "y": 6,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 7,
-        "y": 6,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 6,
-        "y": 6,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 5,
-        "y": 6,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 5,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 8,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 8,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 9,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 12,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 13,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 12,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 12,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 13,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-left",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 7,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-c-nw",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 7,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-top",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 8,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-c-nw",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 9,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-top",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 10,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 11,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 10,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 10,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 10,
-        "y": 5,
         "w": 1,
         "h": 1,
         "rot": 0
@@ -5032,13 +3910,52 @@
       },
       {
         "type": "decor",
+        "id": "sewer2-w-right",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 0,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 180
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-bottom",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 1,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
         "id": "sewer2-c-nw",
         "tags": [
           "wall",
           "autotile"
         ],
         "x": 0,
-        "y": 8,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-left",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 0,
+        "y": 1,
         "w": 1,
         "h": 1,
         "rot": 0
@@ -5051,7 +3968,7 @@
           "autotile"
         ],
         "x": 1,
-        "y": 8,
+        "y": 0,
         "w": 1,
         "h": 1,
         "rot": 0
@@ -5064,7 +3981,7 @@
           "autotile"
         ],
         "x": 2,
-        "y": 8,
+        "y": 0,
         "w": 1,
         "h": 1,
         "rot": 0
@@ -5076,67 +3993,145 @@
           "wall",
           "autotile"
         ],
-        "x": 3,
-        "y": 8,
+        "x": 5,
+        "y": 0,
         "w": 1,
         "h": 1,
         "rot": 0
       },
       {
         "type": "decor",
-        "id": "sewer2-w-bottom",
+        "id": "sewer2-w-top",
         "tags": [
           "wall",
           "autotile"
         ],
-        "x": 1,
-        "y": 7,
+        "x": 6,
+        "y": 0,
         "w": 1,
         "h": 1,
         "rot": 0
       },
       {
         "type": "decor",
-        "id": "sewer2-w-bottom",
+        "id": "sewer2-w-top",
         "tags": [
           "wall",
           "autotile"
         ],
-        "x": 2,
-        "y": 7,
+        "x": 7,
+        "y": 0,
         "w": 1,
         "h": 1,
         "rot": 0
       },
       {
         "type": "decor",
-        "id": "sewer2-w-bottom",
+        "id": "sewer2-w-top",
         "tags": [
           "wall",
           "autotile"
         ],
-        "x": 3,
-        "y": 7,
+        "x": 8,
+        "y": 0,
         "w": 1,
         "h": 1,
         "rot": 0
       },
       {
         "type": "decor",
-        "id": "sewer2-w-bottom",
+        "id": "sewer2-w-top",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 9,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-ci-se",
         "tags": [
           "wall",
           "autotile"
         ],
         "x": 4,
-        "y": 7,
+        "y": 2,
         "w": 1,
         "h": 1,
         "rot": 0
       },
       {
         "type": "decor",
-        "id": "sewer2-w-bottom",
+        "id": "sewer2-ci-sw",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 5,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-left",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 5,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-left",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 5,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-left",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 5,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-left",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 5,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-ci-nw",
         "tags": [
           "wall",
           "autotile"
@@ -5155,7 +4150,46 @@
           "autotile"
         ],
         "x": 4,
-        "y": 8,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-c-se",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 4,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-right",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 4,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-c-ne",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 4,
+        "y": 4,
         "w": 1,
         "h": 1,
         "rot": 0
@@ -5167,108 +4201,108 @@
           "wall",
           "autotile"
         ],
-        "x": 5,
-        "y": 8,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 7,
-        "y": 8,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 7,
-        "y": 7,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 8,
-        "y": 7,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
         "x": 3,
-        "y": 9,
+        "y": 4,
         "w": 1,
         "h": 1,
         "rot": 0
       },
       {
         "type": "decor",
-        "id": "sewer2-floor2",
+        "id": "sewer2-w-top",
         "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 3,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
+          "wall",
           "autotile"
         ],
         "x": 2,
-        "y": 5,
+        "y": 4,
         "w": 1,
         "h": 1,
         "rot": 0
       },
       {
         "type": "decor",
-        "id": "sewer2-floor2",
+        "id": "sewer2-w-top",
         "tags": [
-          "floor",
+          "wall",
           "autotile"
         ],
         "x": 1,
-        "y": 5,
+        "y": 4,
         "w": 1,
         "h": 1,
         "rot": 0
       },
       {
         "type": "decor",
-        "id": "sewer2-floor2",
+        "id": "sewer2-w-bottom",
         "tags": [
-          "floor",
+          "wall",
+          "autotile"
+        ],
+        "x": 1,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-bottom",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 2,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-bottom",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 3,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-c-se",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 4,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-top",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 3,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-bottom",
+        "tags": [
+          "wall",
           "autotile"
         ],
         "x": 3,
@@ -5279,12 +4313,38 @@
       },
       {
         "type": "decor",
-        "id": "sewer2-floor2",
+        "id": "sewer2-ci-se",
         "tags": [
-          "floor",
+          "wall",
           "autotile"
         ],
         "x": 2,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-ci-ne",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 2,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-left",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 11,
         "y": 9,
         "w": 1,
         "h": 1,
@@ -5292,26 +4352,12 @@
       },
       {
         "type": "decor",
-        "id": "sewer2-floor",
+        "id": "sewer2-w-left",
         "tags": [
-          "floor",
+          "wall",
           "autotile"
         ],
-        "x": 12,
-        "y": 9,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sw-cor-nw",
-        "tags": [
-          "floor",
-          "water",
-          "autotile"
-        ],
-        "x": 9,
+        "x": 11,
         "y": 8,
         "w": 1,
         "h": 1,
@@ -5319,10 +4365,100 @@
       },
       {
         "type": "decor",
-        "id": "sw-str-v",
+        "id": "sewer2-w-left",
         "tags": [
-          "floor",
-          "water",
+          "wall",
+          "autotile"
+        ],
+        "x": 11,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-ci-sw",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 11,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-ci-se",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 8,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-ci-ne",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 8,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-right",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 10,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-right",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 10,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-c-ne",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 10,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-top",
+        "tags": [
+          "wall",
           "autotile"
         ],
         "x": 9,
@@ -5333,10 +4469,9 @@
       },
       {
         "type": "decor",
-        "id": "sw-str-v",
+        "id": "sewer2-w-bottom",
         "tags": [
-          "floor",
-          "water",
+          "wall",
           "autotile"
         ],
         "x": 9,
@@ -5347,13 +4482,25 @@
       },
       {
         "type": "decor",
-        "id": "sw-str-v",
+        "id": "sewer2-w-bottom",
         "tags": [
-          "floor",
-          "water",
+          "wall",
           "autotile"
         ],
-        "x": 9,
+        "x": 10,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-ci-ne",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 13,
         "y": 5,
         "w": 1,
         "h": 1,
@@ -5361,28 +4508,147 @@
       },
       {
         "type": "decor",
-        "id": "sw-cor-se",
+        "id": "sewer2-ci-se",
         "tags": [
-          "floor",
-          "water",
+          "wall",
           "autotile"
         ],
-        "x": 8,
-        "y": 8,
+        "x": 13,
+        "y": 4,
         "w": 1,
         "h": 1,
         "rot": 0
       },
       {
         "type": "decor",
-        "id": "sw-tee-new",
+        "id": "sewer2-ci-ne",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 10,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-ci-nw",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 11,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-left",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 11,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-left",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 11,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-right",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 10,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-right",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 10,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sw-cor-ne",
         "tags": [
           "floor",
           "water",
           "autotile"
         ],
-        "x": 8,
-        "y": 9,
+        "x": 9,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sw-str-v",
+        "tags": [
+          "floor",
+          "water",
+          "autotile"
+        ],
+        "x": 9,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sw-str-v",
+        "tags": [
+          "floor",
+          "water",
+          "autotile"
+        ],
+        "x": 9,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sw-str-v",
+        "tags": [
+          "floor",
+          "water",
+          "autotile"
+        ],
+        "x": 9,
+        "y": 1,
         "w": 1,
         "h": 1,
         "rot": 0
@@ -5395,7 +4661,131 @@
           "water",
           "autotile"
         ],
-        "x": 9,
+        "x": 10,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sw-str-h",
+        "tags": [
+          "floor",
+          "water",
+          "autotile"
+        ],
+        "x": 11,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sw-tee-esw",
+        "tags": [
+          "floor",
+          "water",
+          "autotile"
+        ],
+        "x": 12,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sw-str-v",
+        "tags": [
+          "floor",
+          "water",
+          "autotile"
+        ],
+        "x": 12,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sw-str-v",
+        "tags": [
+          "floor",
+          "water",
+          "autotile"
+        ],
+        "x": 12,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sw-cor-ne",
+        "tags": [
+          "floor",
+          "water",
+          "autotile"
+        ],
+        "x": 12,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sw-cor-sw",
+        "tags": [
+          "floor",
+          "water",
+          "autotile"
+        ],
+        "x": 13,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sw-str-v",
+        "tags": [
+          "floor",
+          "water",
+          "autotile"
+        ],
+        "x": 13,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 12,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 12,
         "y": 9,
         "w": 1,
         "h": 1,
@@ -5403,90 +4793,51 @@
       },
       {
         "type": "decor",
-        "id": "sewer2-ci-sw",
+        "id": "sewer2-floor2",
         "tags": [
-          "wall",
+          "floor",
           "autotile"
         ],
-        "x": 3,
-        "y": 2,
+        "x": 13,
+        "y": 6,
         "w": 1,
         "h": 1,
         "rot": 0
       },
       {
         "type": "decor",
-        "id": "sewer2-ci-se",
+        "id": "sewer2-floor2",
         "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 3,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 180
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-right",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 3,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 180
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-ci-sw",
-        "tags": [
-          "wall",
+          "floor",
           "autotile"
         ],
         "x": 11,
-        "y": 7,
+        "y": 5,
         "w": 1,
         "h": 1,
         "rot": 0
       },
       {
         "type": "decor",
-        "id": "sewer2-ci-se",
+        "id": "sewer2-floor",
         "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 10,
-        "y": 7,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-ci-nw",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 11,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-ci-nw",
-        "tags": [
-          "wall",
+          "floor",
           "autotile"
         ],
         "x": 9,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 12,
         "y": 3,
         "w": 1,
         "h": 1,
@@ -5494,9 +4845,555 @@
       },
       {
         "type": "decor",
-        "id": "sewer2-ci-nw",
+        "id": "sewer2-floor",
         "tags": [
-          "wall",
+          "floor",
+          "autotile"
+        ],
+        "x": 13,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 13,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 12,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 12,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 8,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 8,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 8,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 8,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 8,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 7,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 6,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 6,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 7,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 7,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 6,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 6,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 7,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 7,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 5,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 4,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 3,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 3,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 2,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 1,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 1,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 2,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 3,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 2,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 1,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 1,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 1,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 1,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 1,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 2,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 2,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 3,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 3,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 4,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 4,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 5,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 5,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 6,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
           "autotile"
         ],
         "x": 6,
@@ -5507,9 +5404,9 @@
       },
       {
         "type": "decor",
-        "id": "sewer2-ci-sw",
+        "id": "sewer2-floor2",
         "tags": [
-          "wall",
+          "floor",
           "autotile"
         ],
         "x": 6,
@@ -5520,104 +5417,172 @@
       },
       {
         "type": "decor",
-        "id": "sewer2-ci-se",
+        "id": "sewer2-floor2",
         "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 11,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-ci-ne",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 11,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-ci-se",
-        "tags": [
-          "wall",
+          "floor",
           "autotile"
         ],
         "x": 6,
-        "y": 2,
+        "y": 6,
         "w": 1,
         "h": 1,
         "rot": 0
       },
       {
         "type": "decor",
-        "id": "sewer2-ci-ne",
+        "id": "sewer2-floor2",
         "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 6,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-ci-nw",
-        "tags": [
-          "wall",
+          "floor",
           "autotile"
         ],
         "x": 7,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 7,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 7,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 8,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 9,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 9,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 8,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor2",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 7,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-left",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 0,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-left",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 0,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 10,
         "y": 5,
         "w": 1,
         "h": 1,
         "rot": 0
       },
       {
-        "type": "monster",
-        "x": 2,
-        "y": 1,
-        "roll": true
-      },
-      {
-        "type": "monster",
-        "x": 12,
-        "y": 1,
-        "roll": true
-      },
-      {
-        "type": "monster",
-        "x": 1,
-        "y": 6,
-        "roll": true
-      },
-      {
-        "type": "monster",
-        "x": 11,
-        "y": 6,
-        "roll": true
-      },
-      {
-        "type": "loot",
-        "x": 1,
-        "y": 9,
-        "roll": true
-      },
-      {
-        "type": "loot",
-        "x": 1,
-        "y": 5,
-        "roll": true
+        "type": "decor",
+        "id": "sewer2-c-ne",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 10,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
       },
       {
         "type": "portal",
@@ -5634,16 +5599,11 @@
         "title": "A drop to the maze drains"
       },
       {
-        "type": "boss",
-        "x": 13,
-        "y": 2,
-        "name": "The Sluicewarden Gators",
-        "pack": [
-          "alligator",
-          "alligator",
-          "green-slime"
-        ],
-        "drops": []
+        "type": "portal",
+        "x": 6,
+        "y": 1,
+        "to": "courtyard-nw",
+        "title": null
       }
     ]
   },
@@ -5759,7 +5719,7 @@
           "prop"
         ],
         "x": 13,
-        "y": 6,
+        "y": 7,
         "w": 0.5,
         "h": 1,
         "rot": 0
@@ -5795,7 +5755,7 @@
         "tags": [
           "plant"
         ],
-        "x": 1.5,
+        "x": 2,
         "y": 5,
         "w": 0.8,
         "h": 0.8,
@@ -5803,18 +5763,6 @@
       },
       {
         "type": "decor",
-        "id": "sewer-skulls",
-        "tags": [
-          "prop"
-        ],
-        "x": 8,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
         "id": "sewer2-w-top",
         "tags": [
           "wall",
@@ -5893,175 +5841,6 @@
       },
       {
         "type": "decor",
-        "id": "sewer2-c-sw",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 0,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 1,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 2,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-top",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 4,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-c-ne",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 5,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-right",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 5,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-right",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 5,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-right",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 5,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-ci-sw",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 3,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-ci-sw",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 3,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 90
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-top",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 2,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-top",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 1,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-c-nw",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 0,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
         "id": "sewer2-w-left",
         "tags": [
           "wall",
@@ -6072,583 +5851,6 @@
         "w": 1,
         "h": 1,
         "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-ci-se",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 5,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 270
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-top",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 6,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-ci-sw",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 7,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 90
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-left",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 7,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-left",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 7,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-left",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 7,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-c-nw",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 7,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-top",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 8,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-top",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 9,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-top",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 10,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-top",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 11,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-top",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 12,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-top",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 13,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-c-ne",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 14,
-        "y": 0,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-right",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 14,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-c-se",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 14,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sw-str-v",
-        "tags": [
-          "floor",
-          "water",
-          "autotile"
-        ],
-        "x": 4,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sw-str-v",
-        "tags": [
-          "floor",
-          "water",
-          "autotile"
-        ],
-        "x": 4,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sw-str-v",
-        "tags": [
-          "floor",
-          "water",
-          "autotile"
-        ],
-        "x": 4,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sw-str-v",
-        "tags": [
-          "floor",
-          "water",
-          "autotile"
-        ],
-        "x": 4,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sw-cor-nw",
-        "tags": [
-          "floor",
-          "water",
-          "autotile"
-        ],
-        "x": 4,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 90
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 13,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 12,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 11,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 10,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-ci-se",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 9,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-ci-sw",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 9,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 180
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 10,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 180
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 11,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 180
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 12,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 180
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 13,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 180
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-c-ne",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 14,
-        "y": 3,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-right",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 14,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-c-se",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 14,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 13,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 12,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 11,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 10,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-ci-se",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 9,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-ci-sw",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 9,
-        "y": 6,
-        "w": 1,
-        "h": 1,
-        "rot": 180
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 10,
-        "y": 6,
-        "w": 1,
-        "h": 1,
-        "rot": 180
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 11,
-        "y": 6,
-        "w": 1,
-        "h": 1,
-        "rot": 180
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 12,
-        "y": 6,
-        "w": 1,
-        "h": 1,
-        "rot": 180
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 13,
-        "y": 6,
-        "w": 1,
-        "h": 1,
-        "rot": 180
       },
       {
         "type": "decor",
@@ -6787,110 +5989,6 @@
           "wall",
           "autotile"
         ],
-        "x": 8,
-        "y": 10,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-left",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 8,
-        "y": 9,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-ci-sw",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 8,
-        "y": 8,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-ci-se",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 7,
-        "y": 8,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-c-se",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 7,
-        "y": 9,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-ci-se",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 6,
-        "y": 9,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-c-se",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 6,
-        "y": 10,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 5,
-        "y": 10,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-c-sw",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
         "x": 4,
         "y": 10,
         "w": 1,
@@ -7003,52 +6101,363 @@
       },
       {
         "type": "decor",
-        "id": "sewer2-w-bottom",
+        "id": "sewer2-ci-ne",
         "tags": [
           "wall",
-          "autotile"
-        ],
-        "x": 1,
-        "y": 6,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 2,
-        "y": 6,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-w-bottom",
-        "tags": [
-          "wall",
-          "autotile"
-        ],
-        "x": 3,
-        "y": 6,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sw-tee-esw",
-        "tags": [
-          "floor",
-          "water",
           "autotile"
         ],
         "x": 6,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-ci-nw",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 7,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-ci-sw",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 7,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-ci-ne",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 4,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-c-sw",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 5,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-top",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 5,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-c-ne",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 6,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-left",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 7,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-bottom",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 6,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-right",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 4,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-right",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 4,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-left",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 5,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-c-ne",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 4,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-c-nw",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 5,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-top",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 6,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-top",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 7,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-top",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 8,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-top",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 9,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-top",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 10,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-top",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 11,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-top",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 12,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-top",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 13,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-c-ne",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 14,
+        "y": 0,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-right",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 14,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-right",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 14,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-right",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 14,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-right",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 14,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-c-se",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 14,
         "y": 5,
         "w": 1,
         "h": 1,
@@ -7056,39 +6465,65 @@
       },
       {
         "type": "decor",
-        "id": "sewer2-w-top",
+        "id": "sewer2-w-bottom",
         "tags": [
           "wall",
           "autotile"
         ],
-        "x": 1,
-        "y": 7,
+        "x": 13,
+        "y": 5,
         "w": 1,
         "h": 1,
         "rot": 0
       },
       {
         "type": "decor",
-        "id": "sewer2-w-top",
+        "id": "sewer2-w-bottom",
         "tags": [
           "wall",
           "autotile"
         ],
-        "x": 2,
-        "y": 7,
+        "x": 12,
+        "y": 5,
         "w": 1,
         "h": 1,
         "rot": 0
       },
       {
         "type": "decor",
-        "id": "sewer2-w-top",
+        "id": "sewer2-c-sw",
         "tags": [
           "wall",
           "autotile"
         ],
-        "x": 3,
-        "y": 7,
+        "x": 11,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-ci-sw",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 11,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-ci-se",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 10,
+        "y": 4,
         "w": 1,
         "h": 1,
         "rot": 0
@@ -7121,7 +6556,7 @@
       },
       {
         "type": "decor",
-        "id": "sewer2-ci-sw",
+        "id": "sewer2-ci-nw",
         "tags": [
           "wall",
           "autotile"
@@ -7130,7 +6565,7 @@
         "y": 7,
         "w": 1,
         "h": 1,
-        "rot": 90
+        "rot": 0
       },
       {
         "type": "decor",
@@ -7147,10 +6582,490 @@
       },
       {
         "type": "decor",
-        "id": "sw-str-h",
+        "id": "sewer2-w-bottom",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 3,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-bottom",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 2,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-bottom",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 1,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-top",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 3,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-top",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 2,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-top",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 1,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-bottom",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 5,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-bottom",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 6,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-bottom",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 7,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-bottom",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 8,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-top",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 13,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-top",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 12,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-top",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 11,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-ci-ne",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 10,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-right",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 10,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-bottom",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 1,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-top",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 1,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-ci-sw",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 2,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-ci-nw",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 2,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-c-sw",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 0,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-c-nw",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 0,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-ci-nw",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 8,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-ci-ne",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 7,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-ci-sw",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 8,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-ci-se",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 7,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-right",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 7,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-w-left",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 8,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
         "tags": [
           "floor",
-          "water",
+          "autotile"
+        ],
+        "x": 1,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 1,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 2,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 3,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 3,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 3,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 3,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 3,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 1,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 4,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
           "autotile"
         ],
         "x": 5,
@@ -7161,80 +7076,35 @@
       },
       {
         "type": "decor",
-        "id": "sw-cor-sw",
+        "id": "sewer2-floor",
         "tags": [
           "floor",
-          "water",
+          "autotile"
+        ],
+        "x": 5,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
           "autotile"
         ],
         "x": 6,
-        "y": 6,
-        "w": 1,
-        "h": 1,
-        "rot": 90
-      },
-      {
-        "type": "decor",
-        "id": "sw-cor-se",
-        "tags": [
-          "floor",
-          "water",
-          "autotile"
-        ],
-        "x": 5,
-        "y": 6,
+        "y": 5,
         "w": 1,
         "h": 1,
         "rot": 0
       },
       {
         "type": "decor",
-        "id": "sw-str-v",
+        "id": "sewer2-floor",
         "tags": [
           "floor",
-          "water",
-          "autotile"
-        ],
-        "x": 5,
-        "y": 7,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sw-str-v",
-        "tags": [
-          "floor",
-          "water",
-          "autotile"
-        ],
-        "x": 5,
-        "y": 8,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sw-str-v",
-        "tags": [
-          "floor",
-          "water",
-          "autotile"
-        ],
-        "x": 5,
-        "y": 9,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sw-str-h",
-        "tags": [
-          "floor",
-          "water",
           "autotile"
         ],
         "x": 7,
@@ -7245,10 +7115,9 @@
       },
       {
         "type": "decor",
-        "id": "sw-cor-nw",
+        "id": "sewer2-floor",
         "tags": [
           "floor",
-          "water",
           "autotile"
         ],
         "x": 8,
@@ -7259,13 +7128,25 @@
       },
       {
         "type": "decor",
-        "id": "sw-str-v",
+        "id": "sewer2-floor",
         "tags": [
           "floor",
-          "water",
           "autotile"
         ],
-        "x": 8,
+        "x": 9,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 9,
         "y": 4,
         "w": 1,
         "h": 1,
@@ -7273,10 +7154,178 @@
       },
       {
         "type": "decor",
-        "id": "sw-str-v",
+        "id": "sewer2-floor",
         "tags": [
           "floor",
-          "water",
+          "autotile"
+        ],
+        "x": 12,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 12,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 13,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 11,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 11,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 13,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 13,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 12,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 12,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 11,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 11,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 10,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 9,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
           "autotile"
         ],
         "x": 8,
@@ -7287,10 +7336,22 @@
       },
       {
         "type": "decor",
-        "id": "sw-str-v",
+        "id": "sewer2-floor",
         "tags": [
           "floor",
-          "water",
+          "autotile"
+        ],
+        "x": 8,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
           "autotile"
         ],
         "x": 8,
@@ -7301,10 +7362,9 @@
       },
       {
         "type": "decor",
-        "id": "sw-cor-se",
+        "id": "sewer2-floor",
         "tags": [
           "floor",
-          "water",
           "autotile"
         ],
         "x": 8,
@@ -7315,13 +7375,12 @@
       },
       {
         "type": "decor",
-        "id": "sw-str-h",
+        "id": "sewer2-floor",
         "tags": [
           "floor",
-          "water",
           "autotile"
         ],
-        "x": 9,
+        "x": 7,
         "y": 1,
         "w": 1,
         "h": 1,
@@ -7329,13 +7388,12 @@
       },
       {
         "type": "decor",
-        "id": "sw-str-h",
+        "id": "sewer2-floor",
         "tags": [
           "floor",
-          "water",
           "autotile"
         ],
-        "x": 10,
+        "x": 6,
         "y": 1,
         "w": 1,
         "h": 1,
@@ -7343,10 +7401,9 @@
       },
       {
         "type": "decor",
-        "id": "sw-str-h",
+        "id": "sewer2-floor",
         "tags": [
           "floor",
-          "water",
           "autotile"
         ],
         "x": 11,
@@ -7357,54 +7414,13 @@
       },
       {
         "type": "decor",
-        "id": "sw-str-h",
-        "tags": [
-          "floor",
-          "water",
-          "autotile"
-        ],
-        "x": 12,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sw-str-h",
-        "tags": [
-          "floor",
-          "water",
-          "autotile"
-        ],
-        "x": 13,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
         "id": "sewer2-floor",
         "tags": [
           "floor",
           "autotile"
         ],
-        "x": 1,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 1,
-        "y": 2,
+        "x": 4,
+        "y": 4,
         "w": 1,
         "h": 1,
         "rot": 0
@@ -7417,32 +7433,6 @@
           "autotile"
         ],
         "x": 2,
-        "y": 2,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 3,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 1,
         "y": 5,
         "w": 1,
         "h": 1,
@@ -7455,8 +7445,73 @@
           "floor",
           "autotile"
         ],
-        "x": 3,
-        "y": 5,
+        "x": 5,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 6,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 6,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 5,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 5,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 6,
+        "y": 8,
         "w": 1,
         "h": 1,
         "rot": 0
@@ -7507,19 +7562,6 @@
           "floor",
           "autotile"
         ],
-        "x": 2,
-        "y": 9,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
         "x": 1,
         "y": 8,
         "w": 1,
@@ -7546,8 +7588,8 @@
           "floor",
           "autotile"
         ],
-        "x": 6,
-        "y": 8,
+        "x": 5,
+        "y": 9,
         "w": 1,
         "h": 1,
         "rot": 0
@@ -7560,7 +7602,7 @@
           "autotile"
         ],
         "x": 6,
-        "y": 7,
+        "y": 9,
         "w": 1,
         "h": 1,
         "rot": 0
@@ -7573,7 +7615,7 @@
           "autotile"
         ],
         "x": 7,
-        "y": 7,
+        "y": 9,
         "w": 1,
         "h": 1,
         "rot": 0
@@ -7586,6 +7628,58 @@
           "autotile"
         ],
         "x": 8,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 9,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 9,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 9,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-floor",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 9,
         "y": 6,
         "w": 1,
         "h": 1,
@@ -7598,71 +7692,6 @@
           "floor",
           "autotile"
         ],
-        "x": 9,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 10,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 12,
-        "y": 4,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 8,
-        "y": 7,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 9,
-        "y": 7,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
         "x": 10,
         "y": 7,
         "w": 1,
@@ -7728,8 +7757,8 @@
           "floor",
           "autotile"
         ],
-        "x": 13,
-        "y": 9,
+        "x": 12,
+        "y": 8,
         "w": 1,
         "h": 1,
         "rot": 0
@@ -7754,8 +7783,8 @@
           "floor",
           "autotile"
         ],
-        "x": 12,
-        "y": 8,
+        "x": 11,
+        "y": 9,
         "w": 1,
         "h": 1,
         "rot": 0
@@ -7767,8 +7796,8 @@
           "floor",
           "autotile"
         ],
-        "x": 11,
-        "y": 8,
+        "x": 10,
+        "y": 9,
         "w": 1,
         "h": 1,
         "rot": 0
@@ -7793,7 +7822,7 @@
           "floor",
           "autotile"
         ],
-        "x": 9,
+        "x": 11,
         "y": 8,
         "w": 1,
         "h": 1,
@@ -7801,77 +7830,12 @@
       },
       {
         "type": "decor",
-        "id": "sewer2-floor",
+        "id": "sewer2-ci-nw",
         "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 9,
-        "y": 9,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor",
-        "tags": [
-          "floor",
+          "wall",
           "autotile"
         ],
         "x": 10,
-        "y": 9,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 11,
-        "y": 9,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 7,
-        "y": 6,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 2,
-        "y": 5,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
-        "x": 3,
         "y": 2,
         "w": 1,
         "h": 1,
@@ -7879,13 +7843,39 @@
       },
       {
         "type": "decor",
-        "id": "sewer2-floor2",
+        "id": "sewer2-ci-ne",
         "tags": [
-          "floor",
+          "wall",
           "autotile"
         ],
-        "x": 11,
-        "y": 4,
+        "x": 9,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-ci-se",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 9,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "sewer2-ci-sw",
+        "tags": [
+          "wall",
+          "autotile"
+        ],
+        "x": 10,
+        "y": 1,
         "w": 1,
         "h": 1,
         "rot": 0
@@ -7893,12 +7883,12 @@
       {
         "type": "monster",
         "x": 4,
-        "y": 3,
+        "y": 4,
         "roll": true
       },
       {
         "type": "monster",
-        "x": 4,
+        "x": 3,
         "y": 8,
         "roll": true
       },
@@ -7910,13 +7900,13 @@
       },
       {
         "type": "loot",
-        "x": 1,
+        "x": 2,
         "y": 9,
         "roll": true
       },
       {
         "type": "loot",
-        "x": 10,
+        "x": 13,
         "y": 9,
         "roll": true
       },
@@ -7936,8 +7926,8 @@
       },
       {
         "type": "boss",
-        "x": 8,
-        "y": 3,
+        "x": 6,
+        "y": 1,
         "name": "The Rat King",
         "pack": [
           "giant-rat",

@@ -507,52 +507,14 @@
 
 == lost-temple / courtyard-sewer  [The Courtyard Drains]
    15x11  theme sewer  difficulty 4
-   start 7,8 | exit(surface) 6,0 | portal->under-palace-sewer 13,1 | portal->under-maze-sewer 13,9
+   start 7,8 | exit(surface) 6,0 | portal->under-palace-sewer 13,1 | portal->under-maze-sewer 13,9 | portal->courtyard-nw 6,1
    table: alligator(w3,≤2)  green-slime(w2,≤2)  giant-rat(w2,≤3)  giant-snake(w1,≤2)
    objects (type · identity · @cell):
      decor    sewer-grate (floor/prop) 1x1 rot0              @13,1
      decor    sewer-grate (floor/prop) 1x1 rot0              @13,9
-     decor    torch-lit (light/prop) 0.5x1 rot0              @1,4
-     decor    torch-lit (light/prop) 0.5x1 rot0              @13,4
-     decor    torch-lit (light/prop) 0.5x1 rot0              @1,6
-     decor    torch-lit (light/prop) 0.5x1 rot0              @13,6
-     decor    sewer-slime (prop) 0.9x0.8 rot0                @5,1
-     decor    sewer-slime (prop) 0.9x0.8 rot0                @8.5,9
-     decor    sewer-mushrooms (plant) 0.8x0.8 rot0           @4,9
-     decor    sewer-skulls (prop) 1x1 rot0                   @11.5,0.5
      decor    sewer2-w-top (wall/autotile) 1x1 rot0          @4,0
      decor    sewer2-w-top (wall/autotile) 1x1 rot0          @3,0
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @2,0
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @1,0
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @7,0
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @5,0
-     decor    sewer2-c-nw (wall/autotile) 1x1 rot0           @0,0
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @2,1
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @1,1
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @4,1
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @5,1
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @6,1
-     decor    sewer2-w-left (wall/autotile) 1x1 rot0         @0,1
-     decor    sewer2-c-sw (wall/autotile) 1x1 rot0           @0,2
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @1,2
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @2,2
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @4,2
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @5,2
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @7,1
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @4,3
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @5,3
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @5,4
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @4,4
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @4,5
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @4,6
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @2,6
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @1,6
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @1,9
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @4,9
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @5,9
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @6,9
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @7,9
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @1,10
+     decor    sewer2-c-sw (wall/autotile) 1x1 rot0           @0,3
      decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @2,10
      decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @3,10
      decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @4,10
@@ -562,10 +524,6 @@
      decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @8,10
      decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @9,10
      decor    sewer2-c-se (wall/autotile) 1x1 rot0           @10,10
-     decor    sewer2-w-right (wall/autotile) 1x1 rot0        @10,9
-     decor    sewer2-w-right (wall/autotile) 1x1 rot0        @10,8
-     decor    sewer2-w-left (wall/autotile) 1x1 rot0         @11,8
-     decor    sewer2-w-left (wall/autotile) 1x1 rot0         @11,9
      decor    sewer2-c-sw (wall/autotile) 1x1 rot0           @11,10
      decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @12,10
      decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @13,10
@@ -575,10 +533,6 @@
      decor    sewer2-w-right (wall/autotile) 1x1 rot0        @14,7
      decor    sewer2-w-right (wall/autotile) 1x1 rot0        @14,6
      decor    sewer2-c-ne (wall/autotile) 1x1 rot0           @14,5
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @13,5
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @12,5
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @12,4
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @13,4
      decor    sewer2-c-se (wall/autotile) 1x1 rot0           @14,4
      decor    sewer2-w-right (wall/autotile) 1x1 rot0        @14,3
      decor    sewer2-w-right (wall/autotile) 1x1 rot0        @14,2
@@ -587,114 +541,153 @@
      decor    sewer2-w-top (wall/autotile) 1x1 rot0          @13,0
      decor    sewer2-w-top (wall/autotile) 1x1 rot0          @12,0
      decor    sewer2-c-nw (wall/autotile) 1x1 rot0           @11,0
-     decor    sewer2-w-left (wall/autotile) 1x1 rot0         @11,1
-     decor    sewer2-c-ne (wall/autotile) 1x1 rot0           @8,0
-     decor    sewer2-w-right (wall/autotile) 1x1 rot0        @8,1
-     decor    sewer2-c-se (wall/autotile) 1x1 rot0           @8,2
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @7,2
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @3,1
-     decor    sewer2-w-right (wall/autotile) 1x1 rot0        @6,3
-     decor    sewer2-w-right (wall/autotile) 1x1 rot0        @6,4
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @2,4
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @1,4
      decor    sewer2-c-nw (wall/autotile) 1x1 rot0           @0,4
      decor    sewer2-w-left (wall/autotile) 1x1 rot0         @0,5
      decor    sewer2-w-left (wall/autotile) 1x1 rot0         @0,6
-     decor    sewer2-c-sw (wall/autotile) 1x1 rot0           @0,7
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @12,8
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @13,8
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @13,7
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @12,7
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @12,6
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @13,6
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @11,6
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @10,6
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @8,6
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @7,6
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @6,6
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @5,6
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @5,5
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @8,5
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @8,4
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @9,4
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @12,1
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @13,2
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @12,2
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @12,3
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @13,3
-     decor    sewer2-w-left (wall/autotile) 1x1 rot0         @7,4
-     decor    sewer2-c-nw (wall/autotile) 1x1 rot0           @7,3
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @8,3
-     decor    sewer2-c-nw (wall/autotile) 1x1 rot0           @9,2
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @10,2
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @11,3
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @10,3
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @10,4
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @10,5
      decor    sewer2-c-sw (wall/autotile) 1x1 rot0           @0,10
      decor    sewer2-w-left (wall/autotile) 1x1 rot0         @0,9
-     decor    sewer2-c-nw (wall/autotile) 1x1 rot0           @0,8
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @1,8
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @2,8
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @3,8
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @1,7
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @2,7
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @3,7
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @4,7
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @5,7
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @4,8
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @5,8
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @7,8
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @7,7
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @8,7
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @3,9
+     decor    sewer2-w-right (wall/autotile) 1x1 rot180      @0,2
+     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @1,10
+     decor    sewer2-c-nw (wall/autotile) 1x1 rot0           @0,0
+     decor    sewer2-w-left (wall/autotile) 1x1 rot0         @0,1
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @1,0
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @2,0
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @5,0
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @6,0
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @7,0
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @8,0
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @9,0
+     decor    sewer2-ci-se (wall/autotile) 1x1 rot0          @4,2
+     decor    sewer2-ci-sw (wall/autotile) 1x1 rot0          @5,2
+     decor    sewer2-w-left (wall/autotile) 1x1 rot0         @5,3
+     decor    sewer2-w-left (wall/autotile) 1x1 rot0         @5,4
+     decor    sewer2-w-left (wall/autotile) 1x1 rot0         @5,5
+     decor    sewer2-w-left (wall/autotile) 1x1 rot0         @5,6
+     decor    sewer2-ci-nw (wall/autotile) 1x1 rot0          @5,7
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @4,7
+     decor    sewer2-c-se (wall/autotile) 1x1 rot0           @4,6
+     decor    sewer2-w-right (wall/autotile) 1x1 rot0        @4,5
+     decor    sewer2-c-ne (wall/autotile) 1x1 rot0           @4,4
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @3,4
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @2,4
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @1,4
+     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @1,3
+     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @2,3
+     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @3,3
+     decor    sewer2-c-se (wall/autotile) 1x1 rot0           @4,3
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @3,7
+     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @3,6
+     decor    sewer2-ci-se (wall/autotile) 1x1 rot0          @2,6
+     decor    sewer2-ci-ne (wall/autotile) 1x1 rot0          @2,7
+     decor    sewer2-w-left (wall/autotile) 1x1 rot0         @11,9
+     decor    sewer2-w-left (wall/autotile) 1x1 rot0         @11,8
+     decor    sewer2-w-left (wall/autotile) 1x1 rot0         @11,7
+     decor    sewer2-ci-sw (wall/autotile) 1x1 rot0          @11,6
+     decor    sewer2-ci-se (wall/autotile) 1x1 rot0          @8,6
+     decor    sewer2-ci-ne (wall/autotile) 1x1 rot0          @8,7
+     decor    sewer2-w-right (wall/autotile) 1x1 rot0        @10,9
+     decor    sewer2-w-right (wall/autotile) 1x1 rot0        @10,8
+     decor    sewer2-c-ne (wall/autotile) 1x1 rot0           @10,7
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @9,7
+     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @9,6
+     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @10,6
+     decor    sewer2-ci-ne (wall/autotile) 1x1 rot0          @13,5
+     decor    sewer2-ci-se (wall/autotile) 1x1 rot0          @13,4
+     decor    sewer2-ci-ne (wall/autotile) 1x1 rot0          @10,3
+     decor    sewer2-ci-nw (wall/autotile) 1x1 rot0          @11,3
+     decor    sewer2-w-left (wall/autotile) 1x1 rot0         @11,2
+     decor    sewer2-w-left (wall/autotile) 1x1 rot0         @11,1
+     decor    sewer2-w-right (wall/autotile) 1x1 rot0        @10,2
+     decor    sewer2-w-right (wall/autotile) 1x1 rot0        @10,1
+     decor    sw-cor-ne (floor/water/autotile) 1x1 rot0      @9,4
+     decor    sw-str-v (floor/water/autotile) 1x1 rot0       @9,3
+     decor    sw-str-v (floor/water/autotile) 1x1 rot0       @9,2
+     decor    sw-str-v (floor/water/autotile) 1x1 rot0       @9,1
+     decor    sw-str-h (floor/water/autotile) 1x1 rot0       @10,4
+     decor    sw-str-h (floor/water/autotile) 1x1 rot0       @11,4
+     decor    sw-tee-esw (floor/water/autotile) 1x1 rot0     @12,4
+     decor    sw-str-v (floor/water/autotile) 1x1 rot0       @12,5
+     decor    sw-str-v (floor/water/autotile) 1x1 rot0       @12,6
+     decor    sw-cor-ne (floor/water/autotile) 1x1 rot0      @12,7
+     decor    sw-cor-sw (floor/water/autotile) 1x1 rot0      @13,7
+     decor    sw-str-v (floor/water/autotile) 1x1 rot0       @13,8
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @12,8
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @12,9
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @13,6
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @11,5
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @9,5
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @12,3
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @13,3
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @13,2
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @12,2
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @12,1
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @8,1
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @8,2
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @8,3
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @8,4
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @8,5
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @7,5
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @6,5
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @6,4
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @7,4
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @7,3
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @6,3
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @6,2
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @7,2
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @7,1
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @5,1
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @4,1
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @3,1
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @3,2
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @2,2
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @1,2
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @1,1
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @2,1
      decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @3,5
      decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @2,5
      decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @1,5
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @3,6
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @1,6
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @1,7
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @1,8
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @1,9
      decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @2,9
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @12,9
-     decor    sw-cor-nw (floor/water/autotile) 1x1 rot0      @9,8
-     decor    sw-str-v (floor/water/autotile) 1x1 rot0       @9,7
-     decor    sw-str-v (floor/water/autotile) 1x1 rot0       @9,6
-     decor    sw-str-v (floor/water/autotile) 1x1 rot0       @9,5
-     decor    sw-cor-se (floor/water/autotile) 1x1 rot0      @8,8
-     decor    sw-tee-new (floor/water/autotile) 1x1 rot0     @8,9
-     decor    sw-str-h (floor/water/autotile) 1x1 rot0       @9,9
-     decor    sewer2-ci-sw (wall/autotile) 1x1 rot0          @3,2
-     decor    sewer2-ci-se (wall/autotile) 1x1 rot180        @3,4
-     decor    sewer2-w-right (wall/autotile) 1x1 rot180      @3,3
-     decor    sewer2-ci-sw (wall/autotile) 1x1 rot0          @11,7
-     decor    sewer2-ci-se (wall/autotile) 1x1 rot0          @10,7
-     decor    sewer2-ci-nw (wall/autotile) 1x1 rot0          @11,2
-     decor    sewer2-ci-nw (wall/autotile) 1x1 rot0          @9,3
-     decor    sewer2-ci-nw (wall/autotile) 1x1 rot0          @6,8
-     decor    sewer2-ci-sw (wall/autotile) 1x1 rot0          @6,7
-     decor    sewer2-ci-se (wall/autotile) 1x1 rot0          @11,4
-     decor    sewer2-ci-ne (wall/autotile) 1x1 rot0          @11,5
-     decor    sewer2-ci-se (wall/autotile) 1x1 rot0          @6,2
-     decor    sewer2-ci-ne (wall/autotile) 1x1 rot0          @6,5
-     decor    sewer2-ci-nw (wall/autotile) 1x1 rot0          @7,5
-     monster  roll (region table)                            @2,1
-     monster  roll (region table)                            @12,1
-     monster  roll (region table)                            @1,6
-     monster  roll (region table)                            @11,6
-     loot     roll (gold/tome/den)                           @1,9
-     loot     roll (gold/tome/den)                           @1,5
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @2,8
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @3,8
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @3,9
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @4,9
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @4,8
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @5,8
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @5,9
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @6,9
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @6,8
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @6,7
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @6,6
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @7,6
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @7,7
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @7,8
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @8,8
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @9,8
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @9,9
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @8,9
+     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @7,9
+     decor    sewer2-w-left (wall/autotile) 1x1 rot0         @0,7
+     decor    sewer2-w-left (wall/autotile) 1x1 rot0         @0,8
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @10,5
+     decor    sewer2-c-ne (wall/autotile) 1x1 rot0           @10,0
      portal   → under-palace-sewer "A shaft to the palace drains" @13,1
      portal   → under-maze-sewer "A drop to the maze drains" @13,9
-     boss     The Sluicewarden Gators [alligator, alligator, green-slime] @13,2
+     portal   → courtyard-nw                                 @6,1
    grid (M monster · L loot · B boss · b mini · d decor anchor):
-     ddddddEdd##dddd
-     ddMdddddd..dMPd
-     dddddddddddddBd
-     #.#dddddddddddd
      ddddddddddddddd
-     dLddddddddddddd
-     dMdddddddddMddd
+     ddddddPddddddPd
      ddddddddddddddd
      ddddddddddddddd
-     dLdddddddddddPd
+     ddddddddddddddd
+     ddddddddddddddd
+     ddddddddddddddd
+     ddddddddddddddd
+     ddddddddddddddd
+     dddddddddddddPd
      ddddddddddddddd
 
 == lost-temple / under-maze-sewer  [The Maze Drains]
@@ -705,75 +698,17 @@
      decor    sewer-grate (floor/prop) 1x1 rot0              @2,1
      decor    sewer-grate (floor/prop) 1x1 rot0              @13,4
      decor    torch-lit (light/prop) 0.5x1 rot0              @1,6
-     decor    torch-lit (light/prop) 0.5x1 rot0              @13,6
+     decor    torch-lit (light/prop) 0.5x1 rot0              @13,7
      decor    torch-lit (light/prop) 0.5x1 rot0              @11,1
      decor    sewer-slime (prop) 0.9x0.8 rot0                @5,8
-     decor    sewer-mushrooms (plant) 0.8x0.8 rot0           @1.5,5
-     decor    sewer-skulls (prop) 1x1 rot0                   @8,1
+     decor    sewer-mushrooms (plant) 0.8x0.8 rot0           @2,5
      decor    sewer2-w-top (wall/autotile) 1x1 rot0          @2,0
      decor    sewer2-w-top (wall/autotile) 1x1 rot0          @3,0
      decor    sewer2-w-top (wall/autotile) 1x1 rot0          @1,0
      decor    sewer2-c-nw (wall/autotile) 1x1 rot0           @0,0
      decor    sewer2-w-left (wall/autotile) 1x1 rot0         @0,1
      decor    sewer2-w-left (wall/autotile) 1x1 rot0         @0,2
-     decor    sewer2-c-sw (wall/autotile) 1x1 rot0           @0,3
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @1,3
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @2,3
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @4,0
-     decor    sewer2-c-ne (wall/autotile) 1x1 rot0           @5,0
-     decor    sewer2-w-right (wall/autotile) 1x1 rot0        @5,1
-     decor    sewer2-w-right (wall/autotile) 1x1 rot0        @5,2
-     decor    sewer2-w-right (wall/autotile) 1x1 rot0        @5,3
-     decor    sewer2-ci-sw (wall/autotile) 1x1 rot0          @3,3
-     decor    sewer2-ci-sw (wall/autotile) 1x1 rot90         @3,4
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @2,4
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @1,4
-     decor    sewer2-c-nw (wall/autotile) 1x1 rot0           @0,4
      decor    sewer2-w-left (wall/autotile) 1x1 rot0         @0,5
-     decor    sewer2-ci-se (wall/autotile) 1x1 rot270        @5,4
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @6,4
-     decor    sewer2-ci-sw (wall/autotile) 1x1 rot90         @7,4
-     decor    sewer2-w-left (wall/autotile) 1x1 rot0         @7,3
-     decor    sewer2-w-left (wall/autotile) 1x1 rot0         @7,2
-     decor    sewer2-w-left (wall/autotile) 1x1 rot0         @7,1
-     decor    sewer2-c-nw (wall/autotile) 1x1 rot0           @7,0
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @8,0
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @9,0
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @10,0
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @11,0
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @12,0
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @13,0
-     decor    sewer2-c-ne (wall/autotile) 1x1 rot0           @14,0
-     decor    sewer2-w-right (wall/autotile) 1x1 rot0        @14,1
-     decor    sewer2-c-se (wall/autotile) 1x1 rot0           @14,2
-     decor    sw-str-v (floor/water/autotile) 1x1 rot0       @4,1
-     decor    sw-str-v (floor/water/autotile) 1x1 rot0       @4,2
-     decor    sw-str-v (floor/water/autotile) 1x1 rot0       @4,3
-     decor    sw-str-v (floor/water/autotile) 1x1 rot0       @4,4
-     decor    sw-cor-nw (floor/water/autotile) 1x1 rot90     @4,5
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @13,2
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @12,2
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @11,2
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @10,2
-     decor    sewer2-ci-se (wall/autotile) 1x1 rot0          @9,2
-     decor    sewer2-ci-sw (wall/autotile) 1x1 rot180        @9,3
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot180     @10,3
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot180     @11,3
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot180     @12,3
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot180     @13,3
-     decor    sewer2-c-ne (wall/autotile) 1x1 rot0           @14,3
-     decor    sewer2-w-right (wall/autotile) 1x1 rot0        @14,4
-     decor    sewer2-c-se (wall/autotile) 1x1 rot0           @14,5
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @13,5
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @12,5
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @11,5
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @10,5
-     decor    sewer2-ci-se (wall/autotile) 1x1 rot0          @9,5
-     decor    sewer2-ci-sw (wall/autotile) 1x1 rot180        @9,6
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot180     @10,6
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot180     @11,6
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot180     @12,6
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot180     @13,6
      decor    sewer2-c-ne (wall/autotile) 1x1 rot0           @14,6
      decor    sewer2-w-right (wall/autotile) 1x1 rot0        @14,7
      decor    sewer2-w-right (wall/autotile) 1x1 rot0        @14,8
@@ -784,14 +719,6 @@
      decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @11,10
      decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @10,10
      decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @9,10
-     decor    sewer2-c-sw (wall/autotile) 1x1 rot0           @8,10
-     decor    sewer2-w-left (wall/autotile) 1x1 rot0         @8,9
-     decor    sewer2-ci-sw (wall/autotile) 1x1 rot0          @8,8
-     decor    sewer2-ci-se (wall/autotile) 1x1 rot0          @7,8
-     decor    sewer2-c-se (wall/autotile) 1x1 rot0           @7,9
-     decor    sewer2-ci-se (wall/autotile) 1x1 rot0          @6,9
-     decor    sewer2-c-se (wall/autotile) 1x1 rot0           @6,10
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @5,10
      decor    sewer2-c-sw (wall/autotile) 1x1 rot0           @4,10
      decor    sewer2-c-se (wall/autotile) 1x1 rot0           @3,10
      decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @2,10
@@ -801,93 +728,163 @@
      decor    sewer2-w-left (wall/autotile) 1x1 rot0         @0,8
      decor    sewer2-c-nw (wall/autotile) 1x1 rot0           @0,7
      decor    sewer2-c-sw (wall/autotile) 1x1 rot0           @0,6
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @1,6
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @2,6
-     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @3,6
-     decor    sw-tee-esw (floor/water/autotile) 1x1 rot0     @6,5
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @1,7
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @2,7
-     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @3,7
+     decor    sewer2-ci-ne (wall/autotile) 1x1 rot0          @6,4
+     decor    sewer2-ci-nw (wall/autotile) 1x1 rot0          @7,4
+     decor    sewer2-ci-sw (wall/autotile) 1x1 rot0          @7,2
+     decor    sewer2-ci-ne (wall/autotile) 1x1 rot0          @4,3
+     decor    sewer2-c-sw (wall/autotile) 1x1 rot0           @5,2
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @5,3
+     decor    sewer2-c-ne (wall/autotile) 1x1 rot0           @6,3
+     decor    sewer2-w-left (wall/autotile) 1x1 rot0         @7,3
+     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @6,2
+     decor    sewer2-w-right (wall/autotile) 1x1 rot0        @4,2
+     decor    sewer2-w-right (wall/autotile) 1x1 rot0        @4,1
+     decor    sewer2-w-left (wall/autotile) 1x1 rot0         @5,1
+     decor    sewer2-c-ne (wall/autotile) 1x1 rot0           @4,0
+     decor    sewer2-c-nw (wall/autotile) 1x1 rot0           @5,0
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @6,0
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @7,0
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @8,0
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @9,0
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @10,0
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @11,0
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @12,0
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @13,0
+     decor    sewer2-c-ne (wall/autotile) 1x1 rot0           @14,0
+     decor    sewer2-w-right (wall/autotile) 1x1 rot0        @14,1
+     decor    sewer2-w-right (wall/autotile) 1x1 rot0        @14,2
+     decor    sewer2-w-right (wall/autotile) 1x1 rot0        @14,3
+     decor    sewer2-w-right (wall/autotile) 1x1 rot0        @14,4
+     decor    sewer2-c-se (wall/autotile) 1x1 rot0           @14,5
+     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @13,5
+     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @12,5
+     decor    sewer2-c-sw (wall/autotile) 1x1 rot0           @11,5
+     decor    sewer2-ci-sw (wall/autotile) 1x1 rot0          @11,4
+     decor    sewer2-ci-se (wall/autotile) 1x1 rot0          @10,4
      decor    sewer2-ci-se (wall/autotile) 1x1 rot0          @3,9
      decor    sewer2-ci-sw (wall/autotile) 1x1 rot0          @4,9
-     decor    sewer2-ci-sw (wall/autotile) 1x1 rot90         @4,7
+     decor    sewer2-ci-nw (wall/autotile) 1x1 rot0          @4,7
      decor    sewer2-ci-sw (wall/autotile) 1x1 rot0          @4,6
-     decor    sw-str-h (floor/water/autotile) 1x1 rot0       @5,5
-     decor    sw-cor-sw (floor/water/autotile) 1x1 rot90     @6,6
-     decor    sw-cor-se (floor/water/autotile) 1x1 rot0      @5,6
-     decor    sw-str-v (floor/water/autotile) 1x1 rot0       @5,7
-     decor    sw-str-v (floor/water/autotile) 1x1 rot0       @5,8
-     decor    sw-str-v (floor/water/autotile) 1x1 rot0       @5,9
-     decor    sw-str-h (floor/water/autotile) 1x1 rot0       @7,5
-     decor    sw-cor-nw (floor/water/autotile) 1x1 rot0      @8,5
-     decor    sw-str-v (floor/water/autotile) 1x1 rot0       @8,4
-     decor    sw-str-v (floor/water/autotile) 1x1 rot0       @8,3
-     decor    sw-str-v (floor/water/autotile) 1x1 rot0       @8,2
-     decor    sw-cor-se (floor/water/autotile) 1x1 rot0      @8,1
-     decor    sw-str-h (floor/water/autotile) 1x1 rot0       @9,1
-     decor    sw-str-h (floor/water/autotile) 1x1 rot0       @10,1
-     decor    sw-str-h (floor/water/autotile) 1x1 rot0       @11,1
-     decor    sw-str-h (floor/water/autotile) 1x1 rot0       @12,1
-     decor    sw-str-h (floor/water/autotile) 1x1 rot0       @13,1
+     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @3,6
+     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @2,6
+     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @1,6
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @3,7
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @2,7
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @1,7
+     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @5,10
+     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @6,10
+     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @7,10
+     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @8,10
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @13,6
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @12,6
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @11,6
+     decor    sewer2-ci-ne (wall/autotile) 1x1 rot0          @10,6
+     decor    sewer2-w-right (wall/autotile) 1x1 rot0        @10,5
+     decor    sewer2-w-bottom (wall/autotile) 1x1 rot0       @1,3
+     decor    sewer2-w-top (wall/autotile) 1x1 rot0          @1,4
+     decor    sewer2-ci-sw (wall/autotile) 1x1 rot0          @2,3
+     decor    sewer2-ci-nw (wall/autotile) 1x1 rot0          @2,4
+     decor    sewer2-c-sw (wall/autotile) 1x1 rot0           @0,3
+     decor    sewer2-c-nw (wall/autotile) 1x1 rot0           @0,4
+     decor    sewer2-ci-nw (wall/autotile) 1x1 rot0          @8,8
+     decor    sewer2-ci-ne (wall/autotile) 1x1 rot0          @7,8
+     decor    sewer2-ci-sw (wall/autotile) 1x1 rot0          @8,6
+     decor    sewer2-ci-se (wall/autotile) 1x1 rot0          @7,6
+     decor    sewer2-w-right (wall/autotile) 1x1 rot0        @7,7
+     decor    sewer2-w-left (wall/autotile) 1x1 rot0         @8,7
      decor    sewer2-floor (floor/autotile) 1x1 rot0         @1,1
      decor    sewer2-floor (floor/autotile) 1x1 rot0         @1,2
      decor    sewer2-floor (floor/autotile) 1x1 rot0         @2,2
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @3,2
      decor    sewer2-floor (floor/autotile) 1x1 rot0         @3,1
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @1,5
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @3,3
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @3,4
      decor    sewer2-floor (floor/autotile) 1x1 rot0         @3,5
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @1,5
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @4,5
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @5,5
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @5,4
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @6,5
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @7,5
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @8,5
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @9,5
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @9,4
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @12,4
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @12,3
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @13,3
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @11,2
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @11,3
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @13,2
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @13,1
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @12,1
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @12,2
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @11,2
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @11,3
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @10,3
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @9,3
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @8,3
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @8,4
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @8,2
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @8,1
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @7,1
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @6,1
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @11,1
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @4,4
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @2,5
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @5,6
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @6,6
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @6,7
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @5,7
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @5,8
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @6,8
      decor    sewer2-floor (floor/autotile) 1x1 rot0         @4,8
      decor    sewer2-floor (floor/autotile) 1x1 rot0         @3,8
      decor    sewer2-floor (floor/autotile) 1x1 rot0         @2,8
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @2,9
      decor    sewer2-floor (floor/autotile) 1x1 rot0         @1,8
      decor    sewer2-floor (floor/autotile) 1x1 rot0         @1,9
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @6,8
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @6,7
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @7,7
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @8,6
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @9,4
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @10,4
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @12,4
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @8,7
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @5,9
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @6,9
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @7,9
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @8,9
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @9,9
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @9,8
      decor    sewer2-floor (floor/autotile) 1x1 rot0         @9,7
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @9,6
      decor    sewer2-floor (floor/autotile) 1x1 rot0         @10,7
      decor    sewer2-floor (floor/autotile) 1x1 rot0         @11,7
      decor    sewer2-floor (floor/autotile) 1x1 rot0         @12,7
      decor    sewer2-floor (floor/autotile) 1x1 rot0         @13,7
      decor    sewer2-floor (floor/autotile) 1x1 rot0         @13,8
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @13,9
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @12,9
      decor    sewer2-floor (floor/autotile) 1x1 rot0         @12,8
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @11,8
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @10,8
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @9,8
-     decor    sewer2-floor (floor/autotile) 1x1 rot0         @9,9
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @12,9
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @11,9
      decor    sewer2-floor (floor/autotile) 1x1 rot0         @10,9
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @11,9
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @7,6
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @2,5
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @3,2
-     decor    sewer2-floor2 (floor/autotile) 1x1 rot0        @11,4
-     monster  roll (region table)                            @4,3
-     monster  roll (region table)                            @4,8
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @10,8
+     decor    sewer2-floor (floor/autotile) 1x1 rot0         @11,8
+     decor    sewer2-ci-nw (wall/autotile) 1x1 rot0          @10,2
+     decor    sewer2-ci-ne (wall/autotile) 1x1 rot0          @9,2
+     decor    sewer2-ci-se (wall/autotile) 1x1 rot0          @9,1
+     decor    sewer2-ci-sw (wall/autotile) 1x1 rot0          @10,1
+     monster  roll (region table)                            @4,4
+     monster  roll (region table)                            @3,8
      monster  roll (region table)                            @11,8
-     loot     roll (gold/tome/den)                           @1,9
-     loot     roll (gold/tome/den)                           @10,9
+     loot     roll (gold/tome/den)                           @2,9
+     loot     roll (gold/tome/den)                           @13,9
      portal   → courtyard-sewer "A ladder up to the courtyard drains" @2,1
      portal   → under-pyramid-sewer "A channel to the pyramid drains" @13,4
-     boss     The Rat King [giant-rat, giant-rat, green-slime] @8,3
+     boss     The Rat King [giant-rat, giant-rat, green-slime] @6,1
    grid (M monster · L loot · B boss · b mini · d decor anchor):
-     dddddd#dddddddd
-     ddPddd.dddddddd
-     dddddd.dddddddd
-     ddddMd.dBdddddd
-     dddddddddddddPd
+     ddddddddddddddd
+     ddPdddBdddddddd
+     ddddddddddddddd
+     ddddddddddddddd
+     ddddMddddddddPd
      ddddddddddddddd
      ddddddddddddddd
      ddddddddddddddd
-     ddddMddddddMddd
-     dLddddddddLdddd
-     ddddddd#ddddddd
+     dddMdddddddMddd
+     ddLddddddddddLd
+     ddddddddddddddd
 
 == lost-temple / under-pyramid-sewer  [The Pyramid Drains]
    15x11  theme sewer  difficulty 5
