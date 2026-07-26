@@ -830,8 +830,8 @@
     "theme": "grass",
     "difficulty": 2,
     "start": {
-      "x": 2,
-      "y": 2
+      "x": 3,
+      "y": 1
     },
     "doors": [
       {
@@ -1374,6 +1374,19 @@
         "rot": 0
       },
       {
+        "type": "decor",
+        "id": "sat-floor-0-1",
+        "tags": [
+          "floor",
+          "autotile"
+        ],
+        "x": 2,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
         "type": "monster",
         "x": 9,
         "y": 3,
@@ -1395,6 +1408,12 @@
         "type": "loot",
         "x": 11,
         "y": 8,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 2,
+        "y": 2,
         "roll": true
       }
     ]
@@ -3375,8 +3394,8 @@
     "theme": "sewer",
     "difficulty": 4,
     "start": {
-      "x": 7,
-      "y": 8
+      "x": 6,
+      "y": 1
     },
     "doors": [
       {
@@ -3401,11 +3420,6 @@
         "to": "under-maze-sewer",
         "title": "A drop to the maze drains",
         "label": "A broken drain falls away toward the maze cisterns. Climb down?"
-      },
-      {
-        "x": 6,
-        "y": 1,
-        "to": "courtyard-nw"
       }
     ],
     "table": [
@@ -5084,19 +5098,6 @@
           "floor",
           "autotile"
         ],
-        "x": 5,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "type": "decor",
-        "id": "sewer2-floor2",
-        "tags": [
-          "floor",
-          "autotile"
-        ],
         "x": 4,
         "y": 1,
         "w": 1,
@@ -5585,6 +5586,12 @@
         "rot": 0
       },
       {
+        "type": "loot",
+        "x": 5,
+        "y": 1,
+        "roll": true
+      },
+      {
         "type": "portal",
         "x": 13,
         "y": 1,
@@ -5597,13 +5604,6 @@
         "y": 9,
         "to": "under-maze-sewer",
         "title": "A drop to the maze drains"
-      },
-      {
-        "type": "portal",
-        "x": 6,
-        "y": 1,
-        "to": "courtyard-nw",
-        "title": null
       }
     ]
   },

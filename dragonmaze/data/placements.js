@@ -593,6 +593,14 @@ export const PLACEMENTS = {
         "w": 1,
         "h": 1,
         "rot": 0
+      },
+      {
+        "key": "sat-floor-0-1",
+        "x": 2,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
       }
     ],
     "monsters": [
@@ -613,6 +621,10 @@ export const PLACEMENTS = {
       {
         "x": 11,
         "y": 8
+      },
+      {
+        "x": 2,
+        "y": 2
       }
     ]
   },
@@ -2715,14 +2727,6 @@ export const PLACEMENTS = {
       },
       {
         "key": "sewer2-floor2",
-        "x": 5,
-        "y": 1,
-        "w": 1,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "sewer2-floor2",
         "x": 4,
         "y": 1,
         "w": 1,
@@ -3026,6 +3030,12 @@ export const PLACEMENTS = {
         "rot": 0
       }
     ],
+    "loot": [
+      {
+        "x": 5,
+        "y": 1
+      }
+    ],
     "portals": [
       {
         "x": 13,
@@ -3040,11 +3050,6 @@ export const PLACEMENTS = {
         "to": "under-maze-sewer",
         "title": "A drop to the maze drains",
         "label": "A broken drain falls away toward the maze cisterns. Climb down?"
-      },
-      {
-        "x": 6,
-        "y": 1,
-        "to": "courtyard-nw"
       }
     ]
   },
