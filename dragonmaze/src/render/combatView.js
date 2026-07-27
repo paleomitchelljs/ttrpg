@@ -490,7 +490,7 @@ function verdictFor(ev) {
 
 function strikePayload(ev) {
   const verdict = verdictFor(ev);
-  const verb = ev.attackerKind === 'dragon' ? 'Bite' : cap(ev.attackName);
+  const verb = ev.attackerKind === 'dragon' ? 'Bite' : 'Strikes';
   return {
     title: `${ev.attacker} — ${verb} the ${ev.target}!`,
     sides: 20,
@@ -982,8 +982,4 @@ function appendLog(logEl, text, cls = '') {
   logEl.appendChild(p);
   while (logEl.children.length > 60) logEl.removeChild(logEl.firstChild);
   logEl.scrollTop = logEl.scrollHeight;
-}
-
-function cap(s) {
-  return s.charAt(0).toUpperCase() + s.slice(1);
 }
