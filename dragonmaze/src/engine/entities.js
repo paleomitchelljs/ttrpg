@@ -22,6 +22,7 @@ export function makeCombatant(data) {
     ownerId: data.ownerId ?? null,
     minionType: data.minionType ?? null, // 'dominated' | 'summoned' | 'beast' | 'familiar'
     temporary: data.temporary ?? false,
+    isBoss: data.isBoss ?? false, // boss-pack members are immune to domination
     ac: data.ac,
     hp: { current: data.hp?.current ?? data.hpMax ?? data.hp, max: data.hp?.max ?? data.hpMax ?? data.hp },
     tempHp: 0, // a ward (e.g. Potion of Warding) that soaks damage before HP does

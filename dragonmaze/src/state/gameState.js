@@ -1044,6 +1044,7 @@ function beginCombat(encounter) {
     heroes.push(c);
   }
   const monsters = encounter.monsterIds.map((id) => makeCombatant(monsterById(id)));
+  if (encounter.bossName) for (const m of monsters) m.isBoss = true; // a boss pack can't be dominated
   applyWorldFlags(monsters, encounter); // quest flags may weaken a specific boss
   const { combat, events } = createCombat(heroes, monsters, liveRNG, encounter.bossName ?? null);
   combat.consumables = state.meta.consumables; // shared pouch (same array ref; a used item splices out of meta)

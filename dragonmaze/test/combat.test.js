@@ -9,6 +9,7 @@ import {
   runAiTurns,
   playerAttack,
   playerUseItem,
+  playerSpell,
   isPlayerTurn,
   livingMonsters,
   livingHeroes,
@@ -144,6 +145,45 @@ function heroTurn(combat, id = 'hero') {
   const ev = runAiTurns(combat, rng);
   assert.ok(ev.some((e) => e.type === 'ward'), 'a ward-soak event fired');
   assert.equal(h.hp.current, hpBefore, 'the ward soaked the hit — no HP lost');
+}
+
+// --- 7. dominate -> convert a foe into an ally minion ---
+const domCaster = (over = {}) =>
+  hero({ id: 'hero', abilities: { cha: 20 }, spells: ['dominate-undead'], ...over });
+
+{ // dominates a foe: it joins the hero side, is no longer a foe, and pays its gold
+  const rng = () => 0.99; // d20 -> nat20, so the cast never fizzles
+  const c = domCaster();
+  const f = foe({ id: 'goblin', hp: 20, goldValue: 7, undead: true }); // undead can't resist
+  const { combat } = createCombat([c], [f, foe({ id: 'rat', hp: 1000, ac: 1000 })], rng);
+  const ev = playerSpell(heroTurn(combat, 'hero'), 'dominate-undead', f.id, rng);
+  assert.equal(f.side, 'ally', 'foe converted to ally');
+  assert.equal(f.ownerId, c.id, 'ownerId set to the caster');
+  assert.equal(combat.bonusGold, 7, 'dominated foe banks its gold');
+  assert.ok(heroesOf(combat).some((h) => h.id === f.id), 'the ally is on the hero side');
+  assert.ok(!livingMonsters(combat).some((m) => m.id === f.id), 'no longer counted a foe');
+  assert.ok(ev.some((e) => e.type === 'dominated'), 'dominated event fired');
+}
+
+{ // a boss pack is immune
+  const rng = () => 0.99;
+  const boss = foe({ id: 'boss', hp: 50, undead: true, isBoss: true });
+  const { combat } = createCombat([domCaster()], [boss], rng);
+  const ev = playerSpell(heroTurn(combat, 'hero'), 'dominate-undead', boss.id, rng);
+  assert.equal(boss.side, 'foe', 'boss stays a foe');
+  assert.ok(ev.some((e) => e.type === 'dominate-resisted' && e.reason === 'boss'), 'boss immunity');
+}
+
+{ // one minion per caster: a second dominate is blocked
+  const rng = () => 0.99;
+  const c = domCaster();
+  const a = foe({ id: 'a', hp: 20, undead: true }), b = foe({ id: 'b', hp: 20, undead: true });
+  const { combat } = createCombat([c], [a, b, foe({ id: 'z', hp: 1000, ac: 1000 })], rng);
+  playerSpell(heroTurn(combat, 'hero'), 'dominate-undead', a.id, rng);
+  const ev = playerSpell(heroTurn(combat, 'hero'), 'dominate-undead', b.id, rng);
+  assert.equal(a.side, 'ally', 'first dominate holds');
+  assert.equal(b.side, 'foe', 'second dominate blocked by the 1-minion cap');
+  assert.ok(ev.some((e) => e.type === 'dominate-resisted' && e.reason === 'full'), 'cap-full reason');
 }
 
 console.log('combat.test.js: all assertions passed ✓');

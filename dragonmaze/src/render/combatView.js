@@ -162,14 +162,17 @@ async function presentEvent(els, ev) {
     }
     case 'dominated': {
       const card = cardOf(els, ev.targetId);
-      if (card) card.classList.add('hit-flash');
-      appendLog(els.log, `The ${ev.who}'s empty eyes dim — it turns to leave, dominated.`, 'log-start');
-      await delay(500);
-      card?.classList.remove('hit-flash');
+      if (card) card.classList.add('heal-flash');
+      appendLog(els.log, `The ${ev.who} bends to your will — it fights at your side now!${ev.goldValue ? ` (its ${ev.goldValue} gold is yours)` : ''}`, 'log-start');
+      await delay(600);
+      card?.classList.remove('heal-flash');
       return;
     }
     case 'dominate-resisted':
-      appendLog(els.log, `The ${ev.who} is no mindless thing — the domination slides off.`, 'log-miss');
+      appendLog(els.log,
+        ev.reason === 'boss' ? `The ${ev.who} is far too strong to bend — your will breaks on it.`
+        : ev.reason === 'full' ? `You already command a thrall — the ${ev.who} slips free.`
+        : `The ${ev.who} shakes off your grip.`, 'log-miss');
       return delay(400);
     case 'bane':
       appendLog(els.log, `${ev.attacker}'s blade blazes against the ${ev.who}! (+2 undead bane)`, 'log-hit');
@@ -740,7 +743,7 @@ function renderRoster(els, state) {
   const combat = state.run?.combat?.combat;
   if (!combat) return;
   els.enemies.replaceChildren(
-    ...combat.order.filter((c) => c.kind === 'monster').map((m) => unitEl(m, 'enemy', null))
+    ...combat.order.filter((c) => c.side === 'foe').map((m) => unitEl(m, 'enemy', null))
   );
   els.player.replaceChildren(...heroesOf(combat).map((h) => unitEl(h, 'hero', null)));
   // The target info strip is only meaningful while the player is choosing an
@@ -759,7 +762,7 @@ export function renderCombat(els, state, handlers) {
 
   els.enemies.replaceChildren(
     ...combat.order
-      .filter((c) => c.kind === 'monster')
+      .filter((c) => c.side === 'foe')
       .map((m) => {
         const unit = unitEl(m, 'enemy', activeId);
         if (m.hp.current > 0 && !m.fled && m.id === targetId) unit.classList.add('targeted');

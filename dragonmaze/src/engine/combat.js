@@ -16,7 +16,7 @@ import {
   moraleCheck,
   resolveSpellCast,
 } from './rules.js';
-import { roll } from './dice.js';
+import { roll, d20 } from './dice.js';
 import { resolveParleyCheck } from './rules.js';
 import { spellById } from '../../data/spells.js';
 
@@ -81,6 +81,7 @@ export function createCombat(heroes, monsters, rng = Math.random, label = null) 
     winner: null,
     breathReady: true,
     familiar: heroes.find((h) => h.kind === 'dragon')?.familiar ?? null,
+    bonusGold: 0, // loot from dominated foes (they leave the foe list but still pay out)
   };
   const events = [
     { type: 'combat-start', monsters: monsters.map((m) => ({ name: m.name })), label },
@@ -110,7 +111,7 @@ function checkVictory(combat, events) {
   combat.winner = 'heroes';
   const gold = combat.order
     .filter((c) => isFoe(c) && c.hp.current <= 0)
-    .reduce((sum, m) => sum + (m.goldValue ?? 0), 0);
+    .reduce((sum, m) => sum + (m.goldValue ?? 0), 0) + (combat.bonusGold ?? 0);
   const fled = combat.order.filter((c) => isFoe(c) && c.fled).length;
   events.push({ type: 'victory', gold, fled });
   return true;
@@ -496,13 +497,29 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
       combat.order.find((c) => c.id === targetId && isFoe(c) && alive(c)) ??
       livingMonsters(combat)[0];
     if (spell.dominate) {
-      if (target.undead) {
-        target.panicked = true;
-        target.moraleChecked = true;
-        events.push({ type: 'dominated', targetId: target.id, who: target.name });
-      } else {
-        events.push({ type: 'dominate-resisted', who: target.name });
-      }
+      // Turn the foe into an allied minion for the rest of the battle. Bosses are
+      // immune; the caster commands only one minion at a time; undead (mindless)
+      // can't resist, others get one WIS save. A dominated foe still yields loot.
+      const fail = (reason) => {
+        events.push({ type: 'dominate-resisted', who: target.name, reason });
+        if (!checkVictory(combat, events)) advanceTurn(combat, events);
+        return events;
+      };
+      if (target.isBoss) return fail('boss');
+      if (combat.order.some((c) => isAlly(c) && c.ownerId === caster.id && alive(c))) return fail('full');
+      const saveDC = 12 + (caster.abilities?.[caster.castStat ?? 'cha'] ?? 0);
+      const die = d20({ rng });
+      const saveTotal = die.total + (target.abilities?.wis ?? 0);
+      const resisted = !target.undead && die.total !== 1 && (die.total === 20 || saveTotal >= saveDC);
+      if (resisted) return fail('save');
+      target.side = 'ally';
+      target.ownerId = caster.id;
+      target.minionType = 'dominated';
+      target.temporary = true;
+      target.panicked = false;
+      target.fled = false;
+      combat.bonusGold = (combat.bonusGold ?? 0) + (target.goldValue ?? 0);
+      events.push({ type: 'dominated', targetId: target.id, who: target.name, goldValue: target.goldValue ?? 0 });
       if (!checkVictory(combat, events)) advanceTurn(combat, events);
       return events;
     }
