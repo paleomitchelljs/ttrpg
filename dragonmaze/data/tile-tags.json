@@ -12,6 +12,20 @@
       168
     ]
   },
+  "amulet-sun": {
+    "tags": [
+      "item",
+      "gear",
+      "trinket"
+    ],
+    "sheet": "treasure.png",
+    "box": [
+      908,
+      674,
+      92,
+      92
+    ]
+  },
   "brazier1": {
     "tags": [
       "prop",
@@ -48,6 +62,34 @@
       712,
       344,
       280
+    ]
+  },
+  "chainmail": {
+    "tags": [
+      "item",
+      "gear",
+      "armor"
+    ],
+    "sheet": "treasure.png",
+    "box": [
+      908,
+      292,
+      94,
+      90
+    ]
+  },
+  "coin-purse": {
+    "tags": [
+      "item",
+      "loot",
+      "treasure"
+    ],
+    "sheet": "treasure.png",
+    "box": [
+      926,
+      394,
+      60,
+      74
     ]
   },
   "courtyard-archway": {
@@ -498,6 +540,20 @@
       111
     ]
   },
+  "crown": {
+    "tags": [
+      "item",
+      "gear",
+      "trinket"
+    ],
+    "sheet": "treasure.png",
+    "box": [
+      708,
+      106,
+      90,
+      76
+    ]
+  },
   "gargoyle-statue": {
     "tags": [
       "statue",
@@ -523,6 +579,20 @@
       172
     ]
   },
+  "gold-coins": {
+    "tags": [
+      "item",
+      "loot",
+      "treasure"
+    ],
+    "sheet": "treasure.png",
+    "box": [
+      808,
+      390,
+      92,
+      84
+    ]
+  },
   "gold-hoard": {
     "tags": [
       "treasure"
@@ -546,6 +616,32 @@
       0,
       357,
       342
+    ]
+  },
+  "key-brass": {
+    "tags": [
+      "item",
+      "loot"
+    ],
+    "sheet": "treasure.png",
+    "box": [
+      1014,
+      102,
+      78,
+      84
+    ]
+  },
+  "magic-tome": {
+    "tags": [
+      "item",
+      "loot"
+    ],
+    "sheet": "treasure.png",
+    "box": [
+      512,
+      290,
+      82,
+      90
     ]
   },
   "panel-croc": {
@@ -587,6 +683,48 @@
       156
     ]
   },
+  "potion-healing": {
+    "tags": [
+      "item",
+      "consumable",
+      "potion"
+    ],
+    "sheet": "treasure.png",
+    "box": [
+      20,
+      6,
+      66,
+      94
+    ]
+  },
+  "potion-mana": {
+    "tags": [
+      "item",
+      "consumable",
+      "potion"
+    ],
+    "sheet": "treasure.png",
+    "box": [
+      120,
+      6,
+      64,
+      94
+    ]
+  },
+  "potion-protection": {
+    "tags": [
+      "item",
+      "consumable",
+      "potion"
+    ],
+    "sheet": "treasure.png",
+    "box": [
+      220,
+      6,
+      64,
+      94
+    ]
+  },
   "pyramid-capstone": {
     "tags": [
       "prop",
@@ -598,6 +736,20 @@
       18,
       306,
       324
+    ]
+  },
+  "ring-ruby": {
+    "tags": [
+      "item",
+      "gear",
+      "trinket"
+    ],
+    "sheet": "treasure.png",
+    "box": [
+      712,
+      586,
+      82,
+      74
     ]
   },
   "round-hut": {
@@ -1120,6 +1272,33 @@
     "sheet": "sewer-autotile-sheet.png",
     "box": "mirror sat-wall-0-3"
   },
+  "scimitar": {
+    "tags": [
+      "item",
+      "gear",
+      "weapon"
+    ],
+    "sheet": "treasure.png",
+    "box": [
+      4,
+      126,
+      292,
+      116
+    ]
+  },
+  "scroll": {
+    "tags": [
+      "item",
+      "loot"
+    ],
+    "sheet": "treasure.png",
+    "box": [
+      712,
+      6,
+      84,
+      86
+    ]
+  },
   "sewer-archway": {
     "tags": [
       "door",
@@ -1536,6 +1715,20 @@
       130
     ]
   },
+  "shield-round": {
+    "tags": [
+      "item",
+      "gear",
+      "armor"
+    ],
+    "sheet": "treasure.png",
+    "box": [
+      1210,
+      290,
+      90,
+      92
+    ]
+  },
   "snake-statue": {
     "tags": [
       "statue"
@@ -1695,6 +1888,19 @@
       186
     ]
   },
+  "torch-item": {
+    "tags": [
+      "item",
+      "loot"
+    ],
+    "sheet": "treasure.png",
+    "box": [
+      1236,
+      198,
+      42,
+      88
+    ]
+  },
   "torch-lit": {
     "tags": [
       "light",
@@ -1719,6 +1925,34 @@
       675,
       96,
       102
+    ]
+  },
+  "vial-caustic": {
+    "tags": [
+      "item",
+      "consumable",
+      "offensive"
+    ],
+    "sheet": "treasure.png",
+    "box": [
+      418,
+      6,
+      66,
+      94
+    ]
+  },
+  "vial-poison": {
+    "tags": [
+      "item",
+      "consumable",
+      "offensive"
+    ],
+    "sheet": "treasure.png",
+    "box": [
+      330,
+      8,
+      44,
+      90
     ]
   },
   "wall-a": {
