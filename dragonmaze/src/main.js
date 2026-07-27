@@ -168,19 +168,19 @@ game.subscribe((state, events) => {
       const answer = (mode) => () => { ui.showOverlay('result-overlay', false); game.resolveEncounter(mode); };
       ui.showResult({
         title: 'They block your path',
-        body: `${ev.names.join(', ')} bar the way — they seem ${ev.disposition}. Draw steel, or talk your way past? (Talk: CHA check, DC ${ev.dc})`,
+        body: `${ev.names.join(', ')} bar the way — they seem ${ev.disposition}. Draw steel, or talk your way past?`,
         actions: [
           { label: 'Fight!', onClick: answer('fight') },
           { label: 'Talk', onClick: answer('talk') },
         ],
       });
     }
-    // A won Talk opens the outcome menu — persuade / intimidate / quest, no re-roll.
+    // Talk opens the approach menu — persuade / intimidate / quest each roll when picked.
     if (ev.type === 'talk-open') {
       const answer = (mode) => () => { ui.showOverlay('result-overlay', false); game.resolveEncounter(mode); };
       ui.showResult({
-        title: 'They lower their guard',
-        body: `Your words land (${ev.total} vs DC ${ev.dc}). How do you play it?`,
+        title: 'They’ll hear you out',
+        body: 'How do you approach them?',
         actions: [
           { label: 'Persuade — leave in peace', onClick: answer('persuade') },
           { label: 'Intimidate — drive them off', onClick: answer('threaten') },

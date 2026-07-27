@@ -187,10 +187,16 @@ export const FACTION_ENEMIES = {
   bandit: [],
 };
 
-/** Parley DC: base 12, shifted by disposition and standing. */
-export function parleyDC(parley, rep) {
-  const base = parley === 'willing' ? 11 : 13;
-  return Math.max(8, Math.min(18, base - Math.floor((rep ?? 0) / 3)));
+// Faction ranks run -10..+10; clamp any standing into that band.
+export const REP_MIN = -10;
+export const REP_MAX = 10;
+export function clampRep(n) {
+  return Math.max(REP_MIN, Math.min(REP_MAX, n));
+}
+
+/** Parley DC by disposition only — standing now rides on the roll, not the DC. */
+export function parleyDC(parley) {
+  return parley === 'willing' ? 11 : 13;
 }
 
 /** How a faction greets you at this standing. */
@@ -201,14 +207,15 @@ export function dispositionLabel(rep) {
   return 'wary';
 }
 
-/** A CHA check to talk instead of fight. Nat 20 always lands, nat 1 never. */
+/** A CHA check to talk instead of fight. Nat 20 always lands, nat 1 never.
+ * `mod` folds in standing: +faction for persuasion, -faction for intimidation. */
 export function resolveParleyCheck(actor, dc, rng = Math.random, opts = {}) {
   // Silver Tongue (talent) grants advantage on CHA social checks.
   const die = d20({ rng, advantage: !!opts.advantage });
-  const bonus = actor.abilities?.cha ?? 0;
+  const bonus = (actor.abilities?.cha ?? 0) + (opts.mod ?? 0);
   const total = die.total + bonus;
   const success = die.total !== 1 && (die.total === 20 || total >= dc);
-  return { natural: die.total, bonus, total, dc, success };
+  return { natural: die.total, bonus, mod: opts.mod ?? 0, total, dc, success };
 }
 
 // ---------------------------------------------------------------- morale

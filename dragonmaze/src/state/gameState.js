@@ -41,7 +41,14 @@ import {
   FACTION_ENEMIES,
   parleyDC,
   dispositionLabel,
+  clampRep,
 } from '../engine/rules.js';
+
+// Faction standing runs -10..+10; nudge it and clamp.
+function bumpRep(faction, delta) {
+  if (!faction) return;
+  state.meta.reputation[faction] = clampRep((state.meta.reputation[faction] ?? 0) + delta);
+}
 import { liveRNG } from '../engine/rng.js';
 import { loadSave, persist, clearSave, exportJSON, importJSON } from './save.js';
 
@@ -950,15 +957,20 @@ function bestFace(run) {
   return face;
 }
 
-// Will this pack talk, and on what terms? Computed without building the fight.
+// Will this pack talk? Undead never do. Animals (wild) won't either, unless a
+// party member has the Animal Friend feat (Beren starts with it). Other packs
+// need a non-'never' disposition. Standing rides on the roll now, not the offer.
 function parleyOffer(run, encounter) {
   const lead = monsterById(encounter.monsterIds[0]);
-  if (!lead?.parley || lead.parley === 'never') return null;
-  if (!encounter.monsterIds.every((id) => { const t = monsterById(id); return t?.parley && t.parley !== 'never'; })) return null;
+  if (!lead) return null;
+  if (lead.undead || lead.faction === 'undead') return null;
+  if (lead.faction === 'wild') {
+    if (!(run.party ?? []).some((s) => heroWithGrowth(s.id)?.traits?.includes('animal-friend'))) return null;
+  } else if (!lead.parley || lead.parley === 'never') {
+    return null;
+  }
   const rep = state.meta.reputation[lead.faction] ?? 0;
-  if (rep <= -10) return null; // too hated to reason with
-  const barterCost = Math.ceil(encounter.monsterIds.reduce((s, id) => s + (monsterById(id)?.goldValue ?? 0), 0) / 2);
-  return { faction: lead.faction, disposition: dispositionLabel(rep), dc: parleyDC(lead.parley, rep), barterCost, canBarter: run.unbankedGold >= barterCost };
+  return { faction: lead.faction, disposition: dispositionLabel(rep), dc: parleyDC(lead.parley), rep };
 }
 
 // Bump into a pack: offer parley once, up front, if they'll talk — else straight
@@ -973,10 +985,11 @@ function engage(encounter) {
   emit([{ type: 'parley-offer', names: encounter.monsterIds.map((id) => monsterById(id)?.name ?? id), ...offer }]);
 }
 
-// Two-step parley. The top menu is just 'fight' or 'talk'. Talk rolls one CHA
-// check (DC set by faction); a win opens the outcome menu — 'persuade' (leave in
-// peace), 'threaten' (drive them off), 'work' (take a bounty) — each applied
-// without a second roll. Not persisted, so a reload just replays the bump.
+// Two-step parley. The top menu is 'fight' or 'talk'; Talk opens the approach
+// menu — 'persuade' (leave in peace), 'threaten'/intimidate (drive them off),
+// 'work' (take a bounty). Each rolls its own CHA check when chosen, with standing
+// swinging it (+faction to persuade, -faction to intimidate). Not persisted, so a
+// reload just replays the bump.
 export function resolveEncounter(mode) {
   const run = state.run;
   if (!run || run.phase !== 'parley' || !run.pendingEncounter) return;
@@ -986,24 +999,19 @@ export function resolveEncounter(mode) {
 
   if (mode === 'fight' || !mode) { clear(); run.phase = 'explore'; beginCombat(encounter); return; }
 
-  if (mode === 'talk') {
-    const face = bestFace(run);
-    const check = resolveParleyCheck(face, offer.dc, liveRNG, { advantage: face.talents?.includes('silver-tongue') });
-    if (!check.success) {
-      clear(); run.phase = 'explore';
-      emit([{ type: 'parley-outcome', mode: 'talk', success: false, total: check.total, dc: offer.dc }]);
-      beginCombat(encounter);
-      return;
-    }
-    run.parleyWon = true; // stay in 'parley' to choose how the talk resolves
-    emit([{ type: 'talk-open', total: check.total, dc: offer.dc }]);
-    return;
-  }
+  // Talk just opens the approach menu; the CHA roll happens when you pick one.
+  if (mode === 'talk') { emit([{ type: 'talk-open' }]); return; }
 
-  // Outcome of a won talk — no second roll.
-  if (!run.parleyWon) return;
+  // persuade / threaten (intimidate) / work — each rolls when chosen. Standing
+  // helps persuasion (+faction); a fearsome, hated standing helps intimidation
+  // (-faction), so a villain reads as scarier.
+  const face = bestFace(run);
+  const rep = state.meta.reputation[offer.faction] ?? 0;
+  const mod = mode === 'threaten' ? -rep : rep;
+  const check = resolveParleyCheck(face, offer.dc, liveRNG, { advantage: face.talents?.includes('silver-tongue'), mod });
+  const events = [{ type: 'parley-outcome', mode, success: check.success, total: check.total, dc: offer.dc }];
+  if (!check.success) { clear(); run.phase = 'explore'; emit(events); beginCombat(encounter); return; }
   clear(); run.phase = 'explore';
-  const events = [{ type: 'parley-outcome', mode, success: true }];
   if (mode === 'work') {
     const boss = run.dungeon.encounters.find((e) => e.id.startsWith('boss'));
     if (boss) {
@@ -1012,7 +1020,7 @@ export function resolveEncounter(mode) {
       events.push({ type: 'quest-received', target: boss.bossName, reward });
     }
   }
-  if (mode !== 'threaten' && offer.faction) state.meta.reputation[offer.faction] = (state.meta.reputation[offer.faction] ?? 0) + 1;
+  if (mode !== 'threaten') bumpRep(offer.faction, 1);
   const idx = run.dungeon.encounters.indexOf(encounter);
   if (idx >= 0) run.dungeon.encounters.splice(idx, 1);
   run.playerPos = { x: encounter.x, y: encounter.y };
@@ -1191,11 +1199,9 @@ function finishCombat(events) {
     for (const m of slain) {
       const t = monsterById(m.templateId);
       if (!t?.faction) continue;
-      state.meta.reputation[t.faction] = (state.meta.reputation[t.faction] ?? 0) - 1;
+      bumpRep(t.faction, -1);
       for (const friend of Object.keys(FACTION_ENEMIES)) {
-        if (FACTION_ENEMIES[friend]?.includes(t.faction)) {
-          state.meta.reputation[friend] = (state.meta.reputation[friend] ?? 0) + 1;
-        }
+        if (FACTION_ENEMIES[friend]?.includes(t.faction)) bumpRep(friend, 1);
       }
     }
     const idx = run.dungeon.encounters.findIndex((e) => e.id === run.combat.encounterId);
@@ -1217,7 +1223,7 @@ function finishCombat(events) {
     if (run.quest && run.quest.encId === run.combat.encounterId) {
       run.unbankedGold += run.quest.reward;
       events.push({ type: 'quest-complete', target: run.quest.name, reward: run.quest.reward, from: run.quest.from });
-      state.meta.reputation[run.quest.from] = (state.meta.reputation[run.quest.from] ?? 0) + 2;
+      bumpRep(run.quest.from, 2);
       run.quest = null;
     }
 

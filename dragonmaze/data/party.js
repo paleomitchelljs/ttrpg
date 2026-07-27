@@ -70,7 +70,7 @@ export const COMPANIONS = [
     emoji: '🗡️',
     anim: { idle: 'beren-idle', attack: 'beren-attack' },
     walk: 'beren-walk',
-    traits: ['beast-dread'],
+    traits: ['beast-dread', 'animal-friend'],
     abilityLabel: 'beastfriend — beasts rout more easily against him; once a day he can charm one',
     blurb: 'A stalwart human warrior — steel, shield, and a level head with wild things.',
     role: 'Warrior',
