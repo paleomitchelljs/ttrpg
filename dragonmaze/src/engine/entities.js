@@ -12,6 +12,16 @@ export function makeCombatant(data) {
     templateId: data.id ?? null,
     name: data.name,
     kind: data.kind ?? 'monster',
+    // Combat faction: 'foe' (enemy), 'hero' (player-controlled), or 'ally' (an
+    // AI-run minion on the hero side). Defaults from kind; minions pass
+    // side:'ally' explicitly. ownerId ties a minion to the hero who made it
+    // (enforces the one-minion-per-hero cap); a temporary minion (dominated or
+    // summoned) is dropped when combat ends, a persistent one (beast/familiar)
+    // is rebuilt each fight.
+    side: data.side ?? ((data.kind ?? 'monster') === 'monster' ? 'foe' : 'hero'),
+    ownerId: data.ownerId ?? null,
+    minionType: data.minionType ?? null, // 'dominated' | 'summoned' | 'beast' | 'familiar'
+    temporary: data.temporary ?? false,
     ac: data.ac,
     hp: { current: data.hp?.current ?? data.hpMax ?? data.hp, max: data.hp?.max ?? data.hpMax ?? data.hp },
     abilities: { ...ABILITY_DEFAULTS, ...(data.abilities ?? {}) },

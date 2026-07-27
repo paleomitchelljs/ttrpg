@@ -1,7 +1,7 @@
 // Turn-based combat: initiative, turn loop, attacks, breath, spells, morale,
 // death and flight — now for a whole party. Pure logic, no DOM. Every
 // function returns an array of events the view narrates. The UI drives the
-// loop: runMonsterTurns() until a hero's turn, then wait for playerAttack(),
+// loop: runAiTurns() until a hero's turn, then wait for playerAttack(),
 // playerBreath(), or playerSpell() from whichever hero is up.
 //
 // The dragon is the run: if it falls, the fight is lost, even with
@@ -21,23 +21,39 @@ import { resolveParleyCheck } from './rules.js';
 import { spellById } from '../../data/spells.js';
 
 const alive = (c) => c.hp.current > 0 && !c.fled;
-const isMonster = (c) => c.kind === 'monster';
+// Factions. A minion (side 'ally') fights on the hero side but is AI-run, like
+// a foe. isHero = a true, player-controlled hero: only these gate the player's
+// turn and count for defeat. onHeroSide = hero OR minion — what foes target and
+// who shares victory/defeat. aiRun = takes an automatic turn (foe or minion).
+const isFoe = (c) => c.side === 'foe';
+const isAlly = (c) => c.side === 'ally';
+const isHero = (c) => c.side === 'hero';
+const onHeroSide = (c) => !isFoe(c);
+const aiRun = (c) => isFoe(c) || isAlly(c);
 
 export function currentCombatant(combat) {
   return combat.order[combat.turnIndex];
 }
 
+// Living enemies. (A dominated foe becomes an ally and drops out of here.)
 export function livingMonsters(combat) {
-  return combat.order.filter((c) => isMonster(c) && alive(c));
+  return combat.order.filter((c) => isFoe(c) && alive(c));
 }
 
+// Living true heroes — the ones whose survival the run depends on. Minions are
+// deliberately excluded (their fall doesn't lose the fight).
 export function livingHeroes(combat) {
-  return combat.order.filter((c) => !isMonster(c) && alive(c));
+  return combat.order.filter((c) => isHero(c) && alive(c));
+}
+
+// Everyone a foe may strike: heroes plus their minions.
+function livingHeroSide(combat) {
+  return combat.order.filter((c) => onHeroSide(c) && alive(c));
 }
 
 export function heroesOf(combat) {
-  // creation order: dragon first, then companions
-  return combat.combatants.filter((c) => !isMonster(c));
+  // creation order: dragon first, then companions, then any minions
+  return combat.combatants.filter((c) => onHeroSide(c));
 }
 
 export function dragonOf(combat) {
@@ -45,7 +61,7 @@ export function dragonOf(combat) {
 }
 
 export function isPlayerTurn(combat) {
-  return !combat.over && !isMonster(currentCombatant(combat));
+  return !combat.over && isHero(currentCombatant(combat));
 }
 
 /** Roll initiative and build combat state. Breath starts charged. */
@@ -54,7 +70,7 @@ export function createCombat(heroes, monsters, rng = Math.random, label = null) 
   for (const c of combatants) c.initiative = rollInitiative(c, rng);
   // Ties go to the heroes (kind to the kids at the table).
   const order = [...combatants].sort(
-    (a, b) => b.initiative - a.initiative || (isMonster(a) ? 1 : -1)
+    (a, b) => b.initiative - a.initiative || (isFoe(a) ? 1 : -1)
   );
   const combat = {
     combatants,
@@ -93,9 +109,9 @@ function checkVictory(combat, events) {
   combat.over = true;
   combat.winner = 'heroes';
   const gold = combat.order
-    .filter((c) => isMonster(c) && c.hp.current <= 0)
+    .filter((c) => isFoe(c) && c.hp.current <= 0)
     .reduce((sum, m) => sum + (m.goldValue ?? 0), 0);
-  const fled = combat.order.filter((c) => isMonster(c) && c.fled).length;
+  const fled = combat.order.filter((c) => isFoe(c) && c.fled).length;
   events.push({ type: 'victory', gold, fled });
   return true;
 }
@@ -171,22 +187,35 @@ function triggerMorale(combat, monster, rng, events) {
 /** Consequences of damage: deaths rattle allies, wounds rattle the victim. */
 function afterDamage(combat, target, rng, events) {
   if (target.hp.current <= 0) {
-    if (isMonster(target)) {
+    if (isFoe(target)) {
       events.push({ type: 'death', id: target.id, who: target.name, goldValue: target.goldValue });
-      for (const ally of livingMonsters(combat)) triggerMorale(combat, ally, rng, events);
+      for (const foe of livingMonsters(combat)) triggerMorale(combat, foe, rng, events);
+    } else if (isAlly(target)) {
+      events.push({ type: 'minion-down', id: target.id, who: target.name });
     } else if (target.kind !== 'dragon') {
       events.push({ type: 'hero-down', id: target.id, who: target.name });
     }
-  } else if (isMonster(target) && target.hp.current <= target.hp.max / 2) {
+  } else if (isFoe(target) && target.hp.current <= target.hp.max / 2) {
     triggerMorale(combat, target, rng, events);
   }
 }
 
-/** Play out monster turns until a hero's turn comes up or combat ends. */
-export function runMonsterTurns(combat, rng = Math.random) {
+/**
+ * Play out every AI turn — foes and allied minions alike — until a
+ * player-controlled hero's turn comes up or combat ends. Foes strike the hero
+ * side (heroes and their minions); minions strike the foes.
+ */
+export function runAiTurns(combat, rng = Math.random) {
   const events = [];
-  while (!combat.over && isMonster(currentCombatant(combat))) {
-    const monster = currentCombatant(combat);
+  while (!combat.over && aiRun(currentCombatant(combat))) {
+    const actor = currentCombatant(combat);
+    if (isAlly(actor)) {
+      takeMinionTurn(combat, actor, rng, events);
+      if (combat.over) return events;
+      advanceTurn(combat, events);
+      continue;
+    }
+    const monster = actor;
     if (monster.ability === 'regenerate' && monster.hp.current > 0 && monster.hp.current < monster.hp.max) {
       monster.hp.current = Math.min(monster.hp.max, monster.hp.current + 2);
       events.push({ type: 'regenerate', id: monster.id, who: monster.name, hpAfter: monster.hp.current });
@@ -198,7 +227,7 @@ export function runMonsterTurns(combat, rng = Math.random) {
       advanceTurn(combat, events);
       continue;
     }
-    const targets = livingHeroes(combat);
+    const targets = livingHeroSide(combat);
     const target = targets[Math.floor(rng() * targets.length)];
     const res = resolveAttack(monster, monster.attacks[0], target, rng);
     if (res.hit) {
@@ -214,9 +243,11 @@ export function runMonsterTurns(combat, rng = Math.random) {
       attackerId: monster.id,
       attacker: monster.name,
       attackerKind: monster.kind,
+      attackerSide: monster.side,
       targetId: target.id,
       target: target.name,
       targetKind: target.kind,
+      targetSide: target.side,
       targetHpAfter: target.hp.current,
       ...res,
     });
@@ -235,6 +266,34 @@ export function runMonsterTurns(combat, rng = Math.random) {
 }
 
 /**
+ * An allied minion's automatic turn: swing at a random living foe. Minions are
+ * kept simple — no morale, no special abilities — they exist to soak and chip.
+ */
+function takeMinionTurn(combat, minion, rng, events) {
+  if (!minion.attacks?.length) return; // a bodyguard with no attack just holds
+  const foes = livingMonsters(combat);
+  if (!foes.length) { checkVictory(combat, events); return; }
+  const target = foes[Math.floor(rng() * foes.length)];
+  const res = resolveAttack(minion, minion.attacks[0], target, rng);
+  if (res.hit) res.damage = applyDamage(target, res.damage, 'physical', events);
+  events.push({
+    type: 'attack',
+    attackerId: minion.id,
+    attacker: minion.name,
+    attackerKind: minion.kind,
+    attackerSide: 'ally',
+    targetId: target.id,
+    target: target.name,
+    targetKind: target.kind,
+    targetSide: target.side,
+    targetHpAfter: target.hp.current,
+    ...res,
+  });
+  afterDamage(combat, target, rng, events);
+  checkVictory(combat, events);
+}
+
+/**
  * The current hero attacks a chosen monster, then the turn advances.
  * Striking panicked prey rolls with advantage.
  */
@@ -247,7 +306,7 @@ export function playerAttack(combat, targetId, rng = Math.random) {
   let acted = false;
   for (let i = 0; i < strikes; i++) {
     const target =
-      combat.order.find((c) => c.id === targetId && isMonster(c) && alive(c)) ??
+      combat.order.find((c) => c.id === targetId && isFoe(c) && alive(c)) ??
       livingMonsters(combat)[0];
     if (!target) break;
     acted = true;
@@ -266,9 +325,11 @@ export function playerAttack(combat, targetId, rng = Math.random) {
       attackerId: actor.id,
       attacker: actor.name,
       attackerKind: actor.kind,
+      attackerSide: actor.side,
       targetId: target.id,
       target: target.name,
       targetKind: target.kind,
+      targetSide: target.side,
       targetHpAfter: target.hp.current,
       ...res,
     });
@@ -425,7 +486,7 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
 
   if (spell.target === 'enemy') {
     const target =
-      combat.order.find((c) => c.id === targetId && isMonster(c) && alive(c)) ??
+      combat.order.find((c) => c.id === targetId && isFoe(c) && alive(c)) ??
       livingMonsters(combat)[0];
     if (spell.dominate) {
       if (target.undead) {
@@ -460,7 +521,7 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
     afterDamage(combat, target, rng, events);
   } else if (spell.target === 'ally') {
     const target =
-      combat.order.find((c) => c.id === targetId && !isMonster(c)) ?? caster;
+      combat.order.find((c) => c.id === targetId && onHeroSide(c)) ?? caster;
     const amount = roll(spell.dice, rng).total + spellBonus(caster);
     const revived = target.hp.current <= 0;
     target.hp.current = Math.min(target.hp.max, target.hp.current + amount);

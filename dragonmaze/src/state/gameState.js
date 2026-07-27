@@ -18,7 +18,7 @@ import { talentById } from '../../data/talents.js';
 import { makeCombatant, makeDragonCombatant } from '../engine/entities.js';
 import {
   createCombat,
-  runMonsterTurns,
+  runAiTurns,
   playerAttack,
   playerBreath,
   playerSpell,
@@ -1055,7 +1055,7 @@ function beginCombat(encounter) {
   if (combat.parleyInfo) combat.parleyInfo.canBarter = run.unbankedGold >= combat.parleyInfo.barterCost;
   run.phase = 'combat';
   run.combat = { combat, encounterId: encounter.id };
-  const followUp = runMonsterTurns(combat, liveRNG);
+  const followUp = runAiTurns(combat, liveRNG);
   syncDragonHp();
   const all = [...events, ...followUp];
   if (combat.over) {
@@ -1101,7 +1101,7 @@ function resolvePlayerAction(act) {
   if (!isPlayerTurn(combat)) return;
   const events = act(combat);
   if (!events.length) return;
-  if (!combat.over) events.push(...runMonsterTurns(combat, liveRNG));
+  if (!combat.over) events.push(...runAiTurns(combat, liveRNG));
   syncDragonHp();
   if (combat.over) {
     finishCombat(events);

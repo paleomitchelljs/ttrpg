@@ -9,7 +9,7 @@
     "editor": "node serve.mjs --open",
     "build": "node build.mjs",
     "map": "node dump-map.mjs",
-    "test": "node test/dice.test.js"
+    "test": "node test/dice.test.js && node test/combat.test.js"
   },
   "devDependencies": {
     "esbuild": "^0.21.5"

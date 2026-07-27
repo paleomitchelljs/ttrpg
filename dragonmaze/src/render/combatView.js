@@ -377,7 +377,8 @@ function listNames(names) {
 }
 
 function attackLine(ev) {
-  const heroSide = ev.attackerKind !== 'monster';
+  // Faction-based: a dominated foe keeps kind 'monster' but fights on our side.
+  const heroSide = ev.attackerSide != null ? ev.attackerSide !== 'foe' : ev.attackerKind !== 'monster';
   const verb = ev.attackerKind === 'dragon' ? 'bite' : ev.attackName;
   if (ev.crit) {
     return {

@@ -33,7 +33,7 @@ import { makeCombatant, makeDragonCombatant } from '../src/engine/entities.js';
 import { tierByName } from '../data/dragonProgression.js';
 import {
   createCombat,
-  runMonsterTurns,
+  runAiTurns,
   playerSpell,
   playerAttack,
   playerSweep,
@@ -616,7 +616,7 @@ check('party combat: monsters fight heroes, heals can revive', () => {
   const rng = () => (i < seq.length ? seq[i++] : 0.99);
   const { combat } = createCombat([dragon, downed, healer], [troll], rng);
   assert.equal(combat.order.length, 4);
-  runMonsterTurns(combat, rng);
+  runAiTurns(combat, rng);
   assert.ok(isPlayerTurn(combat), 'a hero should be up after monster turns');
 
   // knock a companion down, then Healing Word them back up mid-fight
@@ -744,13 +744,13 @@ check('a party without the dragon loses only when everyone is down', () => {
   swash.hp.current = 0;
   spawnee.hp.current = 30; // sturdy for a moment
   combat.turnIndex = combat.order.findIndex((c) => c.id === troll.id);
-  runMonsterTurns(combat, () => 0.7);
+  runAiTurns(combat, () => 0.7);
   assert.ok(!combat.over, 'fight continues while a hero stands');
   // last hero at 1 HP with slowfall spent: the next hit is defeat
   spawnee.relentlessUsed = true;
   spawnee.hp.current = 1;
   combat.turnIndex = combat.order.findIndex((c) => c.id === troll.id);
-  runMonsterTurns(combat, () => 0.7);
+  runAiTurns(combat, () => 0.7);
   assert.equal(combat.winner, 'monsters', 'party wiped without a dragon');
 });
 
