@@ -30,6 +30,15 @@ const runSlicer = (args) =>
     p.stderr.on('data', (d) => (err += d));
     p.on('close', (code) => (code === 0 ? resolve(out) : reject(new Error(err || `exit ${code}`))));
   });
+// Rebuild the single-file dist/public/dragon.html so a Save is immediately live
+// in the deployed game (CI only copies public/, it never re-runs this build).
+const runBuild = () =>
+  new Promise((resolve) => {
+    const p = spawn('node', [join(root, 'build.mjs')], { cwd: root });
+    let err = '';
+    p.stderr.on('data', (d) => (err += d));
+    p.on('close', (code) => resolve({ built: code === 0, buildError: code === 0 ? null : err.trim() || `exit ${code}` }));
+  });
 const safeName = (s) => String(s).replace(/[^a-z0-9-]/gi, '').toLowerCase();
 
 // serve.mjs statically imports ZONES/PLACEMENTS via dump-map.mjs, and Node caches
@@ -95,7 +104,7 @@ const server = createServer(async (req, res) => {
       const zones = await freshZones();
       await writeFile(join(root, 'data', 'maps.txt'), renderText(data, null, zones) + '\n');
       await writeFile(join(root, 'data', 'maps.json'), JSON.stringify(manifests(data, null, zones), null, 2) + '\n');
-      return json(res, { ok: true, regions: Object.keys(data).length });
+      return json(res, { ok: true, regions: Object.keys(data).length, ...(await runBuild()) });
     }
     // Persist base-map geometry edits (paint mode) back into zones.js — the one
     // source of truth for map layout. Body is { subId: [rowString, …] }.
@@ -114,7 +123,7 @@ const server = createServer(async (req, res) => {
       const placements = await freshPlacements();
       await writeFile(join(root, 'data', 'maps.txt'), renderText(placements, null, zones) + '\n');
       await writeFile(join(root, 'data', 'maps.json'), JSON.stringify(manifests(placements, null, zones), null, 2) + '\n');
-      return json(res, { ok: true, regions: Object.keys(data).length });
+      return json(res, { ok: true, regions: Object.keys(data).length, ...(await runBuild()) });
     }
     if (req.method === 'GET' && url.pathname === '/sheets') {
       const files = (await readdir(join(root, 'art'))).filter((f) => f.endsWith('.png')).sort();
@@ -126,6 +135,22 @@ const server = createServer(async (req, res) => {
         .map((f) => f.replace(/\.png$/, ''))
         .sort();
       return json(res, files);
+    }
+    // Reclassify a tile as decor (placed on top) vs geometry ('wall'/'floor',
+    // painted into the map + drawn by the autotiler). Persists to tile-tags.json;
+    // 'decor' clears the override so the tile's default (autotile set membership)
+    // stands.
+    if (req.method === 'POST' && url.pathname === '/set-tile-role') {
+      const { key, role } = await readBody(req);
+      const nm = safeName(key);
+      if (!nm || !['decor', 'wall', 'floor'].includes(role)) return json(res, { ok: false, error: 'bad key/role' }, 400);
+      const tagPath = join(root, 'data', 'tile-tags.json');
+      const tags = JSON.parse(await readFile(tagPath, 'utf8'));
+      tags[nm] = tags[nm] ?? { tags: [] };
+      if (role === 'decor') delete tags[nm].role;
+      else tags[nm].role = role;
+      await writeFile(tagPath, JSON.stringify(tags, null, 2) + '\n');
+      return json(res, { ok: true, role });
     }
     if (req.method === 'POST' && url.pathname === '/detect') {
       const { sheet } = await readBody(req);

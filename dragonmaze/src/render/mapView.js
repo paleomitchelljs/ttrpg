@@ -7,6 +7,7 @@ import { monsterById } from '../../data/monsters.js';
 import { companionById } from '../../data/party.js';
 import { SPRITES, TILES } from '../assets-manifest.js';
 import TILE_TAGS from '../../data/tile-tags.json' with { type: 'json' };
+import { AUTOTILE, floorVariant, waterKey, wallKey } from './autotile.js';
 
 // Flat ground decor (grass, floor slabs) must NOT cast the raised-prop drop
 // shadow — a shadow only reads right for things standing up off the ground
@@ -23,69 +24,14 @@ export function spritePath(key) {
 }
 
 // ---- autotiling ---------------------------------------------------------
-// Some themes replace the flat "one wall + one floor" CSS background with a
-// per-cell tileset: floor cells pick a floor variant, and wall cells pick a
-// wall piece from a bitmask of which orthogonal neighbours are FLOOR, then
-// draw that piece OVER a floor layer (the piece's floor-facing parts are
-// transparent, so corners blend into the room). Bits: N=1 E=2 S=4 W=8.
-const AUTOTILE = {
-  sewer: {
-    // Opaque rotation-based set: one corner + one wall from the HD sheet, each
-    // pre-rotated to all four orientations, plus a plain floor and a solid fill.
-    floor: ['sewer2-floor', 'sewer2-floor2'],
-    accent: [],
-    water: 'sewer2-water', // fallback for isolated water cells
-    // Water-channel autotile: bitmask of which orthogonal neighbours are also
-    // water (N=1 E=2 S=4 W=8) -> a rotated channel piece with stone banks.
-    waterTiles: {
-      15: 'sw-cross',
-      14: 'sw-tee-esw', 7: 'sw-tee-nes', 11: 'sw-tee-new', 13: 'sw-tee-nsw',
-      10: 'sw-str-h', 5: 'sw-str-v',
-      9: 'sw-cor-nw', 3: 'sw-cor-ne', 6: 'sw-cor-se', 12: 'sw-cor-sw',
-      2: 'sw-str-h', 8: 'sw-str-h', 1: 'sw-str-v', 4: 'sw-str-v', // ends -> straight
-    },
-    // Wall pieces named by which edge/corner is SOLID (so nw = wall in the NW,
-    // opening toward the SE floor, etc.). Outer corners (c-*) are the map's own
-    // boundary corners — a thin L of wall, mostly floor. Inner corners (ci-*)
-    // are the wall-island / concave corners — a chunky wall nub jutting into
-    // the room (ci-nw = the nub sits in the NW), used when two adjacent edges
-    // are floor.
-    wall: {
-      top: 'sewer2-w-top', bottom: 'sewer2-w-bottom', left: 'sewer2-w-left', right: 'sewer2-w-right',
-      nw: 'sewer2-c-nw', ne: 'sewer2-c-ne', sw: 'sewer2-c-sw', se: 'sewer2-c-se',
-      iNW: 'sewer2-ci-nw', iNE: 'sewer2-ci-ne', iSW: 'sewer2-ci-sw', iSE: 'sewer2-ci-se',
-    },
-    fallback: 'sewer2-fill',
-  },
-};
+// The per-cell tileset logic (which key each wall/floor/water cell draws) lives
+// in the shared ./autotile.js so the zone editor renders it identically. Here
+// we only paint the chosen key onto a DOM tile.
 const bg = (keys) => keys.map((k) => `url("${TILES[k]}")`).join(', ');
-function floorVariant(cfg, x, y) {
-  if (cfg.accent?.length && (x * 131 + y * 197) % 100 < 12) return cfg.accent[(x + y) % cfg.accent.length];
-  return cfg.floor[(x * 3 + y) % cfg.floor.length];
-}
-function waterKey(cfg, d, x, y) {
-  const w = (xx, yy) => yy >= 0 && yy < d.height && xx >= 0 && xx < d.width && d.water?.[yy]?.[xx];
-  const mask = (w(x, y - 1) ? 1 : 0) | (w(x + 1, y) ? 2 : 0) | (w(x, y + 1) ? 4 : 0) | (w(x - 1, y) ? 8 : 0);
-  return cfg.waterTiles?.[mask] ?? cfg.water; // 0 (isolated) -> plain water pool
-}
 function paintFloor(tile, cfg, d, x, y) {
   const key = d.water?.[y]?.[x] && cfg.waterTiles ? waterKey(cfg, d, x, y) : floorVariant(cfg, x, y);
   tile.style.backgroundImage = bg([key]);
   tile.style.backgroundSize = '100% 100%';
-}
-// Pick a wall piece from the 8 neighbours: inner corners (two adjacent edges
-// are floor — a wall nub jutting into the room, e.g. a wall-island corner)
-// first, then straight edges, then outer corners (only a diagonal is floor —
-// the map's own boundary corners), else solid fill.
-function wallKey(cfg, d, x, y) {
-  const f = (xx, yy) => yy >= 0 && yy < d.height && xx >= 0 && xx < d.width && d.tiles[yy][xx] === 1;
-  const N = f(x, y - 1), E = f(x + 1, y), S = f(x, y + 1), W = f(x - 1, y);
-  const NE = f(x + 1, y - 1), SE = f(x + 1, y + 1), SW = f(x - 1, y + 1), NW = f(x - 1, y - 1);
-  const w = cfg.wall;
-  if (S && E) return w.iNW; if (S && W) return w.iNE; if (N && E) return w.iSW; if (N && W) return w.iSE;
-  if (S) return w.top; if (N) return w.bottom; if (E) return w.left; if (W) return w.right;
-  if (SE) return w.nw; if (SW) return w.ne; if (NE) return w.sw; if (NW) return w.se;
-  return cfg.fallback;
 }
 function paintWall(tile, cfg, d, x, y) {
   tile.style.backgroundImage = bg([wallKey(cfg, d, x, y)]); // opaque: floor baked in

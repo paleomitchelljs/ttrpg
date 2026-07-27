@@ -6,6 +6,13 @@ import { ZONES } from './data/zones.js';
 import { PLACEMENTS } from './data/placements.js';
 import { MONSTERS, monsterById } from './data/monsters.js';
 import { ITEMS, itemById } from './data/items.js';
+import { AUTOTILE, autotileKeyAt, allAutotileKeys } from './src/render/autotile.js';
+
+// Geometry tiles (the theme autotile sets) are NOT decor — they're drawn from
+// the painted #/./~ map, so they never belong in the decor palette.
+const GEOM_KEYS = allAutotileKeys();
+const tileRole = (k) => tagMeta[k]?.role ?? (GEOM_KEYS.has(k) ? 'wall' : 'decor');
+const isDecorTile = (k) => tileRole(k) === 'decor';
 
 const $ = (id) => document.getElementById(id);
 const tileSrc = (k) => `./assets/tiles/${k}.png`;
@@ -104,6 +111,20 @@ async function loadTiles() {
   fillPalette();
 }
 
+// Reclassify a tile: 'decor' (placed on top) vs 'wall'/'floor' (geometry painted
+// into the map and drawn by the autotiler). Persists to tile-tags.json and
+// updates the palette — a tile reclassed as wall/floor leaves the decor list.
+async function setTileRole(key, role) {
+  const j = await fetch('/set-tile-role', { method: 'POST', body: JSON.stringify({ key, role }) })
+    .then((r) => r.json()).catch(() => ({}));
+  if (!j.ok) { setStatus('Reclassify failed'); return; }
+  tagMeta[key] = tagMeta[key] ?? { tags: [] };
+  if (role === 'decor') delete tagMeta[key].role;
+  else tagMeta[key].role = role;
+  fillPalette();
+  setStatus(`"${key}" → ${role}`);
+}
+
 // ---------------------------------------------------------------- palette
 function allTags() {
   const s = new Set();
@@ -130,6 +151,7 @@ function fillPalette() {
     .join('');
   $('tagfilter').querySelectorAll('button').forEach((b) => (b.onclick = () => { activeTag = b.dataset.t; fillPalette(); }));
   const keys = tileList.filter((k) => {
+    if (!isDecorTile(k)) return false; // geometry (wall/floor/water) is painted, not placed
     if (activeTag === 'all') return true;
     const tg = tagMeta[k]?.tags || [];
     return activeTag === 'untagged' ? tg.length === 0 : tg.includes(activeTag);
@@ -182,10 +204,30 @@ function fillRegions() { $('regionSel').innerHTML = zone.subregions.map((s, i) =
 
 // ---------------------------------------------------------------- map: stage
 const stage = $('stage');
+// Build the game's autotiler view of the painted geometry so the editor shows
+// the exact walls/floors/water the crawler draws — '#' wall, '~' water, else
+// floor. Returns null for themes with no autotiler (they keep CSS base tiles).
+function autotileView() {
+  const cfg = AUTOTILE[sub.theme];
+  if (!cfg) return null;
+  const rows = sub.map;
+  return {
+    cfg,
+    d: {
+      width: rows[0].length,
+      height: rows.length,
+      tiles: rows.map((r) => [...r].map((ch) => (ch === '#' ? 0 : 1))),
+      water: rows.map((r) => [...r].map((ch) => ch === '~')),
+    },
+  };
+}
 function render() {
   const rows = sub.map, H = rows.length, W = rows[0].length;
   const edges = sub.edges ?? {};
-  stage.dataset.theme = sub.theme ?? ''; // faithful base floors/walls per theme
+  const at = autotileView();
+  // Autotiled cells carry their own tile background, so suppress the CSS theme
+  // base (which would otherwise paint the flat one-wall/one-floor look).
+  stage.dataset.theme = at ? '' : (sub.theme ?? '');
   stage.style.width = W * TS + 'px';
   stage.style.height = H * TS + 'px';
   let html = '';
@@ -194,11 +236,16 @@ function render() {
     let cls = 'cell ';
     if (ch === '#') cls += 'wall';
     else if ('E123456789'.includes(ch)) cls += 'door';
+    else if (ch === '~') cls += 'water';
     else cls += 'floor';
     if (ch === 'S') cls += ' mark';
     if (ch !== '#' && ((x === W - 1 && edges.e) || (x === 0 && edges.w) || (y === H - 1 && edges.s) || (y === 0 && edges.n))) cls += ' edge';
     if (cellSel.has(`${x},${y}`)) cls += ' selcell';
-    html += `<div class="${cls}" style="left:${x * TS}px;top:${y * TS}px;width:${TS}px;height:${TS}px"></div>`;
+    let style = `left:${x * TS}px;top:${y * TS}px;width:${TS}px;height:${TS}px`;
+    if (at) style += `;background:url('${tileSrc(autotileKeyAt(at.cfg, at.d, x, y))}') 0 0/100% 100%`;
+    // A badge keeps start/exit/doors legible over the autotiled art.
+    const badge = ch === 'S' ? 'S' : ch === 'E' ? 'E' : '0123456789'.includes(ch) ? ch : '';
+    html += `<div class="${cls}" style="${style}">${badge ? `<span class="cbadge">${badge}</span>` : ''}</div>`;
   }
   stage.innerHTML = html;
   const P = subPlace();
@@ -276,12 +323,23 @@ stage.addEventListener('pointerdown', (e) => {
     capture(e.pointerId);
     return;
   }
-  const hit = e.target.closest('.obj, .marker');
-  if (hit) sel = { kind: hit.dataset.kind, i: +hit.dataset.i };
-  else if (brush) {
+  // With a placement brush active, a click PLACES/paints — it must not be
+  // swallowed by decor sitting under the cursor. That interception was the bug
+  // that made monsters, treasure, and entrances un-placeable over a decorated
+  // map (every click hit a decor tile and just selected it).
+  if (brush) {
     placeBrush(gx, gy);
     if (brush.kind === 'tile') { paint = brush.ch; render(); capture(e.pointerId); return; }
-  } else { sel = null; if (cellSel.size) cellSel.clear(); render(); return; }
+    render();
+    const o = selObj(); if (!o) return;
+    drag = { ox: cx - o.x, oy: cy - o.y, el: stage.querySelector('.obj.sel, .marker.sel') };
+    capture(e.pointerId);
+    return;
+  }
+  // No brush: click selects an existing placement to move/edit, or clears.
+  const hit = e.target.closest('.obj, .marker');
+  if (hit) sel = { kind: hit.dataset.kind, i: +hit.dataset.i };
+  else { sel = null; if (cellSel.size) cellSel.clear(); render(); return; }
   render();
   const o = selObj(); if (!o) return;
   drag = { ox: cx - o.x, oy: cy - o.y, el: stage.querySelector('.obj.sel, .marker.sel') };
@@ -321,6 +379,11 @@ function inspector() {
       <h3>${o.key}</h3>
       <div class="row"><label>Tile</label><select id="tileSwap">
         ${tileList.map((k) => `<option value="${k}" ${k === o.key ? 'selected' : ''}>${k}</option>`).join('')}
+      </select></div>
+      <div class="row"><label>Class</label><select id="tileRole">
+        <option value="decor">decor (on top)</option>
+        <option value="wall">wall tile (geometry)</option>
+        <option value="floor">floor tile (geometry)</option>
       </select></div>
       <div class="row"><label>Rotate</label><button data-a="rot">⟳ ${o.rot || 0}°</button></div>
       <div class="row"><label>Width</label><button data-a="w-">−</button><span class="val">${o.w}</span><button data-a="w+">+</button></div>
@@ -380,6 +443,8 @@ function inspector() {
   if (pin) pin.onchange = () => { if (sel.kind === 'monsters') o.id = pin.value || undefined; else o.item = pin.value || undefined; render(); };
   const swap = box.querySelector('#tileSwap');
   if (swap) swap.onchange = () => { o.key = swap.value; render(); };
+  const roleSel = box.querySelector('#tileRole');
+  if (roleSel) { roleSel.value = tileRole(o.key); roleSel.onchange = () => setTileRole(o.key, roleSel.value); }
   const dest = box.querySelector('#pdest');
   if (dest) dest.onchange = () => { o.to = dest.value || undefined; render(); };
   const ptitle = box.querySelector('#ptitle');
@@ -433,15 +498,18 @@ $('saveBtn').onclick = async () => {
     const j = await fetch('/save-placements', { method: 'POST', body: JSON.stringify(out) }).then((r) => r.json());
     if (!j.ok) { setStatus('Save failed'); return; }
     let msg = `Saved ${j.regions} region(s)`;
+    let last = j;
     // Painted geometry goes back to zones.js in the same Save.
     if (dirtyMaps.size) {
       const maps = {};
       for (const id of dirtyMaps) { const s = subById(id); if (s) maps[id] = s.map; }
       const jm = await fetch('/save-map', { method: 'POST', body: JSON.stringify(maps) }).then((r) => r.json());
-      if (jm.ok) { dirtyMaps.clear(); msg += ` + ${jm.regions} map(s)`; }
-      else { setStatus('Map save failed: ' + (jm.error || 'see server log')); return; }
+      if (!jm.ok) { setStatus('Map save failed: ' + (jm.error || 'see server log')); return; }
+      dirtyMaps.clear(); msg += ` + ${jm.regions} map(s)`; last = jm;
     }
-    setStatus(msg + ' ✓');
+    // The server rebuilds dragon.html on save, so edits are live in-game at once.
+    msg += last.built ? ' + rebuilt ✓' : last.buildError ? ` ✓ (rebuild failed: ${last.buildError})` : ' ✓';
+    setStatus(msg);
   } catch { setStatus('Save failed — is the dev server running?'); }
 };
 
