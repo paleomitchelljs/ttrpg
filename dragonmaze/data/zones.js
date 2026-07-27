@@ -410,6 +410,8 @@ export const ZONES = [
         table: [
           { id: 'lizardfolk-warrior', weight: 3, packMax: 3 },
           { id: 'giant-snake', weight: 2, packMax: 2 },
+          { id: 'cerenasp', weight: 1, packMax: 2 },
+          { id: 'coatl', weight: 1, packMax: 2 },
           { id: 'giant-spider', weight: 2, packMax: 2 },
           { id: 'green-slime', weight: 1, packMax: 2 },
         ],
