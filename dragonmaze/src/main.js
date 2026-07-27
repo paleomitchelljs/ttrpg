@@ -167,14 +167,24 @@ game.subscribe((state, events) => {
     if (ev.type === 'parley-offer') {
       const answer = (mode) => () => { ui.showOverlay('result-overlay', false); game.resolveEncounter(mode); };
       ui.showResult({
-        title: 'Parley?',
-        body: `${ev.names.join(', ')} block your path — they seem ${ev.disposition}. Talk your way past, or draw steel? (CHA check, DC ${ev.dc})`,
+        title: 'They block your path',
+        body: `${ev.names.join(', ')} bar the way — they seem ${ev.disposition}. Draw steel, or talk your way past? (Talk: CHA check, DC ${ev.dc})`,
         actions: [
           { label: 'Fight!', onClick: answer('fight') },
-          { label: 'Threaten', onClick: answer('threaten') },
-          { label: 'Persuade', onClick: answer('persuade') },
-          ...(ev.canBarter ? [{ label: `Barter (${ev.barterCost} gold)`, onClick: answer('barter') }] : []),
-          { label: 'Ask for work', onClick: answer('work') },
+          { label: 'Talk', onClick: answer('talk') },
+        ],
+      });
+    }
+    // A won Talk opens the outcome menu — persuade / intimidate / quest, no re-roll.
+    if (ev.type === 'talk-open') {
+      const answer = (mode) => () => { ui.showOverlay('result-overlay', false); game.resolveEncounter(mode); };
+      ui.showResult({
+        title: 'They lower their guard',
+        body: `Your words land (${ev.total} vs DC ${ev.dc}). How do you play it?`,
+        actions: [
+          { label: 'Persuade — leave in peace', onClick: answer('persuade') },
+          { label: 'Intimidate — drive them off', onClick: answer('threaten') },
+          { label: 'Ask for a job', onClick: answer('work') },
         ],
       });
     }

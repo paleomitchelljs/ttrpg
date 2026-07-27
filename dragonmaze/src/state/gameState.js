@@ -973,22 +973,37 @@ function engage(encounter) {
   emit([{ type: 'parley-offer', names: encounter.monsterIds.map((id) => monsterById(id)?.name ?? id), ...offer }]);
 }
 
-// The player's answer: 'fight' | 'threaten' | 'persuade' | 'barter' | 'work'.
-// Success ends it without a fight; failure starts one.
+// Two-step parley. The top menu is just 'fight' or 'talk'. Talk rolls one CHA
+// check (DC set by faction); a win opens the outcome menu — 'persuade' (leave in
+// peace), 'threaten' (drive them off), 'work' (take a bounty) — each applied
+// without a second roll. Not persisted, so a reload just replays the bump.
 export function resolveEncounter(mode) {
   const run = state.run;
   if (!run || run.phase !== 'parley' || !run.pendingEncounter) return;
   const encounter = run.pendingEncounter;
   const offer = run.pendingParley;
-  run.pendingEncounter = null;
-  run.pendingParley = null;
-  run.phase = 'explore';
-  if (mode === 'fight' || !mode) { beginCombat(encounter); return; }
-  const face = bestFace(run);
-  const check = resolveParleyCheck(face, offer.dc, liveRNG, { advantage: face.talents?.includes('silver-tongue') });
-  const events = [{ type: 'parley-outcome', mode, success: check.success, total: check.total, dc: offer.dc }];
-  if (!check.success) { emit(events); beginCombat(encounter); return; }
-  if (mode === 'barter') { run.unbankedGold = Math.max(0, run.unbankedGold - offer.barterCost); events.push({ type: 'parley-paid', cost: offer.barterCost }); }
+  const clear = () => { run.pendingEncounter = null; run.pendingParley = null; run.parleyWon = false; };
+
+  if (mode === 'fight' || !mode) { clear(); run.phase = 'explore'; beginCombat(encounter); return; }
+
+  if (mode === 'talk') {
+    const face = bestFace(run);
+    const check = resolveParleyCheck(face, offer.dc, liveRNG, { advantage: face.talents?.includes('silver-tongue') });
+    if (!check.success) {
+      clear(); run.phase = 'explore';
+      emit([{ type: 'parley-outcome', mode: 'talk', success: false, total: check.total, dc: offer.dc }]);
+      beginCombat(encounter);
+      return;
+    }
+    run.parleyWon = true; // stay in 'parley' to choose how the talk resolves
+    emit([{ type: 'talk-open', total: check.total, dc: offer.dc }]);
+    return;
+  }
+
+  // Outcome of a won talk — no second roll.
+  if (!run.parleyWon) return;
+  clear(); run.phase = 'explore';
+  const events = [{ type: 'parley-outcome', mode, success: true }];
   if (mode === 'work') {
     const boss = run.dungeon.encounters.find((e) => e.id.startsWith('boss'));
     if (boss) {
