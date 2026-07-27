@@ -470,7 +470,7 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
   const spell = spellById(spellId);
   if (!spell || !caster.spells.includes(spellId) || caster.burned.includes(spellId)) return events;
 
-  const cast = resolveSpellCast(caster, spell, rng);
+  const cast = resolveSpellCast(caster, spell, rng, { dcMod: combat.familiar === 'fae-drake' ? -1 : 0 });
   events.push({
     type: 'spell-cast',
     casterId: caster.id,

@@ -157,7 +157,7 @@ export function talentEarned(level) {
  * Casting check: d20 + CHA vs the spell's castDC. Natural 20 always works,
  * natural 1 always fizzles. A fizzled spell burns out for the combat.
  */
-export function resolveSpellCast(caster, spell, rng = Math.random) {
+export function resolveSpellCast(caster, spell, rng = Math.random, opts = {}) {
   // Spell Focus (talent) grants advantage on casting a matched school.
   const focused = !!(spell.school && caster.talents?.includes(`focus-${spell.school}`));
   const die = d20({ rng, advantage: focused });
@@ -166,8 +166,10 @@ export function resolveSpellCast(caster, spell, rng = Math.random) {
   const stat = caster.castStat ?? 'cha';
   const bonus = caster.abilities?.[stat] ?? 0;
   const total = die.total + bonus;
-  const success = die.total !== 1 && (die.total === 20 || total >= spell.castDC);
-  return { natural: die.total, bonus, stat, total, dc: spell.castDC, success, focused };
+  // dcMod shifts the target DC (e.g. the fae-drake familiar's 'spell-focus' -1).
+  const dc = spell.castDC + (opts.dcMod ?? 0);
+  const success = die.total !== 1 && (die.total === 20 || total >= dc);
+  return { natural: die.total, bonus, stat, total, dc, success, focused };
 }
 
 // ---------------------------------------------------------------- parley & renown

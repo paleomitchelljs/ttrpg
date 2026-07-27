@@ -3,6 +3,7 @@
 //   'fire-boost'  — +1 damage on the dragon's side's fire (breath and spells)
 //   'gold-nose'   — loot piles yield 25% more gold
 //   'far-light'   — the dragon's glow reveals farther into the dark
+//   'spell-focus' — spells fizzle less: casting DC is 1 lower
 
 export const FAMILIARS = [
   {
@@ -22,6 +23,12 @@ export const FAMILIARS = [
     name: 'Lantern Beetle',
     effect: 'far-light',
     blurb: 'a gleaming shellback — its light reveals farther into the dark',
+  },
+  {
+    id: 'fae-drake',
+    name: 'Fae Drake',
+    effect: 'spell-focus',
+    blurb: 'a gossamer-winged dragonet — its presence steadies your casting (spell DC −1)',
   },
 ];
 
