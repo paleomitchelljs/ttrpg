@@ -90,6 +90,7 @@ export const ZONES = [
         doors: { 2: 'mushroom-crypts', 3: 'temple-gator-pools' },
         table: [
           { id: 'skeleton', weight: 3, packMax: 2 },
+          { id: 'skeleton-lizard', weight: 2, packMax: 2 },
           { id: 'zombie', weight: 2, packMax: 2 },
           { id: 'gargoyle', weight: 2, packMax: 2 },
         ],
