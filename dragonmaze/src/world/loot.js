@@ -3,6 +3,7 @@
 
 import { roll } from '../engine/dice.js';
 import { LOOT_TABLE } from '../../data/treasure.js';
+import { CONSUMABLES } from '../../data/consumables.js';
 import { randInt } from '../engine/rng.js';
 import { lootScale } from '../engine/rules.js';
 
@@ -11,6 +12,7 @@ import { lootScale } from '../engine/rules.js';
 // is decided at pickup time (whatever you don't own yet).
 const TOME_CHANCE = 0.06; // dragon learns a spell
 const DEN_CHANCE = 0.04; // a familiar is earned
+const POTION_CHANCE = 0.1; // a one-shot consumable for the pouch
 // Magic items never appear in loot piles: they come from bosses and quests.
 
 export function rollLoot(rng, depth = 1) {
@@ -19,6 +21,10 @@ export function rollLoot(rng, depth = 1) {
   }
   if (rng() < DEN_CHANCE) {
     return { label: 'a rustling den', den: true, gold: 0 };
+  }
+  if (rng() < POTION_CHANCE) {
+    const c = CONSUMABLES[randInt(rng, CONSUMABLES.length)];
+    return { label: `a flask — ${c.name}`, consumable: c.id, gold: 0 };
   }
   const d6 = 1 + randInt(rng, 6);
   const entry = LOOT_TABLE.find((e) => d6 >= e.min && d6 <= e.max);

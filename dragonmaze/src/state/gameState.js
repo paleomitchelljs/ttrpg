@@ -11,6 +11,7 @@ import { monsterById } from '../../data/monsters.js';
 import { COMPANIONS, companionById } from '../../data/party.js';
 import { FAMILIARS, familiarById } from '../../data/familiars.js';
 import { ITEMS, itemById } from '../../data/items.js';
+import { consumableById } from '../../data/consumables.js';
 import { parseHeroExport } from './importHero.js';
 import { bumpDamage, resolveParleyCheck } from '../engine/rules.js';
 import { SPELLS } from '../../data/spells.js';
@@ -24,6 +25,7 @@ import {
   playerSpell,
   playerSweep,
   playerIntimidate,
+  playerUseItem,
   isPlayerTurn,
   heroesOf,
 } from '../engine/combat.js';
@@ -57,6 +59,7 @@ function freshMeta() {
     familiarsOwned: [], // familiars are found in the dungeons, never bought
     tomeSpells: [], // spells the dragon has learned from found tomes
     inventory: [], // equippable items found in gleaming caches
+    consumables: ['potion-healing', 'potion-healing', 'vial-poison'], // shared pouch of one-shot combat items
     equipment: {}, // charKey -> { weapon, armor, trinket }
     customCharacters: [], // heroes imported from the portal's generator
     defeatedBosses: [], // stable boss keys (zone:sub:role) that stay dead
@@ -136,12 +139,14 @@ function normalizeMeta(meta) {
   meta.familiarsOwned ??= [];
   meta.tomeSpells ??= [];
   meta.inventory ??= [];
+  meta.consumables ??= [];
   meta.equipment ??= {};
   meta.customCharacters ??= [];
   meta.defeatedBosses ??= [];
   meta.flags ??= {};
   if (meta.familiar && !meta.familiarsOwned.includes(meta.familiar)) meta.familiar = null;
   meta.inventory = meta.inventory.filter((id) => itemById(id));
+  meta.consumables = meta.consumables.filter((id) => consumableById(id));
   for (const slots of Object.values(meta.equipment)) {
     for (const [slot, id] of Object.entries(slots)) {
       if (!itemById(id)) delete slots[slot];
@@ -700,6 +705,9 @@ export function move(dx, dy) {
         run.unbankedGold += 20;
         events.push({ type: 'loot', label: 'a picked-clean cache', gold: 20 });
       }
+    } else if (loot.consumable) {
+      state.meta.consumables.push(loot.consumable);
+      events.push({ type: 'loot', label: `${consumableById(loot.consumable)?.name ?? 'a flask'} — into your pouch`, gold: 0 });
     } else {
       let gold = loot.gold;
       if (state.meta.familiar === 'pack-rat') gold = Math.round(gold * 1.25);
@@ -1023,6 +1031,7 @@ function beginCombat(encounter) {
   const monsters = encounter.monsterIds.map((id) => makeCombatant(monsterById(id)));
   applyWorldFlags(monsters, encounter); // quest flags may weaken a specific boss
   const { combat, events } = createCombat(heroes, monsters, liveRNG, encounter.bossName ?? null);
+  combat.consumables = state.meta.consumables; // shared pouch (same array ref; a used item splices out of meta)
   // Knowledge check (Shadowdark lore): one silent party INT roll per kind of foe
   // sizes it up. Higher totals reveal more in the inspect popup (name -> stats &
   // weaknesses) and in action labels; a fail leaves it an unidentified
@@ -1075,6 +1084,21 @@ export function breath() {
 
 export function cast(spellId, targetId = null) {
   resolvePlayerAction((combat) => playerSpell(combat, spellId, targetId, liveRNG));
+}
+
+// Use a consumable from the shared pouch. Spent only when the turn is actually
+// taken (playerUseItem returns events), so a wasted click doesn't lose an item.
+export function useItem(itemId, targetId = null) {
+  const item = consumableById(itemId);
+  if (!item || !state.meta.consumables.includes(itemId)) return;
+  resolvePlayerAction((combat) => {
+    const events = playerUseItem(combat, item, targetId, liveRNG);
+    if (events.length) {
+      const i = state.meta.consumables.indexOf(itemId);
+      if (i >= 0) state.meta.consumables.splice(i, 1);
+    }
+    return events;
+  });
 }
 
 /** Cow the highlighted enemy mid-fight: a CHA check to panic it into fleeing. */

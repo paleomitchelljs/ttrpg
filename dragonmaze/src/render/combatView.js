@@ -17,6 +17,7 @@ import {
 import { spritePath } from './mapView.js';
 import { SPRITES } from '../assets-manifest.js';
 import { SPELLS, spellById } from '../../data/spells.js';
+import { consumableById } from '../../data/consumables.js';
 
 const DRAGON_FIRE_IMG = './assets/dragon-fire.png';
 const DRAGON_IDLE_STRIP = SPRITES['dragon-idle'];
@@ -26,6 +27,8 @@ const delay = (ms) => new Promise((r) => setTimeout(r, ms));
 
 // sentinel: "Spell" was chosen, so renderActions shows the spellbook submenu
 const SPELL_MENU = Symbol('spell-menu');
+// sentinel: "Item" was chosen, so renderActions shows the pouch submenu
+const ITEM_MENU = Symbol('item-menu');
 
 // ---------------------------------------------------------------- queue
 const batches = [];
@@ -208,6 +211,50 @@ async function presentEvent(els, ev) {
       for (const card of els.enemies.querySelectorAll('.hit-flash')) card.classList.remove('hit-flash');
       return;
     }
+    case 'item-use':
+      appendLog(els.log, `${ev.actor} reaches for ${ev.name}.`, 'log-start');
+      return delay(220);
+    case 'item-heal': {
+      const card = cardOf(els, ev.targetId);
+      if (card) { card.classList.add('heal-flash'); card.classList.remove('down'); updateCardHp(card, ev.hpAfter); }
+      appendLog(els.log, ev.revived ? `${ev.target} staggers back up with ${ev.amount} HP!` : `${ev.target} drinks it down — ${ev.amount} HP!`, 'log-hit');
+      await delay(500); card?.classList.remove('heal-flash');
+      return;
+    }
+    case 'item-ward': {
+      const card = cardOf(els, ev.targetId);
+      if (card) card.classList.add('heal-flash');
+      appendLog(els.log, `A ward wreathes ${ev.target} — it soaks the next ${ev.amount} damage.`, 'log-start');
+      await delay(450); card?.classList.remove('heal-flash');
+      return;
+    }
+    case 'item-restore':
+      appendLog(els.log, ev.count > 0
+        ? `${ev.target}'s mind clears — ${ev.count} spent spell${ev.count > 1 ? 's' : ''} ready again!`
+        : `${ev.target} had nothing spent to recover.`, ev.count > 0 ? 'log-hit' : 'log-miss');
+      return delay(350);
+    case 'item-hit': {
+      const card = cardOf(els, ev.targetId);
+      if (card) { card.classList.add('hit-flash'); updateCardHp(card, ev.hpAfter); }
+      appendLog(els.log, `The flask shatters on the ${ev.target} — ${ev.damage} ${ev.dtype} damage!`, 'log-hit');
+      await delay(450); card?.classList.remove('hit-flash');
+      return;
+    }
+    case 'item-wave': {
+      appendLog(els.log, `The flask bursts over the whole pack!${ev.dc ? ` (${ev.total}, save DC ${ev.dc})` : ''}`, 'log-start');
+      for (const r of ev.results) {
+        const card = cardOf(els, r.id);
+        if (card) { card.classList.add('hit-flash'); updateCardHp(card, r.hpAfter); }
+        appendLog(els.log, r.saved ? `The ${r.name} twists aside — ${r.damage}!` : `The ${r.name} is seared for ${r.damage}!`, r.saved ? 'log-miss' : 'log-hit');
+        await delay(160);
+      }
+      await delay(300);
+      for (const card of els.enemies.querySelectorAll('.hit-flash')) card.classList.remove('hit-flash');
+      return;
+    }
+    case 'ward':
+      appendLog(els.log, `The ward absorbs ${ev.soaked}${ev.tempLeft > 0 ? ` (${ev.tempLeft} left)` : ' — and shatters'}.`, 'log-miss');
+      return delay(200);
     case 'sweep': {
       appendLog(els.log, `${ev.actor} sweeps through the enemies!`, 'log-start');
       for (const r of ev.results) {
@@ -884,6 +931,31 @@ function renderActions(els, combat, handlers, view) {
     return;
   }
 
+  // "Item" was chosen: the shared party pouch, grouped by kind with a count.
+  if (view === ITEM_MENU) {
+    const menu = document.createElement('div');
+    menu.className = 'spell-menu';
+    const back = document.createElement('button');
+    back.className = 'btn btn-small spell-back';
+    back.textContent = '← Back';
+    back.addEventListener('click', () => renderActions(els, combat, handlers, null));
+    menu.appendChild(back);
+    const counts = {};
+    for (const id of combat.consumables ?? []) counts[id] = (counts[id] ?? 0) + 1;
+    for (const [id, n] of Object.entries(counts)) {
+      const c = consumableById(id);
+      if (!c) continue;
+      const btn = document.createElement('button');
+      btn.className = 'btn btn-small spell-choice';
+      btn.textContent = `${c.name} ×${n}`;
+      btn.title = c.blurb;
+      btn.addEventListener('click', () => useConsumable(combat, handlers, c));
+      menu.appendChild(btn);
+    }
+    els.actions.replaceChildren(menu);
+    return;
+  }
+
   // Main action row: compact, uniform verbs. Which foe they hit is shown by the
   // ◆ target marker and the info strip, so the labels stay short.
   const target = livingMonsters(combat).find((m) => m.id === targetId) ?? livingMonsters(combat)[0];
@@ -941,6 +1013,15 @@ function renderActions(els, combat, handlers, view) {
     row.appendChild(btn);
   }
 
+  if (combat.consumables?.length) {
+    const btn = document.createElement('button');
+    btn.className = 'btn act-btn item-btn';
+    btn.textContent = 'Item';
+    btn.title = 'Use a potion or flask from the pouch';
+    btn.addEventListener('click', () => renderActions(els, combat, handlers, ITEM_MENU));
+    row.appendChild(btn);
+  }
+
   els.actions.replaceChildren(row);
 
   if (target && livingMonsters(combat).length > 1) {
@@ -973,6 +1054,24 @@ function castSpell(combat, handlers, spell) {
   } else {
     handlers.onCast(spell.id, heroTargetId ?? allies[0]?.id ?? null);
   }
+}
+
+// Use a consumable with the same targeting shorthand as attacks/casts: an
+// offensive flask hits the current ◆ target; a potion goes to the highlighted
+// ally (or the user). self / all-enemies resolve their own target in the engine.
+function useConsumable(combat, handlers, c) {
+  const t = c.use.target;
+  if (t === 'enemy') {
+    const foe = livingMonsters(combat).find((m) => m.id === targetId) ?? livingMonsters(combat)[0];
+    handlers.onUseItem(c.id, foe?.id ?? null);
+    return;
+  }
+  if (t === 'ally') {
+    const allies = heroesOf(combat);
+    handlers.onUseItem(c.id, heroTargetId ?? allies[0]?.id ?? null);
+    return;
+  }
+  handlers.onUseItem(c.id, null);
 }
 
 function appendLog(logEl, text, cls = '') {

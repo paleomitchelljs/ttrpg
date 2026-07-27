@@ -29,6 +29,7 @@ const COMBAT_EVENTS = new Set([
   'combat-start', 'initiative', 'round', 'attack', 'breath', 'morale',
   'flee', 'recharge', 'death', 'hero-down', 'victory', 'defeat', 'retreat',
   'spell-cast', 'spell-hit', 'spell-heal', 'spell-wave', 'sweep', 'item-drop',
+  'item-use', 'item-heal', 'item-ward', 'item-restore', 'item-hit', 'item-wave', 'ward',
   'dominated', 'dominate-resisted', 'bane',
   'parley', 'parley-rout', 'parley-peace', 'parley-paid', 'quest-received', 'quest-complete',
 ]);
@@ -262,6 +263,7 @@ game.subscribe((state, events) => {
     onBreath: () => game.breath(),
     onSweep: () => game.sweep(),
     onCast: (spellId, targetId) => game.cast(spellId, targetId),
+    onUseItem: (itemId, targetId) => game.useItem(itemId, targetId),
     onIntimidate: (targetId) => game.intimidate(targetId),
     onFlee: () => { if (confirm("Flee the fight? You'll escape but drop the gold you're carrying.")) game.flee(); },
     onSheet: (id) => openSheet(id),

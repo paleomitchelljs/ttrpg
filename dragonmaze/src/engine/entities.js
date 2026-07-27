@@ -24,6 +24,8 @@ export function makeCombatant(data) {
     temporary: data.temporary ?? false,
     ac: data.ac,
     hp: { current: data.hp?.current ?? data.hpMax ?? data.hp, max: data.hp?.max ?? data.hpMax ?? data.hp },
+    tempHp: 0, // a ward (e.g. Potion of Warding) that soaks damage before HP does
+
     abilities: { ...ABILITY_DEFAULTS, ...(data.abilities ?? {}) },
     attacks: (data.attacks ?? []).map((a) => ({ ...a })),
     special: [...(data.special ?? [])],

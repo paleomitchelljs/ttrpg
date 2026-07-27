@@ -8,12 +8,14 @@ import {
   createCombat,
   runAiTurns,
   playerAttack,
+  playerUseItem,
   isPlayerTurn,
   livingMonsters,
   livingHeroes,
   heroesOf,
 } from '../src/engine/combat.js';
 import { makeSeededRNG } from '../src/engine/rng.js';
+import { consumableById } from '../data/consumables.js';
 
 const hero = (over = {}) =>
   makeCombatant({ id: 'hero', name: 'Hero', kind: 'hero', ac: 12, hp: 40, abilities: { dex: 1 },
@@ -84,6 +86,64 @@ assert.equal(makeCombatant({ name: 'X' }).side, 'foe'); // kind defaults to mons
   assert.ok(combat.over, 'fight resolved');
   assert.equal(combat.winner, 'monsters');
   assert.ok(events.some((e) => e.type === 'defeat'), 'a defeat event fired');
+}
+
+// --- 6. consumables (playerUseItem) ---
+// put a specific hero on turn so isPlayerTurn passes
+function heroTurn(combat, id = 'hero') {
+  combat.turnIndex = combat.order.findIndex((c) => c.id.startsWith(id));
+  return combat;
+}
+
+{ // healing potion restores a wounded ally + emits item-heal
+  const rng = makeSeededRNG('c-heal');
+  const h = hero({ hp: 30 }); h.hp.current = 6;
+  const { combat } = createCombat([h], [foe({ hp: 1000, ac: 1000 })], rng);
+  const ev = playerUseItem(heroTurn(combat), consumableById('potion-healing'), h.id, rng);
+  assert.ok(h.hp.current > 6, 'healing potion restored HP');
+  assert.ok(ev.some((e) => e.type === 'item-heal'), 'item-heal event fired');
+}
+
+{ // Draught of Recall clears burned spells
+  const rng = makeSeededRNG('c-restore');
+  const h = hero(); h.burned = ['ember-bolt', 'smite'];
+  const { combat } = createCombat([h], [foe({ hp: 1000, ac: 1000 })], rng);
+  playerUseItem(heroTurn(combat), consumableById('potion-mana'), h.id, rng);
+  assert.equal(h.burned.length, 0, 'burned spells restored');
+}
+
+{ // Vial of Venom damages one foe
+  const rng = makeSeededRNG('c-poison');
+  const f = foe({ hp: 50 });
+  const { combat } = createCombat([hero()], [f], rng);
+  const ev = playerUseItem(heroTurn(combat), consumableById('vial-poison'), f.id, rng);
+  assert.ok(f.hp.current < 50, 'venom damaged the foe');
+  assert.ok(ev.some((e) => e.type === 'item-hit'), 'item-hit event fired');
+}
+
+{ // Caustic Flask hits every foe
+  const rng = makeSeededRNG('c-caustic');
+  const a = foe({ id: 'goblin', hp: 50 }), b = foe({ id: 'rat', hp: 50 });
+  const { combat } = createCombat([hero()], [a, b], rng);
+  const ev = playerUseItem(heroTurn(combat), consumableById('vial-caustic'), null, rng);
+  assert.ok(a.hp.current < 50 && b.hp.current < 50, 'caustic hit both foes');
+  const wave = ev.find((e) => e.type === 'item-wave');
+  assert.ok(wave && wave.results.length === 2, 'item-wave covers both foes');
+}
+
+{ // Potion of Warding grants a ward that soaks a later hit (no HP lost)
+  const rng = makeSeededRNG('c-ward');
+  const h = hero({ hp: 30, ac: -100 }); // AC -100 so the foe always hits
+  const f = foe({ hp: 1000, ac: 1, attacks: [{ name: 'jab', toHit: 100, damage: '1d4' }] });
+  const { combat } = createCombat([h], [f], rng);
+  playerUseItem(heroTurn(combat), consumableById('potion-protection'), h.id, rng);
+  assert.ok(h.tempHp >= 4, 'ward applied tempHp'); // 1d6+3 >= 4, >= a 1d4 hit
+  const hpBefore = h.hp.current;
+  // let the foe take its swing (1d4 <= ward, fully soaked)
+  combat.turnIndex = combat.order.findIndex((c) => c.id.startsWith('goblin'));
+  const ev = runAiTurns(combat, rng);
+  assert.ok(ev.some((e) => e.type === 'ward'), 'a ward-soak event fired');
+  assert.equal(h.hp.current, hpBefore, 'the ward soaked the hit — no HP lost');
 }
 
 console.log('combat.test.js: all assertions passed ✓');

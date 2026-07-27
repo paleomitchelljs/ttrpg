@@ -142,6 +142,13 @@ function applyDamage(target, amount, type, events) {
     dealt *= 2;
     events.push({ type: 'vulnerable', id: target.id, who: target.name, dtype: type });
   }
+  // A ward (Potion of Warding) soaks damage before it reaches HP.
+  if (target.tempHp > 0 && dealt > 0) {
+    const soaked = Math.min(target.tempHp, dealt);
+    target.tempHp -= soaked;
+    dealt -= soaked;
+    events.push({ type: 'ward', id: target.id, who: target.name, soaked, tempLeft: target.tempHp });
+  }
   if (
     target.ability === 'relentless' &&
     !target.relentlessUsed &&
@@ -543,6 +550,62 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
       results.push({ id: m.id, name: m.name, hpAfter: m.hp.current, ...res });
     }
     events.push({ type: 'spell-wave', total, dc: spell.saveDC, results });
+    for (const m of targets) afterDamage(combat, m, rng, events);
+  }
+
+  if (!checkVictory(combat, events)) advanceTurn(combat, events);
+  return events;
+}
+
+/**
+ * Use a consumable from the party pouch (Phase 1: instant effects only). Spends
+ * the actor's whole turn, like a spell. `item` is a CONSUMABLES entry; the
+ * caller (gameState) owns the shared pouch and removes the item on a used turn.
+ */
+export function playerUseItem(combat, item, targetId, rng = Math.random) {
+  const events = [];
+  if (!isPlayerTurn(combat) || !item?.use) return events;
+  const actor = currentCombatant(combat);
+  const u = item.use;
+  events.push({ type: 'item-use', actorId: actor.id, actor: actor.name, itemId: item.id, name: item.name, tile: item.tile ?? null, target: u.target });
+
+  if (u.target === 'self' || u.target === 'ally') {
+    const target = u.target === 'self'
+      ? actor
+      : combat.order.find((c) => c.id === targetId && onHeroSide(c)) ?? actor;
+    if (u.heal) {
+      const amount = roll(u.heal, rng).total;
+      const revived = target.hp.current <= 0;
+      target.hp.current = Math.min(target.hp.max, target.hp.current + amount);
+      events.push({ type: 'item-heal', targetId: target.id, target: target.name, amount, revived, hpAfter: target.hp.current });
+    }
+    if (u.tempHp) {
+      const amount = roll(u.tempHp, rng).total;
+      target.tempHp = Math.max(target.tempHp, amount); // wards don't stack — keep the stronger
+      events.push({ type: 'item-ward', targetId: target.id, target: target.name, amount });
+    }
+    if (u.restoreSpells) {
+      const before = target.burned.length;
+      target.burned = u.restoreSpells === 'all' ? [] : target.burned.slice(Number(u.restoreSpells));
+      events.push({ type: 'item-restore', targetId: target.id, target: target.name, count: before - target.burned.length });
+    }
+  } else if (u.target === 'enemy') {
+    const target = combat.order.find((c) => c.id === targetId && isFoe(c) && alive(c)) ?? livingMonsters(combat)[0];
+    if (target && u.damage) {
+      const dealt = applyDamage(target, roll(u.damage, rng).total, u.dtype ?? 'physical', events);
+      events.push({ type: 'item-hit', targetId: target.id, target: target.name, damage: dealt, hpAfter: target.hp.current, dtype: u.dtype ?? 'physical' });
+      afterDamage(combat, target, rng, events);
+    }
+  } else if (u.target === 'all-enemies' && u.damage) {
+    const total = roll(u.damage, rng).total;
+    const targets = livingMonsters(combat);
+    const results = [];
+    for (const m of targets) {
+      const res = u.saveDC ? resolveBreathOn(m, u.saveDC, total, rng) : { damage: total, saved: false };
+      res.damage = applyDamage(m, res.damage, u.dtype ?? 'fire', events);
+      results.push({ id: m.id, name: m.name, hpAfter: m.hp.current, ...res });
+    }
+    events.push({ type: 'item-wave', total, dc: u.saveDC ?? null, dtype: u.dtype ?? 'fire', results });
     for (const m of targets) afterDamage(combat, m, rng, events);
   }
 
