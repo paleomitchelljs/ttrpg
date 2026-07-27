@@ -149,6 +149,39 @@ export const ITEMS = [
     mods: { damage: 1, hpMax: 1 },
     blurb: 'a sliver of the god-city’s dread (+1 damage, +1 max HP)',
   },
+  // ---------------------------------------------- Common gear (treasure.png art)
+  // Plainer finds spread across the zones' boss pools. `tile` links the sliced
+  // icon in assets/tiles for when the UI shows item art.
+  {
+    id: 'scimitar', name: 'Fine Scimitar', slot: 'weapon', zone: 'upper-guk',
+    tile: 'scimitar', mods: { toHit: 1, damage: 1 },
+    blurb: 'a curved, well-balanced blade (+1 to hit, +1 damage)',
+  },
+  {
+    id: 'ring-ruby', name: 'Ruby Ring', slot: 'trinket', zone: 'upper-guk',
+    tile: 'ring-ruby', mods: { damage: 1 },
+    blurb: 'the red stone lends your blows a bite (+1 damage)',
+  },
+  {
+    id: 'chainmail', name: 'Chainmail', slot: 'armor', zone: 'lower-guk',
+    tile: 'chainmail', mods: { ac: 2 },
+    blurb: 'a shirt of good riveted rings (+2 AC)',
+  },
+  {
+    id: 'crown', name: 'Gilded Crown', slot: 'trinket', zone: 'lower-guk',
+    tile: 'crown', mods: { hpMax: 2, init: 1 },
+    blurb: 'wear it and they follow your lead (+2 max HP, +1 initiative)',
+  },
+  {
+    id: 'shield-round', name: 'Round Shield', slot: 'armor', zone: 'lost-temple',
+    tile: 'shield-round', mods: { ac: 1 },
+    blurb: 'banded oak and iron, quick to raise (+1 AC)',
+  },
+  {
+    id: 'amulet-sun', name: 'Sun Amulet', slot: 'trinket', zone: 'lost-temple',
+    tile: 'amulet-sun', mods: { hpMax: 3 },
+    blurb: 'a warm ward against the dark (+3 max HP)',
+  },
 ];
 
 export function itemById(id) {
