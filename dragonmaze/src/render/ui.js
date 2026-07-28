@@ -2,7 +2,6 @@
 // decisions live in gameState; main.js wires intents.
 
 import { zoneById } from '../../data/zones.js';
-import { FAMILIARS, familiarById } from '../../data/familiars.js';
 import { ITEMS, SLOTS, itemById } from '../../data/items.js';
 import { spellById } from '../../data/spells.js';
 import { COMPANIONS } from '../../data/party.js';
@@ -64,31 +63,6 @@ export function updateTitle(state) {
     ? zone.blurb
     : 'An ever-changing maze, deeper and richer with every delve.';
 
-  // familiar picker: only found familiars unlock; the rest stay mysteries
-  const owned = state.meta.familiarsOwned ?? [];
-  const active = state.meta.familiar ?? '';
-  const box = el('familiar-buttons');
-  const mkBtn = (fam) => {
-    const btn = document.createElement('button');
-    btn.className = 'zone-btn familiar-btn';
-    if (fam && !owned.includes(fam.id)) {
-      btn.textContent = '???';
-      btn.disabled = true;
-      btn.classList.add('locked');
-    } else {
-      btn.textContent = fam ? fam.name : 'None';
-      btn.dataset.fam = fam?.id ?? '';
-      btn.classList.toggle('selected', active === (fam?.id ?? ''));
-    }
-    return btn;
-  };
-  box.replaceChildren(mkBtn(null), ...FAMILIARS.map(mkBtn));
-  const fam = familiarById(active);
-  el('familiar-blurb').textContent = fam
-    ? fam.blurb
-    : owned.length
-      ? 'delve alone, unencumbered by pets'
-      : 'familiars hide somewhere in the dungeons — find their dens';
 }
 
 const PARTY_CAP = 4;

@@ -574,12 +574,6 @@ ui.el('import-file').addEventListener('change', async (ev) => {
   }
 });
 
-// Familiar picker on the title screen (dynamic buttons; found-only).
-ui.el('familiar-buttons').addEventListener('click', (ev) => {
-  const btn = ev.target.closest('.familiar-btn');
-  if (btn && !btn.disabled) game.setFamiliar(btn.dataset.fam || null);
-});
-
 // Zone picker on the title screen. Scoped to its container: .zone-btn is
 // reused as a visual style by sheet/import/familiar buttons.
 for (const btn of document.querySelectorAll('#zone-buttons .zone-btn')) {

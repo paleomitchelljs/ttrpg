@@ -206,8 +206,17 @@ function applyDamage(target, amount, type, events) {
 }
 
 /** The dragon's familiar sharpens the party's fire. */
+// A familiar rides in the dragon's single minion slot and gives its boost only
+// while it holds that slot — any deployed minion (summon / dominate / beast)
+// displaces the familiar, and its boost, until that minion is gone.
+function familiarActive(combat) {
+  if (!combat.familiar) return false;
+  const dragon = dragonOf(combat);
+  if (!dragon) return false;
+  return !combat.order.some((c) => isAlly(c) && alive(c) && c.ownerId === dragon.id);
+}
 function fireBonus(combat) {
-  return combat.familiar === 'ember-wisp' ? 1 : 0;
+  return familiarActive(combat) && combat.familiar === 'ember-wisp' ? 1 : 0;
 }
 
 // A caster adds their spellcasting-ability modifier to spell damage and healing
@@ -509,7 +518,7 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
   const spell = spellById(spellId);
   if (!spell || !caster.spells.includes(spellId) || caster.burned.includes(spellId)) return events;
 
-  const cast = resolveSpellCast(caster, spell, rng, { dcMod: combat.familiar === 'fae-drake' ? -1 : 0 });
+  const cast = resolveSpellCast(caster, spell, rng, { dcMod: familiarActive(combat) && combat.familiar === 'fae-drake' ? -1 : 0 });
   events.push({
     type: 'spell-cast',
     casterId: caster.id,
