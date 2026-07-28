@@ -31,6 +31,42 @@ const isHero = (c) => c.side === 'hero';
 const onHeroSide = (c) => !isFoe(c);
 const aiRun = (c) => isFoe(c) || isAlly(c);
 
+// ---- conditions: timed buffs/debuffs from Phase-2 consumables ---------------
+// A condition is { id, rounds, ac?, disadv?, dot?:{amount,dtype} }.
+function addCondition(c, cond) {
+  c.conditions = (c.conditions ?? []).filter((k) => k.id !== cond.id); // refresh, don't stack
+  c.conditions.push({ ...cond });
+}
+const condAc = (c) => (c.conditions ?? []).reduce((n, k) => n + (k.ac ?? 0), 0);
+const condDisadv = (c) => (c.conditions ?? []).some((k) => k.disadv);
+// resolveAttack options folding in the attacker's greased footing and the
+// target's ward.
+const atkOpts = (attacker, target, extra = {}) => ({
+  ...extra,
+  disadvantage: !!extra.disadvantage || condDisadv(attacker),
+  acBonus: condAc(target),
+});
+// Age the just-finished combatant's conditions: apply DoT, then expire timed
+// ones. A DoT can drop someone, so resolve win/loss here.
+function tickConditions(combat, c, events) {
+  if (!c.conditions?.length) return;
+  const remain = [];
+  for (const k of c.conditions) {
+    if (k.dot && c.hp.current > 0) {
+      c.hp.current = Math.max(0, c.hp.current - k.dot.amount);
+      events.push({ type: 'condition-dot', id: c.id, who: c.name, cond: k.id, amount: k.dot.amount, hpAfter: c.hp.current, dtype: k.dot.dtype ?? 'fire' });
+    }
+    if (--k.rounds > 0) remain.push(k);
+    else events.push({ type: 'condition-end', id: c.id, who: c.name, cond: k.id });
+  }
+  c.conditions = remain;
+  if (c.hp.current <= 0) {
+    if (isFoe(c)) { events.push({ type: 'death', id: c.id, who: c.name, goldValue: c.goldValue }); checkVictory(combat, events); }
+    else if (c.kind === 'dragon') checkDefeat(combat, events);
+    else { events.push({ type: 'hero-down', id: c.id, who: c.name }); checkDefeat(combat, events); }
+  }
+}
+
 export function currentCombatant(combat) {
   return combat.order[combat.turnIndex];
 }
@@ -94,6 +130,8 @@ export function createCombat(heroes, monsters, rng = Math.random, label = null) 
 }
 
 function advanceTurn(combat, events) {
+  tickConditions(combat, currentCombatant(combat), events); // end-of-turn: DoT + expiry
+  if (combat.over) return; // a DoT could have ended the fight
   do {
     combat.turnIndex++;
     if (combat.turnIndex >= combat.order.length) {
@@ -237,7 +275,7 @@ export function runAiTurns(combat, rng = Math.random) {
     }
     const targets = livingHeroSide(combat);
     const target = targets[Math.floor(rng() * targets.length)];
-    const res = resolveAttack(monster, monster.attacks[0], target, rng);
+    const res = resolveAttack(monster, monster.attacks[0], target, rng, atkOpts(monster, target));
     if (res.hit) {
       res.damage = applyDamage(target, res.damage, 'physical', events);
       if (monster.ability === 'lifedrain' && res.damage > 1 && monster.hp.current < monster.hp.max) {
@@ -282,7 +320,7 @@ function takeMinionTurn(combat, minion, rng, events) {
   const foes = livingMonsters(combat);
   if (!foes.length) { checkVictory(combat, events); return; }
   const target = foes[Math.floor(rng() * foes.length)];
-  const res = resolveAttack(minion, minion.attacks[0], target, rng);
+  const res = resolveAttack(minion, minion.attacks[0], target, rng, atkOpts(minion, target));
   if (res.hit) res.damage = applyDamage(target, res.damage, 'physical', events);
   events.push({
     type: 'attack',
@@ -318,9 +356,7 @@ export function playerAttack(combat, targetId, rng = Math.random) {
       livingMonsters(combat)[0];
     if (!target) break;
     acted = true;
-    const res = resolveAttack(actor, actor.attacks[0], target, rng, {
-      advantage: !!target.panicked,
-    });
+    const res = resolveAttack(actor, actor.attacks[0], target, rng, atkOpts(actor, target, { advantage: !!target.panicked }));
     if (res.hit) {
       if (actor.bane === 'undead' && target.undead) {
         res.damage += 2;
@@ -388,7 +424,7 @@ export function playerSweep(combat, rng = Math.random) {
   if (!targets.length) return events;
   const results = [];
   for (const m of targets) {
-    const res = resolveAttack(actor, actor.attacks[0], m, rng, {});
+    const res = resolveAttack(actor, actor.attacks[0], m, rng, atkOpts(actor, m));
     let dealt = 0;
     if (res.hit) dealt = applyDamage(m, Math.max(1, Math.floor(res.damage / 2)), 'physical', events);
     results.push({ id: m.id, name: m.name, hit: res.hit, damage: dealt, hpAfter: m.hp.current });
@@ -575,9 +611,9 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
 }
 
 /**
- * Use a consumable from the party pouch (Phase 1: instant effects only). Spends
- * the actor's whole turn, like a spell. `item` is a CONSUMABLES entry; the
- * caller (gameState) owns the shared pouch and removes the item on a used turn.
+ * Use a consumable from the party pouch — instant effects plus timed conditions
+ * (grease/ward/burning). Spends the actor's whole turn, like a spell. `item` is a
+ * CONSUMABLES entry; the caller (gameState) owns the pouch and removes it on use.
  */
 export function playerUseItem(combat, item, targetId, rng = Math.random) {
   const events = [];
@@ -606,23 +642,36 @@ export function playerUseItem(combat, item, targetId, rng = Math.random) {
       target.burned = u.restoreSpells === 'all' ? [] : target.burned.slice(Number(u.restoreSpells));
       events.push({ type: 'item-restore', targetId: target.id, target: target.name, count: before - target.burned.length });
     }
+    if (u.condition) {
+      addCondition(target, u.condition);
+      events.push({ type: 'condition-applied', targetId: target.id, target: target.name, cond: u.condition.id });
+    }
   } else if (u.target === 'enemy') {
     const target = combat.order.find((c) => c.id === targetId && isFoe(c) && alive(c)) ?? livingMonsters(combat)[0];
-    if (target && u.damage) {
-      const dealt = applyDamage(target, roll(u.damage, rng).total, u.dtype ?? 'physical', events);
-      events.push({ type: 'item-hit', targetId: target.id, target: target.name, damage: dealt, hpAfter: target.hp.current, dtype: u.dtype ?? 'physical' });
+    if (target) {
+      if (u.damage) {
+        const dealt = applyDamage(target, roll(u.damage, rng).total, u.dtype ?? 'physical', events);
+        events.push({ type: 'item-hit', targetId: target.id, target: target.name, damage: dealt, hpAfter: target.hp.current, dtype: u.dtype ?? 'physical' });
+      }
+      if (u.condition) {
+        addCondition(target, u.condition);
+        events.push({ type: 'condition-applied', targetId: target.id, target: target.name, cond: u.condition.id });
+      }
       afterDamage(combat, target, rng, events);
     }
-  } else if (u.target === 'all-enemies' && u.damage) {
-    const total = roll(u.damage, rng).total;
+  } else if (u.target === 'all-enemies') {
     const targets = livingMonsters(combat);
+    const total = u.damage ? roll(u.damage, rng).total : 0;
     const results = [];
     for (const m of targets) {
-      const res = u.saveDC ? resolveBreathOn(m, u.saveDC, total, rng) : { damage: total, saved: false };
-      res.damage = applyDamage(m, res.damage, u.dtype ?? 'fire', events);
-      results.push({ id: m.id, name: m.name, hpAfter: m.hp.current, ...res });
+      if (u.damage) {
+        const res = u.saveDC ? resolveBreathOn(m, u.saveDC, total, rng) : { damage: total, saved: false };
+        res.damage = applyDamage(m, res.damage, u.dtype ?? 'fire', events);
+        results.push({ id: m.id, name: m.name, hpAfter: m.hp.current, ...res });
+      }
+      if (u.condition) addCondition(m, u.condition);
     }
-    events.push({ type: 'item-wave', total, dc: u.saveDC ?? null, dtype: u.dtype ?? 'fire', results });
+    events.push({ type: 'item-wave', total, dc: u.saveDC ?? null, dtype: u.dtype ?? 'fire', cond: u.condition?.id ?? null, results });
     for (const m of targets) afterDamage(combat, m, rng, events);
   }
 

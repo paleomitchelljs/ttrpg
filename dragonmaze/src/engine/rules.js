@@ -64,7 +64,8 @@ export function resolveAttack(attacker, attack, target, rng = Math.random, opts 
   const total = natural + attack.toHit;
   const crit = natural === 20;
   const fumble = natural === 1;
-  const hit = !fumble && (crit || total >= target.ac);
+  const ac = target.ac + (opts.acBonus ?? 0); // a 'warded' target is harder to hit
+  const hit = !fumble && (crit || total >= ac);
   let damage = 0;
   let damageRolls = [];
   if (hit) {
@@ -79,7 +80,7 @@ export function resolveAttack(attacker, attack, target, rng = Math.random, opts 
     mode: die.mode,
     toHit: attack.toHit,
     total,
-    targetAc: target.ac,
+    targetAc: ac,
     crit,
     fumble,
     hit,

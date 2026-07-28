@@ -132,19 +132,43 @@ function heroTurn(combat, id = 'hero') {
   assert.ok(wave && wave.results.length === 2, 'item-wave covers both foes');
 }
 
-{ // Potion of Warding grants a ward that soaks a later hit (no HP lost)
-  const rng = makeSeededRNG('c-ward');
-  const h = hero({ hp: 30, ac: -100 }); // AC -100 so the foe always hits
-  const f = foe({ hp: 1000, ac: 1, attacks: [{ name: 'jab', toHit: 100, damage: '1d4' }] });
+{ // Potion of Warding applies a lasting +2 AC condition that turns a hit into a miss
+  const rng = () => 0.58; // d20 -> 12
+  const h = hero({ hp: 30, ac: 12 });
+  const f = foe({ id: 'goblin', hp: 1000, ac: 1000, attacks: [{ name: 'poke', toHit: 0, damage: '1d4' }] });
   const { combat } = createCombat([h], [f], rng);
   playerUseItem(heroTurn(combat), consumableById('potion-protection'), h.id, rng);
-  assert.ok(h.tempHp >= 4, 'ward applied tempHp'); // 1d6+3 >= 4, >= a 1d4 hit
-  const hpBefore = h.hp.current;
-  // let the foe take its swing (1d4 <= ward, fully soaked)
+  const w = (h.conditions ?? []).find((k) => k.id === 'warded');
+  assert.ok(w && w.ac === 2 && w.rounds >= 2, 'warded applied (+2 AC)');
+  combat.turnIndex = combat.order.findIndex((c) => c.id.startsWith('goblin'));
+  const atk = runAiTurns(combat, rng).find((e) => e.type === 'attack' && e.targetId === h.id);
+  assert.ok(atk && !atk.hit, 'the ward (AC 12->14) turns a 12 into a miss');
+}
+
+{ // grease: the whole pack attacks at disadvantage
+  const rng = () => 0.99;
+  const h = hero({ hp: 100, ac: 100 });
+  const f = foe({ id: 'goblin', hp: 1000, ac: 1, attacks: [{ name: 'poke', toHit: 5, damage: '1d4' }] });
+  const { combat } = createCombat([h], [f], rng);
+  playerUseItem(heroTurn(combat), consumableById('grease'), null, rng);
+  assert.ok((f.conditions ?? []).some((k) => k.id === 'greased' && k.disadv), 'foe is greased');
+  combat.turnIndex = combat.order.findIndex((c) => c.id.startsWith('goblin'));
+  const atk = runAiTurns(combat, rng).find((e) => e.type === 'attack' && String(e.attackerId).startsWith('goblin'));
+  assert.equal(atk?.mode, 'disadvantage', 'greased foe rolls at disadvantage');
+}
+
+{ // flaming pitch: burning DoT ticks at the end of the foe's turn
+  const rng = () => 0.99;
+  const h = hero({ hp: 100, ac: 100 });
+  const f = foe({ id: 'goblin', hp: 50, ac: 100 });
+  const { combat } = createCombat([h], [f], rng);
+  playerUseItem(heroTurn(combat), consumableById('flaming-pitch'), null, rng);
+  assert.ok((f.conditions ?? []).some((k) => k.id === 'burning' && k.dot), 'foe is burning');
+  const hpAfterSplash = f.hp.current;
   combat.turnIndex = combat.order.findIndex((c) => c.id.startsWith('goblin'));
   const ev = runAiTurns(combat, rng);
-  assert.ok(ev.some((e) => e.type === 'ward'), 'a ward-soak event fired');
-  assert.equal(h.hp.current, hpBefore, 'the ward soaked the hit — no HP lost');
+  assert.ok(ev.some((e) => e.type === 'condition-dot'), 'the burn dealt damage');
+  assert.ok(f.hp.current < hpAfterSplash, 'foe lost HP to the burn');
 }
 
 // --- 7. dominate -> convert a foe into an ally minion ---

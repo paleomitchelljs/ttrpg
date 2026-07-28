@@ -554,6 +554,20 @@
       76
     ]
   },
+  "flaming-pitch": {
+    "tags": [
+      "item",
+      "consumable",
+      "offensive"
+    ],
+    "sheet": "treasure.png",
+    "box": [
+      1318,
+      488,
+      72,
+      82
+    ]
+  },
   "gargoyle-statue": {
     "tags": [
       "statue",
@@ -603,6 +617,20 @@
       39,
       345,
       303
+    ]
+  },
+  "grease": {
+    "tags": [
+      "item",
+      "consumable",
+      "offensive"
+    ],
+    "sheet": "treasure.png",
+    "box": [
+      1124,
+      104,
+      62,
+      82
     ]
   },
   "green-font": {

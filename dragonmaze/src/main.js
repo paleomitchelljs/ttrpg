@@ -30,6 +30,7 @@ const COMBAT_EVENTS = new Set([
   'flee', 'recharge', 'death', 'hero-down', 'victory', 'defeat', 'retreat',
   'spell-cast', 'spell-hit', 'spell-heal', 'spell-wave', 'sweep', 'item-drop',
   'item-use', 'item-heal', 'item-ward', 'item-restore', 'item-hit', 'item-wave', 'ward',
+  'condition-applied', 'condition-dot', 'condition-end',
   'dominated', 'dominate-resisted', 'bane',
   'parley', 'parley-rout', 'parley-peace', 'parley-paid', 'quest-received', 'quest-complete',
 ]);

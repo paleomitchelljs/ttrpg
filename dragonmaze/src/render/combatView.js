@@ -258,6 +258,27 @@ async function presentEvent(els, ev) {
     case 'ward':
       appendLog(els.log, `The ward absorbs ${ev.soaked}${ev.tempLeft > 0 ? ` (${ev.tempLeft} left)` : ' — and shatters'}.`, 'log-miss');
       return delay(200);
+    case 'condition-applied': {
+      const card = cardOf(els, ev.targetId);
+      const good = ev.cond === 'warded';
+      if (card) card.classList.add(good ? 'heal-flash' : 'hit-flash');
+      appendLog(els.log,
+        good ? `${ev.target} is warded — harder to hit for a while.`
+        : ev.cond === 'greased' ? `The ${ev.target} loses its footing on the grease — off-balance!`
+        : ev.cond === 'burning' ? `The ${ev.target} is set alight!`
+        : `${ev.target} is afflicted.`, good ? 'log-hit' : 'log-start');
+      await delay(320); card?.classList.remove('heal-flash', 'hit-flash');
+      return;
+    }
+    case 'condition-dot': {
+      const card = cardOf(els, ev.id);
+      if (card) { card.classList.add('hit-flash'); updateCardHp(card, ev.hpAfter); }
+      appendLog(els.log, `The ${ev.who} burns for ${ev.amount}!`, 'log-hit');
+      await delay(300); card?.classList.remove('hit-flash');
+      return;
+    }
+    case 'condition-end':
+      return; // expiry is silent
     case 'sweep': {
       appendLog(els.log, `${ev.actor} sweeps through the enemies!`, 'log-start');
       for (const r of ev.results) {
