@@ -233,4 +233,30 @@ const domCaster = (over = {}) =>
   assert.ok(ev.some((e) => e.type === 'summon-full'), 'second summon fizzles');
 }
 
+// --- 9. familiars render but never fight; a deployed minion displaces them ---
+{
+  const rng = () => 0.99;
+  const dragon = makeCombatant({ id: 'dragon', name: 'Red Dragon', kind: 'dragon',
+    abilities: { cha: 20 }, ac: 18, hp: 100, spells: ['summon-ember'] });
+  dragon.familiar = 'ember-wisp';
+  const { combat } = createCombat([dragon], [foe({ id: 'goblin', hp: 1000, ac: 1000 })], rng);
+  const fam = combat.combatants.find((c) => c.minionType === 'familiar');
+  assert.ok(fam, 'the familiar joined as a combatant');
+  assert.ok(fam.inert, 'the familiar is inert');
+  assert.ok(!combat.order.includes(fam), 'the familiar is not in the turn order');
+  assert.ok(heroesOf(combat).some((h) => h.id === fam.id), 'the familiar renders on the hero side');
+  assert.ok(!livingHeroes(combat).some((h) => h.id === fam.id), 'but is not counted a hero');
+
+  // A foe can't strike the familiar — it isn't in the order the AI picks from.
+  combat.turnIndex = combat.order.findIndex((c) => c.id.startsWith('goblin'));
+  const aiEv = runAiTurns(combat, rng);
+  assert.ok(!aiEv.some((e) => e.type === 'attack' && e.targetId === fam.id), 'foes cannot target the familiar');
+
+  // Summoning a real minion displaces the familiar (and its boost) from the field.
+  const ev = playerSpell(heroTurn(combat, 'dragon'), 'summon-ember', null, rng);
+  assert.ok(ev.some((e) => e.type === 'familiar-dismiss'), 'the familiar was dismissed');
+  assert.ok(!combat.combatants.some((c) => c.minionType === 'familiar'), 'familiar left the field');
+  assert.ok(combat.order.some((c) => c.minionType === 'summoned'), 'the summoned minion took its place');
+}
+
 console.log('combat.test.js: all assertions passed ✓');

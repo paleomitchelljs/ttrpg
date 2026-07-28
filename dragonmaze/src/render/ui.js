@@ -181,9 +181,16 @@ function growthHtml(subject) {
     const spells = g.learnable
       .map((sp) => `<button class="zone-btn advance-btn" data-advance="spell" data-spell="${sp.id}">Learn ${sp.name}</button>`)
       .join('');
+    // Familiar is a two-step pick: choose "Familiar…" to open the menu of options.
+    const familiar = g.familiarOptions?.length
+      ? `<details class="familiar-feat"><summary class="zone-btn advance-btn">Familiar…</summary>
+           <div class="zone-buttons">${g.familiarOptions
+             .map((f) => `<button class="zone-btn advance-btn" data-advance="familiar" data-fam="${f.id}" title="${(f.blurb || '').replace(/"/g, '')}">${f.name}</button>`)
+             .join('')}</div></details>`
+      : '';
     html += `
       <p class="sheet-blurb">Talent${g.pendingTalent > 1 ? ` ×${g.pendingTalent}` : ''} — choose one:</p>
-      <div class="zone-buttons">${talents}${spells}</div>`;
+      <div class="zone-buttons">${talents}${spells}</div>${familiar}`;
   }
   return html;
 }

@@ -11,16 +11,13 @@ import { lootScale } from '../engine/rules.js';
 // low: each should feel like an event. What a den or cache actually contains
 // is decided at pickup time (whatever you don't own yet).
 const TOME_CHANCE = 0.06; // dragon learns a spell
-const DEN_CHANCE = 0.04; // a familiar is earned
 const POTION_CHANCE = 0.1; // a one-shot consumable for the pouch
 // Magic items never appear in loot piles: they come from bosses and quests.
+// Familiars are no longer found — they're chosen as a level-up feat.
 
 export function rollLoot(rng, depth = 1) {
   if (rng() < TOME_CHANCE) {
     return { label: 'a dusty spell tome', tome: true, gold: 0 };
-  }
-  if (rng() < DEN_CHANCE) {
-    return { label: 'a rustling den', den: true, gold: 0 };
   }
   if (rng() < POTION_CHANCE) {
     const c = CONSUMABLES[randInt(rng, CONSUMABLES.length)];

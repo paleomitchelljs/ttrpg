@@ -159,7 +159,7 @@ check('dungeon is well-formed and connected', () => {
     assert.ok(d.encounters.length >= 3 && d.encounters.length <= 5);
     assert.ok(d.loot.length <= 4);
     for (const l of d.loot) {
-      assert.ok(l.gold >= 1 || l.tome || l.den || l.cache, 'loot has gold or is a special find');
+      assert.ok(l.gold >= 1 || l.tome || l.consumable, 'loot has gold or is a special find');
     }
     // flood-fill: every floor tile reachable from start
     const seen = new Set([`${d.start.x},${d.start.y}`]);
@@ -273,7 +273,8 @@ check('roster has sane stats', () => {
     assert.ok(m.ac >= 8 && m.ac <= 20, `${m.id} ac`);
     assert.ok(m.hpMax >= 1, `${m.id} hp`);
     assert.ok(m.attacks.length >= 1, `${m.id} attacks`);
-    assert.ok(m.goldValue > 0, `${m.id} gold`);
+    // Conjured/summon-only templates (weight 0) aren't looted, so no gold required.
+    if (m.weight !== 0) assert.ok(m.goldValue > 0, `${m.id} gold`);
     roll(m.attacks[0].damage); // throws if the dice expression is malformed
   }
 });
@@ -341,7 +342,7 @@ check('every zone subregion is well-formed, connected, and deterministic', () =>
 check('spellbook is well-formed and companion spells exist', () => {
   for (const s of SPELLS) {
     if (s.dice) roll(s.dice); // throws on a malformed expression
-    assert.ok(['enemy', 'ally', 'all-enemies'].includes(s.target), `${s.id} target`);
+    assert.ok(['enemy', 'ally', 'all-enemies', 'self'].includes(s.target), `${s.id} target`);
     assert.ok(s.castDC >= 10 && s.castDC <= 15, `${s.id} castDC`);
   }
   for (const c of COMPANIONS) {
@@ -405,7 +406,7 @@ check('resistances, abilities, familiars, and tomes hold together', () => {
 });
 
 check('spellblade companion and familiars are well-formed', () => {
-  assert.equal(FAMILIARS.length, 3);
+  assert.equal(FAMILIARS.length, 4);
   for (const f of FAMILIARS) assert.ok(f.id && f.name && f.blurb);
   const sb = companionById('dragonkin-spellblade');
   assert.ok(sb, 'spellblade exists');
@@ -498,7 +499,9 @@ check('drain and dominate behave', () => {
   }
   const evs2 = playerSpell(combat, 'dominate-undead', skeleton.id, () => 0.99);
   assert.ok(evs2.some((e) => e.type === 'dominated'), 'skeleton dominated');
-  assert.ok(skeleton.panicked, 'dominated undead will flee');
+  assert.equal(skeleton.side, 'ally', 'dominated undead joins your side');
+  assert.equal(skeleton.minionType, 'dominated', 'as a dominated minion');
+  assert.ok(!skeleton.panicked, 'a dominated thrall does not flee');
 });
 
 check('zone doors and boss drops reference real places and items', () => {

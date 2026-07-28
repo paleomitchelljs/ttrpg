@@ -183,6 +183,9 @@ async function presentEvent(els, ev) {
     case 'minion-down':
       appendLog(els.log, `Your ${ev.who} is cut down.`, 'log-hurt');
       return delay(300);
+    case 'familiar-dismiss':
+      appendLog(els.log, `Your ${ev.who} winks out, giving up its place.`, 'log-dim');
+      return delay(300);
     case 'bane':
       appendLog(els.log, `${ev.attacker}'s blade blazes against the ${ev.who}! (+2 undead bane)`, 'log-hit');
       return delay(250);
@@ -812,6 +815,7 @@ export function renderCombat(els, state, handlers) {
   els.player.replaceChildren(
     ...heroesOf(combat).map((h) => {
       const unit = unitEl(h, 'hero', activeId);
+      if (h.inert) return unit; // familiars can't be healed or targeted
       if (h.hp.current > 0 && h.id === heroTargetId) unit.classList.add('ally-targeted');
       // Tap a living hero to make them the heal target.
       unit.addEventListener('click', () => {
@@ -832,12 +836,18 @@ function unitEl(c, side, activeId) {
     'unit',
     side,
     c.kind === 'dragon' ? 'dragon' : '',
+    c.inert ? 'inert familiar' : '',
     side === 'enemy' && dead ? 'dead' : '',
     side === 'hero' && dead ? 'down' : '',
     c.fled ? 'fled' : '',
     c.id === activeId ? 'active' : '',
   ].filter(Boolean).join(' ');
   unit.dataset.id = c.id;
+  // A familiar is a passive companion sprite — no HP, no turn, no targeting.
+  if (c.inert) {
+    unit.innerHTML = `${faceHtml(c, false)}<div class="familiar-tag">✦ ${c.name}</div>`;
+    return unit;
+  }
   unit.dataset.hpmax = c.hp.max;
   if (c.kind === 'dragon') {
     unit.dataset.idle = DRAGON_IDLE_STRIP;

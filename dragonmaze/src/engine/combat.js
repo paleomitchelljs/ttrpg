@@ -21,6 +21,7 @@ import { resolveParleyCheck } from './rules.js';
 import { spellById } from '../../data/spells.js';
 import { makeCombatant } from './entities.js';
 import { monsterById } from '../../data/monsters.js';
+import { familiarById } from '../../data/familiars.js';
 
 const alive = (c) => c.hp.current > 0 && !c.fled;
 // Factions. A minion (side 'ally') fights on the hero side but is AI-run, like
@@ -121,6 +122,30 @@ export function createCombat(heroes, monsters, rng = Math.random, label = null) 
     familiar: heroes.find((h) => h.kind === 'dragon')?.familiar ?? null,
     bonusGold: 0, // loot from dominated foes (they leave the foe list but still pay out)
   };
+  // The familiar rides along as a companion sprite: it's added to `combatants`
+  // (so heroesOf renders it) but NOT to `order`, so it never takes a turn, can't
+  // be struck, and doesn't count for victory/defeat. It's inert — it only carries
+  // its owner's casting boost, and it's displaced the instant a real minion deploys.
+  const dragon = heroes.find((h) => h.kind === 'dragon');
+  const famData = dragon?.familiar ? familiarById(dragon.familiar) : null;
+  if (famData) {
+    const fam = makeCombatant({
+      id: `familiar-${famData.id}`,
+      name: famData.name,
+      kind: 'monster',
+      side: 'ally',
+      ownerId: dragon.id,
+      minionType: 'familiar',
+      temporary: true,
+      ac: 10,
+      hpMax: 1,
+      emoji: famData.emoji ?? '✦',
+      faction: 'wild',
+    });
+    fam.inert = true; // never fights, never targeted — a passive boost-carrier
+    fam.initiative = 0;
+    combat.combatants.push(fam);
+  }
   const events = [
     { type: 'combat-start', monsters: monsters.map((m) => ({ name: m.name })), label },
     { type: 'initiative', order: order.map((c) => ({ id: c.id, name: c.name, initiative: c.initiative })) },
@@ -207,16 +232,30 @@ function applyDamage(target, amount, type, events) {
 
 /** The dragon's familiar sharpens the party's fire. */
 // A familiar rides in the dragon's single minion slot and gives its boost only
-// while it holds that slot — any deployed minion (summon / dominate / beast)
-// displaces the familiar, and its boost, until that minion is gone.
+// while it's on the field. Deploying a real minion (summon / dominate / beast)
+// displaces it via dismissFamiliar(), so the boost simply follows the sprite.
+function familiarCombatant(combat) {
+  return combat.combatants.find((c) => c.minionType === 'familiar' && alive(c));
+}
 function familiarActive(combat) {
-  if (!combat.familiar) return false;
-  const dragon = dragonOf(combat);
-  if (!dragon) return false;
-  return !combat.order.some((c) => isAlly(c) && alive(c) && c.ownerId === dragon.id);
+  const fam = familiarCombatant(combat);
+  if (!fam) return false;
+  // Belt-and-suspenders: if some other minion of the owner is already deployed,
+  // the boost defers to it (dismissFamiliar normally removes the familiar first).
+  return !combat.order.some((c) => isAlly(c) && alive(c) && c.ownerId === fam.ownerId);
 }
 function fireBonus(combat) {
   return familiarActive(combat) && combat.familiar === 'ember-wisp' ? 1 : 0;
+}
+// A real minion just took the slot — the familiar winks out, and its boost with
+// it. Removing it from `combatants` (it was never in `order`) drops it from the
+// hero lineup on the next render.
+function dismissFamiliar(combat, casterId, events) {
+  const idx = combat.combatants.findIndex((c) => c.minionType === 'familiar' && c.ownerId === casterId);
+  if (idx === -1) return;
+  const fam = combat.combatants[idx];
+  combat.combatants.splice(idx, 1);
+  events.push({ type: 'familiar-dismiss', id: fam.id, who: fam.name });
 }
 
 // A caster adds their spellcasting-ability modifier to spell damage and healing
@@ -547,6 +586,7 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
     } else {
       const tmpl = monsterById(spell.summon);
       if (tmpl) {
+        dismissFamiliar(combat, caster.id, events); // the conjuration takes the familiar's slot
         const minion = makeCombatant({ ...tmpl, side: 'ally', ownerId: caster.id, minionType: 'summoned', temporary: true });
         minion.initiative = rollInitiative(minion, rng);
         combat.combatants.push(minion);
@@ -578,6 +618,7 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
       const saveTotal = die.total + (target.abilities?.wis ?? 0);
       const resisted = !target.undead && die.total !== 1 && (die.total === 20 || saveTotal >= saveDC);
       if (resisted) return fail('save');
+      dismissFamiliar(combat, caster.id, events); // the new thrall takes the familiar's slot
       target.side = 'ally';
       target.ownerId = caster.id;
       target.minionType = 'dominated';

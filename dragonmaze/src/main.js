@@ -10,7 +10,7 @@ import * as ui from './render/ui.js';
 import { DRAGON_TIERS, tierByName } from '../data/dragonProgression.js';
 import { COMPANIONS, companionById } from '../data/party.js';
 import { itemById } from '../data/items.js';
-import { familiarById } from '../data/familiars.js';
+import { FAMILIARS, familiarById } from '../data/familiars.js';
 import { spellById, SPELLS as SPELLS_ALL } from '../data/spells.js';
 import { TALENTS, talentById, focusTalentsFor } from '../data/talents.js';
 import * as rulesRef from './engine/rules.js';
@@ -204,7 +204,6 @@ game.subscribe((state, events) => {
         'log-start'
       );
     }
-    if (ev.type === 'familiar-found') ui.logExplore(`Something stirs in the den… a familiar joins you: ${ev.name} — ${ev.blurb}!`, 'log-start');
     if (ev.type === 'item-found') ui.logExplore(`Inside the cache: ${ev.name} — ${ev.blurb}. Equip it from a character sheet!`, 'log-start');
     if (ev.type === 'level-up') ui.logExplore(`${ev.who} reaches level ${ev.level}! Open their sheet to choose an advance.`, 'log-start');
     if (ev.type === 'rested') {
@@ -362,6 +361,9 @@ function growthInfo(id, c, g) {
     abilityCap: rulesRef.ABILITY_CAP,
     talentOptions,
     learnable: c.castStat ? learnableSpells(id) : [],
+    // A familiar (party-wide casting boost) is a talent-slot pick — offered only
+    // until the party has one; choosing it opens the familiar menu.
+    familiarOptions: game.state.meta.familiar ? [] : FAMILIARS.map((f) => ({ id: f.id, name: f.name, blurb: f.blurb })),
     talents: chosen.filter((tid) => tid !== 'armor').map((tid) => talentById(tid)?.name ?? tid),
   };
 }
@@ -410,8 +412,8 @@ ui.el('sheet-body').addEventListener('click', (ev) => {
 ui.el('sheet-body').addEventListener('click', (ev) => {
   const btn = ev.target.closest('.advance-btn');
   if (!btn || !openSheetId) return;
-  const type = btn.dataset.advance; // 'asi' | 'talent' | 'spell'
-  const arg = btn.dataset.ability ?? btn.dataset.talent ?? btn.dataset.spell ?? null;
+  const type = btn.dataset.advance; // 'asi' | 'talent' | 'spell' | 'familiar'
+  const arg = btn.dataset.ability ?? btn.dataset.talent ?? btn.dataset.spell ?? btn.dataset.fam ?? null;
   game.chooseAdvance(openSheetId, type, arg);
   openSheet(openSheetId);
 });

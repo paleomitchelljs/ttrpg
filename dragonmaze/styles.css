@@ -493,6 +493,10 @@ button { font: inherit; }
 .unit.hero:not(.down):not(.dead):hover { border-color: #ffffff44; }
 .unit.hero.ally-targeted { border-color: #6cc0ff; }
 .unit.hero.ally-targeted .hp-num::before { content: '✚ '; color: #6cc0ff; }
+/* A familiar: a passive companion sprite, not a fighter — smaller and quiet. */
+.unit.inert { width: calc(var(--unit-w) * 0.72); cursor: default; opacity: 0.9; align-self: flex-end; }
+.unit.inert .enemy-face, .unit.inert .combat-sprite { font-size: 1.5rem; width: 46px; }
+.familiar-tag { font-size: 0.62rem; color: #b9a7d6; text-align: center; letter-spacing: 0.02em; }
 .unit.enemy.targeted .combat-sprite,
 .unit.enemy.targeted .enemy-face {
   outline: 2px dashed var(--ember);

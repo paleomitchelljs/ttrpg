@@ -1742,6 +1742,20 @@ export const PLACEMENTS = {
         "rot": 0
       }
     ],
+    "monsters": [
+      {
+        "x": 3,
+        "y": 4
+      },
+      {
+        "x": 7,
+        "y": 6
+      },
+      {
+        "x": 11,
+        "y": 9
+      }
+    ],
     "loot": [
       {
         "x": 5,

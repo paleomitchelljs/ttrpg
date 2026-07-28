@@ -62,8 +62,7 @@ function freshMeta() {
     heroGrowth: {}, // charId -> { xp, level, pending, choices: [{type, spellId?}] }
     reputation: {}, // faction -> renown (kills of their enemies raise it)
     zone: { zoneId: 'lost-temple', subIndex: 0 }, // default hunt; null = procedural
-    familiar: null, // the active familiar (must be owned)
-    familiarsOwned: [], // familiars are found in the dungeons, never bought
+    familiar: null, // the party's familiar, chosen as a level-up feat
     tomeSpells: [], // spells the dragon has learned from found tomes
     inventory: [], // equippable items found in gleaming caches
     consumables: ['potion-healing', 'potion-healing', 'vial-poison'], // shared pouch of one-shot combat items
@@ -143,7 +142,7 @@ function normalizeMeta(meta) {
   meta.reputation ??= {};
   meta.zone ??= null;
   meta.familiar ??= null;
-  meta.familiarsOwned ??= [];
+  delete meta.familiarsOwned; // legacy: familiars are no longer found/owned
   meta.tomeSpells ??= [];
   meta.inventory ??= [];
   meta.consumables ??= [];
@@ -151,7 +150,7 @@ function normalizeMeta(meta) {
   meta.customCharacters ??= [];
   meta.defeatedBosses ??= [];
   meta.flags ??= {};
-  if (meta.familiar && !meta.familiarsOwned.includes(meta.familiar)) meta.familiar = null;
+  if (meta.familiar && !familiarById(meta.familiar)) meta.familiar = null;
   meta.inventory = meta.inventory.filter((id) => itemById(id));
   meta.consumables = meta.consumables.filter((id) => consumableById(id));
   for (const slots of Object.values(meta.equipment)) {
@@ -235,7 +234,7 @@ export function pendingAdvances(id) {
   const g = state.meta.heroGrowth?.[id];
   if (!g) return { asi: 0, talent: 0, total: 0 };
   const asiChosen = g.choices.filter((c) => c.type === 'asi').length;
-  const talentChosen = g.choices.filter((c) => c.type === 'talent' || c.type === 'spell').length;
+  const talentChosen = g.choices.filter((c) => c.type === 'talent' || c.type === 'spell' || c.type === 'familiar').length;
   const asi = Math.max(0, asiEarned(g.level) - asiChosen);
   const talent = Math.max(0, talentEarned(g.level) - talentChosen);
   return { asi, talent, total: asi + talent };
@@ -262,6 +261,12 @@ export function chooseAdvance(charId, type, arg = null) {
     const spell = SPELLS.find((sp) => sp.id === arg && sp.tome !== false);
     if (!spell || (heroWithGrowth(charId)?.spells ?? []).includes(arg)) return;
     g.choices.push({ type: 'spell', spellId: arg });
+  } else if (type === 'familiar') {
+    if (pend.talent <= 0) return; // taking a familiar spends a talent slot
+    if (!familiarById(arg)) return;
+    if (g.choices.some((c) => c.type === 'familiar')) return; // one familiar feat per hero
+    g.choices.push({ type: 'familiar', familiarId: arg });
+    state.meta.familiar = arg; // the party's familiar (a single shared boost)
   } else {
     return;
   }
@@ -318,10 +323,9 @@ export function equip(charKey, slot, itemId) {
   emit([{ type: 'equip-changed' }]);
 }
 
-/** Choose the active familiar from those already found (or null for none). */
+/** Set the party's familiar (chosen as a level-up feat), or null for none. */
 export function setFamiliar(familiarId) {
-  state.meta.familiar =
-    familiarById(familiarId) && state.meta.familiarsOwned.includes(familiarId) ? familiarId : null;
+  state.meta.familiar = familiarById(familiarId) ? familiarId : null;
   persist(state);
   emit([{ type: 'familiar-changed' }]);
 }
@@ -681,18 +685,7 @@ export function move(dx, dy) {
   const lootIdx = d.loot.findIndex((l) => l.x === x && l.y === y);
   if (lootIdx >= 0) {
     const [loot] = d.loot.splice(lootIdx, 1);
-    if (loot.den) {
-      const unowned = FAMILIARS.filter((f) => !state.meta.familiarsOwned.includes(f.id));
-      if (unowned.length) {
-        const found = unowned[Math.floor(liveRNG() * unowned.length)];
-        state.meta.familiarsOwned.push(found.id);
-        state.meta.familiar ??= found.id;
-        events.push({ type: 'familiar-found', name: found.name, blurb: found.blurb });
-      } else {
-        run.unbankedGold += 15;
-        events.push({ type: 'loot', label: 'an empty den (15 gold under the bedding)', gold: 15 });
-      }
-    } else if (loot.tome) {
+    if (loot.tome) {
       const unknown = SPELLS.filter((sp) => sp.tome !== false && !state.meta.tomeSpells.includes(sp.id));
       if (unknown.length) {
         const learned = unknown[Math.floor(liveRNG() * unknown.length)];
