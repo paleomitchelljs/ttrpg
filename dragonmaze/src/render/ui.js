@@ -6,7 +6,7 @@ import { FAMILIARS, familiarById } from '../../data/familiars.js';
 import { ITEMS, SLOTS, itemById } from '../../data/items.js';
 import { spellById } from '../../data/spells.js';
 import { COMPANIONS } from '../../data/party.js';
-import { SPRITES } from '../assets-manifest.js';
+import { SPRITES, TILES } from '../assets-manifest.js';
 
 export function el(id) {
   return document.getElementById(id);
@@ -217,14 +217,21 @@ function growthHtml(subject) {
 function equipmentHtml(subject) {
   if (!subject.equip) return '';
   const { charKey, slots, taken } = subject.equip;
+  // Click-to-equip chips that show the item's icon (art from assets/tiles) when
+  // it has one; the equipped chip is highlighted, the "none" chip unequips.
+  const chip = (slot, item) => {
+    const equipped = item ? slots[slot] === item.id : !slots[slot];
+    const wornByOther = item && taken[item.id] && taken[item.id] !== charKey;
+    const icon = item?.tile && TILES[item.tile]
+      ? `<img class="equip-ico" src="${TILES[item.tile]}" alt="">`
+      : `<span class="equip-ico none">${item ? '▪' : '∅'}</span>`;
+    const label = item ? item.name : 'none';
+    return `<button class="equip-chip${equipped ? ' on' : ''}${wornByOther ? ' worn' : ''}" data-char="${charKey}" data-slot="${slot}" data-item="${item?.id ?? ''}" title="${item ? item.blurb.replace(/"/g, '') : 'unequip'}">${icon}<span class="equip-name">${label}${wornByOther ? ' · worn' : ''}</span></button>`;
+  };
   const rows = SLOTS.map((slot) => {
-    const current = slots[slot] ?? '';
     const options = ITEMS.filter((i) => i.slot === slot && subject.equip.inventory.includes(i.id));
-    const opts = [
-      `<option value="">— nothing —</option>`,
-      ...options.map((i) => `<option value="${i.id}" ${i.id === current ? 'selected' : ''}>${i.name} — ${i.blurb}${taken[i.id] && taken[i.id] !== charKey ? ' (worn by another)' : ''}</option>`),
-    ].join('');
-    return `<label class="equip-row">${slot}: <select class="spell-select equip-select" data-char="${charKey}" data-slot="${slot}">${opts}</select></label>`;
+    const chips = [chip(slot, null), ...options.map((i) => chip(slot, i))].join('');
+    return `<div class="equip-row"><span class="equip-slot">${slot}</span><div class="equip-chips">${chips}</div></div>`;
   }).join('');
   return `<h3>Equipment</h3><div class="equip-grid">${rows}</div>
     <p class="sheet-blurb">changes take effect at the next labyrinth</p>`;

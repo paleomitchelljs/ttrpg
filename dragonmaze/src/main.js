@@ -398,11 +398,11 @@ function openSheet(id) {
   }
 }
 
-// equipment dropdowns inside the sheet
-ui.el('sheet-body').addEventListener('change', (ev) => {
-  const sel = ev.target.closest('.equip-select');
-  if (!sel) return;
-  game.equip(sel.dataset.char, sel.dataset.slot, sel.value || null);
+// equipment chips inside the sheet (click an item icon to equip / swap / unequip)
+ui.el('sheet-body').addEventListener('click', (ev) => {
+  const chip = ev.target.closest('.equip-chip');
+  if (!chip) return;
+  game.equip(chip.dataset.char, chip.dataset.slot, chip.dataset.item || null);
   if (openSheetId) openSheet(openSheetId);
 });
 

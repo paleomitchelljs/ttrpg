@@ -561,6 +561,19 @@ button { font: inherit; }
 .sheet-blurb { color: var(--ink-dim); margin: 0.2rem 0 0; font-size: 0.9rem; font-style: italic; }
 .sheet-sprite { width: 84px; flex: none; filter: drop-shadow(0 3px 5px #000a); }
 
+/* Equipment: click-to-equip chips with the item's icon. */
+.equip-grid { display: flex; flex-direction: column; gap: 0.5rem; }
+.equip-row { display: flex; align-items: flex-start; gap: 0.5rem; }
+.equip-slot { width: 3.5rem; flex: none; text-transform: capitalize; color: var(--ink-dim); font-size: 0.8rem; padding-top: 0.35rem; }
+.equip-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; flex: 1; }
+.equip-chip { display: flex; align-items: center; gap: 0.3rem; background: #2e2b38; border: 2px solid #43404f; border-radius: 7px; padding: 3px 7px 3px 3px; cursor: pointer; color: #d8d3e9; font: inherit; line-height: 1; }
+.equip-chip:hover { border-color: #6c86d0; }
+.equip-chip.on { border-color: #6cc0ff; background: #33445e; }
+.equip-chip.worn { opacity: 0.5; }
+.equip-ico { width: 26px; height: 26px; object-fit: contain; image-rendering: pixelated; display: block; }
+.equip-ico.none { display: grid; place-items: center; color: #7f7a93; font-size: 14px; }
+.equip-name { font-size: 0.78rem; }
+
 .sheet-vitals {
   display: flex;
   gap: 0.45rem;
