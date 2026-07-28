@@ -139,8 +139,12 @@ export function levelForXp(xp) {
 // every level-up so toughness scales without spending a pick on it.
 export function hpPerLevel(hero) {
   const con = hero?.abilities?.con ?? 0;
-  const classBase = hero?.castStat ? 2 : 3; // casters d4-ish, martials d6-ish
-  return Math.max(1, classBase + con);
+  // Shadowdark: each level adds a class hit-die roll + CON (min 1). We use the
+  // die's rounded average so growth is smooth — d4->3, d6->4, d8->5. Fall back to
+  // a caster's d4 / a martial's d6 if a hero predates the hitDie field.
+  const hitDie = hero?.hitDie ?? (hero?.castStat ? 4 : 6);
+  const dieAvg = Math.round((hitDie + 1) / 2);
+  return Math.max(1, dieAvg + con);
 }
 
 // Level cadence: an ability score increase at 2/4/6/8/10, a talent at 3/5/7/9.
@@ -159,18 +163,25 @@ export function talentEarned(level) {
  * natural 1 always fizzles. A fizzled spell burns out for the combat.
  */
 export function resolveSpellCast(caster, spell, rng = Math.random, opts = {}) {
-  // Spell Focus (talent) grants advantage on casting a matched school.
+  // Advantage on the cast comes from Spell Focus (talent, matched school) or from
+  // a spell that is simply cast with advantage (Shadowdark's Magic Missile).
   const focused = !!(spell.school && caster.talents?.includes(`focus-${spell.school}`));
-  const die = d20({ rng, advantage: focused });
+  const advantage = focused || !!spell.castAdvantage;
+  const die = d20({ rng, advantage });
   // Casting keys off the caster's spellcasting ability (Shadowdark: wizards
   // INT, priests WIS; our dragon and vampire cast on CHA). Defaults to CHA.
   const stat = caster.castStat ?? 'cha';
-  const bonus = caster.abilities?.[stat] ?? 0;
+  // The cast adds the caster's spellcasting ability plus any spellcasting-check
+  // bonus (Shadowdark's "+1 to spellcasting checks" talents live in spellPower).
+  const bonus = (caster.abilities?.[stat] ?? 0) + (caster.spellPower ?? 0);
   const total = die.total + bonus;
-  // dcMod shifts the target DC (e.g. the fae-drake familiar's 'spell-focus' -1).
-  const dc = spell.castDC + (opts.dcMod ?? 0);
+  // Shadowdark: the DC is always 10 + the spell's tier. dcMod shifts it (e.g. the
+  // fae-drake familiar's 'spell-focus' -1). castDC is kept in the data as a
+  // self-documenting mirror of 10 + tier.
+  const dc = (spell.castDC ?? 10 + (spell.tier ?? 1)) + (opts.dcMod ?? 0);
   const success = die.total !== 1 && (die.total === 20 || total >= dc);
-  return { natural: die.total, bonus, stat, total, dc, success, focused };
+  const crit = die.total === 20; // a natural 20 doubles the spell's numerical effect
+  return { natural: die.total, bonus, stat, total, dc, success, crit, focused };
 }
 
 // ---------------------------------------------------------------- parley & renown

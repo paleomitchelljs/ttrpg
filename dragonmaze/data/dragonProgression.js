@@ -1,5 +1,9 @@
 // Dragon age tiers — pure data (plan §6). Phase 0 plays entirely at
 // wyrmling; hoardToNext and breath are wired up in Phase 1.
+//
+// Shadowdark-aligned: a monster's bite deals its dice ONLY (no flat ability
+// bonus), so each tier's old `XdY+Z` is re-expressed as pure dice that keep the
+// same average punch (e.g. 1d8+2 avg 6.5 -> 1d12). Breath is already pure dice.
 
 export const DRAGON_TIERS = [
   {
@@ -9,7 +13,7 @@ export const DRAGON_TIERS = [
     hpMax: 18,
     ac: 13,
     abilities: { str: 2, dex: 2, con: 1, int: 1, wis: 0, cha: 1 },
-    attacks: [{ name: 'bite', toHit: 4, damage: '1d8+2', range: 'melee' }],
+    attacks: [{ name: 'bite', toHit: 4, damage: '1d12', range: 'melee' }],
     breath: { damage: '2d6', dc: 11, recharge: 'd6>=5' },
     sprite: 'dragon_wyrmling',
     emoji: '🐉',
@@ -21,7 +25,7 @@ export const DRAGON_TIERS = [
     hpMax: 30,
     ac: 15,
     abilities: { str: 4, dex: 2, con: 2, int: 1, wis: 1, cha: 2 },
-    attacks: [{ name: 'bite', toHit: 6, damage: '1d10+4', range: 'melee' }],
+    attacks: [{ name: 'bite', toHit: 6, damage: '2d8', range: 'melee' }],
     breath: { damage: '3d6', dc: 13, recharge: 'd6>=5' },
     sprite: 'dragon_young',
     emoji: '🐉',
@@ -33,7 +37,7 @@ export const DRAGON_TIERS = [
     hpMax: 52,
     ac: 18,
     abilities: { str: 6, dex: 2, con: 4, int: 2, wis: 2, cha: 3 },
-    attacks: [{ name: 'bite', toHit: 9, damage: '2d8+6', range: 'melee' }],
+    attacks: [{ name: 'bite', toHit: 9, damage: '4d6', range: 'melee' }],
     breath: { damage: '5d6', dc: 16, recharge: 'd6>=5' },
     sprite: 'dragon_adult',
     emoji: '🐉',
@@ -45,7 +49,7 @@ export const DRAGON_TIERS = [
     hpMax: 90,
     ac: 20,
     abilities: { str: 8, dex: 2, con: 6, int: 4, wis: 3, cha: 5 },
-    attacks: [{ name: 'bite', toHit: 13, damage: '2d10+8', range: 'melee' }],
+    attacks: [{ name: 'bite', toHit: 13, damage: '3d12', range: 'melee' }],
     breath: { damage: '8d6', dc: 19, recharge: 'd6>=5' },
     sprite: 'dragon_ancient',
     emoji: '🐉',

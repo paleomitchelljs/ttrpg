@@ -343,7 +343,11 @@ check('spellbook is well-formed and companion spells exist', () => {
   for (const s of SPELLS) {
     if (s.dice) roll(s.dice); // throws on a malformed expression
     assert.ok(['enemy', 'ally', 'all-enemies', 'self'].includes(s.target), `${s.id} target`);
-    assert.ok(s.castDC >= 10 && s.castDC <= 15, `${s.id} castDC`);
+    // Shadowdark: tiers run 1-5 and the DC is always 10 + tier.
+    assert.ok(s.tier >= 1 && s.tier <= 5, `${s.id} tier`);
+    assert.equal(s.castDC, 10 + s.tier, `${s.id} DC is 10 + tier`);
+    // Damage is dice only — no flat ability bonus baked into a spell's dice.
+    if (s.dice) assert.ok(!/[+]/.test(s.dice), `${s.id} damage is dice only`);
   }
   for (const c of COMPANIONS) {
     for (const id of c.spells) assert.ok(spellById(id), `${c.id} knows unknown spell ${id}`);
@@ -377,10 +381,12 @@ check('drain life steals at most half the damage', () => {
   const { combat } = createCombat([spawnee], [rat], () => 0.5);
   while (combat.order[combat.turnIndex].id !== spawnee.id)
     combat.turnIndex = (combat.turnIndex + 1) % combat.order.length;
-  const evs = playerSpell(combat, 'drain-life', rat.id, () => 0.99); // 1d8 (8) + CHA 2 = 10
+  // 0.7 -> d20 15 (a clean success, not a nat-20 crit); 1d6 -> 5. Shadowdark
+  // spell damage is the dice only, with no ability modifier folded in.
+  const evs = playerSpell(combat, 'drain-life', rat.id, () => 0.7);
   const hit = evs.find((e) => e.type === 'spell-hit');
-  assert.equal(hit.damage, 10, 'spell damage adds the caster CHA modifier');
-  assert.equal(hit.drained, 5, 'lifesteal capped at half of 10');
+  assert.equal(hit.damage, 5, 'spell damage is the dice only — no ability bonus');
+  assert.equal(hit.drained, 3, 'lifesteal capped at half the damage');
 });
 
 check('resistances, abilities, familiars, and tomes hold together', () => {
@@ -662,9 +668,10 @@ check('ASI and talent advances fold into the hero template', () => {
   const grown = game.heroWithGrowth('spawnee');
   assert.equal(grown.abilities.str, base.abilities.str + 1, 'STR ASI raises the score');
   assert.equal(grown.abilities.dex, base.abilities.dex + 1, 'DEX ASI raises the score');
-  // STR gives hit+dmg, DEX gives hit+AC; armor talent adds a further +1 AC.
+  // STR + DEX both sharpen the attack; DEX also gives AC (+ the armor talent).
+  // Shadowdark: weapon damage is the die alone, so raising STR never pads it.
   assert.equal(grown.attacks[0].toHit, base.attacks[0].toHit + 2, 'STR + DEX both add to hit');
-  assert.equal(grown.attacks[0].damage, bumpDamage(base.attacks[0].damage, 1), 'STR adds damage');
+  assert.equal(grown.attacks[0].damage, base.attacks[0].damage, 'weapon damage stays the die (no STR bonus)');
   assert.equal(grown.ac, base.ac + 2, 'DEX ASI +1 and the +1 AC talent');
   assert.ok(grown.talents.includes('cleave'), 'Cleave talent recorded');
   // Auto HP uses the (unchanged) CON: +hpPerLevel * 5 levels, plus legacy +2.

@@ -2,16 +2,23 @@
 // Spawnee is a friendly vampire spawn warrior with a few limited vampire
 // powers; the swashbuckler knows the whole spellbook; the spellblade
 // splits the difference with a flaming sword.
+//
+// Scaled to Shadowdark's level-1 PCs (see references/shadowdark): abilities are
+// modifiers in -4..+4; HP is one class hit-die + CON (hitDie: 4/6/8 = Wizard-Thief
+// / Priest-gish / Fighter); AC is armour base + DEX (leather 11, chain 13, +2 for
+// a shield); a weapon deals its die ONLY (no ability bonus on damage), and the
+// attack bonus is the wielding ability's modifier + a small trained bump.
 
 export const COMPANIONS = [
   {
     id: 'spawnee',
     name: 'Spawnee',
     kind: 'hero',
-    ac: 15,
-    hpMax: 14,
+    ac: 15, // chainmail 13 + DEX 2
+    hpMax: 7, // d8 + CON 2
+    hitDie: 8,
     abilities: { str: 2, dex: 2, con: 2, int: 1, wis: 0, cha: 2 },
-    attacks: [{ name: 'sword', toHit: 5, damage: '1d8+2', range: 'melee' }],
+    attacks: [{ name: 'sword', toHit: 3, damage: '1d8', range: 'melee' }],
     sprite: 'hero_spawnee',
     emoji: '🌙',
     anim: { idle: 'spawnee-idle', attack: 'spawnee-attack' },
@@ -29,10 +36,11 @@ export const COMPANIONS = [
     id: 'dragonkin-swashbuckler',
     name: 'Dragonkin Swashbuckler',
     kind: 'hero',
-    ac: 14,
-    hpMax: 11,
+    ac: 14, // unarmoured 10 + DEX 4 (a duelist trusts footwork over plate)
+    hpMax: 5, // d6 + CON 1
+    hitDie: 6,
     abilities: { str: 1, dex: 4, con: 1, int: 0, wis: 0, cha: 1 },
-    attacks: [{ name: 'sword', toHit: 6, damage: '1d6+3', range: 'melee' }],
+    attacks: [{ name: 'sword', toHit: 5, damage: '1d6', range: 'melee' }],
     sprite: 'hero_swashbuckler',
     emoji: '🗡️',
     anim: { idle: 'swash-idle', attack: 'swash-attack' },
@@ -45,10 +53,11 @@ export const COMPANIONS = [
     id: 'dragonkin-spellblade',
     name: 'Dragonkin Spellblade',
     kind: 'hero',
-    ac: 15,
-    hpMax: 12,
+    ac: 14, // chainmail 13 + DEX 1
+    hpMax: 5, // d6 + CON 1
+    hitDie: 6,
     abilities: { str: 2, dex: 1, con: 1, int: 3, wis: 1, cha: 1 },
-    attacks: [{ name: 'sword', toHit: 4, damage: '1d8+2', range: 'melee' }],
+    attacks: [{ name: 'sword', toHit: 3, damage: '1d8', range: 'melee' }],
     sprite: 'hero_spellblade',
     emoji: '🔥',
     anim: { idle: 'spellblade-idle', attack: 'spellblade-attack' },
@@ -62,10 +71,11 @@ export const COMPANIONS = [
     id: 'beren',
     name: 'Beren',
     kind: 'hero',
-    ac: 16,
-    hpMax: 15,
+    ac: 16, // chainmail 13 + DEX 1 + shield 2
+    hpMax: 7, // d8 + CON 2
+    hitDie: 8,
     abilities: { str: 3, dex: 1, con: 2, int: 0, wis: 1, cha: 1 },
-    attacks: [{ name: 'sword', toHit: 5, damage: '1d8+3', range: 'melee' }],
+    attacks: [{ name: 'sword', toHit: 4, damage: '1d8', range: 'melee' }],
     sprite: 'hero_beren',
     emoji: '🗡️',
     anim: { idle: 'beren-idle', attack: 'beren-attack' },
@@ -80,10 +90,11 @@ export const COMPANIONS = [
     id: 'turquoise',
     name: 'Turquoise',
     kind: 'hero',
-    ac: 14,
-    hpMax: 18,
+    ac: 13, // leather 11 + DEX 2 (a barbarian shuns heavy plate)
+    hpMax: 8, // d8 + CON 3
+    hitDie: 8,
     abilities: { str: 4, dex: 2, con: 3, int: -1, wis: 0, cha: 0 },
-    attacks: [{ name: 'sword', toHit: 6, damage: '1d10+3', range: 'melee' }],
+    attacks: [{ name: 'sword', toHit: 5, damage: '1d10', range: 'melee' }],
     sprite: 'hero_turquoise',
     emoji: '🪓',
     anim: { idle: 'turquoise-idle', attack: 'turquoise-attack' },

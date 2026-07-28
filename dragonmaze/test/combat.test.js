@@ -259,4 +259,26 @@ const domCaster = (over = {}) =>
   assert.ok(combat.order.some((c) => c.minionType === 'summoned'), 'the summoned minion took its place');
 }
 
+// --- 10. spell damage is dice-only, and a natural-20 cast doubles it ---
+{
+  // ember-bolt is 1d6, DC 11. rng 0.99 -> d20 20 (crit) and 1d6 -> 6, doubled to 12.
+  const c = hero({ id: 'hero', abilities: { cha: 20 }, castStat: 'cha', spells: ['ember-bolt'] });
+  const foeBig = foe({ id: 'goblin', hp: 1000, ac: 1 });
+  const { combat } = createCombat([c], [foeBig], () => 0.99);
+  const ev = playerSpell(heroTurn(combat, 'hero'), 'ember-bolt', foeBig.id, () => 0.99);
+  const hit = ev.find((e) => e.type === 'spell-hit');
+  assert.ok(ev.find((e) => e.type === 'spell-cast')?.crit, 'a natural 20 is a crit');
+  assert.equal(hit.damage, 12, 'nat-20 doubles the spell dice (1d6=6 -> 12), no ability bonus');
+}
+
+// --- 11. a failed cast burns the spell for the rest of the fight ---
+{
+  // rng 0.01 -> d20 1: an automatic fizzle. The spell is now burned.
+  const c = hero({ id: 'hero', abilities: { cha: 0 }, castStat: 'cha', spells: ['ember-bolt'] });
+  const { combat } = createCombat([c], [foe({ id: 'goblin', hp: 1000, ac: 1000 })], () => 0.01);
+  const ev = playerSpell(heroTurn(combat, 'hero'), 'ember-bolt', null, () => 0.01);
+  assert.ok(ev.find((e) => e.type === 'spell-cast' && e.success === false), 'the cast fizzled');
+  assert.ok(c.burned.includes('ember-bolt'), 'the fizzled spell is burned (lost until rest)');
+}
+
 console.log('combat.test.js: all assertions passed ✓');

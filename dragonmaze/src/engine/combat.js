@@ -258,13 +258,6 @@ function dismissFamiliar(combat, casterId, events) {
   events.push({ type: 'familiar-dismiss', id: fam.id, who: fam.name });
 }
 
-// A caster adds their spellcasting-ability modifier to spell damage and healing
-// (the way attacks bake in an ability) plus any spell-might, so a cast is worth
-// the fizzle risk and scales as the caster grows.
-function spellBonus(caster) {
-  return (caster.abilities?.[caster.castStat ?? 'cha'] ?? 0) + (caster.spellPower ?? 0);
-}
-
 /** One courage check, at most once per monster per combat. */
 function triggerMorale(combat, monster, rng, events) {
   if (monster.moraleChecked || monster.morale == null) return;
@@ -630,7 +623,9 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
       if (!checkVictory(combat, events)) advanceTurn(combat, events);
       return events;
     }
-    const dmg = roll(spell.dice, rng).total + spellBonus(caster) + (spell.drain ? 0 : fireBonus(combat));
+    // Shadowdark: damage is the spell's dice only. A natural-20 cast doubles it.
+    const rolled = roll(spell.dice, rng).total;
+    const dmg = (cast.crit ? rolled * 2 : rolled) + (spell.drain ? 0 : fireBonus(combat));
     const dealt = applyDamage(target, dmg, spell.drain ? 'physical' : 'fire', events);
     let drained = 0;
     if (spell.drain && dealt > 0 && caster.hp.current < caster.hp.max) {
@@ -653,7 +648,8 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
   } else if (spell.target === 'ally') {
     const target =
       combat.order.find((c) => c.id === targetId && onHeroSide(c)) ?? caster;
-    const amount = roll(spell.dice, rng).total + spellBonus(caster);
+    const healed = roll(spell.dice, rng).total;
+    const amount = cast.crit ? healed * 2 : healed; // nat-20 doubles the mending
     const revived = target.hp.current <= 0;
     target.hp.current = Math.min(target.hp.max, target.hp.current + amount);
     events.push({
@@ -665,7 +661,8 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
       hpAfter: target.hp.current,
     });
   } else if (spell.target === 'all-enemies') {
-    const total = roll(spell.dice, rng).total + spellBonus(caster) + fireBonus(combat);
+    const rolled = roll(spell.dice, rng).total;
+    const total = (cast.crit ? rolled * 2 : rolled) + fireBonus(combat);
     const targets = livingMonsters(combat);
     const results = [];
     for (const m of targets) {

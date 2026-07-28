@@ -202,9 +202,10 @@ export function heroWithGrowth(id) {
     if (ab === 'str') strGain = delta;
     if (ab === 'dex') dexGain = delta;
   }
+  // Shadowdark: a higher STR/DEX sharpens the attack roll, but weapon damage is
+  // the die alone — raising a stat never pads damage.
   hero.attacks.forEach((a) => {
     a.toHit += strGain + dexGain;
-    if (strGain) a.damage = bumpDamage(a.damage, strGain);
   });
   hero.ac += dexGain;
 
@@ -476,6 +477,7 @@ export function enterLabyrinth(seed) {
     combat: null,
     encountersCleared: 0,
     lastResult: null,
+    burnedSpells: {}, // casterKey -> [spellId] fizzled spells, lost until camp (Shadowdark)
   };
   reveal(state.run);
   state.screen = 'game';
@@ -836,6 +838,7 @@ export function rest() {
   };
   if (run.dragon) mend(run.dragon.hp);
   for (const slot of run.party) mend(slot.hp);
+  run.burnedSpells = {}; // a night's rest restores every fizzled spell (Shadowdark)
 
   // A camp thief may try your purse — his own event, before any wandering pack.
   const heist = maybeThiefHeist(run);
@@ -1034,6 +1037,7 @@ function beginCombat(encounter) {
     dragon.hp.max = run.dragon.hp.max;
     dragon.hp.current = Math.min(run.dragon.hp.current, dragon.hp.max);
     applyEquipment(dragon, 'dragon');
+    dragon.burned = [...(run.burnedSpells?.dragon ?? [])]; // spells still lost from before the last camp
     heroes.push(dragon);
   }
   // Downed companions come along at 0 HP — a Healing Word can revive them.
@@ -1042,6 +1046,7 @@ function beginCombat(encounter) {
     c.hp.max = slot.hp.max;
     c.hp.current = slot.hp.current;
     applyEquipment(c, slot.id);
+    c.burned = [...(run.burnedSpells?.[slot.id] ?? [])];
     heroes.push(c);
   }
   const monsters = encounter.monsterIds.map((id) => makeCombatant(monsterById(id)));
@@ -1171,7 +1176,14 @@ function syncDragonHp() {
   const run = state.run;
   const combat = run.combat?.combat;
   if (!combat) return;
+  run.burnedSpells ??= {};
   for (const hero of heroesOf(combat)) {
+    // Fizzled spells stay lost until the party makes camp (Shadowdark), so mirror
+    // each caster's burned list back onto the run between combats.
+    if (hero.spells?.length) {
+      const key = hero.kind === 'dragon' ? 'dragon' : hero.templateId;
+      if (key) run.burnedSpells[key] = [...(hero.burned ?? [])];
+    }
     if (hero.kind === 'dragon') {
       if (run.dragon) run.dragon.hp.current = hero.hp.current;
     } else {
