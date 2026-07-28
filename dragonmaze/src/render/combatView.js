@@ -98,7 +98,7 @@ async function presentEvent(els, ev) {
       appendLog(els.log, `Initiative: ${ev.order.map((o) => `${o.name} ${o.initiative}`).join(' · ')}`, 'log-dim');
       return delay(300);
     case 'round':
-      appendLog(els.log, `— Round ${ev.round} —`, 'log-dim');
+      appendLog(els.log, `Round ${ev.round}`, 'log-dim');
       return delay(200);
     case 'attack': {
       if (ev.attackerKind !== 'monster') await playCinematic(strikePayload(ev));
@@ -116,7 +116,7 @@ async function presentEvent(els, ev) {
         appendLog(
           els.log,
           r.saved
-            ? `The ${r.name} dives aside — only ${r.damage}! (save ${r.total} vs ${r.dc})`
+            ? `The ${r.name} dives aside; only ${r.damage}! (save ${r.total} vs ${r.dc})`
             : `The ${r.name} is engulfed for ${r.damage}! (save ${r.total} vs ${r.dc})`,
           r.saved ? 'log-miss' : 'log-hit'
         );
@@ -132,7 +132,7 @@ async function presentEvent(els, ev) {
         ev.success
           ? `${ev.caster} casts ${ev.name}! ${math}`
           : ev.recovered
-            ? `${ev.caster}'s ${ev.name} gutters — but Arcane Recovery keeps it ready to try again! ${math}`
+            ? `${ev.caster}'s ${ev.name} gutters, but Arcane Recovery keeps it ready to try again! ${math}`
             : `${ev.caster}'s ${ev.name} fizzles… the spell is lost until you rest. ${math}`,
         ev.success ? 'log-start' : 'log-miss'
       );
@@ -150,7 +150,7 @@ async function presentEvent(els, ev) {
           casterCard.classList.add('heal-flash');
           updateCardHp(casterCard, ev.casterHpAfter);
         }
-        appendLog(els.log, `Darkness tears at the ${ev.target} for ${ev.damage} — ${ev.caster} drinks ${ev.drained} of it!`, 'log-hit');
+        appendLog(els.log, `Darkness tears at the ${ev.target} for ${ev.damage}, and ${ev.caster} drinks ${ev.drained} of it!`, 'log-hit');
         await delay(500);
         casterCard?.classList.remove('heal-flash');
       } else {
@@ -163,22 +163,22 @@ async function presentEvent(els, ev) {
     case 'dominated': {
       const card = cardOf(els, ev.targetId);
       if (card) card.classList.add('heal-flash');
-      appendLog(els.log, `The ${ev.who} bends to your will — it fights at your side now!${ev.goldValue ? ` (its ${ev.goldValue} gold is yours)` : ''}`, 'log-start');
+      appendLog(els.log, `The ${ev.who} bends to your will and fights at your side now!${ev.goldValue ? ` (its ${ev.goldValue} gold is yours)` : ''}`, 'log-start');
       await delay(600);
       card?.classList.remove('heal-flash');
       return;
     }
     case 'dominate-resisted':
       appendLog(els.log,
-        ev.reason === 'boss' ? `The ${ev.who} is far too strong to bend — your will breaks on it.`
-        : ev.reason === 'full' ? `You already command a thrall — the ${ev.who} slips free.`
+        ev.reason === 'boss' ? `The ${ev.who} is far too strong to bend; your will breaks on it.`
+        : ev.reason === 'full' ? `You already command a thrall, so the ${ev.who} slips free.`
         : `The ${ev.who} shakes off your grip.`, 'log-miss');
       return delay(400);
     case 'summoned':
-      appendLog(els.log, `${ev.caster} conjures a ${ev.name} — it takes the field at your side!`, 'log-start');
+      appendLog(els.log, `${ev.caster} conjures a ${ev.name}; it takes the field at your side!`, 'log-start');
       return delay(500);
     case 'summon-full':
-      appendLog(els.log, `${ev.caster} already commands a minion — the conjuration fizzles.`, 'log-miss');
+      appendLog(els.log, `${ev.caster} already commands a minion, so the conjuration fizzles.`, 'log-miss');
       return delay(300);
     case 'minion-down':
       appendLog(els.log, `Your ${ev.who} is cut down.`, 'log-hurt');
@@ -195,7 +195,7 @@ async function presentEvent(els, ev) {
         card?.classList.remove('hit-flash');
         return;
       }
-      appendLog(els.log, `The backlash leaves ${ev.caster} reeling — dazed!`, 'log-miss');
+      appendLog(els.log, `The backlash leaves ${ev.caster} reeling and dazed!`, 'log-miss');
       return delay(300);
     }
     case 'monster-cast':
@@ -223,13 +223,13 @@ async function presentEvent(els, ev) {
       return;
     }
     case 'monster-daze':
-      appendLog(els.log, `The ${ev.caster} fixes ${ev.target} with a baleful stare — dazed!`, 'log-miss');
+      appendLog(els.log, `The ${ev.caster} fixes ${ev.target} with a baleful stare, dazing them!`, 'log-miss');
       return delay(300);
     case 'luck-offer':
-      appendLog(els.log, `${ev.actor} has a luck token — reroll?`, 'log-dim');
+      appendLog(els.log, `${ev.actor} has a luck token. Reroll?`, 'log-dim');
       return delay(150);
     case 'luck-spent':
-      appendLog(els.log, `${ev.actor} cashes in a luck token — a second chance!`, 'log-start');
+      appendLog(els.log, `${ev.actor} cashes in a luck token for a second chance!`, 'log-start');
       return delay(350);
     case 'spell-recovered':
       appendLog(els.log, `${ev.caster}'s Arcane Recovery keeps ${ev.spellId ? 'the spell' : 'it'} ready to try again.`, 'log-start');
@@ -265,7 +265,7 @@ async function presentEvent(els, ev) {
         }
         appendLog(
           els.log,
-          r.saved ? `The ${r.name} ducks — ${r.damage}!` : `The ${r.name} burns for ${r.damage}!`,
+          r.saved ? `The ${r.name} ducks; only ${r.damage}!` : `The ${r.name} burns for ${r.damage}!`,
           r.saved ? 'log-miss' : 'log-hit'
         );
         await delay(160);
@@ -280,26 +280,26 @@ async function presentEvent(els, ev) {
     case 'item-heal': {
       const card = cardOf(els, ev.targetId);
       if (card) { card.classList.add('heal-flash'); card.classList.remove('down'); updateCardHp(card, ev.hpAfter); }
-      appendLog(els.log, ev.revived ? `${ev.target} staggers back up with ${ev.amount} HP!` : `${ev.target} drinks it down — ${ev.amount} HP!`, 'log-hit');
+      appendLog(els.log, ev.revived ? `${ev.target} staggers back up with ${ev.amount} HP!` : `${ev.target} drinks it down for ${ev.amount} HP!`, 'log-hit');
       await delay(500); card?.classList.remove('heal-flash');
       return;
     }
     case 'item-ward': {
       const card = cardOf(els, ev.targetId);
       if (card) card.classList.add('heal-flash');
-      appendLog(els.log, `A ward wreathes ${ev.target} — it soaks the next ${ev.amount} damage.`, 'log-start');
+      appendLog(els.log, `A ward wreathes ${ev.target}, soaking the next ${ev.amount} damage.`, 'log-start');
       await delay(450); card?.classList.remove('heal-flash');
       return;
     }
     case 'item-restore':
       appendLog(els.log, ev.count > 0
-        ? `${ev.target}'s mind clears — ${ev.count} spent spell${ev.count > 1 ? 's' : ''} ready again!`
+        ? `${ev.target}'s mind clears; ${ev.count} spent spell${ev.count > 1 ? 's' : ''} ready again!`
         : `${ev.target} had nothing spent to recover.`, ev.count > 0 ? 'log-hit' : 'log-miss');
       return delay(350);
     case 'item-hit': {
       const card = cardOf(els, ev.targetId);
       if (card) { card.classList.add('hit-flash'); updateCardHp(card, ev.hpAfter); }
-      appendLog(els.log, `The flask shatters on the ${ev.target} — ${ev.damage} ${ev.dtype} damage!`, 'log-hit');
+      appendLog(els.log, `The flask shatters on the ${ev.target} for ${ev.damage} ${ev.dtype} damage!`, 'log-hit');
       await delay(450); card?.classList.remove('hit-flash');
       return;
     }
@@ -308,7 +308,7 @@ async function presentEvent(els, ev) {
       for (const r of ev.results) {
         const card = cardOf(els, r.id);
         if (card) { card.classList.add('hit-flash'); updateCardHp(card, r.hpAfter); }
-        appendLog(els.log, r.saved ? `The ${r.name} twists aside — ${r.damage}!` : `The ${r.name} is seared for ${r.damage}!`, r.saved ? 'log-miss' : 'log-hit');
+        appendLog(els.log, r.saved ? `The ${r.name} twists aside; only ${r.damage}!` : `The ${r.name} is seared for ${r.damage}!`, r.saved ? 'log-miss' : 'log-hit');
         await delay(160);
       }
       await delay(300);
@@ -316,15 +316,15 @@ async function presentEvent(els, ev) {
       return;
     }
     case 'ward':
-      appendLog(els.log, `The ward absorbs ${ev.soaked}${ev.tempLeft > 0 ? ` (${ev.tempLeft} left)` : ' — and shatters'}.`, 'log-miss');
+      appendLog(els.log, `The ward absorbs ${ev.soaked}${ev.tempLeft > 0 ? ` (${ev.tempLeft} left)` : ', and shatters'}.`, 'log-miss');
       return delay(200);
     case 'condition-applied': {
       const card = cardOf(els, ev.targetId);
       const good = ev.cond === 'warded';
       if (card) card.classList.add(good ? 'heal-flash' : 'hit-flash');
       appendLog(els.log,
-        good ? `${ev.target} is warded — harder to hit for a while.`
-        : ev.cond === 'greased' ? `The ${ev.target} loses its footing on the grease — off-balance!`
+        good ? `${ev.target} is warded, harder to hit for a while.`
+        : ev.cond === 'greased' ? `The ${ev.target} loses its footing on the grease, off-balance!`
         : ev.cond === 'burning' ? `The ${ev.target} is set alight!`
         : `${ev.target} is afflicted.`, good ? 'log-hit' : 'log-start');
       await delay(320); card?.classList.remove('heal-flash', 'hit-flash');
@@ -363,7 +363,7 @@ async function presentEvent(els, ev) {
       return delay(250);
     }
     case 'vulnerable': {
-      appendLog(els.log, `The ${ev.who} ${ev.dtype === 'fire' ? 'goes up like kindling' : 'takes it hard'} — double damage!`, 'log-hit');
+      appendLog(els.log, `The ${ev.who} ${ev.dtype === 'fire' ? 'goes up like kindling' : 'takes it hard'}, double damage!`, 'log-hit');
       return delay(250);
     }
     case 'relentless': {
@@ -389,7 +389,7 @@ async function presentEvent(els, ev) {
         card.classList.add('heal-flash');
         updateCardHp(card, ev.hpAfter);
       }
-      appendLog(els.log, `The ${ev.who} drinks the wound — it heals ${ev.amount}!`, 'log-hurt');
+      appendLog(els.log, `The ${ev.who} drinks the wound and heals ${ev.amount}!`, 'log-hurt');
       await delay(350);
       card?.classList.remove('heal-flash');
       return;
@@ -399,7 +399,7 @@ async function presentEvent(els, ev) {
       appendLog(
         els.log,
         ev.success
-          ? `${ev.actor} ${verb} — and they listen! (${ev.total} vs DC ${ev.dc})`
+          ? `${ev.actor} ${verb}, and they listen! (${ev.total} vs DC ${ev.dc})`
           : `${ev.actor} ${verb}… but they aren't having it. (${ev.total} vs DC ${ev.dc})`,
         ev.success ? 'log-start' : 'log-miss'
       );
@@ -412,7 +412,7 @@ async function presentEvent(els, ev) {
       appendLog(
         els.log,
         ev.mode === 'barter'
-          ? 'A deal is struck — they withdraw with their price.'
+          ? 'A deal is struck; they withdraw with their price.'
           : ev.mode === 'work'
             ? 'Weapons lower. They have a job for you…'
             : 'Words win. They lower their weapons and withdraw.',
@@ -426,7 +426,7 @@ async function presentEvent(els, ev) {
       appendLog(els.log, `Bounty accepted: slay ${ev.target} for ${ev.reward} gold!`, 'log-start');
       return delay(500);
     case 'quest-complete':
-      appendLog(els.log, `Bounty fulfilled — ${ev.target} is slain! ${ev.reward} gold, and word of your deed spreads.`, 'log-start');
+      appendLog(els.log, `Bounty fulfilled! ${ev.target} is slain! ${ev.reward} gold, and word of your deed spreads.`, 'log-start');
       return delay(600);
     case 'morale':
       appendLog(
@@ -440,7 +440,7 @@ async function presentEvent(els, ev) {
     case 'intimidate': {
       const card = cardOf(els, ev.targetId);
       if (ev.fearless) {
-        appendLog(els.log, `The ${ev.target} is fearless — threats roll off it.`, 'log-miss');
+        appendLog(els.log, `The ${ev.target} is fearless; threats roll off it.`, 'log-miss');
         return delay(400);
       }
       appendLog(
@@ -454,7 +454,7 @@ async function presentEvent(els, ev) {
       return delay(500);
     }
     case 'flee-combat':
-      appendLog(els.log, 'You break off and flee the fight — the gold you carried scatters behind you!', 'log-hurt');
+      appendLog(els.log, 'You break off and flee the fight; the gold you carried scatters behind you!', 'log-hurt');
       return delay(500);
     case 'flee': {
       const card = cardOf(els, ev.id);
@@ -482,7 +482,7 @@ async function presentEvent(els, ev) {
       return delay(500);
     }
     case 'item-drop':
-      appendLog(els.log, `Among the spoils: ${ev.name} — ${ev.blurb}. Equip it from a character sheet!`, 'log-start');
+      appendLog(els.log, `Among the spoils: ${ev.name}: ${ev.blurb}. Equip it from a character sheet!`, 'log-start');
       return delay(2400);
     case 'victory':
       appendLog(
@@ -621,9 +621,9 @@ function verdictFor(ev) {
 
 function strikePayload(ev) {
   const verdict = verdictFor(ev);
-  const verb = ev.attackerKind === 'dragon' ? 'Bite' : 'Strikes';
+  const verb = ev.attackerKind === 'dragon' ? 'bites' : 'strikes';
   return {
-    title: `${ev.attacker} — ${verb} the ${ev.target}!`,
+    title: `${ev.attacker} ${verb} the ${ev.target}!`,
     sides: 20,
     rolls: ev.dieRolls,
     kept: ev.natural,
@@ -687,8 +687,8 @@ function playCinematic(p) {
         <div class="dice-title">${p.title}</div>
         ${p.targetLabel ? `<div class="dice-target">vs ${p.targetLabel}</div>` : ''}
         <div class="dice-tray">${p.rolls.map(() => dieHtml(p.sides, small)).join('')}</div>
-        ${p.mode === 'advantage' ? '<div class="dice-mode">▲ advantage — keep the best</div>' : ''}
-        ${p.mode === 'disadvantage' ? '<div class="dice-mode">▼ disadvantage — keep the worst</div>' : ''}
+        ${p.mode === 'advantage' ? '<div class="dice-mode">▲ advantage, keep the best</div>' : ''}
+        ${p.mode === 'disadvantage' ? '<div class="dice-mode">▼ disadvantage, keep the worst</div>' : ''}
         <div class="dice-parts">${p.parts
           .filter((x) => x.value !== 0)
           .map((x) => `<span class="dice-part${x.value < 0 ? ' neg' : ''}">${x.value >= 0 ? '+' : '−'}${Math.abs(x.value)} <em>${x.label}</em></span>`)
@@ -909,7 +909,7 @@ function unitEl(c, side, activeId) {
   // party's knowledge roll). Keeps the cards compact for a full party on a phone.
   unit.innerHTML = `
     <div class="hp-num">${c.hp.current}/${c.hp.max}</div>
-    ${!dead && c.luck > 0 ? '<span class="badge-luck luck-emblem" title="a luck token — spend it to reroll a failed roll"></span>' : ''}
+    ${!dead && c.luck > 0 ? '<span class="badge-luck luck-emblem" title="a luck token: spend it to reroll a failed roll"></span>' : ''}
     ${faceHtml(c, dead)}
     ${c.fled
       ? '<div class="badge-flee">fled!</div>'
@@ -1002,7 +1002,7 @@ function renderActions(els, combat, handlers, view) {
     row.className = 'action-row luck-prompt';
     const reroll = document.createElement('button');
     reroll.className = 'btn act-btn luck-btn has-edge';
-    reroll.innerHTML = '<span class="luck-emblem"></span>Luck — reroll';
+    reroll.innerHTML = '<span class="luck-emblem"></span>Reroll';
     reroll.title = `Spend ${actor.name}'s luck token to reroll (you keep the new result)`;
     reroll.addEventListener('click', () => handlers.onLuck());
     const keep = document.createElement('button');
@@ -1077,7 +1077,7 @@ function renderActions(els, combat, handlers, view) {
     const strike = document.createElement('button');
     strike.className = 'btn act-btn';
     strike.textContent = actor.kind === 'dragon' ? 'Bite' : 'Strike';
-    strike.title = `Attack the ${foeName(target, combat)}${target.panicked ? ' — panicked, advantage!' : ''}`;
+    strike.title = `Attack the ${foeName(target, combat)}${target.panicked ? ' (panicked, advantage!)' : ''}`;
     if (target.panicked) strike.classList.add('has-edge');
     strike.addEventListener('click', () => handlers.onAttack(target.id));
     row.appendChild(strike);
@@ -1099,7 +1099,7 @@ function renderActions(els, combat, handlers, view) {
     btn.className = 'btn act-btn breath-btn';
     btn.textContent = 'Breath';
     if (combat.breathReady) {
-      btn.title = `${actor.breath.damage} fire to every enemy — they save vs DC ${actor.breath.dc} for half`;
+      btn.title = `${actor.breath.damage} fire to every enemy; they save vs DC ${actor.breath.dc} for half`;
       btn.addEventListener('click', () => handlers.onBreath());
     } else {
       btn.title = 'Recharging…';

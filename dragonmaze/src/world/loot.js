@@ -21,7 +21,7 @@ export function rollLoot(rng, depth = 1) {
   }
   if (rng() < POTION_CHANCE) {
     const c = CONSUMABLES[randInt(rng, CONSUMABLES.length)];
-    return { label: `a flask — ${c.name}`, consumable: c.id, gold: 0 };
+    return { label: `a flask, ${c.name}`, consumable: c.id, gold: 0 };
   }
   const d6 = 1 + randInt(rng, 6);
   const entry = LOOT_TABLE.find((e) => d6 >= e.min && d6 <= e.max);

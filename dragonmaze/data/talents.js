@@ -7,10 +7,10 @@
 import { SPELLS, SCHOOL_LABEL } from './spells.js';
 
 export const TALENTS = [
-  { id: 'armor', name: '+1 AC', blurb: 'a quicker guard — +1 to Armor Class', repeatable: true },
+  { id: 'armor', name: '+1 AC', blurb: 'a quicker guard: +1 to Armor Class', repeatable: true },
   { id: 'cleave', name: 'Cleave', blurb: 'unlock a Sweep action: hit every foe for half your weapon damage' },
   { id: 'flurry', name: 'Flurry', blurb: 'your Strike lands twice each turn' },
-  { id: 'arcane-recovery', name: 'Arcane Recovery', blurb: "the first spell you fizzle each fight isn't spent — try again", caster: true },
+  { id: 'arcane-recovery', name: 'Arcane Recovery', blurb: "the first spell you fizzle each fight isn't spent; try again", caster: true },
   { id: 'silver-tongue', name: 'Silver Tongue', blurb: 'advantage on Parley and Intimidate (CHA) checks' },
 ];
 

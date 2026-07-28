@@ -726,7 +726,7 @@ export function move(dx, dy) {
       }
     } else if (loot.consumable) {
       state.meta.consumables.push(loot.consumable);
-      events.push({ type: 'loot', label: `${consumableById(loot.consumable)?.name ?? 'a flask'} — into your pouch`, gold: 0 });
+      events.push({ type: 'loot', label: `${consumableById(loot.consumable)?.name ?? 'a flask'} into your pouch`, gold: 0 });
     } else {
       let gold = loot.gold;
       if (partyHasFamiliar(run, 'pack-rat')) gold = Math.round(gold * 1.25);

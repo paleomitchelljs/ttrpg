@@ -150,7 +150,7 @@ game.subscribe((state, events) => {
       ui.clearExploreLog();
       ui.logExplore(
         ev.zone
-          ? `You enter ${ev.zone.name} — ${ev.zone.sub}. Find the way down!`
+          ? `You enter ${ev.zone.name}: ${ev.zone.sub}. Find the way down!`
           : `You slink into labyrinth depth ${ev.depth}. Find the exit!`
       );
       ui.logExplore('Tap an adjacent tile to move, or use the arrow keys / pad.', 'log-dim');
@@ -174,7 +174,7 @@ game.subscribe((state, events) => {
       const answer = (mode) => () => { ui.showOverlay('result-overlay', false); game.resolveEncounter(mode); };
       ui.showResult({
         title: 'They block your path',
-        body: `${ev.names.join(', ')} bar the way — they seem ${ev.disposition}. Draw steel, or talk your way past?`,
+        body: `${ev.names.join(', ')} bar the way. They seem ${ev.disposition}. Draw steel, or talk your way past?`,
         actions: [
           { label: 'Fight!', onClick: answer('fight') },
           { label: 'Talk', onClick: answer('talk') },
@@ -188,28 +188,28 @@ game.subscribe((state, events) => {
         title: 'They’ll hear you out',
         body: 'How do you approach them?',
         actions: [
-          { label: 'Persuade — leave in peace', onClick: answer('persuade') },
-          { label: 'Intimidate — drive them off', onClick: answer('threaten') },
+          { label: 'Persuade: leave in peace', onClick: answer('persuade') },
+          { label: 'Intimidate: drive them off', onClick: answer('threaten') },
           { label: 'Ask for a job', onClick: answer('work') },
         ],
       });
     }
     if (ev.type === 'parley-outcome') {
-      const win = { threaten: 'They flinch and scatter before you!', persuade: 'Cooler heads prevail — they let you pass.', barter: 'Coin changes hands; they wave you through.', work: 'You strike a deal — they point you toward bigger prey.' };
-      ui.logExplore(ev.success ? (win[ev.mode] ?? 'They let you pass.') : 'The parley fails — steel it is!', ev.success ? 'log-hit' : 'log-hurt');
+      const win = { threaten: 'They flinch and scatter before you!', persuade: 'Cooler heads prevail; they let you pass.', barter: 'Coin changes hands; they wave you through.', work: 'You strike a deal; they point you toward bigger prey.' };
+      ui.logExplore(ev.success ? (win[ev.mode] ?? 'They let you pass.') : 'The parley fails. Steel it is!', ev.success ? 'log-hit' : 'log-hurt');
     }
     if (ev.type === 'parley-paid') ui.logExplore(`You part with ${ev.cost} gold.`, 'log-dim');
     if (ev.type === 'quest-received') ui.logExplore(`A job: bring down ${ev.target} for ${ev.reward} gold.`, 'log-start');
-    if (ev.type === 'loot') ui.logExplore(`You found ${ev.label} — ${ev.gold} gold!`, 'log-hit');
+    if (ev.type === 'loot') ui.logExplore(`You found ${ev.label}: ${ev.gold} gold!`, 'log-hit');
     if (ev.type === 'tome') {
       ui.logExplore(
         ev.spell
           ? `A dusty spell tome! ${ev.who ?? 'A caster'} studies it and learns ${ev.spell}!`
-          : `A spell tome — but your casters know it all. Sold for ${ev.gold} gold.`,
+          : `A spell tome, but your casters know it all. Sold for ${ev.gold} gold.`,
         'log-start'
       );
     }
-    if (ev.type === 'item-found') ui.logExplore(`Inside the cache: ${ev.name} — ${ev.blurb}. Equip it from a character sheet!`, 'log-start');
+    if (ev.type === 'item-found') ui.logExplore(`Inside the cache: ${ev.name}. ${ev.blurb}. Equip it from a character sheet!`, 'log-start');
     if (ev.type === 'level-up') ui.logExplore(`${ev.who} reaches level ${ev.level}! Open their sheet to choose an advance.`, 'log-start');
     if (ev.type === 'rested') {
       ui.logExplore(
@@ -218,14 +218,14 @@ game.subscribe((state, events) => {
       );
     }
     if (ev.type === 'heist-start') {
-      ui.logExplore('A thief bolts from your camp with your purse in his eye — catch him before he slips out a door!', 'log-hurt');
+      ui.logExplore('A thief bolts from your camp with your purse in his eye; catch him before he slips out a door!', 'log-hurt');
     }
     if (ev.type === 'robbed') {
       ui.showResult({
         title: 'Robbed!',
         growth: { img: SPRITES['thief-portrait'], text: 'The Thief' },
         body: ev.escaped
-          ? `The thief ducks out a door with ${ev.gold} gold — gone into the dark.`
+          ? `The thief ducks out a door with ${ev.gold} gold, gone into the dark.`
           : `You wake to a lighter purse: a thief lifted ${ev.gold} gold while you slept.`,
         actions: [{ label: 'Blast!', onClick: () => ui.showOverlay('result-overlay', false) }],
       });
@@ -239,7 +239,7 @@ game.subscribe((state, events) => {
       ui.showResult({
         title: 'The gate to the surface',
         body: ev.carried > 0
-          ? `The broken gate opens on the daylit world above. You're carrying ${ev.carried} gold — stash it safe and keep delving, or head home.`
+          ? `The broken gate opens on the daylit world above. You're carrying ${ev.carried} gold. Stash it safe and keep delving, or head home.`
           : 'The broken gate opens on the daylit world above.',
         actions,
       });
@@ -247,7 +247,7 @@ game.subscribe((state, events) => {
     if (ev.type === 'stashed') {
       ui.logExplore(
         ev.stashed > 0
-          ? `You stash ${ev.stashed} gold through the gate. Your hoard is now ${ev.hoard.toLocaleString()} gold — safe.`
+          ? `You stash ${ev.stashed} gold through the gate. Your hoard is now ${ev.hoard.toLocaleString()} gold, safe.`
           : 'Nothing to stash yet.',
         'log-hit'
       );

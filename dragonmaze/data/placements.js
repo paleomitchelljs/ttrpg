@@ -2140,7 +2140,7 @@ export const PLACEMENTS = {
         "y": 4,
         "to": "summoning-chamber",
         "title": "The way to the summoning chamber",
-        "label": "Green light seeps from a doorway ahead — the summoning of the Avatar. Enter?"
+        "label": "Green light seeps from a doorway ahead; the summoning of the Avatar. Enter?"
       }
     ]
   }

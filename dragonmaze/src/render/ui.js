@@ -87,7 +87,7 @@ export function renderPartyPanel(state) {
     <span class="party-card-face sprite f4 flip"><img src="${SPRITES['dragon-fly']}" alt=""></span>
     <span class="party-card-info">
       <span class="party-card-name">Red Dragon</span>
-      <span class="party-card-role">You, the wyrm — fire breath &amp; bite</span>
+      <span class="party-card-role">You, the wyrm: fire breath &amp; bite</span>
       <span class="party-card-spells">Grows mightier as the hoard grows</span>
     </span>
     <button class="party-card-sheet zone-btn" data-sheet="dragon">Sheet</button>`;
@@ -100,8 +100,8 @@ export function renderPartyPanel(state) {
       card.className = 'party-card' + (chosen ? ' chosen' : '');
       card.dataset.cid = c.id;
       const magic = c.spells?.length
-        ? `Casts on ${(c.castStat ?? 'cha').toUpperCase()} — ${c.spells.map((id) => spellById(id)?.name).filter(Boolean).join(', ')}`
-        : 'No magic — pure steel';
+        ? `Casts on ${(c.castStat ?? 'cha').toUpperCase()}: ${c.spells.map((id) => spellById(id)?.name).filter(Boolean).join(', ')}`
+        : 'No magic, pure steel';
       card.innerHTML = `
         <span class="party-card-check">${chosen ? '✓' : ''}</span>
         <span class="party-card-face sprite f2 flip"><img src="${SPRITES[c.anim.idle]}" alt=""></span>
@@ -126,10 +126,10 @@ export function showCharacterSheet(subject) {
     .map(([k, v]) => `<div class="sheet-stat"><span>${k.toUpperCase()}</span><b>${v >= 0 ? '+' : ''}${v}</b></div>`)
     .join('');
   const attacks = subject.attacks
-    .map((a) => `<li>${cap(a.name)} — +${a.toHit} to hit, ${a.damage} damage</li>`)
+    .map((a) => `<li>${cap(a.name)}: +${a.toHit} to hit, ${a.damage} damage</li>`)
     .join('');
   const spells = subject.spells.length
-    ? `<h3>Spells <span class="cast-stat">(cast on ${(subject.castStat ?? 'cha').toUpperCase()})</span></h3><ul>${subject.spells.map((s) => `<li>${s.name} — ${s.blurb}</li>`).join('')}</ul>`
+    ? `<h3>Spells <span class="cast-stat">(cast on ${(subject.castStat ?? 'cha').toUpperCase()})</span></h3><ul>${subject.spells.map((s) => `<li>${s.name}: ${s.blurb}</li>`).join('')}</ul>`
     : '';
   el('sheet-body').innerHTML = `
     <div class="sheet-head">
@@ -147,7 +147,7 @@ export function showCharacterSheet(subject) {
     <h3>Attacks</h3><ul>${attacks}</ul>
     ${subject.breath ? `<h3>Fire Breath</h3><ul><li>${subject.breath.damage} fire damage to every enemy, save DC ${subject.breath.dc} for half; recharges on a 5+</li></ul>` : ''}
     ${spells}
-    ${subject.familiar ? `<h3>Familiar</h3><ul><li>${subject.familiar.name} — ${subject.familiar.blurb}</li></ul>` : ''}
+    ${subject.familiar ? `<h3>Familiar</h3><ul><li>${subject.familiar.name}: ${subject.familiar.blurb}</li></ul>` : ''}
     ${subject.renown?.length ? `<h3>Renown</h3><ul>${subject.renown.map((r) => `<li>${r}</li>`).join('')}</ul>` : ''}
     ${subject.traits?.length ? `<h3>Traits</h3><ul>${subject.traits.map((t) => `<li>${t}</li>`).join('')}</ul>` : ''}
     ${growthHtml(subject)}
@@ -160,7 +160,7 @@ const ABILITY_ORDER = [['str', 'STR'], ['dex', 'DEX'], ['con', 'CON'], ['int', '
 function growthHtml(subject) {
   if (!subject.growth) return '';
   const g = subject.growth;
-  let html = `<h3>Level ${g.level}</h3><p class="sheet-blurb">${g.xp} XP${g.next ? ` — next level at ${g.next}` : ' — at the summit'} · +${g.hpPerLevel} HP each level (automatic)</p>`;
+  let html = `<h3>Level ${g.level}</h3><p class="sheet-blurb">${g.xp} XP${g.next ? `, next level at ${g.next}` : ', at the summit'} · +${g.hpPerLevel} HP each level (automatic)</p>`;
   if (g.talents.length) html += `<p class="sheet-blurb">Talents: ${g.talents.join(', ')}</p>`;
 
   if (g.pendingAsi > 0) {
@@ -170,7 +170,7 @@ function growthHtml(subject) {
       return `<button class="zone-btn advance-btn" data-advance="asi" data-ability="${k}"${atCap ? ' disabled' : ''}>${label} ${v >= 0 ? '+' : ''}${v}${atCap ? ' (max)' : ` → +${v + 1}`}</button>`;
     }).join('');
     html += `
-      <p class="sheet-blurb">Ability increase${g.pendingAsi > 1 ? ` ×${g.pendingAsi}` : ''} — raise one (STR: hit+dmg · DEX: hit+AC · CON: HP · INT/WIS/CHA: casting/talk):</p>
+      <p class="sheet-blurb">Ability increase${g.pendingAsi > 1 ? ` ×${g.pendingAsi}` : ''}: raise one (STR: hit+dmg · DEX: hit+AC · CON: HP · INT/WIS/CHA: casting/talk):</p>
       <div class="zone-buttons">${abil}</div>`;
   }
 
@@ -189,7 +189,7 @@ function growthHtml(subject) {
              .join('')}</div></details>`
       : '';
     html += `
-      <p class="sheet-blurb">Talent${g.pendingTalent > 1 ? ` ×${g.pendingTalent}` : ''} — choose one:</p>
+      <p class="sheet-blurb">Talent${g.pendingTalent > 1 ? ` ×${g.pendingTalent}` : ''}: choose one:</p>
       <div class="zone-buttons">${talents}${spells}</div>${familiar}`;
   }
   return html;
@@ -211,7 +211,7 @@ function equipmentHtml(subject) {
       ? `<img class="equip-ico" src="${TILES[item.tile]}" alt="">`
       : `<span class="equip-ico none">${item ? '▪' : isBaseWeapon ? '⚔' : '∅'}</span>`;
     const label = item ? item.name : isBaseWeapon ? baseWeapon : 'none';
-    const title = item ? item.blurb.replace(/"/g, '') : isBaseWeapon ? `${baseWeapon} — your default weapon` : 'unequip';
+    const title = item ? item.blurb.replace(/"/g, '') : isBaseWeapon ? `${baseWeapon}: your default weapon` : 'unequip';
     return `<button class="equip-chip${equipped ? ' on' : ''}${wornByOther ? ' worn' : ''}" data-char="${charKey}" data-slot="${slot}" data-item="${item?.id ?? ''}" title="${title}">${icon}<span class="equip-name">${label}${wornByOther ? ' · worn' : ''}</span></button>`;
   };
   const rows = SLOTS.map((slot) => {

@@ -82,7 +82,7 @@ export const ITEMS = [
     slot: 'trinket',
     zone: 'lower-guk',
     mods: { init: 2, toHit: 1 },
-    blurb: 'the assassin’s silk — you are always first (+2 initiative, +1 to hit)',
+    blurb: 'the assassin’s silk; you are always first (+2 initiative, +1 to hit)',
   },
   {
     id: 'froglok-crown',

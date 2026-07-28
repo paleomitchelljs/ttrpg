@@ -24,7 +24,7 @@ export const ZONES = [
   {
     id: 'upper-guk',
     name: 'Upper Guk',
-    blurb: 'The drowned froglok city — a dark, swampy castle sinking into the fen.',
+    blurb: 'The drowned froglok city: a dark, swampy castle sinking into the fen.',
     subregions: [
       {
         id: 'sunken-gate',
@@ -145,7 +145,7 @@ export const ZONES = [
     subregions: [
       {
         id: 'kings-redoubt',
-        name: 'The Living Side — King’s Redoubt',
+        name: 'The Living Side: King’s Redoubt',
         blurb: 'Royal guards and minotaur mercenaries of the Underhorn hold the last froglok halls.',
         difficulty: 3,
         theme: 'dark',
@@ -172,7 +172,7 @@ export const ZONES = [
       },
       {
         id: 'ghoul-kingdom',
-        name: 'The Dead Side — Ghoul Kingdom',
+        name: 'The Dead Side: Ghoul Kingdom',
         blurb: 'Frenzied ghouls patrol tomb-warrens under the silt; the Ghoul Lord holds court below.',
         difficulty: 4,
         theme: 'dark',
@@ -199,7 +199,7 @@ export const ZONES = [
       },
       {
         id: 'the-front',
-        name: 'The Front — Where the War Grinds On',
+        name: 'The Front: Where the War Grinds On',
         blurb: 'Living and dead trade blows across barricades that have not moved in a century.',
         difficulty: 5,
         theme: 'dark',
@@ -265,7 +265,7 @@ export const ZONES = [
       {
         id: 'courtyard-ne',
         name: 'The Palace Approach',
-        blurb: 'Broad steps climb north to the temple-palace — and the courtyard golem stands astride them.',
+        blurb: 'Broad steps climb north to the temple-palace, and the courtyard golem stands astride them.',
         difficulty: 2,
         theme: 'grass',
         doors: { 3: 'throne-palace' },
@@ -433,7 +433,7 @@ export const ZONES = [
       {
         id: 'archon-pyramid',
         name: 'The Archon Pyramid',
-        blurb: 'Fight to the top through the Crusader and the silvered ranks to reach the Archon — then drop into the sewers below.',
+        blurb: 'Fight to the top through the Crusader and the silvered ranks to reach the Archon, then drop into the sewers below.',
         difficulty: 4,
         theme: 'sand',
         doors: { 6: 'maze-of-doors', 7: 'under-pyramid-sewer' },
@@ -553,7 +553,7 @@ export const ZONES = [
       {
         id: 'under-palace-sewer',
         name: 'The Palace Drains',
-        blurb: 'The deepest sump, below the throne — where the drains give onto the summoning of fear itself.',
+        blurb: 'The deepest sump, below the throne, where the drains give onto the summoning of fear itself.',
         difficulty: 5,
         theme: 'sewer',
         doors: {},

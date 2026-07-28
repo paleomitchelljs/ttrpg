@@ -35,7 +35,7 @@ export const SPELLS = [
     castAdvantage: true, // Shadowdark: you cast Magic Missile with advantage
     school: 'force',
     tome: true,
-    blurb: 'unerring darts of force — advantage to cast, never a whiff (1d4)',
+    blurb: 'unerring darts of force; advantage to cast, never a whiff (1d4)',
   },
   {
     id: 'smite',
@@ -57,7 +57,7 @@ export const SPELLS = [
     target: 'ally',
     dice: '1d6',
     school: 'holy',
-    blurb: 'your touch mends a companion — even a fallen one (1d6)',
+    blurb: 'your touch mends a companion, even a fallen one (1d6)',
   },
   {
     // id kept for save-compatibility; now the Shadowdark Fireball
@@ -96,7 +96,7 @@ SPELLS.push(
     drain: true,
     school: 'drain',
     tome: false,
-    blurb: 'darkness leaps from her hand — she keeps half of what it takes (1d6)',
+    blurb: 'darkness leaps from her hand, and she keeps half of what it takes (1d6)',
   },
   {
     id: 'dominate-undead',
