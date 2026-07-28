@@ -33,6 +33,8 @@ const COMBAT_EVENTS = new Set([
   'condition-applied', 'condition-dot', 'condition-end',
   'dominated', 'dominate-resisted', 'summoned', 'summon-full', 'bane', 'minion-down',
   'parley', 'parley-rout', 'parley-peace', 'parley-paid', 'quest-received', 'quest-complete',
+  'luck-offer', 'luck-spent', 'spell-mishap', 'spell-recovered', 'familiar-dismiss',
+  'monster-cast', 'monster-spell-hit', 'monster-heal', 'monster-daze',
 ]);
 
 function refreshWorld(state) {
@@ -136,7 +138,10 @@ game.subscribe((state, events) => {
   }
   prevScreen = state.screen;
 
-  const combatBatch = events.some((e) => COMBAT_EVENTS.has(e.type));
+  // Any emit while a fight is live drives the combat view — even a batch with no
+  // "combat event" (e.g. a luck reroll that lands us on another hero's turn),
+  // so the action row (and the luck prompt) always refreshes.
+  const combatBatch = state.run?.phase === 'combat' || events.some((e) => COMBAT_EVENTS.has(e.type));
 
   for (const ev of events) {
     if (ev.type === 'entered') {
