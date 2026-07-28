@@ -89,6 +89,16 @@ SPELLS.push(
     school: 'charm',
     tome: false,
     blurb: 'her will crushes the mindless dead and sends them away',
+  },
+  {
+    id: 'summon-ember',
+    name: 'Summon Ember Spirit',
+    castDC: 12,
+    target: 'self',
+    summon: 'ember-spirit',
+    school: 'fire',
+    tome: true,
+    blurb: 'a mote of fire takes shape and fights at your side for the battle',
   }
 );
 

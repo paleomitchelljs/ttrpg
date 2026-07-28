@@ -19,6 +19,8 @@ import {
 import { roll, d20 } from './dice.js';
 import { resolveParleyCheck } from './rules.js';
 import { spellById } from '../../data/spells.js';
+import { makeCombatant } from './entities.js';
+import { monsterById } from '../../data/monsters.js';
 
 const alive = (c) => c.hp.current > 0 && !c.fled;
 // Factions. A minion (side 'ally') fights on the hero side but is AI-run, like
@@ -523,6 +525,25 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
       events[events.length - 1].recovered = true;
     } else {
       caster.burned.push(spellId);
+    }
+    advanceTurn(combat, events);
+    return events;
+  }
+
+  // Conjure an allied minion. One minion per caster; it slots in right after you
+  // and lasts the battle (temporary — dropped when the combat object is discarded).
+  if (spell.summon) {
+    if (combat.order.some((c) => isAlly(c) && c.ownerId === caster.id && alive(c))) {
+      events.push({ type: 'summon-full', caster: caster.name });
+    } else {
+      const tmpl = monsterById(spell.summon);
+      if (tmpl) {
+        const minion = makeCombatant({ ...tmpl, side: 'ally', ownerId: caster.id, minionType: 'summoned', temporary: true });
+        minion.initiative = rollInitiative(minion, rng);
+        combat.combatants.push(minion);
+        combat.order.splice(combat.turnIndex + 1, 0, minion); // acts next, after the caster
+        events.push({ type: 'summoned', casterId: caster.id, caster: caster.name, id: minion.id, name: minion.name });
+      }
     }
     advanceTurn(combat, events);
     return events;

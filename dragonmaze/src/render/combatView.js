@@ -174,6 +174,15 @@ async function presentEvent(els, ev) {
         : ev.reason === 'full' ? `You already command a thrall — the ${ev.who} slips free.`
         : `The ${ev.who} shakes off your grip.`, 'log-miss');
       return delay(400);
+    case 'summoned':
+      appendLog(els.log, `${ev.caster} conjures a ${ev.name} — it takes the field at your side!`, 'log-start');
+      return delay(500);
+    case 'summon-full':
+      appendLog(els.log, `${ev.caster} already commands a minion — the conjuration fizzles.`, 'log-miss');
+      return delay(300);
+    case 'minion-down':
+      appendLog(els.log, `Your ${ev.who} is cut down.`, 'log-hurt');
+      return delay(300);
     case 'bane':
       appendLog(els.log, `${ev.attacker}'s blade blazes against the ${ev.who}! (+2 undead bane)`, 'log-hit');
       return delay(250);

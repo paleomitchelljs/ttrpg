@@ -210,4 +210,27 @@ const domCaster = (over = {}) =>
   assert.ok(ev.some((e) => e.type === 'dominate-resisted' && e.reason === 'full'), 'cap-full reason');
 }
 
+// --- 8. summon -> conjure an ally minion ---
+{ // summon adds an owned ally minion
+  const rng = () => 0.99; // nat20 -> cast lands
+  const c = hero({ id: 'hero', abilities: { cha: 20 }, spells: ['summon-ember'] });
+  const { combat } = createCombat([c], [foe({ id: 'goblin', hp: 1000, ac: 1000 })], rng);
+  const before = combat.order.length;
+  const ev = playerSpell(heroTurn(combat, 'hero'), 'summon-ember', null, rng);
+  assert.equal(combat.order.length, before + 1, 'a combatant joined the order');
+  const minion = combat.order.find((x) => x.minionType === 'summoned');
+  assert.ok(minion && minion.side === 'ally' && minion.ownerId === c.id, 'summoned an owned ally');
+  assert.ok(ev.some((e) => e.type === 'summoned'), 'summoned event fired');
+}
+
+{ // one minion per caster: a second summon fizzles
+  const rng = () => 0.99;
+  const c = hero({ id: 'hero', abilities: { cha: 20 }, spells: ['summon-ember'] });
+  const { combat } = createCombat([c], [foe({ id: 'z', hp: 1000, ac: 1000 })], rng);
+  playerSpell(heroTurn(combat, 'hero'), 'summon-ember', null, rng);
+  const ev = playerSpell(heroTurn(combat, 'hero'), 'summon-ember', null, rng);
+  assert.equal(combat.order.filter((x) => x.minionType === 'summoned').length, 1, 'still just one minion');
+  assert.ok(ev.some((e) => e.type === 'summon-full'), 'second summon fizzles');
+}
+
 console.log('combat.test.js: all assertions passed ✓');

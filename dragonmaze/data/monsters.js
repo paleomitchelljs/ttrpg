@@ -667,6 +667,25 @@ export const MONSTERS = [
     weight: 1,
     morale: null,
   },
+  // Conjured, not encountered: summoned as an ally (see the summon spell). Not in
+  // any zone table (weight 0), no loot; renders as its emoji.
+  {
+    id: 'ember-spirit',
+    name: 'Ember Spirit',
+    kind: 'monster',
+    ac: 13,
+    hpMax: 10,
+    abilities: { str: 1, dex: 2, con: 0, int: 0, wis: 0, cha: 0 },
+    attacks: [{ name: 'searing touch', toHit: 4, damage: '1d6+1', range: 'melee' }],
+    emoji: '🔥',
+    faction: 'wild',
+    parley: 'never',
+    goldValue: 0,
+    minDepth: 1,
+    packMax: 1,
+    weight: 0,
+    morale: null,
+  },
 ];
 
 export function monsterById(id) {
