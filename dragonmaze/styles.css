@@ -459,6 +459,7 @@ button { font: inherit; }
 }
 
 .unit {
+  position: relative; /* anchors the corner luck badge */
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -694,6 +695,8 @@ button { font: inherit; }
 
 .badge-panic { font-size: 0.8rem; color: #ffb4a6; }
 .badge-flee { font-size: 0.85rem; color: var(--ink-dim); font-style: italic; }
+/* A held luck token — a small clover in the hero card's top corner. */
+.badge-luck { position: absolute; top: 2px; right: 3px; font-size: 0.8rem; line-height: 1; filter: drop-shadow(0 0 3px #6fce7e88); }
 .enemy-card.fled { opacity: 0.4; }
 
 .growth { text-align: center; }

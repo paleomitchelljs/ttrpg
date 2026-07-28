@@ -225,6 +225,9 @@ async function presentEvent(els, ev) {
     case 'monster-daze':
       appendLog(els.log, `The ${ev.caster} fixes ${ev.target} with a baleful stare — dazed!`, 'log-miss');
       return delay(300);
+    case 'luck-spent':
+      appendLog(els.log, `🍀 ${ev.actor} cashes in a luck token — a second chance!`, 'log-start');
+      return delay(350);
     case 'bane':
       appendLog(els.log, `${ev.attacker}'s blade blazes against the ${ev.who}! (+2 undead bane)`, 'log-hit');
       return delay(250);
@@ -900,6 +903,7 @@ function unitEl(c, side, activeId) {
   // party's knowledge roll). Keeps the cards compact for a full party on a phone.
   unit.innerHTML = `
     <div class="hp-num">${c.hp.current}/${c.hp.max}</div>
+    ${!dead && c.luck > 0 ? '<div class="badge-luck" title="a luck token — a failed roll rerolls once">🍀</div>' : ''}
     ${faceHtml(c, dead)}
     ${c.fled
       ? '<div class="badge-flee">fled!</div>'

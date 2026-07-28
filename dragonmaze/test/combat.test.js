@@ -324,4 +324,33 @@ const domCaster = (over = {}) =>
   assert.ok(c.hp.current < before && c.hp.current >= 1, 'the backlash hurts the caster but never kills');
 }
 
+// --- 15. a luck token auto-rerolls a hero's missed swing (keeps the new roll) ---
+{
+  const h = hero({ id: 'hero', attacks: [{ name: 'sword', toHit: 0, damage: '1d6' }] });
+  h.luck = 1;
+  const g = foe({ id: 'goblin', hp: 1000, ac: 15 });
+  // seq: d20 2 (miss vs AC 15) -> luck reroll d20 20 (crit hit) -> damage roll.
+  let i = 0; const seq = [0.05, 0.99, 0.5, 0.5];
+  const rng = () => (i < seq.length ? seq[i++] : 0.5);
+  const { combat } = createCombat([h], [g], () => 0.5);
+  const ev = playerAttack(heroTurn(combat, 'hero'), g.id, rng);
+  assert.ok(ev.some((e) => e.type === 'luck-spent'), 'the miss was rerolled with luck');
+  assert.equal(h.luck, 0, 'the token was spent');
+  assert.ok(ev.find((e) => e.type === 'attack')?.hit, 'the reroll landed the hit');
+}
+
+// --- 16. a minion bodyguards its controller — the foe can't reach them ---
+{
+  const h = hero({ id: 'hero', hp: 100 });
+  const wolf = minion({ ownerId: h.id, hp: 100, ac: 1000 }); // owned by this hero, hard to kill
+  const g = foe({ id: 'goblin', hp: 1000, ac: 1000, attacks: [{ name: 'poke', toHit: 100, damage: '1d4' }] });
+  const { combat } = createCombat([h, wolf], [g], () => 0.5);
+  combat.turnIndex = combat.order.findIndex((c) => c.id.startsWith('goblin'));
+  const ev = runAiTurns(combat, () => 0.5);
+  const foeAtk = ev.find((e) => e.type === 'attack' && e.attackerSide === 'foe');
+  assert.ok(foeAtk, 'the foe took its swing');
+  assert.notEqual(foeAtk.targetId, h.id, 'the guarded controller was spared');
+  assert.equal(foeAtk.targetId, wolf.id, 'the minion took the hit instead');
+}
+
 console.log('combat.test.js: all assertions passed ✓');

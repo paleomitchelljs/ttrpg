@@ -3,10 +3,11 @@
 // powers; the swashbuckler knows the whole spellbook; the spellblade
 // splits the difference with a flaming sword.
 //
-// Scaled to Shadowdark's level-1 PCs (see references/shadowdark): abilities are
-// modifiers in -4..+4; HP is one class hit-die + CON (hitDie: 4/6/8 = Wizard-Thief
-// / Priest-gish / Fighter); AC is armour base + DEX (leather 11, chain 13, +2 for
-// a shield); a weapon deals its die ONLY (no ability bonus on damage), and the
+// Scaled to Shadowdark's level-1 PCs (see references/shadowdark), with a house
+// "softening": each class uses one hit-die tier UP (d4->d6, d6->d8, d8->d10),
+// and a level-1 hero starts at the MAX of that die + CON (not an average roll),
+// so hitDie: 8/10 here. AC is armour base + DEX (leather 11, chain 13, +2 for a
+// shield); a weapon deals its die ONLY (no ability bonus on damage), and the
 // attack bonus is the wielding ability's modifier + a small trained bump.
 
 export const COMPANIONS = [
@@ -15,8 +16,8 @@ export const COMPANIONS = [
     name: 'Spawnee',
     kind: 'hero',
     ac: 15, // chainmail 13 + DEX 2
-    hpMax: 7, // d8 + CON 2
-    hitDie: 8,
+    hpMax: 12, // d10 + CON 2
+    hitDie: 10,
     abilities: { str: 2, dex: 2, con: 2, int: 1, wis: 0, cha: 2 },
     attacks: [{ name: 'sword', toHit: 3, damage: '1d8', range: 'melee' }],
     sprite: 'hero_spawnee',
@@ -37,8 +38,8 @@ export const COMPANIONS = [
     name: 'Dragonkin Swashbuckler',
     kind: 'hero',
     ac: 14, // unarmoured 10 + DEX 4 (a duelist trusts footwork over plate)
-    hpMax: 5, // d6 + CON 1
-    hitDie: 6,
+    hpMax: 9, // d8 + CON 1
+    hitDie: 8,
     abilities: { str: 1, dex: 4, con: 1, int: 0, wis: 0, cha: 1 },
     attacks: [{ name: 'sword', toHit: 5, damage: '1d6', range: 'melee' }],
     sprite: 'hero_swashbuckler',
@@ -54,8 +55,8 @@ export const COMPANIONS = [
     name: 'Dragonkin Spellblade',
     kind: 'hero',
     ac: 14, // chainmail 13 + DEX 1
-    hpMax: 5, // d6 + CON 1
-    hitDie: 6,
+    hpMax: 9, // d8 + CON 1
+    hitDie: 8,
     abilities: { str: 2, dex: 1, con: 1, int: 3, wis: 1, cha: 1 },
     attacks: [{ name: 'sword', toHit: 3, damage: '1d8', range: 'melee' }],
     sprite: 'hero_spellblade',
@@ -72,8 +73,8 @@ export const COMPANIONS = [
     name: 'Beren',
     kind: 'hero',
     ac: 16, // chainmail 13 + DEX 1 + shield 2
-    hpMax: 7, // d8 + CON 2
-    hitDie: 8,
+    hpMax: 12, // d10 + CON 2
+    hitDie: 10,
     abilities: { str: 3, dex: 1, con: 2, int: 0, wis: 1, cha: 1 },
     attacks: [{ name: 'sword', toHit: 4, damage: '1d8', range: 'melee' }],
     sprite: 'hero_beren',
@@ -91,8 +92,8 @@ export const COMPANIONS = [
     name: 'Turquoise',
     kind: 'hero',
     ac: 13, // leather 11 + DEX 2 (a barbarian shuns heavy plate)
-    hpMax: 8, // d8 + CON 3
-    hitDie: 8,
+    hpMax: 13, // d10 + CON 3
+    hitDie: 10,
     abilities: { str: 4, dex: 2, con: 3, int: -1, wis: 0, cha: 0 },
     attacks: [{ name: 'sword', toHit: 5, damage: '1d10', range: 'melee' }],
     sprite: 'hero_turquoise',

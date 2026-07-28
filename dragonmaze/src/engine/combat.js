@@ -90,6 +90,18 @@ function livingHeroSide(combat) {
   return combat.order.filter((c) => onHeroSide(c) && alive(c));
 }
 
+// Who a foe will actually target. A minion "bodyguards" its controller: while
+// any minion it owns is alive, that controller can't be targeted — the enemy
+// has to go through the minion first. (Falls back to the full side if, somehow,
+// everyone left is a guarded controller.)
+function foeTargets(combat) {
+  const guarded = new Set(
+    combat.order.filter((c) => isAlly(c) && alive(c) && c.ownerId).map((c) => c.ownerId)
+  );
+  const pool = livingHeroSide(combat).filter((c) => !guarded.has(c.id));
+  return pool.length ? pool : livingHeroSide(combat);
+}
+
 export function heroesOf(combat) {
   // creation order: dragon first, then companions, then any minions
   return combat.combatants.filter((c) => onHeroSide(c));
@@ -323,7 +335,7 @@ export function runAiTurns(combat, rng = Math.random) {
       advanceTurn(combat, events);
       continue;
     }
-    const targets = livingHeroSide(combat);
+    const targets = foeTargets(combat);
     const target = targets[Math.floor(rng() * targets.length)];
     const res = resolveAttack(monster, monster.attacks[0], target, rng, atkOpts(monster, target));
     if (res.hit) {
@@ -407,7 +419,7 @@ function takeMonsterCast(combat, monster, rng, events) {
     hurt.sort((a, b) => a.hp.current / a.hp.max - b.hp.current / b.hp.max);
     target = hurt[0] ?? null;
   } else {
-    const hs = livingHeroSide(combat);
+    const hs = foeTargets(combat); // honour minion bodyguards for offensive spells too
     target = hs.length ? hs[Math.floor(rng() * hs.length)] : null;
   }
   if (!target) return false; // nothing worth casting at — swing instead
@@ -460,7 +472,15 @@ export function playerAttack(combat, targetId, rng = Math.random) {
       livingMonsters(combat)[0];
     if (!target) break;
     acted = true;
-    const res = resolveAttack(actor, actor.attacks[0], target, rng, atkOpts(actor, target, { advantage: !!target.panicked }));
+    const swing = () => resolveAttack(actor, actor.attacks[0], target, rng, atkOpts(actor, target, { advantage: !!target.panicked }));
+    let res = swing();
+    // Luck token (once/day, non-dragon heroes): auto-reroll a missed swing and
+    // keep the new result (Shadowdark: "you must use the new result").
+    if (!res.hit && actor.luck > 0) {
+      actor.luck -= 1;
+      events.push({ type: 'luck-spent', actorId: actor.id, actor: actor.name, kind: 'attack' });
+      res = swing();
+    }
     if (res.hit) {
       if (actor.bane === 'undead' && target.undead) {
         res.damage += 2;
@@ -627,7 +647,15 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
   const spell = spellById(spellId);
   if (!spell || !caster.spells.includes(spellId) || caster.burned.includes(spellId)) return events;
 
-  const cast = resolveSpellCast(caster, spell, rng, { dcMod: familiarActive(combat) && combat.familiar === 'fae-drake' ? -1 : 0 });
+  const castOpts = { dcMod: familiarActive(combat) && combat.familiar === 'fae-drake' ? -1 : 0 };
+  let cast = resolveSpellCast(caster, spell, rng, castOpts);
+  // Luck token: auto-reroll a failed cast and keep the new result (a fizzled or
+  // nat-1 cast can be saved this way — the mishap only lands if the reroll fails).
+  if (!cast.success && caster.luck > 0) {
+    caster.luck -= 1;
+    events.push({ type: 'luck-spent', actorId: caster.id, actor: caster.name, kind: 'cast' });
+    cast = resolveSpellCast(caster, spell, rng, castOpts);
+  }
   events.push({
     type: 'spell-cast',
     casterId: caster.id,

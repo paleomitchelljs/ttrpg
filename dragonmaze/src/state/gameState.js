@@ -478,6 +478,7 @@ export function enterLabyrinth(seed) {
     encountersCleared: 0,
     lastResult: null,
     burnedSpells: {}, // casterKey -> [spellId] fizzled spells, lost until camp (Shadowdark)
+    luck: Object.fromEntries(partyIds.map((id) => [id, 1])), // 1 luck token/day per hero (not the dragon)
   };
   reveal(state.run);
   state.screen = 'game';
@@ -839,6 +840,7 @@ export function rest() {
   if (run.dragon) mend(run.dragon.hp);
   for (const slot of run.party) mend(slot.hp);
   run.burnedSpells = {}; // a night's rest restores every fizzled spell (Shadowdark)
+  run.luck = Object.fromEntries(run.party.map((p) => [p.id, 1])); // and refreshes each hero's luck token
 
   // A camp thief may try your purse — his own event, before any wandering pack.
   const heist = maybeThiefHeist(run);
@@ -1047,6 +1049,7 @@ function beginCombat(encounter) {
     c.hp.current = slot.hp.current;
     applyEquipment(c, slot.id);
     c.burned = [...(run.burnedSpells?.[slot.id] ?? [])];
+    c.luck = run.luck?.[slot.id] ?? 0; // this hero's remaining luck token(s) for the day
     heroes.push(c);
   }
   const monsters = encounter.monsterIds.map((id) => makeCombatant(monsterById(id)));
@@ -1189,6 +1192,7 @@ function syncDragonHp() {
     } else {
       const slot = run.party.find((p) => p.id === hero.templateId);
       if (slot) slot.hp.current = hero.hp.current;
+      if (run.luck && hero.templateId in run.luck) run.luck[hero.templateId] = hero.luck ?? 0;
     }
   }
 }
