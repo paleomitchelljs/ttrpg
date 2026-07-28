@@ -459,28 +459,24 @@ function takeMonsterCast(combat, monster, rng, events) {
  * The current hero attacks a chosen monster, then the turn advances.
  * Striking panicked prey rolls with advantage.
  */
-export function playerAttack(combat, targetId, rng = Math.random) {
+export function playerAttack(combat, targetId, rng = Math.random, opts = {}) {
   const events = [];
   if (!isPlayerTurn(combat)) return events;
   const actor = currentCombatant(combat);
   // Flurry (talent) strikes twice in one turn; each swing re-picks a live foe.
   const strikes = actor.talents?.includes('flurry') ? 2 : 1;
   let acted = false;
+  let lastRes = null;
+  let lastTarget = null;
   for (let i = 0; i < strikes; i++) {
     const target =
       combat.order.find((c) => c.id === targetId && isFoe(c) && alive(c)) ??
       livingMonsters(combat)[0];
     if (!target) break;
     acted = true;
-    const swing = () => resolveAttack(actor, actor.attacks[0], target, rng, atkOpts(actor, target, { advantage: !!target.panicked }));
-    let res = swing();
-    // Luck token (once/day, non-dragon heroes): auto-reroll a missed swing and
-    // keep the new result (Shadowdark: "you must use the new result").
-    if (!res.hit && actor.luck > 0) {
-      actor.luck -= 1;
-      events.push({ type: 'luck-spent', actorId: actor.id, actor: actor.name, kind: 'attack' });
-      res = swing();
-    }
+    const res = resolveAttack(actor, actor.attacks[0], target, rng, atkOpts(actor, target, { advantage: !!target.panicked }));
+    lastRes = res;
+    lastTarget = target;
     if (res.hit) {
       if (actor.bane === 'undead' && target.undead) {
         res.damage += 2;
@@ -505,6 +501,13 @@ export function playerAttack(combat, targetId, rng = Math.random) {
     if (!livingMonsters(combat).length) break;
   }
   if (!acted) return events;
+  // The last swing missed and there's still a foe to hit: offer a luck reroll
+  // (deferred — the turn does not pass until the player decides; see spendLuck).
+  if (lastRes && !lastRes.hit && livingMonsters(combat).length && actor.luck > 0 && !opts.viaLuck) {
+    combat.pendingLuck = { kind: 'attack', casterId: actor.id, targetId: lastTarget.id };
+    events.push({ type: 'luck-offer', actorId: actor.id, actor: actor.name, kind: 'attack' });
+    return events;
+  }
   if (!checkVictory(combat, events)) advanceTurn(combat, events);
   return events;
 }
@@ -640,7 +643,7 @@ function applyCastMishap(combat, caster, rng, events) {
  * The current hero casts a known, unburned spell. A failed casting check
  * fizzles and burns the spell until the party rests; a natural 1 also mishaps.
  */
-export function playerSpell(combat, spellId, targetId, rng = Math.random) {
+export function playerSpell(combat, spellId, targetId, rng = Math.random, opts = {}) {
   const events = [];
   if (!isPlayerTurn(combat)) return events;
   const caster = currentCombatant(combat);
@@ -648,14 +651,7 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
   if (!spell || !caster.spells.includes(spellId) || caster.burned.includes(spellId)) return events;
 
   const castOpts = { dcMod: familiarActive(combat) && combat.familiar === 'fae-drake' ? -1 : 0 };
-  let cast = resolveSpellCast(caster, spell, rng, castOpts);
-  // Luck token: auto-reroll a failed cast and keep the new result (a fizzled or
-  // nat-1 cast can be saved this way — the mishap only lands if the reroll fails).
-  if (!cast.success && caster.luck > 0) {
-    caster.luck -= 1;
-    events.push({ type: 'luck-spent', actorId: caster.id, actor: caster.name, kind: 'cast' });
-    cast = resolveSpellCast(caster, spell, rng, castOpts);
-  }
+  const cast = resolveSpellCast(caster, spell, rng, castOpts);
   events.push({
     type: 'spell-cast',
     casterId: caster.id,
@@ -664,19 +660,40 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
     name: spell.name,
     ...cast,
   });
-  if (!cast.success) {
-    // Arcane Recovery (talent): the first fizzle each combat isn't burned.
-    if (caster.talents?.includes('arcane-recovery') && !caster.recoveredThisCombat) {
-      caster.recoveredThisCombat = true;
-      events[events.length - 1].recovered = true;
-    } else {
-      caster.burned.push(spellId);
-    }
-    if (cast.natural === 1) applyCastMishap(combat, caster, rng, events); // a nat-1 is perilous
-    advanceTurn(combat, events);
+  if (cast.success) {
+    applyCastSuccess(combat, caster, spell, targetId, cast, rng, events);
     return events;
   }
+  // A failed cast offers a luck reroll before finalizing — deferred, so the spell
+  // is NOT burned and the turn does NOT pass until the player decides (see
+  // spendLuck / declineLuck). viaLuck means we're already in the reroll.
+  if (caster.luck > 0 && !opts.viaLuck) {
+    combat.pendingLuck = { kind: 'cast', casterId: caster.id, spellId, targetId, cast };
+    events.push({ type: 'luck-offer', actorId: caster.id, actor: caster.name, kind: 'cast' });
+    return events;
+  }
+  finalizeFizzle(combat, caster, spellId, cast, rng, events);
+  return events;
+}
 
+// Burn the fizzled spell (unless Arcane Recovery saves the first this fight),
+// mishap on a nat-1, then pass the turn.
+function finalizeFizzle(combat, caster, spellId, cast, rng, events) {
+  if (caster.talents?.includes('arcane-recovery') && !caster.recoveredThisCombat) {
+    caster.recoveredThisCombat = true;
+    const sc = [...events].reverse().find((e) => e.type === 'spell-cast');
+    if (sc) sc.recovered = true;
+    else events.push({ type: 'spell-recovered', casterId: caster.id, caster: caster.name, spellId });
+  } else {
+    caster.burned.push(spellId);
+  }
+  if (cast.natural === 1) applyCastMishap(combat, caster, rng, events);
+  advanceTurn(combat, events);
+}
+
+// Apply a successful cast's effect (summon / damage / heal / wave / dominate),
+// then pass the turn. `cast` carries the crit flag for doubling.
+function applyCastSuccess(combat, caster, spell, targetId, cast, rng, events) {
   // Conjure an allied minion. One minion per caster; it slots in right after you
   // and lasts the battle (temporary — dropped when the combat object is discarded).
   if (spell.summon) {
@@ -694,7 +711,7 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
       }
     }
     advanceTurn(combat, events);
-    return events;
+    return;
   }
 
   if (spell.target === 'enemy') {
@@ -708,7 +725,6 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
       const fail = (reason) => {
         events.push({ type: 'dominate-resisted', who: target.name, reason });
         if (!checkVictory(combat, events)) advanceTurn(combat, events);
-        return events;
       };
       if (target.isBoss) return fail('boss');
       if (combat.order.some((c) => isAlly(c) && c.ownerId === caster.id && alive(c))) return fail('full');
@@ -781,6 +797,61 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
   }
 
   if (!checkVictory(combat, events)) advanceTurn(combat, events);
+}
+
+/**
+ * The player answers a pending luck offer. spendLuck cashes the token and rerolls
+ * the deferred attack or cast (keeping the new result); declineLuck lets the
+ * original failure stand (burning a fizzle, passing the turn). Both leave the
+ * turn advanced so the caller can run the AI turns that follow.
+ */
+export function spendLuck(combat, rng = Math.random) {
+  const p = combat.pendingLuck;
+  if (!p) return [];
+  combat.pendingLuck = null;
+  const actor = combat.order.find((c) => c.id === p.casterId);
+  if (!actor) return [];
+  actor.luck = Math.max(0, (actor.luck ?? 0) - 1);
+  const events = [{ type: 'luck-spent', actorId: actor.id, actor: actor.name, kind: p.kind }];
+  if (p.kind === 'cast') {
+    const spell = spellById(p.spellId);
+    const castOpts = { dcMod: familiarActive(combat) && combat.familiar === 'fae-drake' ? -1 : 0 };
+    const cast = resolveSpellCast(actor, spell, rng, castOpts);
+    events.push({ type: 'spell-cast', casterId: actor.id, caster: actor.name, spellId: p.spellId, name: spell.name, reroll: true, ...cast });
+    if (cast.success) applyCastSuccess(combat, actor, spell, p.targetId, cast, rng, events);
+    else finalizeFizzle(combat, actor, p.spellId, cast, rng, events);
+  } else {
+    // Reroll exactly the one swing that missed (not the whole flurry).
+    const target = combat.order.find((c) => c.id === p.targetId && isFoe(c) && alive(c)) ?? livingMonsters(combat)[0];
+    if (target) {
+      const res = resolveAttack(actor, actor.attacks[0], target, rng, atkOpts(actor, target, { advantage: !!target.panicked }));
+      if (res.hit) {
+        if (actor.bane === 'undead' && target.undead) { res.damage += 2; events.push({ type: 'bane', attacker: actor.name, who: target.name }); }
+        res.damage = applyDamage(target, res.damage, 'physical', events);
+      }
+      events.push({
+        type: 'attack', attackerId: actor.id, attacker: actor.name, attackerKind: actor.kind,
+        attackerSide: actor.side, targetId: target.id, target: target.name, targetKind: target.kind,
+        targetSide: target.side, targetHpAfter: target.hp.current, reroll: true, ...res,
+      });
+      afterDamage(combat, target, rng, events);
+    }
+    if (!checkVictory(combat, events)) advanceTurn(combat, events);
+  }
+  return events;
+}
+
+export function declineLuck(combat, rng = Math.random) {
+  const p = combat.pendingLuck;
+  if (!p) return [];
+  combat.pendingLuck = null;
+  const actor = combat.order.find((c) => c.id === p.casterId);
+  const events = [];
+  if (p.kind === 'cast' && actor) {
+    finalizeFizzle(combat, actor, p.spellId, p.cast, rng, events); // the fizzle stands
+  } else if (!checkVictory(combat, events)) {
+    advanceTurn(combat, events); // the miss stands; pass the turn
+  }
   return events;
 }
 

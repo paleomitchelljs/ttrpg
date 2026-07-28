@@ -26,6 +26,8 @@ import {
   playerSweep,
   playerIntimidate,
   playerUseItem,
+  spendLuck as luckReroll,
+  declineLuck as luckDecline,
   isPlayerTurn,
   heroesOf,
 } from '../engine/combat.js';
@@ -1150,6 +1152,13 @@ function resolvePlayerAction(act) {
   if (!isPlayerTurn(combat)) return;
   const events = act(combat);
   if (!events.length) return;
+  // A failed roll may pause the turn to offer a luck reroll: narrate the miss and
+  // wait — the AI turns wait for spendLuck()/declineLuck() to resolve the choice.
+  if (combat.pendingLuck) {
+    syncDragonHp();
+    emit(events);
+    return;
+  }
   if (!combat.over) events.push(...runAiTurns(combat, liveRNG));
   syncDragonHp();
   if (combat.over) {
@@ -1157,6 +1166,29 @@ function resolvePlayerAction(act) {
     return;
   }
   // Mid-combat state is never persisted; reloading resumes from before the fight.
+  emit(events);
+}
+
+/** Cash in the pending luck token to reroll the failed attack/cast. */
+export function spendLuck() {
+  resolveLuckChoice((combat) => luckReroll(combat, liveRNG));
+}
+/** Let the failed roll stand and move on. */
+export function declineLuck() {
+  resolveLuckChoice((combat) => luckDecline(combat, liveRNG));
+}
+function resolveLuckChoice(resolve) {
+  const run = state.run;
+  if (!run || run.phase !== 'combat' || !run.combat) return;
+  const combat = run.combat.combat;
+  if (!combat.pendingLuck) return;
+  const events = resolve(combat); // rerolls (or finalizes) and advances the turn
+  if (!combat.over) events.push(...runAiTurns(combat, liveRNG));
+  syncDragonHp();
+  if (combat.over) {
+    finishCombat(events);
+    return;
+  }
   emit(events);
 }
 

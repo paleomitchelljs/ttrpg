@@ -10,6 +10,8 @@ import {
   playerAttack,
   playerUseItem,
   playerSpell,
+  spendLuck,
+  declineLuck,
   isPlayerTurn,
   livingMonsters,
   livingHeroes,
@@ -324,19 +326,51 @@ const domCaster = (over = {}) =>
   assert.ok(c.hp.current < before && c.hp.current >= 1, 'the backlash hurts the caster but never kills');
 }
 
-// --- 15. a luck token auto-rerolls a hero's missed swing (keeps the new roll) ---
+// --- 15. a luck token is OFFERED after a missed swing; spending it rerolls ---
 {
   const h = hero({ id: 'hero', attacks: [{ name: 'sword', toHit: 0, damage: '1d6' }] });
   h.luck = 1;
   const g = foe({ id: 'goblin', hp: 1000, ac: 15 });
-  // seq: d20 2 (miss vs AC 15) -> luck reroll d20 20 (crit hit) -> damage roll.
-  let i = 0; const seq = [0.05, 0.99, 0.5, 0.5];
-  const rng = () => (i < seq.length ? seq[i++] : 0.5);
   const { combat } = createCombat([h], [g], () => 0.5);
-  const ev = playerAttack(heroTurn(combat, 'hero'), g.id, rng);
-  assert.ok(ev.some((e) => e.type === 'luck-spent'), 'the miss was rerolled with luck');
-  assert.equal(h.luck, 0, 'the token was spent');
-  assert.ok(ev.find((e) => e.type === 'attack')?.hit, 'the reroll landed the hit');
+  const ev = playerAttack(heroTurn(combat, 'hero'), g.id, () => 0.05); // d20 2 -> miss
+  assert.ok(ev.some((e) => e.type === 'luck-offer'), 'a missed swing offers luck');
+  assert.ok(combat.pendingLuck, 'the turn pauses for the choice (not advanced)');
+  assert.equal(h.luck, 1, 'the token is not spent until the player cashes it');
+  // Cash it in: reroll d20 20 (crit hit) + damage.
+  let i = 0; const seq = [0.99, 0.5]; const rng = () => (i < seq.length ? seq[i++] : 0.5);
+  const ev2 = spendLuck(combat, rng);
+  assert.ok(ev2.some((e) => e.type === 'luck-spent'), 'the token was cashed');
+  assert.equal(h.luck, 0, 'and now spent');
+  assert.ok(ev2.find((e) => e.type === 'attack')?.hit, 'the reroll landed the hit');
+  assert.ok(!combat.pendingLuck, 'the offer is cleared');
+}
+
+// --- 15b. declining a luck offer lets the miss stand and passes the turn ---
+{
+  const h = hero({ id: 'hero', attacks: [{ name: 'sword', toHit: 0, damage: '1d6' }] });
+  h.luck = 1;
+  const g = foe({ id: 'goblin', hp: 1000, ac: 15 });
+  const { combat } = createCombat([h], [g], () => 0.5);
+  playerAttack(heroTurn(combat, 'hero'), g.id, () => 0.05);
+  assert.ok(combat.pendingLuck, 'offer is pending');
+  declineLuck(combat, () => 0.5);
+  assert.equal(h.luck, 1, 'declining keeps the token');
+  assert.ok(!combat.pendingLuck, 'the offer is cleared');
+}
+
+// --- 15c. a fizzled cast offers luck; spending it can save the spell ---
+{
+  const c = hero({ id: 'hero', abilities: { cha: 0 }, castStat: 'cha', hp: 40, spells: ['ember-bolt'] });
+  c.luck = 1;
+  const g = foe({ id: 'goblin', hp: 1000, ac: 1000 });
+  const { combat } = createCombat([c], [g], () => 0.5);
+  const ev = playerSpell(heroTurn(combat, 'hero'), 'ember-bolt', g.id, () => 0.01); // d20 1 -> fizzle
+  assert.ok(ev.some((e) => e.type === 'luck-offer'), 'a fizzle offers luck');
+  assert.ok(!c.burned.includes('ember-bolt'), 'the spell is not burned while the offer stands');
+  assert.ok(!ev.some((e) => e.type === 'spell-mishap'), 'and the nat-1 mishap has not fired yet');
+  const ev2 = spendLuck(combat, () => 0.99); // reroll d20 20 -> success
+  assert.ok(ev2.some((e) => e.type === 'spell-cast' && e.success), 'the reroll landed the cast');
+  assert.ok(!c.burned.includes('ember-bolt'), 'a saved spell is not burned');
 }
 
 // --- 16. a minion bodyguards its controller — the foe can't reach them ---

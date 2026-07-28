@@ -225,9 +225,15 @@ async function presentEvent(els, ev) {
     case 'monster-daze':
       appendLog(els.log, `The ${ev.caster} fixes ${ev.target} with a baleful stare — dazed!`, 'log-miss');
       return delay(300);
+    case 'luck-offer':
+      appendLog(els.log, `🍀 ${ev.actor} has a luck token — reroll?`, 'log-dim');
+      return delay(150);
     case 'luck-spent':
       appendLog(els.log, `🍀 ${ev.actor} cashes in a luck token — a second chance!`, 'log-start');
       return delay(350);
+    case 'spell-recovered':
+      appendLog(els.log, `${ev.caster}'s Arcane Recovery keeps ${ev.spellId ? 'the spell' : 'it'} ready to try again.`, 'log-start');
+      return delay(250);
     case 'bane':
       appendLog(els.log, `${ev.attacker}'s blade blazes against the ${ev.who}! (+2 undead bane)`, 'log-hit');
       return delay(250);
@@ -989,6 +995,25 @@ function renderActions(els, combat, handlers, view) {
     return;
   }
   const actor = currentCombatant(combat);
+
+  // A failed roll is waiting on a luck choice: show only Reroll / Keep.
+  if (combat.pendingLuck) {
+    const row = document.createElement('div');
+    row.className = 'action-row luck-prompt';
+    const reroll = document.createElement('button');
+    reroll.className = 'btn act-btn luck-btn has-edge';
+    reroll.textContent = '🍀 Luck — reroll';
+    reroll.title = `Spend ${actor.name}'s luck token to reroll (you keep the new result)`;
+    reroll.addEventListener('click', () => handlers.onLuck());
+    const keep = document.createElement('button');
+    keep.className = 'btn act-btn';
+    keep.textContent = 'Keep it';
+    keep.title = 'Let the roll stand';
+    keep.addEventListener('click', () => handlers.onDeclineLuck());
+    row.append(reroll, keep);
+    els.actions.replaceChildren(row);
+    return;
+  }
 
   // "Spell" was chosen: swap the row for the actor's spellbook. A menu (rather
   // than a cramped button label) has room for each spell's blurb and scales as

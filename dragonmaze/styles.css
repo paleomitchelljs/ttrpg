@@ -690,6 +690,7 @@ button { font: inherit; }
 .hp-num { font-size: 0.72rem; color: var(--ink-dim); line-height: 1; }
 
 .breath-btn { background: #c2601d; }
+.luck-btn { background: #2f7d4a; }
 .btn:disabled { opacity: 0.45; cursor: default; transform: none; }
 .btn:disabled:hover { filter: none; }
 
