@@ -281,4 +281,47 @@ const domCaster = (over = {}) =>
   assert.ok(c.burned.includes('ember-bolt'), 'the fizzled spell is burned (lost until rest)');
 }
 
+// --- 12. a caster monster works a spell on its turn ---
+{
+  // A monster with a 'bolt' cast sears a hero (rng 0.99 -> nat-20 crit success).
+  const h = hero({ id: 'hero', ac: 100, hp: 100 });
+  const mage = foe({ id: 'mage', hp: 1000, ac: 1000, abilities: { int: 3 } });
+  mage.castStat = 'int';
+  mage.cast = { name: 'Zap', tier: 1, kind: 'bolt', dice: '1d6', chance: 1 };
+  const { combat } = createCombat([h], [mage], () => 0.99);
+  combat.turnIndex = combat.order.findIndex((c) => c.id.startsWith('mage'));
+  const before = h.hp.current;
+  const ev = runAiTurns(combat, () => 0.99);
+  assert.ok(ev.some((e) => e.type === 'monster-cast' && e.success), 'the monster cast its spell');
+  assert.ok(ev.some((e) => e.type === 'monster-spell-hit'), 'the bolt landed on the hero');
+  assert.ok(h.hp.current < before, 'the hero took spell damage');
+}
+
+// --- 13. a caster monster heals its most-wounded ally instead of the hero ---
+{
+  const h = hero({ id: 'hero', ac: 100, hp: 100 });
+  const healer = foe({ id: 'healer', hp: 1000, ac: 1000, abilities: { wis: 3 } });
+  healer.castStat = 'wis';
+  healer.cast = { name: 'Mend', tier: 1, kind: 'heal', dice: '1d6', chance: 1 };
+  const hurt = foe({ id: 'hurt', hp: 1000, ac: 1000 });
+  hurt.hp.current = 3; // wounded ally worth healing
+  const { combat } = createCombat([h], [healer, hurt], () => 0.99);
+  combat.turnIndex = combat.order.findIndex((c) => c.id.startsWith('healer'));
+  const ev = runAiTurns(combat, () => 0.99);
+  assert.ok(ev.some((e) => e.type === 'monster-heal' && e.targetId === hurt.id), 'the healer mended its ally');
+  assert.ok(hurt.hp.current > 3, 'the wounded ally recovered HP');
+}
+
+// --- 14. a natural-1 cast mishaps (perilous magic) ---
+{
+  // rng 0.01 -> d20 1: auto-fizzle + mishap. First rng() in the mishap is 0.01
+  // (<0.5) so it's the backlash branch, then 1d4 damage.
+  const c = hero({ id: 'hero', abilities: { cha: 0 }, castStat: 'cha', hp: 40, spells: ['ember-bolt'] });
+  const { combat } = createCombat([c], [foe({ id: 'goblin', hp: 1000, ac: 1000 })], () => 0.01);
+  const before = c.hp.current;
+  const ev = playerSpell(heroTurn(combat, 'hero'), 'ember-bolt', null, () => 0.01);
+  assert.ok(ev.some((e) => e.type === 'spell-mishap'), 'a nat-1 triggers a mishap');
+  assert.ok(c.hp.current < before && c.hp.current >= 1, 'the backlash hurts the caster but never kills');
+}
+
 console.log('combat.test.js: all assertions passed ✓');

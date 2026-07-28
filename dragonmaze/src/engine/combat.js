@@ -316,6 +316,13 @@ export function runAiTurns(combat, rng = Math.random) {
       advanceTurn(combat, events);
       continue;
     }
+    // A caster monster may work a spell instead of swinging. If it has nothing
+    // worth casting at (e.g. a healer with no wounded ally), it falls through.
+    if (monster.cast && rng() < (monster.cast.chance ?? 0.5) && takeMonsterCast(combat, monster, rng, events)) {
+      if (combat.over) return events;
+      advanceTurn(combat, events);
+      continue;
+    }
     const targets = livingHeroSide(combat);
     const target = targets[Math.floor(rng() * targets.length)];
     const res = resolveAttack(monster, monster.attacks[0], target, rng, atkOpts(monster, target));
@@ -380,6 +387,60 @@ function takeMinionTurn(combat, minion, rng, events) {
   });
   afterDamage(combat, target, rng, events);
   checkVictory(combat, events);
+}
+
+/**
+ * A caster monster works its spell (data/monsters.js `cast`). Uses the same
+ * Shadowdark check as everyone: d20 + the monster's castStat vs DC (10 + tier),
+ * nat-20 doubles the effect, nat-1 mishaps. Returns true if the turn was spent
+ * casting; false if there was no worthwhile target (caller then attacks).
+ *   kind 'bolt'  — sears a random hero for its dice
+ *   kind 'drain' — same, and the caster heals half
+ *   kind 'heal'  — mends its most-wounded ally (or itself)
+ *   kind 'daze'  — leaves a hero reeling (disadvantage next round)
+ */
+function takeMonsterCast(combat, monster, rng, events) {
+  const c = monster.cast;
+  let target = null;
+  if (c.kind === 'heal') {
+    const hurt = combat.order.filter((x) => isFoe(x) && alive(x) && x.hp.current < x.hp.max);
+    hurt.sort((a, b) => a.hp.current / a.hp.max - b.hp.current / b.hp.max);
+    target = hurt[0] ?? null;
+  } else {
+    const hs = livingHeroSide(combat);
+    target = hs.length ? hs[Math.floor(rng() * hs.length)] : null;
+  }
+  if (!target) return false; // nothing worth casting at — swing instead
+
+  const cast = resolveSpellCast(monster, c, rng);
+  events.push({ type: 'monster-cast', casterId: monster.id, caster: monster.name, name: c.name, tier: c.tier, kind: c.kind, ...cast });
+  if (!cast.success) {
+    if (cast.natural === 1) applyCastMishap(combat, monster, rng, events);
+    return true;
+  }
+  const rolled = c.dice ? roll(c.dice, rng).total : 0;
+  const amount = cast.crit ? rolled * 2 : rolled;
+  if (c.kind === 'heal') {
+    const revived = target.hp.current <= 0;
+    target.hp.current = Math.min(target.hp.max, target.hp.current + amount);
+    events.push({ type: 'monster-heal', casterId: monster.id, caster: monster.name, targetId: target.id, target: target.name, amount, revived, hpAfter: target.hp.current });
+    return true;
+  }
+  if (c.kind === 'daze') {
+    addCondition(target, { id: 'dazed', rounds: 2, disadv: true });
+    events.push({ type: 'monster-daze', casterId: monster.id, caster: monster.name, targetId: target.id, target: target.name });
+    return true;
+  }
+  // 'bolt' or 'drain'
+  const dealt = applyDamage(target, amount, 'fire', events);
+  if (c.kind === 'drain' && dealt > 0 && monster.hp.current < monster.hp.max) {
+    monster.hp.current = Math.min(monster.hp.max, monster.hp.current + Math.ceil(dealt / 2));
+  }
+  events.push({ type: 'monster-spell-hit', casterId: monster.id, caster: monster.name, targetId: target.id, target: target.name, damage: dealt, hpAfter: target.hp.current, kind: c.kind });
+  if (target.kind === 'dragon') { checkDefeat(combat, events); return true; }
+  afterDamage(combat, target, rng, events);
+  checkDefeat(combat, events);
+  return true;
 }
 
 /**
@@ -539,9 +600,25 @@ export function playerIntimidate(combat, targetId, rng = Math.random) {
   return events;
 }
 
+// Shadowdark: a natural-1 casting check is a critical failure — magic is
+// perilous. We keep the backlash light and game-appropriate: half the time a
+// jolt of arcane feedback (1d4, and a fumble never kills — floored at 1 HP),
+// half the time the caster is left reeling (dazed: disadvantage next round).
+// Used by both the party's casters and monster casters.
+function applyCastMishap(combat, caster, rng, events) {
+  if (rng() < 0.5) {
+    const dmg = roll('1d4', rng).total;
+    caster.hp.current = Math.max(1, caster.hp.current - dmg);
+    events.push({ type: 'spell-mishap', kind: 'backlash', casterId: caster.id, caster: caster.name, damage: dmg, hpAfter: caster.hp.current });
+  } else {
+    addCondition(caster, { id: 'dazed', rounds: 2, disadv: true });
+    events.push({ type: 'spell-mishap', kind: 'dazed', casterId: caster.id, caster: caster.name });
+  }
+}
+
 /**
  * The current hero casts a known, unburned spell. A failed casting check
- * fizzles and burns the spell for the rest of the combat.
+ * fizzles and burns the spell until the party rests; a natural 1 also mishaps.
  */
 export function playerSpell(combat, spellId, targetId, rng = Math.random) {
   const events = [];
@@ -567,6 +644,7 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random) {
     } else {
       caster.burned.push(spellId);
     }
+    if (cast.natural === 1) applyCastMishap(combat, caster, rng, events); // a nat-1 is perilous
     advanceTurn(combat, events);
     return events;
   }

@@ -153,7 +153,11 @@ function rollZoneEncounter(sub, rng, partySize) {
       break;
     }
   }
-  let count = 1 + randInt(rng, chosen.packMax ?? 1);
-  if (partySize > 1) count += randInt(rng, partySize);
-  return Array(Math.min(count, 4)).fill(chosen.id);
+  // The monster's own packMax (data/monsters.js) is the authoritative "number
+  // appearing" ceiling — zone weights choose *which* monster, its number-appearing
+  // decides how many. (A zone table's legacy packMax is now just a fallback.)
+  const packMax = monsterById(chosen.id)?.packMax ?? chosen.packMax ?? 1;
+  let count = 1 + randInt(rng, packMax);
+  if (partySize > 1) count += randInt(rng, Math.ceil(partySize / 2));
+  return Array(Math.min(count, packMax, 6)).fill(chosen.id);
 }

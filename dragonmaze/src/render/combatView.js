@@ -133,7 +133,7 @@ async function presentEvent(els, ev) {
           ? `${ev.caster} casts ${ev.name}! ${math}`
           : ev.recovered
             ? `${ev.caster}'s ${ev.name} gutters — but Arcane Recovery keeps it ready to try again! ${math}`
-            : `${ev.caster}'s ${ev.name} fizzles… the spell is spent for this fight. ${math}`,
+            : `${ev.caster}'s ${ev.name} fizzles… the spell is lost until you rest. ${math}`,
         ev.success ? 'log-start' : 'log-miss'
       );
       return delay(200);
@@ -185,6 +185,45 @@ async function presentEvent(els, ev) {
       return delay(300);
     case 'familiar-dismiss':
       appendLog(els.log, `Your ${ev.who} winks out, giving up its place.`, 'log-dim');
+      return delay(300);
+    case 'spell-mishap': {
+      const card = cardOf(els, ev.casterId);
+      if (ev.kind === 'backlash') {
+        if (card) { card.classList.add('hit-flash'); updateCardHp(card, ev.hpAfter); }
+        appendLog(els.log, `Wild magic lashes back at ${ev.caster} for ${ev.damage}!`, 'log-hurt');
+        await delay(400);
+        card?.classList.remove('hit-flash');
+        return;
+      }
+      appendLog(els.log, `The backlash leaves ${ev.caster} reeling — dazed!`, 'log-miss');
+      return delay(300);
+    }
+    case 'monster-cast':
+      appendLog(els.log, ev.success
+        ? `The ${ev.caster} works ${ev.name}! (${ev.total} vs DC ${ev.dc})`
+        : `The ${ev.caster}'s ${ev.name} sputters out. (${ev.total} vs DC ${ev.dc})`,
+        ev.success ? 'log-start' : 'log-miss');
+      return delay(250);
+    case 'monster-spell-hit': {
+      const card = cardOf(els, ev.targetId);
+      if (card) { card.classList.add('hit-flash'); updateCardHp(card, ev.hpAfter); }
+      appendLog(els.log, ev.kind === 'drain'
+        ? `Dark power drains ${ev.target} for ${ev.damage}!`
+        : `Searing force blasts ${ev.target} for ${ev.damage}!`, 'log-hurt');
+      await delay(450);
+      card?.classList.remove('hit-flash');
+      return;
+    }
+    case 'monster-heal': {
+      const card = cardOf(els, ev.targetId);
+      if (card) { card.classList.add('heal-flash'); updateCardHp(card, ev.hpAfter); }
+      appendLog(els.log, `The ${ev.caster} knits the ${ev.target}'s wounds (+${ev.amount}).`, 'log-start');
+      await delay(400);
+      card?.classList.remove('heal-flash');
+      return;
+    }
+    case 'monster-daze':
+      appendLog(els.log, `The ${ev.caster} fixes ${ev.target} with a baleful stare — dazed!`, 'log-miss');
       return delay(300);
     case 'bane':
       appendLog(els.log, `${ev.attacker}'s blade blazes against the ${ev.who}! (+2 undead bane)`, 'log-hit');

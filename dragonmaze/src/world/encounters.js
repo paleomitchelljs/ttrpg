@@ -18,9 +18,10 @@ export function rollEncounter(depth, rng, partySize = 1) {
       break;
     }
   }
-  let count = 1 + randInt(rng, chosen.packMax ?? 1);
-  // Bigger parties draw bigger packs (extra rolls only when partySize > 1
-  // keeps solo seeds bit-identical to older versions).
-  if (partySize > 1) count += randInt(rng, partySize);
-  return Array(Math.min(count, 4)).fill(chosen.id);
+  // Shadowdark "number appearing": packMax is the hard ceiling for this monster,
+  // so swarms (packMax 4-5) fill out while brutes/bosses (packMax 1) stay solo.
+  const packMax = chosen.packMax ?? 1;
+  let count = 1 + randInt(rng, packMax);
+  if (partySize > 1) count += randInt(rng, Math.ceil(partySize / 2)); // bigger party, fuller pack
+  return Array(Math.min(count, packMax, 6)).fill(chosen.id);
 }
