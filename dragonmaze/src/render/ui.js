@@ -200,14 +200,19 @@ function equipmentHtml(subject) {
   const { charKey, slots, taken } = subject.equip;
   // Click-to-equip chips that show the item's icon (art from assets/tiles) when
   // it has one; the equipped chip is highlighted, the "none" chip unequips.
+  // The weapon slot's "base" (unequipped) chip shows the character's default
+  // mundane weapon rather than "none", so every hero has a weapon in view.
+  const baseWeapon = subject.equip.weapon;
   const chip = (slot, item) => {
     const equipped = item ? slots[slot] === item.id : !slots[slot];
     const wornByOther = item && taken[item.id] && taken[item.id] !== charKey;
+    const isBaseWeapon = !item && slot === 'weapon' && baseWeapon;
     const icon = item?.tile && TILES[item.tile]
       ? `<img class="equip-ico" src="${TILES[item.tile]}" alt="">`
-      : `<span class="equip-ico none">${item ? '▪' : '∅'}</span>`;
-    const label = item ? item.name : 'none';
-    return `<button class="equip-chip${equipped ? ' on' : ''}${wornByOther ? ' worn' : ''}" data-char="${charKey}" data-slot="${slot}" data-item="${item?.id ?? ''}" title="${item ? item.blurb.replace(/"/g, '') : 'unequip'}">${icon}<span class="equip-name">${label}${wornByOther ? ' · worn' : ''}</span></button>`;
+      : `<span class="equip-ico none">${item ? '▪' : isBaseWeapon ? '⚔' : '∅'}</span>`;
+    const label = item ? item.name : isBaseWeapon ? baseWeapon : 'none';
+    const title = item ? item.blurb.replace(/"/g, '') : isBaseWeapon ? `${baseWeapon} — your default weapon` : 'unequip';
+    return `<button class="equip-chip${equipped ? ' on' : ''}${wornByOther ? ' worn' : ''}" data-char="${charKey}" data-slot="${slot}" data-item="${item?.id ?? ''}" title="${title}">${icon}<span class="equip-name">${label}${wornByOther ? ' · worn' : ''}</span></button>`;
   };
   const rows = SLOTS.map((slot) => {
     const options = ITEMS.filter((i) => i.slot === slot && subject.equip.inventory.includes(i.id));

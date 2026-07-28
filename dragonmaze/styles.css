@@ -696,8 +696,12 @@ button { font: inherit; }
 
 .badge-panic { font-size: 0.8rem; color: #ffb4a6; }
 .badge-flee { font-size: 0.85rem; color: var(--ink-dim); font-style: italic; }
-/* A held luck token — a small clover in the hero card's top corner. */
-.badge-luck { position: absolute; top: 2px; right: 3px; font-size: 0.8rem; line-height: 1; filter: drop-shadow(0 0 3px #6fce7e88); }
+/* The luck token's mark: a small bear-and-wren emblem (the title crest). Both
+   the card badge and the Luck button reuse this one class so the image inlines
+   once. */
+.luck-emblem { display: inline-block; width: 1.05em; height: 1.05em; background: url(./assets/bear-wren-badge.png) center/contain no-repeat; vertical-align: -0.18em; }
+.badge-luck { position: absolute; top: 2px; right: 3px; width: 16px; height: 16px; filter: drop-shadow(0 0 2px #d7dee9aa); }
+.luck-btn .luck-emblem { width: 1.15em; height: 1.15em; margin-right: 0.28em; filter: drop-shadow(0 0 2px #ffffff66); }
 .enemy-card.fled { opacity: 0.4; }
 
 .growth { text-align: center; }

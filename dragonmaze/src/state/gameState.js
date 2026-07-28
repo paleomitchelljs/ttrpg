@@ -145,7 +145,8 @@ function normalizeMeta(meta) {
   meta.zone ??= null;
   meta.familiar ??= null;
   delete meta.familiarsOwned; // legacy: familiars are no longer found/owned
-  meta.tomeSpells ??= [];
+  meta.tomeSpells ??= []; // legacy: the dragon's old spellbook (dragons no longer cast)
+  meta.heroTomes ??= {}; // charId -> [spellId] spells a caster learned from found tomes
   meta.inventory ??= [];
   meta.consumables ??= [];
   meta.equipment ??= {};
@@ -180,7 +181,11 @@ export function heroWithGrowth(id) {
   if (!base) return null;
   const g = state.meta.heroGrowth[id];
   const level = g?.level ?? 1;
-  if (!g || (level <= 1 && !g.choices.length)) return base;
+  const tomes = state.meta.heroTomes?.[id] ?? [];
+  const choices = g?.choices ?? [];
+  // Nothing to fold — a fresh level-1 hero with no learned tomes: hand back the
+  // shared base object untouched.
+  if ((!g || (level <= 1 && !choices.length)) && !tomes.length) return base;
   const hero = {
     ...base,
     abilities: { ...base.abilities },
@@ -194,7 +199,7 @@ export function heroWithGrowth(id) {
   // hit + damage, DEX gives hit + AC; CON feeds HP/level; the rest raise
   // abilities the engine already reads (casting, parley, intimidate).
   const asi = {};
-  for (const c of g.choices) if (c.type === 'asi' && c.ability) asi[c.ability] = (asi[c.ability] ?? 0) + 1;
+  for (const c of choices) if (c.type === 'asi' && c.ability) asi[c.ability] = (asi[c.ability] ?? 0) + 1;
   let strGain = 0;
   let dexGain = 0;
   for (const ab of Object.keys(asi)) {
@@ -215,7 +220,7 @@ export function heroWithGrowth(id) {
   hero.hpMax += hpPerLevel(hero) * (level - 1);
 
   // Talents (odd levels) and learned spells.
-  for (const c of g.choices) {
+  for (const c of choices) {
     if (c.type === 'talent' && c.talentId) {
       if (c.talentId === 'armor') hero.ac += 1; // repeatable defensive pick
       else if (!hero.talents.includes(c.talentId)) hero.talents.push(c.talentId);
@@ -228,6 +233,8 @@ export function heroWithGrowth(id) {
     if (c.type === 'hp') hero.hpMax += 2;
     if (c.type === 'ac') hero.ac += 1;
   }
+  // Spells learned from found tomes (a caster studies them — no talent slot).
+  for (const sid of tomes) if (!hero.spells.includes(sid)) hero.spells.push(sid);
   return hero;
 }
 
@@ -691,11 +698,22 @@ export function move(dx, dy) {
   if (lootIdx >= 0) {
     const [loot] = d.loot.splice(lootIdx, 1);
     if (loot.tome) {
-      const unknown = SPELLS.filter((sp) => sp.tome !== false && !state.meta.tomeSpells.includes(sp.id));
-      if (unknown.length) {
-        const learned = unknown[Math.floor(liveRNG() * unknown.length)];
-        state.meta.tomeSpells.push(learned.id);
-        events.push({ type: 'tome', spell: learned.name });
+      // A caster among the party studies the tome — dragons are beasts, not
+      // bookworms. Pick a caster hero who has an unknown tome spell to learn.
+      const casters = (run.party ?? [])
+        .map((s) => heroWithGrowth(s.id))
+        .filter((h) => h?.castStat)
+        .map((h) => ({
+          id: h.id,
+          name: h.name,
+          unknown: SPELLS.filter((sp) => sp.tome !== false && !h.spells.includes(sp.id)),
+        }))
+        .filter((h) => h.unknown.length);
+      if (casters.length) {
+        const learner = casters[Math.floor(liveRNG() * casters.length)];
+        const learned = learner.unknown[Math.floor(liveRNG() * learner.unknown.length)];
+        (state.meta.heroTomes[learner.id] ??= []).push(learned.id);
+        events.push({ type: 'tome', spell: learned.name, who: learner.name });
       } else {
         run.unbankedGold += 25;
         events.push({ type: 'tome', spell: null, gold: 25 });
@@ -1034,17 +1052,15 @@ function beginCombat(encounter) {
   let heroes = [];
   if (run.dragon) {
     const tier = tierByName(run.dragon.tier);
-    const dragon = makeDragonCombatant(tier, run.dragon.hp.current, {
-      spells: state.meta.tomeSpells,
-      familiar: state.meta.familiar,
-    });
+    // The dragon is a pure martial — bite and breath, no tomes and no familiar.
+    const dragon = makeDragonCombatant(tier, run.dragon.hp.current, { spells: [] });
     dragon.hp.max = run.dragon.hp.max;
     dragon.hp.current = Math.min(run.dragon.hp.current, dragon.hp.max);
     applyEquipment(dragon, 'dragon');
-    dragon.burned = [...(run.burnedSpells?.dragon ?? [])]; // spells still lost from before the last camp
     heroes.push(dragon);
   }
   // Downed companions come along at 0 HP — a Healing Word can revive them.
+  const companions = [];
   for (const slot of run.party) {
     const c = makeCombatant(heroWithGrowth(slot.id));
     c.hp.max = slot.hp.max;
@@ -1052,7 +1068,13 @@ function beginCombat(encounter) {
     applyEquipment(c, slot.id);
     c.burned = [...(run.burnedSpells?.[slot.id] ?? [])];
     c.luck = run.luck?.[slot.id] ?? 0; // this hero's remaining luck token(s) for the day
+    companions.push(c);
     heroes.push(c);
+  }
+  // The party's familiar rides with a caster companion (never the dragon).
+  if (state.meta.familiar && companions.length) {
+    const keeper = companions.find((c) => c.castStat) ?? companions[0];
+    keeper.familiar = state.meta.familiar;
   }
   const monsters = encounter.monsterIds.map((id) => makeCombatant(monsterById(id)));
   if (encounter.bossName) for (const m of monsters) m.isBoss = true; // a boss pack can't be dominated

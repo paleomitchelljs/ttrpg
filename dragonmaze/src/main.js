@@ -199,8 +199,8 @@ game.subscribe((state, events) => {
     if (ev.type === 'tome') {
       ui.logExplore(
         ev.spell
-          ? `A dusty spell tome! The dragon devours it and learns ${ev.spell}!`
-          : `A spell tome — but the dragon knows it all. Sold for ${ev.gold} gold.`,
+          ? `A dusty spell tome! ${ev.who ?? 'A caster'} studies it and learns ${ev.spell}!`
+          : `A spell tome — but your casters know it all. Sold for ${ev.gold} gold.`,
         'log-start'
       );
     }
@@ -307,13 +307,12 @@ function sheetSubject(id) {
       abilities: tier.abilities,
       attacks: tier.attacks,
       breath: tier.breath,
-      spells: game.state.meta.tomeSpells.map((sid) => spellById(sid)).filter(Boolean),
-      familiar: familiarById(game.state.meta.familiar),
-      castStat: 'cha',
+      spells: [], // the dragon is a pure martial — bite and breath, no spells or familiar
+      familiar: null,
       renown: Object.entries(game.state.meta.reputation ?? {})
         .filter(([, v]) => v !== 0)
         .map(([faction, v]) => `${faction}: ${v > 0 ? '+' : ''}${v} (${rulesRef.dispositionLabel(v)})`),
-      equip: equipInfo('dragon'),
+      equip: equipInfo('dragon', tier.attacks[0]?.name),
     };
   }
   const c = game.heroWithGrowth(id);
@@ -336,9 +335,10 @@ function sheetSubject(id) {
     attacks: c.attacks,
     spells: c.spells.map((sid) => spellById(sid)).filter(Boolean),
     castStat: c.castStat ?? 'cha',
+    familiar: c.castStat ? familiarById(game.state.meta.familiar) : null, // a caster tends the party familiar
     traits: c.abilityLabel ? [c.abilityLabel] : [],
     growth: growthInfo(id, c, g),
-    equip: equipInfo(id),
+    equip: equipInfo(id, c.attacks[0]?.name),
   };
 }
 
@@ -380,7 +380,7 @@ function learnableSpells(id) {
   return SPELLS_ALL.filter((sp) => sp.tome !== false && !known.includes(sp.id));
 }
 
-function equipInfo(charKey) {
+function equipInfo(charKey, weapon = null) {
   const taken = {};
   for (const [key, slots] of Object.entries(game.state.meta.equipment ?? {})) {
     for (const id of Object.values(slots)) taken[id] = key;
@@ -390,6 +390,7 @@ function equipInfo(charKey) {
     slots: game.state.meta.equipment?.[charKey] ?? {},
     inventory: game.state.meta.inventory ?? [],
     taken,
+    weapon, // the character's default (mundane) weapon — shown as the weapon slot's base
   };
 }
 

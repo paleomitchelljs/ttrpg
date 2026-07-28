@@ -131,22 +131,23 @@ export function createCombat(heroes, monsters, rng = Math.random, label = null) 
     over: false,
     winner: null,
     breathReady: true,
-    familiar: heroes.find((h) => h.kind === 'dragon')?.familiar ?? null,
+    familiar: heroes.find((h) => h.familiar)?.familiar ?? null,
     bonusGold: 0, // loot from dominated foes (they leave the foe list but still pay out)
   };
   // The familiar rides along as a companion sprite: it's added to `combatants`
   // (so heroesOf renders it) but NOT to `order`, so it never takes a turn, can't
   // be struck, and doesn't count for victory/defeat. It's inert — it only carries
-  // its owner's casting boost, and it's displaced the instant a real minion deploys.
-  const dragon = heroes.find((h) => h.kind === 'dragon');
-  const famData = dragon?.familiar ? familiarById(dragon.familiar) : null;
+  // its keeper's casting boost, and it's displaced the instant a real minion
+  // deploys. Its keeper is whichever hero tends it (a caster, never the dragon).
+  const keeper = heroes.find((h) => h.familiar);
+  const famData = keeper?.familiar ? familiarById(keeper.familiar) : null;
   if (famData) {
     const fam = makeCombatant({
       id: `familiar-${famData.id}`,
       name: famData.name,
       kind: 'monster',
       side: 'ally',
-      ownerId: dragon.id,
+      ownerId: keeper.id,
       minionType: 'familiar',
       temporary: true,
       ac: 10,

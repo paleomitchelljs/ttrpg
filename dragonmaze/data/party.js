@@ -19,7 +19,7 @@ export const COMPANIONS = [
     hpMax: 12, // d10 + CON 2
     hitDie: 10,
     abilities: { str: 2, dex: 2, con: 2, int: 1, wis: 0, cha: 2 },
-    attacks: [{ name: 'sword', toHit: 3, damage: '1d8', range: 'melee' }],
+    attacks: [{ name: 'Longsword', toHit: 3, damage: '1d8', range: 'melee' }],
     sprite: 'hero_spawnee',
     emoji: '🌙',
     anim: { idle: 'spawnee-idle', attack: 'spawnee-attack' },
@@ -41,7 +41,7 @@ export const COMPANIONS = [
     hpMax: 9, // d8 + CON 1
     hitDie: 8,
     abilities: { str: 1, dex: 4, con: 1, int: 0, wis: 0, cha: 1 },
-    attacks: [{ name: 'sword', toHit: 5, damage: '1d6', range: 'melee' }],
+    attacks: [{ name: 'Rapier', toHit: 5, damage: '1d6', range: 'melee' }],
     sprite: 'hero_swashbuckler',
     emoji: '🗡️',
     anim: { idle: 'swash-idle', attack: 'swash-attack' },
@@ -58,7 +58,7 @@ export const COMPANIONS = [
     hpMax: 9, // d8 + CON 1
     hitDie: 8,
     abilities: { str: 2, dex: 1, con: 1, int: 3, wis: 1, cha: 1 },
-    attacks: [{ name: 'sword', toHit: 3, damage: '1d8', range: 'melee' }],
+    attacks: [{ name: 'Longsword', toHit: 3, damage: '1d8', range: 'melee' }],
     sprite: 'hero_spellblade',
     emoji: '🔥',
     anim: { idle: 'spellblade-idle', attack: 'spellblade-attack' },
@@ -76,7 +76,7 @@ export const COMPANIONS = [
     hpMax: 12, // d10 + CON 2
     hitDie: 10,
     abilities: { str: 3, dex: 1, con: 2, int: 0, wis: 1, cha: 1 },
-    attacks: [{ name: 'sword', toHit: 4, damage: '1d8', range: 'melee' }],
+    attacks: [{ name: 'Warhammer', toHit: 4, damage: '1d8', range: 'melee' }],
     sprite: 'hero_beren',
     emoji: '🗡️',
     anim: { idle: 'beren-idle', attack: 'beren-attack' },
@@ -95,7 +95,7 @@ export const COMPANIONS = [
     hpMax: 13, // d10 + CON 3
     hitDie: 10,
     abilities: { str: 4, dex: 2, con: 3, int: -1, wis: 0, cha: 0 },
-    attacks: [{ name: 'sword', toHit: 5, damage: '1d10', range: 'melee' }],
+    attacks: [{ name: 'Greataxe', toHit: 5, damage: '1d10', range: 'melee' }],
     sprite: 'hero_turquoise',
     emoji: '🪓',
     anim: { idle: 'turquoise-idle', attack: 'turquoise-attack' },

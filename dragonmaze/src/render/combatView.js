@@ -226,10 +226,10 @@ async function presentEvent(els, ev) {
       appendLog(els.log, `The ${ev.caster} fixes ${ev.target} with a baleful stare — dazed!`, 'log-miss');
       return delay(300);
     case 'luck-offer':
-      appendLog(els.log, `🍀 ${ev.actor} has a luck token — reroll?`, 'log-dim');
+      appendLog(els.log, `${ev.actor} has a luck token — reroll?`, 'log-dim');
       return delay(150);
     case 'luck-spent':
-      appendLog(els.log, `🍀 ${ev.actor} cashes in a luck token — a second chance!`, 'log-start');
+      appendLog(els.log, `${ev.actor} cashes in a luck token — a second chance!`, 'log-start');
       return delay(350);
     case 'spell-recovered':
       appendLog(els.log, `${ev.caster}'s Arcane Recovery keeps ${ev.spellId ? 'the spell' : 'it'} ready to try again.`, 'log-start');
@@ -909,7 +909,7 @@ function unitEl(c, side, activeId) {
   // party's knowledge roll). Keeps the cards compact for a full party on a phone.
   unit.innerHTML = `
     <div class="hp-num">${c.hp.current}/${c.hp.max}</div>
-    ${!dead && c.luck > 0 ? '<div class="badge-luck" title="a luck token — a failed roll rerolls once">🍀</div>' : ''}
+    ${!dead && c.luck > 0 ? '<span class="badge-luck luck-emblem" title="a luck token — spend it to reroll a failed roll"></span>' : ''}
     ${faceHtml(c, dead)}
     ${c.fled
       ? '<div class="badge-flee">fled!</div>'
@@ -1002,7 +1002,7 @@ function renderActions(els, combat, handlers, view) {
     row.className = 'action-row luck-prompt';
     const reroll = document.createElement('button');
     reroll.className = 'btn act-btn luck-btn has-edge';
-    reroll.textContent = '🍀 Luck — reroll';
+    reroll.innerHTML = '<span class="luck-emblem"></span>Luck — reroll';
     reroll.title = `Spend ${actor.name}'s luck token to reroll (you keep the new result)`;
     reroll.addEventListener('click', () => handlers.onLuck());
     const keep = document.createElement('button');

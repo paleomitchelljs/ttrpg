@@ -387,4 +387,16 @@ const domCaster = (over = {}) =>
   assert.equal(foeAtk.targetId, wolf.id, 'the minion took the hit instead');
 }
 
+// --- 17. the familiar's keeper is a hero, never the dragon ---
+{
+  const dragon = makeCombatant({ id: 'dragon', name: 'Red Dragon', kind: 'dragon', ac: 18, hp: 100 });
+  const caster = hero({ id: 'mage', castStat: 'int', abilities: { int: 3 }, spells: ['ember-bolt'] });
+  caster.familiar = 'ember-wisp'; // beginCombat pins the familiar to a caster, not the dragon
+  const { combat } = createCombat([dragon, caster], [foe({ id: 'goblin', hp: 100, ac: 12 })], () => 0.5);
+  const fam = combat.combatants.find((c) => c.minionType === 'familiar');
+  assert.ok(fam, 'the familiar joined the field');
+  assert.equal(fam.ownerId, caster.id, 'the caster hero keeps it');
+  assert.notEqual(fam.ownerId, dragon.id, 'the dragon does not');
+}
+
 console.log('combat.test.js: all assertions passed ✓');
