@@ -9,7 +9,7 @@ import { zoneById } from '../../data/zones.js';
 import { tierByName } from '../../data/dragonProgression.js';
 import { monsterById } from '../../data/monsters.js';
 import { COMPANIONS, companionById } from '../../data/party.js';
-import { FAMILIARS, familiarById } from '../../data/familiars.js';
+import { familiarById } from '../../data/familiars.js';
 import { ITEMS, itemById } from '../../data/items.js';
 import { consumableById } from '../../data/consumables.js';
 import { parseHeroExport } from './importHero.js';
@@ -64,7 +64,6 @@ function freshMeta() {
     heroGrowth: {}, // charId -> { xp, level, pending, choices: [{type, spellId?}] }
     reputation: {}, // faction -> renown (kills of their enemies raise it)
     zone: { zoneId: 'lost-temple', subIndex: 0 }, // default hunt; null = procedural
-    familiar: null, // the party's familiar, chosen as a level-up feat
     tomeSpells: [], // spells the dragon has learned from found tomes
     inventory: [], // equippable items found in gleaming caches
     consumables: ['potion-healing', 'potion-healing', 'vial-poison'], // shared pouch of one-shot combat items
@@ -103,8 +102,13 @@ function key(x, y) {
 // darkvision (Spawnee, the Yuan-Ti) widens sight: a full 3x3 lit, plus the ring
 // two tiles out glimpsed dimly. Without light it's the bare plus. No light
 // *spell* exists yet — add it here when one does.
+// True if any hero in the party keeps the given familiar (familiars are per-hero
+// now, but some knacks — light, gold-sense — help the whole party).
+function partyHasFamiliar(run, familiarId) {
+  return (run?.party ?? []).some((s) => heroWithGrowth(s.id)?.familiar === familiarId);
+}
 function hasLight(run) {
-  return state.meta.familiar === 'lantern-beetle'
+  return partyHasFamiliar(run, 'lantern-beetle')
     || (run.party ?? []).some((s) => companionById(s.id)?.darkvision);
 }
 
@@ -143,8 +147,8 @@ function normalizeMeta(meta) {
   meta.heroGrowth ??= {};
   meta.reputation ??= {};
   meta.zone ??= null;
-  meta.familiar ??= null;
   delete meta.familiarsOwned; // legacy: familiars are no longer found/owned
+  delete meta.familiar; // legacy: familiars are now per-hero (in heroGrowth choices)
   meta.tomeSpells ??= []; // legacy: the dragon's old spellbook (dragons no longer cast)
   meta.heroTomes ??= {}; // charId -> [spellId] spells a caster learned from found tomes
   meta.inventory ??= [];
@@ -153,7 +157,6 @@ function normalizeMeta(meta) {
   meta.customCharacters ??= [];
   meta.defeatedBosses ??= [];
   meta.flags ??= {};
-  if (meta.familiar && !familiarById(meta.familiar)) meta.familiar = null;
   meta.inventory = meta.inventory.filter((id) => itemById(id));
   meta.consumables = meta.consumables.filter((id) => consumableById(id));
   for (const slots of Object.values(meta.equipment)) {
@@ -226,6 +229,7 @@ export function heroWithGrowth(id) {
       else if (!hero.talents.includes(c.talentId)) hero.talents.push(c.talentId);
     }
     if (c.type === 'spell' && c.spellId && !hero.spells.includes(c.spellId)) hero.spells.push(c.spellId);
+    if (c.type === 'familiar' && familiarById(c.familiarId)) hero.familiar = c.familiarId; // this hero's own familiar
     // Legacy picks from earlier systems (no longer offered, kept for old saves).
     if (c.type === 'attack') hero.attacks.forEach((a) => (a.toHit += 1));
     if (c.type === 'damage') hero.attacks.forEach((a) => (a.damage = bumpDamage(a.damage, 1)));
@@ -274,9 +278,8 @@ export function chooseAdvance(charId, type, arg = null) {
   } else if (type === 'familiar') {
     if (pend.talent <= 0) return; // taking a familiar spends a talent slot
     if (!familiarById(arg)) return;
-    if (g.choices.some((c) => c.type === 'familiar')) return; // one familiar feat per hero
-    g.choices.push({ type: 'familiar', familiarId: arg });
-    state.meta.familiar = arg; // the party's familiar (a single shared boost)
+    if (g.choices.some((c) => c.type === 'familiar')) return; // one familiar per hero
+    g.choices.push({ type: 'familiar', familiarId: arg }); // this hero's own familiar
   } else {
     return;
   }
@@ -331,13 +334,6 @@ export function equip(charKey, slot, itemId) {
   else delete state.meta.equipment[charKey][slot];
   persist(state);
   emit([{ type: 'equip-changed' }]);
-}
-
-/** Set the party's familiar (chosen as a level-up feat), or null for none. */
-export function setFamiliar(familiarId) {
-  state.meta.familiar = familiarById(familiarId) ? familiarId : null;
-  persist(state);
-  emit([{ type: 'familiar-changed' }]);
 }
 
 /** Choose where to hunt: a written zone (by id) or null for procedural. */
@@ -733,7 +729,7 @@ export function move(dx, dy) {
       events.push({ type: 'loot', label: `${consumableById(loot.consumable)?.name ?? 'a flask'} — into your pouch`, gold: 0 });
     } else {
       let gold = loot.gold;
-      if (state.meta.familiar === 'pack-rat') gold = Math.round(gold * 1.25);
+      if (partyHasFamiliar(run, 'pack-rat')) gold = Math.round(gold * 1.25);
       run.unbankedGold += gold;
       events.push({ type: 'loot', label: loot.label, icon: loot.icon, gold });
     }
@@ -1059,8 +1055,8 @@ function beginCombat(encounter) {
     applyEquipment(dragon, 'dragon');
     heroes.push(dragon);
   }
-  // Downed companions come along at 0 HP — a Healing Word can revive them.
-  const companions = [];
+  // Downed companions come along at 0 HP — a Healing Word can revive them. Each
+  // carries its own familiar (from heroWithGrowth → makeCombatant), if it has one.
   for (const slot of run.party) {
     const c = makeCombatant(heroWithGrowth(slot.id));
     c.hp.max = slot.hp.max;
@@ -1068,13 +1064,7 @@ function beginCombat(encounter) {
     applyEquipment(c, slot.id);
     c.burned = [...(run.burnedSpells?.[slot.id] ?? [])];
     c.luck = run.luck?.[slot.id] ?? 0; // this hero's remaining luck token(s) for the day
-    companions.push(c);
     heroes.push(c);
-  }
-  // The party's familiar rides with a caster companion (never the dragon).
-  if (state.meta.familiar && companions.length) {
-    const keeper = companions.find((c) => c.castStat) ?? companions[0];
-    keeper.familiar = state.meta.familiar;
   }
   const monsters = encounter.monsterIds.map((id) => makeCombatant(monsterById(id)));
   if (encounter.bossName) for (const m of monsters) m.isBoss = true; // a boss pack can't be dominated

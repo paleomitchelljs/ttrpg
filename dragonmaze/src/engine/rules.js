@@ -163,10 +163,11 @@ export function talentEarned(level) {
  * natural 1 always fizzles. A fizzled spell burns out for the combat.
  */
 export function resolveSpellCast(caster, spell, rng = Math.random, opts = {}) {
-  // Advantage on the cast comes from Spell Focus (talent, matched school) or from
-  // a spell that is simply cast with advantage (Shadowdark's Magic Missile).
+  // Advantage on the cast comes from Spell Focus (talent, matched school), a
+  // spell cast with advantage (Shadowdark's Magic Missile), or a familiar knack
+  // the caller passes in (opts.advantage, e.g. the Dusk Bat on Drain Life).
   const focused = !!(spell.school && caster.talents?.includes(`focus-${spell.school}`));
-  const advantage = focused || !!spell.castAdvantage;
+  const advantage = focused || !!spell.castAdvantage || !!opts.advantage;
   const die = d20({ rng, advantage });
   // Casting keys off the caster's spellcasting ability (Shadowdark: wizards
   // INT, priests WIS; our dragon and vampire cast on CHA). Defaults to CHA.

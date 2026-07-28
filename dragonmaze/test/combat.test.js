@@ -399,4 +399,28 @@ const domCaster = (over = {}) =>
   assert.notEqual(fam.ownerId, dragon.id, 'the dragon does not');
 }
 
+// --- 18. familiars are per-hero — each hero fields their own ---
+{
+  const a = hero({ id: 'aaa' }); a.familiar = 'ember-wisp';
+  const b = hero({ id: 'bbb' }); b.familiar = 'fae-drake';
+  const plain = hero({ id: 'ccc' }); // no familiar
+  const { combat } = createCombat([a, b, plain], [foe({ id: 'goblin', hp: 100, ac: 12 })], () => 0.5);
+  const fams = combat.combatants.filter((c) => c.minionType === 'familiar');
+  assert.equal(fams.length, 2, 'two heroes with familiars => two familiar sprites');
+  assert.ok(fams.some((f) => f.ownerId === a.id) && fams.some((f) => f.ownerId === b.id), 'each owned by its hero');
+}
+
+// --- 19. the Dusk Bat gives its owner advantage on Drain Life ---
+{
+  const c = hero({ id: 'hero', abilities: { cha: 0 }, castStat: 'cha', spells: ['drain-life'] });
+  c.familiar = 'dusk-bat';
+  const g = foe({ id: 'goblin', hp: 100, ac: 1000 });
+  const { combat } = createCombat([c], [g], () => 0.5);
+  // Two d20 rolls (advantage): first 2 (would fail vs DC 12), then 15 (succeeds);
+  // advantage keeps the 15. Then the 1d6 drain roll.
+  let i = 0; const seq = [0.05, 0.7, 0.5]; const rng = () => (i < seq.length ? seq[i++] : 0.5);
+  const ev = playerSpell(heroTurn(combat, 'hero'), 'drain-life', g.id, rng);
+  assert.ok(ev.find((e) => e.type === 'spell-cast')?.success, 'advantage lands the drain the low roll would have flubbed');
+}
+
 console.log('combat.test.js: all assertions passed ✓');

@@ -335,7 +335,7 @@ function sheetSubject(id) {
     attacks: c.attacks,
     spells: c.spells.map((sid) => spellById(sid)).filter(Boolean),
     castStat: c.castStat ?? 'cha',
-    familiar: c.castStat ? familiarById(game.state.meta.familiar) : null, // a caster tends the party familiar
+    familiar: familiarById(c.familiar), // this hero's own familiar, if they took the feat
     traits: c.abilityLabel ? [c.abilityLabel] : [],
     growth: growthInfo(id, c, g),
     equip: equipInfo(id, c.attacks[0]?.name),
@@ -363,9 +363,9 @@ function growthInfo(id, c, g) {
     abilityCap: rulesRef.ABILITY_CAP,
     talentOptions,
     learnable: c.castStat ? learnableSpells(id) : [],
-    // A familiar (party-wide casting boost) is a talent-slot pick — offered only
-    // until the party has one; choosing it opens the familiar menu.
-    familiarOptions: game.state.meta.familiar ? [] : FAMILIARS.map((f) => ({ id: f.id, name: f.name, blurb: f.blurb })),
+    // A familiar is a talent-slot pick that belongs to THIS hero — offered until
+    // they have one; choosing it opens the familiar menu.
+    familiarOptions: c.familiar ? [] : FAMILIARS.map((f) => ({ id: f.id, name: f.name, blurb: f.blurb })),
     talents: chosen.filter((tid) => tid !== 'armor').map((tid) => talentById(tid)?.name ?? tid),
   };
 }

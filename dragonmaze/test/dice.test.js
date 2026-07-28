@@ -412,7 +412,7 @@ check('resistances, abilities, familiars, and tomes hold together', () => {
 });
 
 check('spellblade companion and familiars are well-formed', () => {
-  assert.equal(FAMILIARS.length, 4);
+  assert.equal(FAMILIARS.length, 5);
   for (const f of FAMILIARS) assert.ok(f.id && f.name && f.blurb);
   const sb = companionById('dragonkin-spellblade');
   assert.ok(sb, 'spellblade exists');

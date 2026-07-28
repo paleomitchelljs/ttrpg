@@ -48,6 +48,7 @@ export function makeCombatant(data) {
     spells: [...(data.spells ?? [])],
     castStat: data.castStat ?? 'cha', // which ability powers this caster's spells
     cast: data.cast ?? null, // a monster's spell attack (see runAiTurns / takeMonsterCast)
+    familiar: data.familiar ?? null, // this hero's own familiar id, if they took the feat
     spellPower: data.spellPower ?? 0, // bonus damage added to this caster's spells
     talents: [...(data.talents ?? [])], // chosen level-up talents (Cleave, Flurry, …)
     recoveredThisCombat: false, // Arcane Recovery: one saved fizzle per fight

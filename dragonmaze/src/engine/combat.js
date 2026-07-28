@@ -131,23 +131,23 @@ export function createCombat(heroes, monsters, rng = Math.random, label = null) 
     over: false,
     winner: null,
     breathReady: true,
-    familiar: heroes.find((h) => h.familiar)?.familiar ?? null,
     bonusGold: 0, // loot from dominated foes (they leave the foe list but still pay out)
   };
-  // The familiar rides along as a companion sprite: it's added to `combatants`
-  // (so heroesOf renders it) but NOT to `order`, so it never takes a turn, can't
-  // be struck, and doesn't count for victory/defeat. It's inert — it only carries
-  // its keeper's casting boost, and it's displaced the instant a real minion
-  // deploys. Its keeper is whichever hero tends it (a caster, never the dragon).
-  const keeper = heroes.find((h) => h.familiar);
-  const famData = keeper?.familiar ? familiarById(keeper.familiar) : null;
-  if (famData) {
+  // Each hero who tends a familiar (their own, chosen as a feat) brings it along
+  // as a companion sprite: added to `combatants` (so heroesOf renders it) but NOT
+  // to `order`, so it never takes a turn, can't be struck, and doesn't count for
+  // victory/defeat. It's inert — it only carries its OWNER's boost, and it's
+  // displaced the instant that owner deploys a real minion. The dragon can't have
+  // one. Multiple heroes may each field their own.
+  for (const owner of heroes) {
+    const famData = owner.familiar ? familiarById(owner.familiar) : null;
+    if (!famData) continue;
     const fam = makeCombatant({
-      id: `familiar-${famData.id}`,
+      id: `familiar-${famData.id}-${owner.id}`,
       name: famData.name,
       kind: 'monster',
       side: 'ally',
-      ownerId: keeper.id,
+      ownerId: owner.id,
       minionType: 'familiar',
       temporary: true,
       ac: 10,
@@ -243,22 +243,27 @@ function applyDamage(target, amount, type, events) {
   return dealt;
 }
 
-/** The dragon's familiar sharpens the party's fire. */
-// A familiar rides in the dragon's single minion slot and gives its boost only
-// while it's on the field. Deploying a real minion (summon / dominate / beast)
-// displaces it via dismissFamiliar(), so the boost simply follows the sprite.
-function familiarCombatant(combat) {
-  return combat.combatants.find((c) => c.minionType === 'familiar' && alive(c));
+// A hero's familiar gives its knack only to that hero, and only while it's on
+// the field. Deploying a real minion (summon / dominate / beast) displaces the
+// familiar via dismissFamiliar(), so the boost simply follows the sprite. Each
+// hero has at most one familiar (their own), keyed by ownerId.
+function familiarActiveFor(combat, hero) {
+  return (
+    !!hero?.familiar &&
+    combat.combatants.some((c) => c.minionType === 'familiar' && c.ownerId === hero.id && alive(c))
+  );
 }
-function familiarActive(combat) {
-  const fam = familiarCombatant(combat);
-  if (!fam) return false;
-  // Belt-and-suspenders: if some other minion of the owner is already deployed,
-  // the boost defers to it (dismissFamiliar normally removes the familiar first).
-  return !combat.order.some((c) => isAlly(c) && alive(c) && c.ownerId === fam.ownerId);
+// +1 to a caster's damage spells while their Ember Wisp is out.
+function fireBonus(combat, caster) {
+  return familiarActiveFor(combat, caster) && caster?.familiar === 'ember-wisp' ? 1 : 0;
 }
-function fireBonus(combat) {
-  return familiarActive(combat) && combat.familiar === 'ember-wisp' ? 1 : 0;
+// Advantage on the cast for a caster's own familiar knacks (Fae Drake lowers the
+// DC via dcMod; the Dusk Bat grants advantage on Drain Life).
+function familiarDcMod(combat, caster) {
+  return familiarActiveFor(combat, caster) && caster?.familiar === 'fae-drake' ? -1 : 0;
+}
+function familiarCastAdvantage(combat, caster, spell) {
+  return !!spell?.drain && familiarActiveFor(combat, caster) && caster?.familiar === 'dusk-bat';
 }
 // A real minion just took the slot — the familiar winks out, and its boost with
 // it. Removing it from `combatants` (it was never in `order`) drops it from the
@@ -525,7 +530,7 @@ export function playerBreath(combat, rng = Math.random) {
   if (dragon.kind !== 'dragon' || !spec) return events;
   combat.breathReady = false;
   const dmg = roll(spec.damage, rng);
-  const total = dmg.total + fireBonus(combat);
+  const total = dmg.total + fireBonus(combat, dragon); // dragon has no familiar → 0
   const targets = livingMonsters(combat);
   const results = [];
   for (const m of targets) {
@@ -651,7 +656,10 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random, opts =
   const spell = spellById(spellId);
   if (!spell || !caster.spells.includes(spellId) || caster.burned.includes(spellId)) return events;
 
-  const castOpts = { dcMod: familiarActive(combat) && combat.familiar === 'fae-drake' ? -1 : 0 };
+  const castOpts = {
+    dcMod: familiarDcMod(combat, caster),
+    advantage: familiarCastAdvantage(combat, caster, spell), // Dusk Bat: advantage on Drain Life
+  };
   const cast = resolveSpellCast(caster, spell, rng, castOpts);
   events.push({
     type: 'spell-cast',
@@ -748,7 +756,7 @@ function applyCastSuccess(combat, caster, spell, targetId, cast, rng, events) {
     }
     // Shadowdark: damage is the spell's dice only. A natural-20 cast doubles it.
     const rolled = roll(spell.dice, rng).total;
-    const dmg = (cast.crit ? rolled * 2 : rolled) + (spell.drain ? 0 : fireBonus(combat));
+    const dmg = (cast.crit ? rolled * 2 : rolled) + (spell.drain ? 0 : fireBonus(combat, caster));
     const dealt = applyDamage(target, dmg, spell.drain ? 'physical' : 'fire', events);
     let drained = 0;
     if (spell.drain && dealt > 0 && caster.hp.current < caster.hp.max) {
@@ -785,7 +793,7 @@ function applyCastSuccess(combat, caster, spell, targetId, cast, rng, events) {
     });
   } else if (spell.target === 'all-enemies') {
     const rolled = roll(spell.dice, rng).total;
-    const total = (cast.crit ? rolled * 2 : rolled) + fireBonus(combat);
+    const total = (cast.crit ? rolled * 2 : rolled) + fireBonus(combat, caster);
     const targets = livingMonsters(combat);
     const results = [];
     for (const m of targets) {
@@ -816,7 +824,7 @@ export function spendLuck(combat, rng = Math.random) {
   const events = [{ type: 'luck-spent', actorId: actor.id, actor: actor.name, kind: p.kind }];
   if (p.kind === 'cast') {
     const spell = spellById(p.spellId);
-    const castOpts = { dcMod: familiarActive(combat) && combat.familiar === 'fae-drake' ? -1 : 0 };
+    const castOpts = { dcMod: familiarDcMod(combat, actor), advantage: familiarCastAdvantage(combat, actor, spell) };
     const cast = resolveSpellCast(actor, spell, rng, castOpts);
     events.push({ type: 'spell-cast', casterId: actor.id, caster: actor.name, spellId: p.spellId, name: spell.name, reroll: true, ...cast });
     if (cast.success) applyCastSuccess(combat, actor, spell, p.targetId, cast, rng, events);
