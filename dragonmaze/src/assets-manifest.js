@@ -9,6 +9,8 @@ export const SPRITES = {
   'beren-attack': './assets/sprites/beren-attack.png',
   'beren-idle': './assets/sprites/beren-idle.png',
   'beren-walk': './assets/sprites/beren-walk.png',
+  'beren-walk-down': './assets/sprites/beren-walk-down.png',
+  'beren-walk-up': './assets/sprites/beren-walk-up.png',
   'bone-wraith-attack': './assets/sprites/bone-wraith-attack.png',
   'bone-wraith-idle': './assets/sprites/bone-wraith-idle.png',
   'cerenasp-attack': './assets/sprites/cerenasp-attack.png',

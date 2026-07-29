@@ -50,8 +50,10 @@ function facingStrips(key, frames) {
   const uk = `${key}-up`;
   return {
     side,
-    down: SPRITES[dk] ? { key: dk, frames } : side,
-    up: SPRITES[uk] ? { key: uk, frames } : side,
+    // Fall back to the side strip (flagged, so setFacing flips it to the
+    // right-facing pose) until dedicated down/up art exists.
+    down: SPRITES[dk] ? { key: dk, frames } : { key, frames, fallback: true },
+    up: SPRITES[uk] ? { key: uk, frames } : { key, frames, fallback: true },
   };
 }
 const DRAGON_FACING = facingStrips('dragon-fly', 'f4');
@@ -230,7 +232,10 @@ function setFacing(token, dx, dy) {
   const sprite = token.firstElementChild;
   const img = sprite.querySelector('img');
   const facing = dx !== 0 ? tokenFacing.side : dy > 0 ? tokenFacing.down : tokenFacing.up;
-  sprite.classList.toggle('flip', dx > 0);
+  // Flip to the right-facing pose for rightward moves, and — while up/down still
+  // borrow the side strip — for those headings too (right-facing default). Coerce
+  // to a real boolean: toggle(cls, undefined) would flip the class, not clear it.
+  sprite.classList.toggle('flip', dx > 0 || (dx === 0 && !!facing.fallback));
   const src = spritePath(facing.key);
   if (img.getAttribute('src') !== src) {
     img.setAttribute('src', src);
