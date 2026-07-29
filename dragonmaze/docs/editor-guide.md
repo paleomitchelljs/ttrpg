@@ -140,6 +140,42 @@ magenta-chroma convention, and regular-grid caveats are in
 
 ---
 
+## Enemies / Items modes — edit the definitions
+
+The **Enemies** and **Items** header tabs edit the data *behind* the monster and
+loot brushes (not placement — that's Map mode). Each is a searchable list + a form;
+**+ New** clones a blank template.
+
+- **Enemies** → `data/monsters.js`: name, emoji, AC, HP, faction, parley, depth
+  range, pack max, weight, gold, morale (blank = fearless), the six abilities, a
+  repeatable **attacks** editor, traits (special ability, resist/vulnerable, sprite,
+  anim, faces-left, patrol), and a **spellcaster** toggle (cast stat + spell). The
+  `id` is fixed once created (editing it would orphan the entry); a new id defaults
+  to the slug of the name.
+- **Items** → `data/items.js`: name, slot, zone, bane, the stat mods
+  (`toHit/damage/ac/hpMax/init` — blank omits), and blurb.
+
+Save writes the one entry and rebuilds; the in-memory list is patched too, so the
+Map-mode pin dropdowns pick up new/renamed entries without a reload.
+
+## Region editor — pools & bosses (Map mode)
+
+With **nothing selected**, the Map-mode inspector shows the current region's config:
+
+- **Random pool** — the region's `table:` (`{ id, weight, packMax }` rows). This is
+  the pool a `↻ random` monster marker rolls from. Add/remove rows, then **Save
+  pool**.
+- **Miniboss / Boss pack** — the region's `miniboss:`/`boss:` definition: a name, the
+  monster ids that make up the pack, and (boss only) the item ids it drops. **+
+  define** creates one where a region had none. This is *what* the 💀/👺 markers
+  spawn; the markers themselves are still placed in Map mode.
+
+Each saves independently to `data/zones.js` (see the endpoints below). To make a
+special monster a boss-only encounter, keep it in the boss/miniboss pack and remove
+it from the pool (how the Tae Ew Crusader was made the pyramid miniboss only).
+
+---
+
 ## Server endpoints (`serve.mjs`, dev-only)
 
 | Route | Does |
@@ -150,12 +186,24 @@ magenta-chroma convention, and regular-grid caveats are in
 | `POST /slice` | `slice_tiles.py --name/--box/--tags` — one tagged tile |
 | `POST /save-placements` | write `data/placements.js` + regenerate `maps.txt`/`maps.json` |
 | `POST /save-map` | rewrite one or more subs' `map:[]` in `data/zones.js` (validated) + regenerate dumps |
+| `POST /save-monster` | upsert one entry in `data/monsters.js` (body = the object) + rebuild |
+| `POST /save-item` | upsert one entry in `data/items.js` + rebuild |
+| `POST /save-zone-table` | replace a sub's `table:[]` in `data/zones.js` (body `{subId, field:'table', value}`) |
+| `POST /save-zone-boss` | replace/insert a sub's `boss{}`/`miniboss{}` (body `{subId, field, value}`) |
 
 `/save-map` body is `{ subId: [rowString, …] }`. It **surgically replaces only the
 target sub's `map[]`** (regex anchored on `id: '<sub>'` → its `map: [ … ]`), leaving
 every comment/table/boss byte-for-byte intact, and **validates hard** before
 writing: rows must be equal-length strings of `[#.SE1-9]` with **exactly one `S`**,
 or it 400s and writes nothing. An identity save is byte-identical.
+
+The four entity endpoints share the same discipline via `data-edit.mjs` (unit-tested
+in `test/data-edit.test.mjs`): `upsertEntry` replaces one `{ id: … }` object by id
+(or appends) with a brace-counting scan that skips strings/comments; `rewriteZonesField`
+swaps a sub's `table`/`boss`/`miniboss` within that sub's block. Before writing, the
+endpoint **imports the result as a `data:` module** — a bad rewrite throws and never
+lands on disk. Entity edits re-serialize that one entry to a canonical key order (so
+an edit may reorder its own keys), but leave every other entry byte-for-byte intact.
 
 ---
 

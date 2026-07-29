@@ -483,7 +483,7 @@
 == lost-temple / archon-pyramid  [The Archon Pyramid]
    15x11  theme sand  difficulty 4
    start 1,1 | door 6->maze-of-doors 1,0 | door 7->under-pyramid-sewer 14,9
-   table: lizardman-crusader(w2,≤1)  giant-snake(w2,≤2)  gargoyle(w1,≤1)
+   table: giant-snake(w2,≤2)  gargoyle(w1,≤1)
    objects (type · identity · @cell):
      monster  roll (region table)                            @8,7
      loot     roll (gold/tome/den)                           @12,3

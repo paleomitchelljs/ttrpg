@@ -196,18 +196,24 @@ function setBrush(b) {
 // ---------------------------------------------------------------- mode switch
 function setMode(m) {
   mode = m;
-  $('mMap').classList.toggle('on', m === 'map');
-  $('mSheet').classList.toggle('on', m === 'sheet');
-  document.querySelector('.maponly').style.display = m === 'map' ? '' : 'none';
-  document.querySelector('.sheetonly').style.display = m === 'sheet' ? '' : 'none';
-  $('stagewrap').style.display = m === 'map' ? 'block' : 'none';
-  $('sheetview').classList.toggle('on', m === 'sheet');
-  $('inspector').style.display = m === 'map' ? 'block' : 'none';
-  $('sliceform').style.display = m === 'sheet' ? 'block' : 'none';
-  if (m === 'sheet') initSheet();
+  const isMap = m === 'map', isSheet = m === 'sheet', isEntity = m === 'enemies' || m === 'items';
+  for (const [id, name] of [['mMap', 'map'], ['mSheet', 'sheet'], ['mEnemies', 'enemies'], ['mItems', 'items']])
+    $(id).classList.toggle('on', m === name);
+  document.querySelector('.maponly').style.display = isMap ? '' : 'none';
+  document.querySelector('.sheetonly').style.display = isSheet ? '' : 'none';
+  $('palette').style.display = isMap ? '' : 'none';
+  $('stagewrap').style.display = isMap ? 'block' : 'none';
+  $('sheetview').classList.toggle('on', isSheet);
+  $('inspector').style.display = isMap ? 'block' : 'none';
+  $('sliceform').style.display = isSheet ? 'block' : 'none';
+  $('entityview').classList.toggle('on', isEntity);
+  if (isSheet) initSheet();
+  if (isEntity) renderEntities();
 }
 $('mMap').onclick = () => setMode('map');
 $('mSheet').onclick = () => setMode('sheet');
+$('mEnemies').onclick = () => setMode('enemies');
+$('mItems').onclick = () => setMode('items');
 
 // ---------------------------------------------------------------- map: dropdowns
 $('zoneSel').onchange = (e) => { zone = ZONES[+e.target.value]; sub = zone.subregions[0]; sel = null; cellSel.clear(); fillRegions(); fillTilebar(); render(); };
@@ -385,7 +391,7 @@ function inspector() {
       box.innerHTML = `<h3>${cellSel.size} tile(s) selected</h3><div class="hint">Now click a <b>Paint base tile</b>, an <b>Add to map</b> marker, or a <b>Decor</b> swatch — it fills every selected tile identically.<br><br><kbd>Shift</kbd>-click toggles a tile · shift-drag selects a rectangle · <kbd>Esc</kbd> clears.</div>`;
       return;
     }
-    box.innerHTML = `<h3>Nothing selected</h3><div class="hint"><b>Paint base tile</b> — click/drag to lay floor, wall, start, exit or a door (saved to zones.js). <b>Invisible wall</b> lays collision that draws as plain floor (red hatch here, nothing in-game) — put it under a statue or rubble so the decor blocks the way.<br><br><b>Add to map</b> or a <b>Decor</b> swatch — click the map to place; click a placement to select, drag to move. Hover a swatch and hit <b>✕</b> to hide a stale tile from the palette (the <b>hidden</b> filter restores them).<br><br><kbd>Shift</kbd>-click (or shift-drag) selects many tiles, then pick a brush to fill them identically.<br><br><kbd>R</kbd> rotate decor · <kbd>Del</kbd> delete (no confirm) · arrows nudge · <kbd>[</kbd> <kbd>]</kbd> scale decor · <kbd>Esc</kbd> deselect</div>`;
+    box.innerHTML = regionPanelHtml();
     return;
   }
   if (sel.kind === 'decor') {
@@ -610,6 +616,321 @@ async function doSlice() {
   if (j.ok) { await loadTiles(); setStatus(`Sliced "${j.name}" ✓ — in the palette`); selBox = null; $('sheetwrap').querySelectorAll('.box.sel').forEach((e) => e.remove()); sliceForm(); }
   else setStatus('Slice failed: ' + (j.error || 'see server log'));
 }
+
+// ---------------------------------------------------------------- enemies / items editor
+// Edit the definitions behind the monster/loot brushes. Saves POST to serve.mjs,
+// which surgically rewrites data/monsters.js or data/items.js and rebuilds. We
+// also patch the in-memory MONSTERS/ITEMS so the map-mode pin dropdowns update
+// without a reload.
+let entitySel = null;   // id being edited, or '__new__'
+let entityDraft = null; // working copy shown in the form
+
+const numOrU = (v) => (v === '' || v == null ? undefined : Number(v));
+const strOrU = (v) => { v = (v ?? '').trim(); return v || undefined; };
+const listOrU = (v) => { const a = (v ?? '').split(',').map((s) => s.trim()).filter(Boolean); return a.length ? a : undefined; };
+const slug = (s) => String(s ?? '').trim().toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+const esc = (s) => String(s ?? '').replace(/"/g, '&quot;');
+const entHint = (t) => { const el = $('entHint'); if (el) el.textContent = t; };
+
+// A labeled input or select. opts: {type, step, options:[val|[val,label]], readonly}.
+function fld(label, id, value, opts = {}) {
+  const v = value ?? '';
+  if (opts.options) {
+    const os = opts.options.map((o) => { const [ov, ol] = Array.isArray(o) ? o : [o, o]; return `<option value="${esc(ov)}" ${String(ov) === String(v) ? 'selected' : ''}>${ol}</option>`; }).join('');
+    return `<label class="field">${label}<select id="${id}">${os}</select></label>`;
+  }
+  return `<label class="field">${label}<input id="${id}" type="${opts.type || 'text'}"${opts.step ? ` step="${opts.step}"` : ''}${opts.readonly ? ' readonly' : ''} value="${esc(v)}"></label>`;
+}
+
+function blankMonster() {
+  return { id: '', name: '', kind: 'monster', ac: 12, hpMax: 6, abilities: { str: 0, dex: 0, con: 0, int: -2, wis: 0, cha: -2 },
+    attacks: [{ name: 'strike', toHit: 2, damage: '1d6', range: 'melee' }], emoji: '👾', faction: 'wild', parley: 'never',
+    minDepth: 1, packMax: 2, weight: 1, morale: 2 };
+}
+function blankItem() { return { id: '', name: '', slot: 'weapon', zone: '', mods: {}, blurb: '' }; }
+
+function renderEntities() { renderEntityList(); renderEntityForm(); }
+
+function renderEntityList() {
+  const isEnemy = mode === 'enemies';
+  const list = isEnemy ? MONSTERS : ITEMS;
+  const q = ($('entSearch')?.value || '').toLowerCase();
+  const rows = list.filter((e) => !q || e.name.toLowerCase().includes(q) || e.id.includes(q));
+  $('entityList').innerHTML =
+    `<div class="elhead"><b>${isEnemy ? 'Enemies' : 'Items'} (${list.length})</b><button id="entNew">+ New</button></div>` +
+    `<div class="elhead"><input id="entSearch" placeholder="search…" value="${esc($('entSearch')?.value || '')}" autocomplete="off"></div>` +
+    rows.map((e) => `<div class="erow ${entitySel === e.id ? 'on' : ''}" data-id="${e.id}">${isEnemy ? (e.emoji ?? '👹') : '💎'} ${e.name}</div>`).join('');
+  $('entNew').onclick = () => { entitySel = '__new__'; entityDraft = isEnemy ? blankMonster() : blankItem(); renderEntities(); };
+  $('entSearch').oninput = () => renderEntityList();
+  $('entityList').querySelectorAll('.erow').forEach((el) => (el.onclick = () => {
+    entitySel = el.dataset.id; entityDraft = structuredClone((isEnemy ? MONSTERS : ITEMS).find((x) => x.id === el.dataset.id)); renderEntityForm(); renderEntityList();
+  }));
+}
+
+function renderEntityForm() {
+  const isEnemy = mode === 'enemies';
+  if (!entityDraft) { $('entityForm').innerHTML = `<div class="hint">Pick ${isEnemy ? 'an enemy' : 'an item'} on the left to edit its name and stats, or <b>+ New</b> to create one. Saving writes to data/${isEnemy ? 'monsters' : 'items'}.js and rebuilds the game.</div>`; return; }
+  const isNew = entitySel === '__new__';
+  $('entityForm').innerHTML = isEnemy ? monsterFormHtml(entityDraft, isNew) : itemFormHtml(entityDraft, isNew);
+  bindEntityForm(isNew);
+}
+
+function attackRow(a, i) {
+  return `<div class="arow" data-i="${i}">
+    ${fld('attack', `a_name_${i}`, a.name)}
+    ${fld('to hit', `a_hit_${i}`, a.toHit, { type: 'number' })}
+    ${fld('damage', `a_dmg_${i}`, a.damage)}
+    ${fld('range', `a_rng_${i}`, a.range || 'melee', { options: ['melee', 'ranged'] })}
+    <button class="arowdel" data-i="${i}" title="remove attack">✕</button></div>`;
+}
+
+function monsterFormHtml(m, isNew) {
+  const ab = m.abilities || {};
+  const atk = m.attacks?.length ? m.attacks : [{ name: 'strike', toHit: 0, damage: '1d6', range: 'melee' }];
+  return `<h3 style="margin-top:0">${isNew ? 'New enemy' : m.name}</h3>
+    <div class="fgrid">
+      ${fld('id', 'm_id', m.id, { readonly: !isNew })}
+      ${fld('name', 'm_name', m.name)}
+      ${fld('emoji', 'm_emoji', m.emoji)}
+      ${fld('AC', 'm_ac', m.ac, { type: 'number' })}
+      ${fld('HP max', 'm_hp', m.hpMax, { type: 'number' })}
+      ${fld('faction', 'm_faction', m.faction)}
+      ${fld('parley', 'm_parley', m.parley, { options: ['willing', 'wary', 'never'] })}
+      ${fld('min depth', 'm_min', m.minDepth, { type: 'number' })}
+      ${fld('max depth', 'm_max', m.maxDepth, { type: 'number' })}
+      ${fld('pack max', 'm_pack', m.packMax, { type: 'number' })}
+      ${fld('weight', 'm_weight', m.weight, { type: 'number' })}
+      ${fld('gold', 'm_gold', m.goldValue, { type: 'number' })}
+      ${fld('morale (blank=fearless)', 'm_morale', m.morale, { type: 'number' })}
+    </div>
+    <div class="fsection"><b>Abilities</b><div class="fgrid">
+      ${['str', 'dex', 'con', 'int', 'wis', 'cha'].map((k) => fld(k.toUpperCase(), `m_ab_${k}`, ab[k] ?? 0, { type: 'number' })).join('')}
+    </div></div>
+    <div class="fsection"><b>Attacks</b><div id="m_attacks">${atk.map(attackRow).join('')}</div>
+      <button class="minibtn" id="m_addatk">+ attack</button></div>
+    <div class="fsection"><b>Traits</b><div class="fgrid">
+      ${fld('special', 'm_ability', m.ability, { options: [['', '— none —'], 'regenerate', 'relentless', 'lifedrain'] })}
+      ${fld('resist (csv)', 'm_resist', (m.resist || []).join(', '))}
+      ${fld('vulnerable (csv)', 'm_vuln', (m.vulnerable || []).join(', '))}
+      ${fld('sprite', 'm_sprite', m.sprite)}
+      ${fld('anim idle', 'm_idle', m.anim?.idle)}
+      ${fld('anim attack', 'm_atk', m.anim?.attack)}
+    </div>
+      <label class="chk"><input type="checkbox" id="m_facesLeft" ${m.facesLeft ? 'checked' : ''}> art already faces left</label>
+      <label class="chk"><input type="checkbox" id="m_patrol" ${m.patrol ? 'checked' : ''}> patrols / gives chase</label>
+    </div>
+    <div class="fsection"><label class="chk"><input type="checkbox" id="m_caster" ${m.castStat ? 'checked' : ''}> <b>spellcaster</b></label>
+      <div id="m_castbox" class="fgrid" style="${m.castStat ? '' : 'display:none'}">
+        ${fld('cast stat', 'm_caststat', m.castStat || 'wis', { options: ['str', 'dex', 'con', 'int', 'wis', 'cha'] })}
+        ${fld('spell name', 'm_castname', m.cast?.name)}
+        ${fld('tier', 'm_casttier', m.cast?.tier, { type: 'number' })}
+        ${fld('kind', 'm_castkind', m.cast?.kind, { options: ['bolt', 'heal', 'drain', 'daze'] })}
+        ${fld('dice', 'm_castdice', m.cast?.dice)}
+        ${fld('chance', 'm_castchance', m.cast?.chance, { type: 'number', step: '0.05' })}
+      </div></div>
+    <button class="bigbtn go" id="entSave">Save enemy</button>
+    <div class="hint" id="entHint"></div>`;
+}
+
+function itemFormHtml(it, isNew) {
+  const mods = it.mods || {};
+  const zones = [...new Set(ITEMS.map((i) => i.zone).filter(Boolean))].sort();
+  return `<h3 style="margin-top:0">${isNew ? 'New item' : it.name}</h3>
+    <div class="fgrid">
+      ${fld('id', 'i_id', it.id, { readonly: !isNew })}
+      ${fld('name', 'i_name', it.name)}
+      ${fld('slot', 'i_slot', it.slot, { options: ['weapon', 'armor', 'trinket'] })}
+      ${fld('zone', 'i_zone', it.zone, { options: [['', '—'], ...zones] })}
+      ${fld('bane', 'i_bane', it.bane, { options: [['', '— none —'], 'undead'] })}
+    </div>
+    <div class="fsection"><b>Stat mods (blank = none)</b><div class="fgrid">
+      ${fld('to hit', 'i_toHit', mods.toHit, { type: 'number' })}
+      ${fld('damage', 'i_damage', mods.damage, { type: 'number' })}
+      ${fld('AC', 'i_ac', mods.ac, { type: 'number' })}
+      ${fld('HP max', 'i_hp', mods.hpMax, { type: 'number' })}
+      ${fld('init', 'i_init', mods.init, { type: 'number' })}
+    </div></div>
+    <label class="field" style="margin-top:12px">blurb<input id="i_blurb" value="${esc(it.blurb)}" autocomplete="off"></label>
+    <button class="bigbtn go" id="entSave" style="margin-top:12px">Save item</button>
+    <div class="hint" id="entHint"></div>`;
+}
+
+function bindEntityForm(isNew) {
+  $('entSave').onclick = saveEntity;
+  if (mode !== 'enemies') return;
+  $('m_caster').onchange = (e) => ($('m_castbox').style.display = e.target.checked ? '' : 'none');
+  $('m_addatk').onclick = () => { entityDraft = readMonsterForm(isNew); entityDraft.attacks.push({ name: 'strike', toHit: 0, damage: '1d6', range: 'melee' }); renderEntityForm(); };
+  $('entityForm').querySelectorAll('.arowdel').forEach((b) => (b.onclick = () => { entityDraft = readMonsterForm(isNew); entityDraft.attacks.splice(+b.dataset.i, 1); if (!entityDraft.attacks.length) entityDraft.attacks.push({ name: 'strike', toHit: 0, damage: '1d6', range: 'melee' }); renderEntityForm(); }));
+}
+
+function readMonsterForm(isNew) {
+  const V = (id) => $(id)?.value;
+  const abilities = {};
+  ['str', 'dex', 'con', 'int', 'wis', 'cha'].forEach((k) => (abilities[k] = Number(V(`m_ab_${k}`)) || 0));
+  const attacks = [...$('m_attacks').querySelectorAll('.arow')].map((row) => {
+    const i = row.dataset.i;
+    return { name: strOrU(V(`a_name_${i}`)) || 'attack', toHit: Number(V(`a_hit_${i}`)) || 0, damage: strOrU(V(`a_dmg_${i}`)) || '1d4', range: V(`a_rng_${i}`) || 'melee' };
+  });
+  const m = {
+    id: isNew ? (slug(V('m_id')) || slug(V('m_name'))) : entityDraft.id,
+    name: strOrU(V('m_name')) || 'Unnamed', kind: 'monster',
+    ac: Number(V('m_ac')) || 10, hpMax: Number(V('m_hp')) || 1, abilities, attacks,
+    emoji: strOrU(V('m_emoji')), faction: strOrU(V('m_faction')), parley: V('m_parley'),
+    goldValue: numOrU(V('m_gold')), minDepth: numOrU(V('m_min')), maxDepth: numOrU(V('m_max')),
+    packMax: numOrU(V('m_pack')), weight: numOrU(V('m_weight')),
+    morale: V('m_morale') === '' ? null : Number(V('m_morale')),
+    ability: strOrU(V('m_ability')), resist: listOrU(V('m_resist')), vulnerable: listOrU(V('m_vuln')),
+    sprite: strOrU(V('m_sprite')),
+    anim: (strOrU(V('m_idle')) || strOrU(V('m_atk'))) ? { idle: strOrU(V('m_idle')), attack: strOrU(V('m_atk')) } : undefined,
+    facesLeft: $('m_facesLeft').checked || undefined, patrol: $('m_patrol').checked || undefined,
+  };
+  if ($('m_caster').checked) {
+    m.castStat = V('m_caststat');
+    m.cast = { name: strOrU(V('m_castname')) || 'Spell', tier: Number(V('m_casttier')) || 1, kind: V('m_castkind') || 'bolt', dice: strOrU(V('m_castdice')) || '1d6', chance: Number(V('m_castchance')) || 0.4 };
+  }
+  return m;
+}
+
+function readItemForm(isNew) {
+  const V = (id) => $(id)?.value;
+  const mods = {};
+  for (const [k, f] of [['toHit', 'i_toHit'], ['damage', 'i_damage'], ['ac', 'i_ac'], ['hpMax', 'i_hp'], ['init', 'i_init']]) {
+    const n = numOrU(V(f)); if (n !== undefined) mods[k] = n;
+  }
+  return {
+    id: isNew ? (slug(V('i_id')) || slug(V('i_name'))) : entityDraft.id,
+    name: strOrU(V('i_name')) || 'Unnamed', slot: V('i_slot'), zone: strOrU(V('i_zone')),
+    mods, bane: strOrU(V('i_bane')), blurb: strOrU(V('i_blurb')),
+  };
+}
+
+async function saveEntity() {
+  const isEnemy = mode === 'enemies';
+  const isNew = entitySel === '__new__';
+  const obj = isEnemy ? readMonsterForm(isNew) : readItemForm(isNew);
+  const arr = isEnemy ? MONSTERS : ITEMS;
+  if (!obj.id) { entHint('An id (or name) is required.'); return; }
+  if (isNew && arr.some((e) => e.id === obj.id)) { entHint(`id "${obj.id}" already exists — pick another.`); return; }
+  setStatus('Saving…'); entHint('');
+  const j = await fetch(isEnemy ? '/save-monster' : '/save-item', { method: 'POST', body: JSON.stringify(obj) }).then((r) => r.json()).catch(() => ({}));
+  if (!j.ok) { entHint('Save failed: ' + (j.error || 'see server log')); setStatus('Save failed'); return; }
+  const i = arr.findIndex((e) => e.id === obj.id);
+  if (i >= 0) arr[i] = obj; else arr.push(obj);
+  entitySel = obj.id; entityDraft = structuredClone(obj);
+  setStatus(`Saved ${obj.id} ✓${j.built === false ? ' (rebuild failed — see log)' : ''}`);
+  renderEntities();
+}
+
+// ---------------------------------------------------------------- region editor
+// When no placement is selected, the inspector shows the current region's config:
+// its random-encounter table, and its boss/miniboss packs — each saved to
+// zones.js independently (POST /save-zone-table | /save-zone-boss). A transient
+// `regionDraft` holds edits (add/remove rows) until Save; it's re-seeded from the
+// live sub whenever the region changes.
+const INSPECTOR_HELP =
+  '<b>Paint base tile</b> — click/drag to lay floor, wall, start, exit or a door (saved to zones.js). ' +
+  '<b>Invisible wall</b> draws as floor but blocks movement — put it under a statue or rubble.<br><br>' +
+  '<b>Add to map</b> or a <b>Decor</b> swatch — click the map to place; click a placement to select, drag to move.<br><br>' +
+  '<kbd>Shift</kbd>-click (or drag) selects many tiles, then a brush fills them alike.<br>' +
+  '<kbd>R</kbd> rotate · <kbd>Del</kbd> delete · arrows nudge · <kbd>[</kbd> <kbd>]</kbd> scale · <kbd>Esc</kbd> deselect';
+
+let regionDraft = null, regionDraftSub = null;
+function regionDraftInit() {
+  if (regionDraftSub === sub.id && regionDraft) return;
+  regionDraft = {
+    table: structuredClone(sub.table ?? []),
+    boss: sub.boss ? structuredClone(sub.boss) : null,
+    miniboss: sub.miniboss ? structuredClone(sub.miniboss) : null,
+  };
+  regionDraftSub = sub.id;
+}
+// Pull the current inputs back into regionDraft before any add/remove/save so
+// in-progress edits survive a re-render.
+function syncRegionDraft() {
+  const pr = $('poolRows');
+  if (pr) regionDraft.table = [...pr.querySelectorAll('.prow')].map((r) => ({
+    id: r.querySelector('.pmon').value, weight: Number(r.querySelector('.pw').value) || 1, packMax: Number(r.querySelector('.pmax').value) || 1,
+  }));
+  if (regionDraft.miniboss && $('mbName')) {
+    regionDraft.miniboss.name = $('mbName').value.trim();
+    regionDraft.miniboss.monsterIds = [...$('mbMons').querySelectorAll('select')].map((s) => s.value);
+  }
+  if (regionDraft.boss && $('bName')) {
+    regionDraft.boss.name = $('bName').value.trim();
+    regionDraft.boss.monsterIds = [...$('bMons').querySelectorAll('select')].map((s) => s.value);
+    regionDraft.boss.drops = [...$('bDrops').querySelectorAll('select')].map((s) => s.value);
+  }
+}
+const optList = (arr, sel) => arr.map((e) => `<option value="${e.id}" ${e.id === sel ? 'selected' : ''}>${e.name}</option>`).join('');
+function poolRow(t) {
+  return `<div class="prow"><select class="pmon">${optList(MONSTERS, t.id)}</select>` +
+    `<input class="pw" type="number" title="weight" value="${t.weight ?? 1}">` +
+    `<input class="pmax" type="number" title="pack max" value="${t.packMax ?? 1}">` +
+    `<button class="rrowdel" data-ra="pool-del">✕</button></div>`;
+}
+const idRow = (arr, id, delRa) => `<div class="idrow"><select>${optList(arr, id)}</select><button class="rrowdel" data-ra="${delRa}">✕</button></div>`;
+function packEditor(kind, pack) {
+  const cap = kind === 'boss' ? 'Boss' : 'Miniboss';
+  if (!pack) return `<div class="rsection"><b>${cap}</b> <span class="hint" style="display:inline;margin:0">none defined</span> <button class="minibtn" data-ra="def-${kind}">+ define</button></div>`;
+  const nameId = kind === 'boss' ? 'bName' : 'mbName', monsId = kind === 'boss' ? 'bMons' : 'mbMons';
+  const drops = kind === 'boss'
+    ? `<div class="sublabel">drops</div><div id="bDrops">${(pack.drops ?? []).map((id) => idRow(ITEMS, id, 'b-drop-del')).join('')}</div><button class="minibtn" data-ra="b-drop-add">+ drop</button>`
+    : '';
+  return `<div class="rsection"><b>${cap} pack</b>
+    <label class="field">name<input id="${nameId}" value="${esc(pack.name)}" autocomplete="off"></label>
+    <div class="sublabel">monsters</div><div id="${monsId}">${(pack.monsterIds ?? []).map((id) => idRow(MONSTERS, id, kind === 'boss' ? 'b-mon-del' : 'mb-del')).join('')}</div>
+    <button class="minibtn" data-ra="${kind === 'boss' ? 'b-mon-add' : 'mb-add'}">+ monster</button>
+    ${drops}
+    <button class="bigbtn go" data-ra="${kind === 'boss' ? 'b-save' : 'mb-save'}">Save ${kind}</button></div>`;
+}
+function regionPanelHtml() {
+  regionDraftInit();
+  const d = regionDraft;
+  return `<h3 style="margin-top:0">Region: ${sub.name ?? sub.id}</h3>
+    <div class="hint" style="margin-top:0">difficulty ${sub.difficulty ?? '—'} · theme ${sub.theme ?? 'none'} · <code>${sub.id}</code></div>
+    <div class="rsection"><b>Random pool</b> <span class="hint" style="display:inline;margin:0">monster · weight · pack</span>
+      <div id="poolRows">${d.table.map(poolRow).join('') || '<div class="hint" style="margin:0">empty — walks roll nothing here</div>'}</div>
+      <button class="minibtn" data-ra="pool-add">+ monster</button>
+      <button class="bigbtn go" data-ra="pool-save">Save pool</button></div>
+    ${packEditor('miniboss', d.miniboss)}
+    ${packEditor('boss', d.boss)}
+    <details class="rsection"><summary>Placement help</summary><div class="hint">${INSPECTOR_HELP}</div></details>`;
+}
+// One delegated handler for every region-editor button (the inspector re-renders
+// its innerHTML, but the #inspector element persists, so this binds once).
+async function onRegionAction(ev) {
+  const b = ev.target.closest('[data-ra]');
+  if (!b || mode !== 'map' || selObj()) return; // region view only (nothing selected)
+  regionDraftInit();
+  syncRegionDraft();
+  const a = b.dataset.ra;
+  const rowIndex = () => { const row = b.closest('.prow, .idrow'); return [...row.parentElement.children].indexOf(row); };
+  const d = regionDraft;
+  if (a === 'pool-save') return saveZoneField('table', d.table);
+  if (a === 'mb-save') return saveZoneField('miniboss', d.miniboss);
+  if (a === 'b-save') return saveZoneField('boss', d.boss);
+  if (a === 'pool-add') d.table.push({ id: MONSTERS[0].id, weight: 1, packMax: 1 });
+  else if (a === 'pool-del') d.table.splice(rowIndex(), 1);
+  else if (a === 'def-miniboss') d.miniboss = { name: 'New pack', monsterIds: [MONSTERS[0].id] };
+  else if (a === 'mb-add') d.miniboss.monsterIds.push(MONSTERS[0].id);
+  else if (a === 'mb-del') d.miniboss.monsterIds.splice(rowIndex(), 1);
+  else if (a === 'def-boss') d.boss = { name: 'New pack', monsterIds: [MONSTERS[0].id], drops: [] };
+  else if (a === 'b-mon-add') d.boss.monsterIds.push(MONSTERS[0].id);
+  else if (a === 'b-mon-del') d.boss.monsterIds.splice(rowIndex(), 1);
+  else if (a === 'b-drop-add') (d.boss.drops ??= []).push(ITEMS[0].id);
+  else if (a === 'b-drop-del') d.boss.drops.splice(rowIndex(), 1);
+  inspector();
+}
+async function saveZoneField(field, value) {
+  const url = field === 'table' ? '/save-zone-table' : '/save-zone-boss';
+  setStatus('Saving…');
+  const j = await fetch(url, { method: 'POST', body: JSON.stringify({ subId: sub.id, field, value }) }).then((r) => r.json()).catch(() => ({}));
+  if (!j.ok) { setStatus(`Save failed: ${j.error || 'see server log'}`); return; }
+  sub[field] = value; // reflect in memory so the panel and pins stay in step
+  setStatus(`Saved ${sub.id} ${field} ✓${j.built === false ? ' (rebuild failed — see log)' : ''}`);
+  inspector();
+}
+$('inspector').addEventListener('click', onRegionAction);
 
 // ---------------------------------------------------------------- boot
 fillZones(); fillRegions(); fillMarkerbar(); fillTilebar();

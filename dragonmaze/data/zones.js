@@ -438,7 +438,6 @@ export const ZONES = [
         theme: 'sand',
         doors: { 6: 'maze-of-doors', 7: 'under-pyramid-sewer' },
         table: [
-          { id: 'lizardman-crusader', weight: 2, packMax: 1 },
           { id: 'giant-snake', weight: 2, packMax: 2 },
           { id: 'gargoyle', weight: 1, packMax: 1 },
         ],

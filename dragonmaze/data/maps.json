@@ -3277,11 +3277,6 @@
     "portals": [],
     "table": [
       {
-        "id": "lizardman-crusader",
-        "weight": 2,
-        "packMax": 1
-      },
-      {
         "id": "giant-snake",
         "weight": 2,
         "packMax": 2

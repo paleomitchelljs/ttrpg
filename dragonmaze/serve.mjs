@@ -8,6 +8,7 @@ import { extname, join, normalize, basename } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { spawn } from 'node:child_process';
 import { renderText, manifests } from './dump-map.mjs';
+import { upsertEntry, rewriteZonesField, MONSTER_ORDER, ITEM_ORDER } from './data-edit.mjs';
 
 const root = fileURLToPath(new URL('.', import.meta.url));
 const port = Number(process.env.PORT ?? 8060);
@@ -68,6 +69,14 @@ function rewriteZonesMap(source, subId, rows) {
   if (!re.test(source)) throw new Error(`${subId}: could not locate its map[] in zones.js`);
   const block = '\n' + rows.map((r) => `          '${r}',`).join('\n') + '\n        ';
   return source.replace(re, (_, open, close) => open + block + close);
+}
+
+// Write `next` to a data file only after it parses: import it as a data: module
+// first (these files are self-contained, no imports), so a bad rewrite never
+// lands on disk. The surgical serializers live in ./data-edit.mjs (unit-tested).
+async function saveDataFile(relParts, next) {
+  await import('data:text/javascript,' + encodeURIComponent(next));
+  await writeFile(join(root, ...relParts), next);
 }
 
 const TYPES = {
@@ -166,6 +175,39 @@ const server = createServer(async (req, res) => {
         '--tags', tags.join(','),
       ]);
       return json(res, JSON.parse(out.trim().split('\n').pop()));
+    }
+
+    // ---- entity editors: monsters.js / items.js / zones.js (tables & bosses) ----
+    if (req.method === 'POST' && url.pathname === '/save-monster') {
+      const obj = await readBody(req);
+      try {
+        const src = await readFile(join(root, 'data', 'monsters.js'), 'utf8');
+        await saveDataFile(['data', 'monsters.js'], upsertEntry(src, 'MONSTERS', obj, MONSTER_ORDER));
+      } catch (e) { return json(res, { ok: false, error: String(e.message || e) }, 400); }
+      return json(res, { ok: true, id: obj.id, ...(await runBuild()) });
+    }
+    if (req.method === 'POST' && url.pathname === '/save-item') {
+      const obj = await readBody(req);
+      try {
+        const src = await readFile(join(root, 'data', 'items.js'), 'utf8');
+        await saveDataFile(['data', 'items.js'], upsertEntry(src, 'ITEMS', obj, ITEM_ORDER));
+      } catch (e) { return json(res, { ok: false, error: String(e.message || e) }, 400); }
+      return json(res, { ok: true, id: obj.id, ...(await runBuild()) });
+    }
+    if (req.method === 'POST' && (url.pathname === '/save-zone-table' || url.pathname === '/save-zone-boss')) {
+      const { subId, field, value } = await readBody(req);
+      const allowed = url.pathname === '/save-zone-table' ? ['table'] : ['boss', 'miniboss'];
+      if (!subId || !allowed.includes(field)) return json(res, { ok: false, error: 'bad subId/field' }, 400);
+      try {
+        const src = await readFile(join(root, 'data', 'zones.js'), 'utf8');
+        await saveDataFile(['data', 'zones.js'], rewriteZonesField(src, subId, field, value));
+      } catch (e) { return json(res, { ok: false, error: String(e.message || e) }, 400); }
+      // zones changed → refresh the readable dumps, same as /save-map
+      const zones = await freshZones();
+      const placements = await freshPlacements();
+      await writeFile(join(root, 'data', 'maps.txt'), renderText(placements, null, zones) + '\n');
+      await writeFile(join(root, 'data', 'maps.json'), JSON.stringify(manifests(placements, null, zones), null, 2) + '\n');
+      return json(res, { ok: true, subId, field, ...(await runBuild()) });
     }
 
     let path = normalize(decodeURIComponent(url.pathname)).replace(/^([/\\])+/, '');
