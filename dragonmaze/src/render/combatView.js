@@ -586,7 +586,7 @@ async function breathBeat(els, ev) {
   const spriteBox = dragonCard?.querySelector('.combat-sprite');
   if (img) {
     img.src = DRAGON_FIRE_IMG;
-    spriteBox.classList.remove('f4');
+    spriteBox.classList.remove('f2', 'f4');
     spriteBox.classList.add('static');
   }
   dragonCard?.classList.add('breathing');
@@ -606,8 +606,8 @@ async function breathBeat(els, ev) {
   for (const card of els.enemies.querySelectorAll('.hit-flash')) card.classList.remove('hit-flash');
   if (img) {
     img.src = DRAGON_IDLE_STRIP;
-    spriteBox.classList.add('static');
-    spriteBox.classList.remove('f4');
+    spriteBox.classList.remove('static', 'f4');
+    spriteBox.classList.add('f2');
   }
 }
 
@@ -935,7 +935,7 @@ function traitBadges(c) {
 
 function faceHtml(c, dead) {
   if (c.kind === 'dragon') {
-    return `<div class="combat-sprite sprite static flip"><img src="${DRAGON_IDLE_STRIP}" alt="${c.name}"></div>`;
+    return `<div class="combat-sprite sprite f2 flip"><img src="${DRAGON_IDLE_STRIP}" alt="${c.name}"></div>`;
   }
   if (c.anim?.idle) {
     // hero side art faces left natively; flip heroes to face the enemy column.

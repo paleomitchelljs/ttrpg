@@ -21,6 +21,8 @@ export const SPRITES = {
   'coatl-idle': './assets/sprites/coatl-idle.png',
   'dragon-attack': './assets/sprites/dragon-attack.png',
   'dragon-fly': './assets/sprites/dragon-fly.png',
+  'dragon-fly-down': './assets/sprites/dragon-fly-down.png',
+  'dragon-fly-up': './assets/sprites/dragon-fly-up.png',
   'dragon-idle': './assets/sprites/dragon-idle.png',
   'evil-eye-attack': './assets/sprites/evil-eye-attack.png',
   'evil-eye-idle': './assets/sprites/evil-eye-idle.png',

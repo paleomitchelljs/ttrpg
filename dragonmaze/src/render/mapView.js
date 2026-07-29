@@ -56,7 +56,7 @@ function facingStrips(key, frames) {
     up: SPRITES[uk] ? { key: uk, frames } : { key, frames, fallback: true },
   };
 }
-const DRAGON_FACING = facingStrips('dragon-fly', 'f4');
+const DRAGON_FACING = facingStrips('dragon-fly', 'f2');
 
 // The overworld token is the dragon — or, on party-only delves, the party's
 // leader walking in its stead.
