@@ -52,6 +52,7 @@ const MARKERS = [
 const TILE_BRUSHES = [
   { ch: '.', label: 'Floor' },
   { ch: '#', label: 'Wall' },
+  { ch: '%', label: 'Invisible wall' }, // draws as floor, blocks movement (collision under decor)
   { ch: 'S', label: 'Start' },
   { ch: 'E', label: 'Exit' },
 ];
@@ -146,22 +147,34 @@ function fillTilebar() {
   $('tilebar').querySelectorAll('button').forEach((b) => (b.onclick = () => setBrush({ kind: 'tile', ch: b.dataset.ch })));
 }
 function fillPalette() {
-  $('tagfilter').innerHTML = ['all', ...allTags(), 'untagged']
+  $('tagfilter').innerHTML = ['all', ...allTags(), 'untagged', 'hidden']
     .map((t) => `<button data-t="${t}" class="${t === activeTag ? 'on' : ''}">${t}</button>`)
     .join('');
   $('tagfilter').querySelectorAll('button').forEach((b) => (b.onclick = () => { activeTag = b.dataset.t; fillPalette(); }));
+  // The 'hidden' filter reviews archived (stale) tiles so they can be restored;
+  // otherwise show placeable decor, filtered by tag.
+  const showHidden = activeTag === 'hidden';
   const keys = tileList.filter((k) => {
-    if (!isDecorTile(k)) return false; // geometry (wall/floor/water) is painted, not placed
+    if (showHidden) return tileRole(k) === 'hidden';
+    if (!isDecorTile(k)) return false; // geometry is painted, hidden is archived
     if (activeTag === 'all') return true;
     const tg = tagMeta[k]?.tags || [];
     return activeTag === 'untagged' ? tg.length === 0 : tg.includes(activeTag);
   });
   const on = (k) => brush?.kind === 'decor' && brush.key === k;
+  const hideBtn = (k) => `<button class="swatch-hide" data-hk="${k}" title="${showHidden ? 'restore to the palette' : 'hide this stale tile from the palette'}">${showHidden ? '↩' : '✕'}</button>`;
   $('swatches').innerHTML = keys
-    .map((k) => `<div class="swatch ${on(k) ? 'on' : ''}" data-k="${k}"><img src="${tileSrc(k)}"><span>${k}</span><em>${(tagMeta[k]?.tags || []).join(', ')}</em></div>`)
+    .map((k) => `<div class="swatch ${on(k) ? 'on' : ''}" data-k="${k}"><img src="${tileSrc(k)}"><span>${k}</span><em>${(tagMeta[k]?.tags || []).join(', ')}</em>${hideBtn(k)}</div>`)
     .join('');
   $('swatches').querySelectorAll('.swatch').forEach((el) => {
-    el.onclick = () => setBrush({ kind: 'decor', key: el.dataset.k });
+    el.onclick = (e) => {
+      if (e.target.classList.contains('swatch-hide')) {
+        e.stopPropagation();
+        setTileRole(e.target.dataset.hk, showHidden ? 'decor' : 'hidden');
+        return;
+      }
+      setBrush({ kind: 'decor', key: el.dataset.k });
+    };
   });
 }
 function setBrush(b) {
@@ -238,6 +251,7 @@ function render() {
     else if ('E123456789'.includes(ch)) cls += 'door';
     else if (ch === '~') cls += 'water';
     else cls += 'floor';
+    if (ch === '%') cls += ' inviswall'; // draws as floor + an editor-only hatch
     if (ch === 'S') cls += ' mark';
     if (ch !== '#' && ((x === W - 1 && edges.e) || (x === 0 && edges.w) || (y === H - 1 && edges.s) || (y === 0 && edges.n))) cls += ' edge';
     if (cellSel.has(`${x},${y}`)) cls += ' selcell';
@@ -371,7 +385,7 @@ function inspector() {
       box.innerHTML = `<h3>${cellSel.size} tile(s) selected</h3><div class="hint">Now click a <b>Paint base tile</b>, an <b>Add to map</b> marker, or a <b>Decor</b> swatch — it fills every selected tile identically.<br><br><kbd>Shift</kbd>-click toggles a tile · shift-drag selects a rectangle · <kbd>Esc</kbd> clears.</div>`;
       return;
     }
-    box.innerHTML = `<h3>Nothing selected</h3><div class="hint"><b>Paint base tile</b> — click/drag to lay floor, wall, start, exit or a door (saved to zones.js).<br><br><b>Add to map</b> or a <b>Decor</b> swatch — click the map to place; click a placement to select, drag to move.<br><br><kbd>Shift</kbd>-click (or shift-drag) selects many tiles, then pick a brush to fill them identically.<br><br><kbd>R</kbd> rotate decor · <kbd>Del</kbd> delete (no confirm) · arrows nudge · <kbd>[</kbd> <kbd>]</kbd> scale decor · <kbd>Esc</kbd> deselect</div>`;
+    box.innerHTML = `<h3>Nothing selected</h3><div class="hint"><b>Paint base tile</b> — click/drag to lay floor, wall, start, exit or a door (saved to zones.js). <b>Invisible wall</b> lays collision that draws as plain floor (red hatch here, nothing in-game) — put it under a statue or rubble so the decor blocks the way.<br><br><b>Add to map</b> or a <b>Decor</b> swatch — click the map to place; click a placement to select, drag to move. Hover a swatch and hit <b>✕</b> to hide a stale tile from the palette (the <b>hidden</b> filter restores them).<br><br><kbd>Shift</kbd>-click (or shift-drag) selects many tiles, then pick a brush to fill them identically.<br><br><kbd>R</kbd> rotate decor · <kbd>Del</kbd> delete (no confirm) · arrows nudge · <kbd>[</kbd> <kbd>]</kbd> scale decor · <kbd>Esc</kbd> deselect</div>`;
     return;
   }
   if (sel.kind === 'decor') {
@@ -384,6 +398,7 @@ function inspector() {
         <option value="decor">decor (on top)</option>
         <option value="wall">wall tile (geometry)</option>
         <option value="floor">floor tile (geometry)</option>
+        <option value="hidden">hidden (stale — off palette)</option>
       </select></div>
       <div class="row"><label>Rotate</label><button data-a="rot">⟳ ${o.rot || 0}°</button></div>
       <div class="row"><label>Width</label><button data-a="w-">−</button><span class="val">${o.w}</span><button data-a="w+">+</button></div>

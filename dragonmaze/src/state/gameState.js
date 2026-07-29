@@ -506,7 +506,7 @@ export function quitToTitle() {
 const DETECT_RADIUS = 3;
 const PATROL_LEASH = 3;
 
-const isFloor = (d, x, y) => x >= 0 && x < d.width && y >= 0 && y < d.height && d.tiles[y][x] === 1;
+const isFloor = (d, x, y) => x >= 0 && x < d.width && y >= 0 && y < d.height && d.tiles[y][x] === 1 && !d.blocked?.has(`${x},${y}`);
 const occupiedBy = (d, x, y, self) => d.encounters.some((e) => e !== self && e.x === x && e.y === y);
 const openLen = (d, enc, sx, sy) => {
   let n = 0, x = enc.x + sx, y = enc.y + sy;
@@ -676,7 +676,7 @@ export function move(dx, dy) {
     return;
   }
 
-  if (d.tiles[y][x] !== 1) return; // wall
+  if (d.tiles[y][x] !== 1 || d.blocked?.has(`${x},${y}`)) return; // wall (or an invisible wall)
 
   // Bump-to-fight: stepping at a monster tile starts combat; the party
   // only occupies the tile after winning.

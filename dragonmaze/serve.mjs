@@ -143,7 +143,7 @@ const server = createServer(async (req, res) => {
     if (req.method === 'POST' && url.pathname === '/set-tile-role') {
       const { key, role } = await readBody(req);
       const nm = safeName(key);
-      if (!nm || !['decor', 'wall', 'floor'].includes(role)) return json(res, { ok: false, error: 'bad key/role' }, 400);
+      if (!nm || !['decor', 'wall', 'floor', 'hidden'].includes(role)) return json(res, { ok: false, error: 'bad key/role' }, 400);
       const tagPath = join(root, 'data', 'tile-tags.json');
       const tags = JSON.parse(await readFile(tagPath, 'utf8'));
       tags[nm] = tags[nm] ?? { tags: [] };

@@ -28,7 +28,14 @@ export function buildZoneDungeon(zoneId, subIndex, seedString, partySize = 1) {
   const tiles = rows.map((r) => [...r].map((ch) => (ch === '#' || isDoorCh(ch) ? 0 : 1)));
   // '~' is walkable (a shallow sewer stream) but drawn as water, not stone floor.
   const water = rows.map((r) => [...r].map((ch) => ch === '~'));
-  const floorAt = (x, y) => x >= 0 && x < width && y >= 0 && y < height && tiles[y][x] === 1;
+  // '%' is an INVISIBLE wall: it draws as ordinary floor (so it doesn't disturb
+  // the autotiled walls) but blocks movement — for laying collision under decor
+  // like statues or rubble. Rendered floor, treated as wall.
+  const blocked = new Set();
+  for (let y = 0; y < height; y++) for (let x = 0; x < width; x++) {
+    if (rows[y][x] === '%') blocked.add(`${x},${y}`);
+  }
+  const floorAt = (x, y) => x >= 0 && x < width && y >= 0 && y < height && tiles[y][x] === 1 && !blocked.has(`${x},${y}`);
 
   // Geometry pass: the map yields only the start and the border-wall doors.
   let start = null;
@@ -112,6 +119,7 @@ export function buildZoneDungeon(zoneId, subIndex, seedString, partySize = 1) {
     height,
     tiles,
     water,
+    blocked, // "x,y" cells that render as floor but block movement (invisible walls)
     start,
     exit: doors.find((d) => d.to === 'surface') ?? null,
     encounters,
