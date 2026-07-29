@@ -55,7 +55,7 @@ function renderRoster(state) {
   if (!run) { box.replaceChildren(); return; }
   const members = [];
   if (run.dragon) {
-    members.push({ key: 'dragon', name: 'Red Dragon', hp: run.dragon.hp, sprite: SPRITES['dragon-fly'], frames: 4 });
+    members.push({ key: 'dragon', name: 'Red Dragon', hp: run.dragon.hp, sprite: SPRITES['dragon-fly'], frames: 2 });
   }
   for (const slot of run.party) {
     const c = companionById(slot.id) ?? game.state.meta.customCharacters.find((h) => h.id === slot.id);
@@ -305,7 +305,7 @@ function sheetSubject(id) {
       name: `Red Dragon (${tier.label})`,
       blurb: `Hoard: ${game.state.meta.hoardGold.toLocaleString()} gold. The labyrinth's rightful owner.`,
       sprite: SPRITES['dragon-fly'],
-      frames: 4,
+      frames: 2,
       flip: true,
       ac: tier.ac,
       hp: runHp ? `${runHp.current} / ${runHp.max}` : `${tier.hpMax}`,
@@ -418,12 +418,31 @@ ui.el('sheet-body').addEventListener('click', (ev) => {
 
 // level-up advance choices inside the sheet
 ui.el('sheet-body').addEventListener('click', (ev) => {
+  // Talent/spell/familiar come from the grouped dropdown; its option value is
+  // `${type}:${id}`. Ability increases are still their own buttons.
+  const confirm = ev.target.closest('.advance-confirm');
+  if (confirm && openSheetId) {
+    const val = confirm.closest('.advance-picker')?.querySelector('.advance-select')?.value;
+    if (!val) return;
+    const i = val.indexOf(':');
+    game.chooseAdvance(openSheetId, val.slice(0, i), val.slice(i + 1));
+    openSheet(openSheetId);
+    return;
+  }
   const btn = ev.target.closest('.advance-btn');
   if (!btn || !openSheetId) return;
-  const type = btn.dataset.advance; // 'asi' | 'talent' | 'spell' | 'familiar'
-  const arg = btn.dataset.ability ?? btn.dataset.talent ?? btn.dataset.spell ?? btn.dataset.fam ?? null;
+  const type = btn.dataset.advance; // 'asi'
+  const arg = btn.dataset.ability ?? null;
   game.chooseAdvance(openSheetId, type, arg);
   openSheet(openSheetId);
+});
+
+// Enable Confirm only once a real advance is picked in the dropdown.
+ui.el('sheet-body').addEventListener('change', (ev) => {
+  const sel = ev.target.closest('.advance-select');
+  if (!sel) return;
+  const btn = sel.closest('.advance-picker')?.querySelector('.advance-confirm');
+  if (btn) btn.disabled = !sel.value;
 });
 
 for (const btn of document.querySelectorAll('.sheet-btn')) {

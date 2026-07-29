@@ -84,7 +84,7 @@ export function renderPartyPanel(state) {
   dragonCard.dataset.dragon = '1';
   dragonCard.innerHTML = `
     <span class="party-card-check">${withDragon ? '✓' : ''}</span>
-    <span class="party-card-face sprite f4 flip"><img src="${SPRITES['dragon-fly']}" alt=""></span>
+    <span class="party-card-face sprite f2 flip"><img src="${SPRITES['dragon-fly']}" alt=""></span>
     <span class="party-card-info">
       <span class="party-card-name">Red Dragon</span>
       <span class="party-card-role">You, the wyrm: fire breath &amp; bite</span>
@@ -175,22 +175,26 @@ function growthHtml(subject) {
   }
 
   if (g.pendingTalent > 0) {
-    const talents = g.talentOptions
-      .map((t) => `<button class="zone-btn advance-btn" data-advance="talent" data-talent="${t.id}" title="${t.blurb}">${t.name}</button>`)
-      .join('');
-    const spells = g.learnable
-      .map((sp) => `<button class="zone-btn advance-btn" data-advance="spell" data-spell="${sp.id}">Learn ${sp.name}</button>`)
-      .join('');
-    // Familiar is a two-step pick: choose "Familiar…" to open the menu of options.
-    const familiar = g.familiarOptions?.length
-      ? `<details class="familiar-feat"><summary class="zone-btn advance-btn">Familiar…</summary>
-           <div class="zone-buttons">${g.familiarOptions
-             .map((f) => `<button class="zone-btn advance-btn" data-advance="familiar" data-fam="${f.id}" title="${(f.blurb || '').replace(/"/g, '')}">${f.name}</button>`)
-             .join('')}</div></details>`
-      : '';
+    // One advance per talent slot, chosen from a single grouped dropdown so the
+    // list stays compact: a talent, a spell (casters), or a familiar. Each option
+    // carries its own type, so `${type}:${id}` is all the confirm handler needs.
+    const attr = (s) => (s || '').replace(/"/g, '&quot;');
+    const opt = (type, id, label, blurb) =>
+      `<option value="${type}:${id}"${blurb ? ` title="${attr(blurb)}"` : ''}>${label}</option>`;
+    const group = (label, opts) => (opts ? `<optgroup label="${label}">${opts}</optgroup>` : '');
+    const talents = group('Talents', g.talentOptions.map((t) => opt('talent', t.id, t.name, t.blurb)).join(''));
+    const spells = group('Spells', g.learnable.map((sp) => opt('spell', sp.id, `Learn ${sp.name}`, sp.blurb)).join(''));
+    const familiar = group('Familiar', (g.familiarOptions ?? []).map((f) => opt('familiar', f.id, f.name, f.blurb)).join(''));
+    const kinds = ['a talent', g.learnable.length && 'a spell', g.familiarOptions?.length && 'a familiar'].filter(Boolean);
     html += `
-      <p class="sheet-blurb">Talent${g.pendingTalent > 1 ? ` ×${g.pendingTalent}` : ''}: choose one:</p>
-      <div class="zone-buttons">${talents}${spells}</div>${familiar}`;
+      <p class="sheet-blurb">Talent${g.pendingTalent > 1 ? ` ×${g.pendingTalent}` : ''}: choose ${kinds.join(', ').replace(/, ([^,]*)$/, ' or $1')}:</p>
+      <div class="advance-picker">
+        <select class="advance-select" aria-label="Choose an advance">
+          <option value="" disabled selected>Choose an advance…</option>
+          ${talents}${spells}${familiar}
+        </select>
+        <button class="zone-btn advance-confirm" disabled>Confirm</button>
+      </div>`;
   }
   return html;
 }

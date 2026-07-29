@@ -820,6 +820,33 @@ button { font: inherit; }
   color: var(--gold);
   border-color: var(--gold);
 }
+.zone-btn:disabled { opacity: 0.45; cursor: default; }
+.zone-btn:disabled:hover { color: var(--ink-dim); }
+
+/* Level-up advance picker: a grouped dropdown (talent / spell / familiar) plus
+   a Confirm, so the choice stays to one compact row instead of a wall of buttons. */
+.advance-picker {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  margin-top: 0.4rem;
+}
+.advance-select {
+  flex: 1 1 12rem;
+  min-width: 10rem;
+  max-width: 22rem;
+  background: var(--panel);
+  color: var(--ink);
+  border: 2px solid #00000088;
+  border-radius: 10px;
+  padding: 0.5em 0.7em;
+  font: inherit;
+  font-size: 0.95rem;
+  cursor: pointer;
+}
+.advance-select:focus { outline: none; border-color: var(--gold); }
 
 .zone-blurb {
   color: var(--ink-dim);
