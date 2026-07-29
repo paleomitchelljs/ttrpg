@@ -67,6 +67,24 @@ character by giving it `anim: { idle, attack }` (and `walk`) keys in its data
 
 Superseded art goes to `art/defunct/` (keep it out of the pipeline, keep history).
 
+### 4-direction overworld walk
+
+The overworld token faces its heading: the **side** strip (`<name>-walk`, or
+`dragon-fly`) is used for left AND right (auto-flipped for right), and the
+renderer (`facingFor` in `mapView.js`) looks for dedicated **`<key>-down`** and
+**`<key>-up`** strips for those headings — falling back to the side strip when
+they don't exist yet. So the game is already wired; it just needs the art.
+
+- **What's missing:** `python3 tools/make_4dir_sheets.py` writes a reference
+  sheet per character to `docs/4dir-sheets/` — existing side frames next to the
+  empty DOWN (toward camera) and UP (facing away) slots that still need drawing.
+  No character has down/up art today; all are side-view only.
+- **To add it:** draw the down/up poses to match the side frames on a magenta
+  grid (one row per direction), then slice with e.g.
+  `python3 tools/slice_grid.py art/spawnee-4dir.png spawnee-walk --rows down up`
+  → `spawnee-walk-down` / `spawnee-walk-up` (dragon: base `dragon-fly`). Rebuild
+  and the token uses them automatically — no code change.
+
 ---
 
 ## Tiles (map walls, floors, decor, props)

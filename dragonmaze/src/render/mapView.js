@@ -39,17 +39,25 @@ function paintWall(tile, cfg, d, x, y) {
 }
 
 // Which strip the player token shows for each heading. The side strip faces
-// left natively; heading right flips it.
-// The new dragon art is a single side view, so every heading shows the same
-// 4-frame wing-flap strip (flipped left/right by heading); no top/bottom pose.
-const DRAGON_FACING = {
-  side: { key: 'dragon-fly', frames: 'f4' },
-  down: { key: 'dragon-fly', frames: 'f4' },
-  up: { key: 'dragon-fly', frames: 'f4' },
-};
+// left natively; heading right flips it (see the flip toggle in moveToken).
+// Down (toward camera) and Up (away) use dedicated strips named '<key>-down' /
+// '<key>-up' WHEN they exist in the manifest; until that art is drawn every
+// heading falls back to the side strip. (See docs/4dir-sheets/ for what's
+// needed per character, and tools/make_4dir_sheets.py.)
+function facingStrips(key, frames) {
+  const side = { key, frames };
+  const dk = `${key}-down`;
+  const uk = `${key}-up`;
+  return {
+    side,
+    down: SPRITES[dk] ? { key: dk, frames } : side,
+    up: SPRITES[uk] ? { key: uk, frames } : side,
+  };
+}
+const DRAGON_FACING = facingStrips('dragon-fly', 'f4');
 
 // The overworld token is the dragon — or, on party-only delves, the party's
-// leader walking in its stead (same strip for every heading).
+// leader walking in its stead.
 let tokenFacing = DRAGON_FACING;
 let lastPos = null;
 
@@ -60,8 +68,7 @@ function facingFor(state) {
   const lead =
     companionById(leadId) ?? state.meta.customCharacters?.find((c) => c.id === leadId) ?? null;
   const key = lead?.walk ?? lead?.anim?.idle ?? 'dragon-fly';
-  const strip = { key, frames: 'f2' };
-  return { side: strip, down: strip, up: strip };
+  return facingStrips(key, 'f2');
 }
 
 export function renderMap(container, state) {
