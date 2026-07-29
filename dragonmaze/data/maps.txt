@@ -51,7 +51,7 @@
 == upper-guk / the-crypts  [The Crypts]
    15x11  theme dark  difficulty 2
    start 1,1 | door 2->mushroom-crypts 1,0 | exit(surface) 7,0 | door 3->temple-gator-pools 14,1
-   table: skeleton(w3,≤2)  zombie(w2,≤2)  gargoyle(w2,≤2)
+   table: skeleton(w3,≤2)  skeleton-lizard(w2,≤2)  zombie(w2,≤2)  gargoyle(w2,≤2)
    objects (type · identity · @cell):
      monster  roll (region table)                            @12,1
      monster  roll (region table)                            @9,4
@@ -100,7 +100,7 @@
      #......L#B....#
      ###############
 
-== lower-guk / kings-redoubt  [The Living Side — King’s Redoubt]
+== lower-guk / kings-redoubt  [The Living Side: King’s Redoubt]
    15x11  theme dark  difficulty 3
    start 1,1 | exit(surface) 6,0 | door 1->ghoul-kingdom 14,9
    table: froglok-skirmisher(w3,≤3)  cave-troll(w1,≤1)  lizardfolk-warrior(w1,≤2)
@@ -125,7 +125,7 @@
      #....L.#..B...1
      ###############
 
-== lower-guk / ghoul-kingdom  [The Dead Side — Ghoul Kingdom]
+== lower-guk / ghoul-kingdom  [The Dead Side: Ghoul Kingdom]
    15x11  theme dark  difficulty 4
    start 1,1 | door 1->kings-redoubt 1,0 | exit(surface) 6,0 | door 2->the-front 14,9
    table: zombie(w3,≤3)  skeleton(w3,≤2)  bone-wraith(w2,≤1)
@@ -150,7 +150,7 @@
      #....B........2
      ###############
 
-== lower-guk / the-front  [The Front — Where the War Grinds On]
+== lower-guk / the-front  [The Front: Where the War Grinds On]
    15x11  theme dark  difficulty 5
    start 1,1 | door 2->ghoul-kingdom 1,0 | exit(surface) 6,0
    table: froglok-skirmisher(w2,≤2)  skeleton(w2,≤3)  bone-wraith(w1,≤1)  evil-eye(w1,≤1)
@@ -179,8 +179,8 @@
    start 3,1 | exit(surface) 7,0 | edges e:courtyard-ne s:courtyard-sw
    table: lizardfolk-warrior(w3,≤2)  giant-spider(w2,≤2)  giant-rat(w1,≤3)
    objects (type · identity · @cell):
-     decor    round-hut (building) 1.5x2.5 rot0              @3,4
-     decor    stone-hut (building) 1.5x2.5 rot0              @10,5
+     decor    round-hut (building) 1.5x2.5 rot0              @2.7,4
+     decor    stone-hut (building) 1.5x2.5 rot0              @8.6,4
      decor    brazier1 (prop/light) 0.5x2 rot0               @5,1
      decor    brazier2 (prop/light) 0.5x2 rot0               @9,1
      decor    courtyard-wall-top (wall) 1x1 rot0             @10,0
@@ -220,22 +220,21 @@
      decor    courtyard-grass (floor/grass) 1x1 rot0         @1,8
      decor    courtyard-grass-flower (floor/grass) 1x1 rot0  @1,9
      decor    courtyard-bush (prop/plant) 1x1 rot0           @1,10
-     decor    sat-floor-0-1 (floor/autotile) 1x1 rot0        @2,6
-     monster  roll (region table)                            @9,3
-     monster  roll (region table)                            @4,4
-     monster  roll (region table)                            @6,7
-     loot     roll (gold/tome/den)                           @11,8
-     loot     roll (gold/tome/den)                           @2,2
+     monster  roll (region table)                            @6,5
+     monster  roll (region table)                            @3,3
+     monster  roll (region table)                            @8,6
+     loot     roll (gold/tome/den)                           @9,6
+     loot     roll (gold/tome/den)                           @2,3
    grid (M monster · L loot · B boss · b mini · d decor anchor):
      ddddddddddddddd
      dddS.d...d.....
-     ddL............
-     dd.......M.....
-     dd.dM..d.......
-     dd........d....
-     ddd............
-     dd....M........
-     dd.........L...
+     dd.............
+     ddLM...........
+     dd.....d.......
+     dd.#..M..#.....
+     dd......ML.....
+     dd.............
+     dd.............
      dd.............
      dd.............
 
@@ -244,11 +243,11 @@
    start 12,8 | door 3->throne-palace 7,0 | edges w:courtyard-nw s:courtyard-se
    table: lizardfolk-warrior(w3,≤2)  giant-spider(w2,≤2)  giant-rat(w1,≤3)
    objects (type · identity · @cell):
-     decor    snake-statue (statue) 1x2 rot0                 @6,3.5
-     decor    gator-statue (statue) 1x1.5 rot0               @8,4
+     decor    snake-statue (statue) 1x2 rot0                 @6,4.3
+     decor    gator-statue (statue) 1x1.5 rot0               @8,4.5
      decor    brazier1 (prop/light) 1x2 rot0                 @2,4
      decor    brazier2 (prop/light) 1x2 rot0                 @12,4
-     decor    courtyard-chest (prop/treasure) 0.9x0.9 rot0   @7,4.5
+     decor    courtyard-chest (prop/treasure) 0.5x0.5 rot0   @7.5,5.5
      decor    courtyard-wall-crack2 (wall) 1x1 rot0          @2,0
      decor    courtyard-wall-crack2 (wall) 1x1 rot0          @5,0
      decor    courtyard-wall-end-right (wall/corner) 1x1 rot0 @6,0
@@ -277,7 +276,7 @@
      decor    courtyard-wall-vine2 (wall) 1x1 rot0           @3,0
      decor    courtyard-wall-vine (wall) 1x1 rot0            @1,0
      decor    wall-b (wall) 1x1 rot0                         @0,0
-     decor    courtyard-broken-column (prop) 1x1.5 rot0      @4.5,1.5
+     decor    courtyard-broken-column (prop) 1x1.5 rot0      @5,1.5
      decor    courtyard-stone-floor (floor) 1x1.5 rot0       @7,1
      decor    courtyard-wall-gate (wall/door) 1x1.5 rot0     @7,0
      monster  roll (region table)                            @3,5
@@ -287,10 +286,10 @@
    grid (M monster · L loot · B boss · b mini · d decor anchor):
      ddddddddddddddd
      ......ddd.....d
-     ......dBd.....d
+     .....#dBd.....d
      ..............d
-     ..d.....d...d.d
-     ...M..........d
+     ..d.........d.d
+     ...M..#.#.....d
      ...........M..d
      ..............d
      ....L.......S.d
@@ -331,24 +330,22 @@
      decor    courtyard-wall-crack (wall) 1.1x1.1 rot180     @13,10
      decor    courtyard-wall-crack (wall) 1.1x1.1 rot180     @14,10
      decor    snakestatue (statue) 1.1x1.1 rot0              @11,7
-     decor    courtyard-rocks (prop) 0.6000000000000001x0.6000000000000001 rot0 @3,5
      decor    courtyard-grass-tuft (floor/grass) 0.6000000000000001x0.6000000000000001 rot0 @2,4
      decor    courtyard-grass-palm (floor/grass) 0.6000000000000001x0.6000000000000001 rot0 @7,6
      decor    courtyard-grass (floor/grass) 0.6000000000000001x0.6000000000000001 rot0 @10,1
      decor    courtyard-grass-flower (floor/grass) 0.6000000000000001x0.6000000000000001 rot0 @8,1
-     decor    courtyard-gold-pile (prop/treasure) 0.6000000000000001x0.6000000000000001 rot0 @9,3
      monster  roll (region table)                            @4,3
      monster  roll (region table)                            @9,5
      monster  roll (region table)                            @6,6
-     loot     roll (gold/tome/den)                           @11,2
+     loot     roll (gold/tome/den)                           @8,4
      portal   → courtyard-sewer "The Sunken Well"            @3,8
    grid (M monster · L loot · B boss · b mini · d decor anchor):
      d..............
      d.......d.d....
-     d..........L...
-     d...M....d.....
-     d.d............
-     d..d.....M.....
+     d..........d...
+     d...M..........
+     d.d.....L......
+     d........M.....
      d.....Md.......
      d..........d...
      d..P...........
@@ -394,15 +391,15 @@
      monster  roll (region table)                            @9,3
      monster  roll (region table)                            @5,4
      monster  roll (region table)                            @6,7
-     loot     roll (gold/tome/den)                           @3,6
+     loot     roll (gold/tome/den)                           @7,5
    grid (M monster · L loot · B boss · b mini · d decor anchor):
      ..............d
      ..............d
      ...d..........d
      ...d.....M....d
      .....M........d
+     .......L......d
      ..............d
-     ...L..........d
      ..d...M.......d
      ....d..S......d
      .............dd
@@ -462,7 +459,7 @@
 == lost-temple / maze-of-doors  [The Maze of Ten Thousand Doors]
    15x11  theme sand  difficulty 3
    start 1,1 | door 6->archon-pyramid 6,0 | door 2->courtyard-se 1,9
-   table: lizardfolk-warrior(w3,≤3)  giant-snake(w2,≤2)  giant-spider(w2,≤2)  green-slime(w1,≤2)
+   table: lizardfolk-warrior(w3,≤3)  giant-snake(w2,≤2)  cerenasp(w1,≤2)  coatl(w1,≤2)  giant-spider(w2,≤2)  green-slime(w1,≤2)
    objects (type · identity · @cell):
      monster  roll (region table)                            @13,2
      monster  roll (region table)                            @3,4
@@ -514,20 +511,26 @@
    objects (type · identity · @cell):
      decor    sewer-grate (floor/prop) 1x1 rot0              @13,1
      decor    sewer-grate (floor/prop) 1x1 rot0              @13,9
-     loot     roll (gold/tome/den)                           @5,1
+     decor    altar-skulls (prop/structure) 1x1 rot0         @2,4
+     monster  roll (region table)                            @3,4
+     monster  roll (region table)                            @6,5
+     monster  roll (region table)                            @11,9
+     loot     roll (gold/tome/den)                           @1,4
+     loot     roll (gold/tome/den)                           @10,4
+     loot     roll (gold/tome/den)                           @1,1
      portal   → under-palace-sewer "A shaft to the palace drains" @13,1
      portal   → under-maze-sewer "A drop to the maze drains" @13,9
    grid (M monster · L loot · B boss · b mini · d decor anchor):
      ######E########
-     .....LS......P#
-     #.####...####.#
-     #.####...####.#
-     #.............#
-     #~~~~~~~~~~~~~#
-     #.............#
-     #.####...####.#
-     #.####...####.#
-     #............P#
+     #L....S##....P#
+     ######.######.#
+     ######.######.#
+     #LdM##.##.L##.#
+     #~~~##M##..##~#
+     #...##.....##.#
+     ##.###.######.#
+     ##.###.######.#
+     #..........M.P#
      ###############
 
 == lost-temple / under-maze-sewer  [The Maze Drains]
@@ -553,14 +556,14 @@
    grid (M monster · L loot · B boss · b mini · d decor anchor):
      ###############
      #.P.##BS.##d..#
-     #...####.##...#
-     ###.####......#
-     #.#.M.##..##.P#
-     #~d~~~~~~~#####
-     #d###..##.#####
-     #####..##....d#
+     #...####.##.###
+     ###.####....###
+     ###.M.##.##..P#
+     #.d.~~~..######
+     #d####.########
+     ######.####..d#
      #..M.d.##..M..#
-     #.L##..~.....L#
+     #.L##.....##.L#
      ###############
 
 == lost-temple / under-pyramid-sewer  [The Pyramid Drains]
@@ -573,67 +576,65 @@
      decor    torch-lit (light/prop) 0.5x1 rot0              @1,6
      decor    torch-lit (light/prop) 0.5x1 rot0              @13,6
      decor    torch-lit (light/prop) 0.5x1 rot0              @13,4
-     decor    gargoyle-statue (statue/structure) 1x1.4 rot0  @7,4
-     decor    sewer-skulls (prop) 1x1 rot0                   @3,9
+     decor    gargoyle-statue (statue/structure) 1x1.4 rot0  @8,7.5
      decor    sewer-bone (prop) 1x1 rot0                     @11,9
      decor    sewer-slime (prop) 0.9x0.8 rot0                @9,1
      monster  roll (region table)                            @3,1
-     monster  roll (region table)                            @10,1
      monster  roll (region table)                            @3,6
-     monster  roll (region table)                            @10,6
+     monster  roll (region table)                            @11,6
+     monster  roll (region table)                            @9,1
      loot     roll (gold/tome/den)                           @2,9
      loot     roll (gold/tome/den)                           @12,9
      portal   → under-maze-sewer "A channel back to the maze drains" @1,4
      portal   → under-palace-sewer "A shaft up to the palace drains" @12,1
-     boss     The Iron Golem of the Drains [iron-golem] drops idol-of-thule @7,6
+     boss     The Iron Golem of the Drains [iron-golem] drops idol-of-thule @6,8
    grid (M monster · L loot · B boss · b mini · d decor anchor):
      #######7#######
-     #..M.....dM.P.#
+     #..M.....M##P.#
+     ########.####.#
+     ########.####.#
+     #P.......##..d#
+     #~~~#######~~~#
+     #d.M#######M.d#
      #.####...####.#
-     #.####...####.#
-     #P.....d.....d#
-     #~~~~~~~~~~~~~#
-     #d.M...B..M..d#
-     #.####...####.#
-     #.####.S.####.#
-     #.Ld.......dL.#
+     #.####BS.####.#
+     #.L........dL.#
      ###############
 
 == lost-temple / under-palace-sewer  [The Palace Drains]
    15x11  theme sewer  difficulty 5
-   start 7,1 | portal->courtyard-sewer 1,9 | portal->under-pyramid-sewer 7,9 | portal->summoning-chamber 13,4
+   start 7,1 | portal->courtyard-sewer 1,9 | portal->under-pyramid-sewer 1,1 | portal->summoning-chamber 0,5
    table: bone-wraith(w2,≤1)  lizardfolk-warrior(w2,≤2)  gargoyle(w2,≤1)  green-slime(w1,≤2)
    objects (type · identity · @cell):
      decor    sewer-grate (floor/prop) 1x1 rot0              @1,9
-     decor    sewer-grate (floor/prop) 1x1 rot0              @7,9
-     decor    green-font (structure/prop) 1.1x1.1 rot0       @13,4
+     decor    sewer-grate (floor/prop) 1x1 rot0              @1,1
+     decor    green-font (structure/prop) 0.5x0.5 rot0       @0.5,6
      decor    altar-skulls (prop/structure) 1.2x0.9 rot0     @11,4
-     decor    rune-altar (structure/prop) 1.4x1 rot0         @3,4
-     decor    torch-lit (light/prop) 0.5x1 rot0              @1,6
+     decor    rune-altar (structure/prop) 0.5x0.5 rot270     @0,5
      decor    torch-lit (light/prop) 0.5x1 rot0              @13,6
-     decor    sewer-skulls (prop) 1x1 rot0                   @9,9
-     decor    throne (structure) 1x1.3 rot0                  @3,6
+     decor    throne (structure) 0.5x0.5 rot0                @4.5,4
+     decor    green-font (structure/prop) 0.5x0.5 rot0       @0.5,4.5
      monster  roll (region table)                            @3,1
      monster  roll (region table)                            @11,1
-     monster  roll (region table)                            @3,6
-     monster  roll (region table)                            @11,6
-     loot     roll (gold/tome/den)                           @11,9
-     loot     roll (gold/tome/den)                           @12,4
+     monster  roll (region table)                            @4,4
+     monster  roll (region table)                            @8,6
+     loot     roll (gold/tome/den)                           @4,6
+     loot     roll (gold/tome/den)                           @10,4
      portal   → courtyard-sewer "A long ladder up to the courtyard" @1,9
-     portal   → under-pyramid-sewer "A shaft down to the pyramid drains" @7,9
-     portal   → summoning-chamber "The way to the summoning chamber" @13,4
-     boss     The Fear-Touched Gargoyles [gargoyle, gargoyle, bone-wraith] drops rubicite-breastplate @7,6
+     portal   → under-pyramid-sewer "A shaft down to the pyramid drains" @1,1
+     portal   → summoning-chamber "The way to the summoning chamber" @0,5
+     boss     The Fear-Touched Gargoyles [gargoyle, gargoyle, bone-wraith] drops rubicite-breastplate @4,9
    grid (M monster · L loot · B boss · b mini · d decor anchor):
      ###############
-     #..M...S...M..#
-     #.###.....###.#
-     #.###.....###.#
-     #..d.......dLP#
-     #~~~~~~~~~~~~~#
-     #d.M...B...M.d#
-     #.###.....###.#
-     #.###.....###.#
-     #P.....P.d.L..#
+     #P.M...S...M..#
+     #######.#####.#
+     #######.#####.#
+     #...M##.##Ld..#
+     P~~~~##~##.##~#
+     #...L##.M..##d#
+     ###.#########.#
+     ###.#########.#
+     #P..B.........#
      ###############
 
 == lost-temple / summoning-chamber  [The Summoning Chamber of the Avatar]

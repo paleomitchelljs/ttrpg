@@ -268,7 +268,7 @@ export const PLACEMENTS = {
     "decor": [
       {
         "key": "round-hut",
-        "x": 3,
+        "x": 2.7,
         "y": 4,
         "w": 1.5,
         "h": 2.5,
@@ -276,8 +276,8 @@ export const PLACEMENTS = {
       },
       {
         "key": "stone-hut",
-        "x": 10,
-        "y": 5,
+        "x": 8.6,
+        "y": 4,
         "w": 1.5,
         "h": 2.5,
         "rot": 0
@@ -593,38 +593,30 @@ export const PLACEMENTS = {
         "w": 1,
         "h": 1,
         "rot": 0
-      },
-      {
-        "key": "sat-floor-0-1",
-        "x": 2,
-        "y": 6,
-        "w": 1,
-        "h": 1,
-        "rot": 0
       }
     ],
     "monsters": [
       {
-        "x": 9,
+        "x": 6,
+        "y": 5
+      },
+      {
+        "x": 3,
         "y": 3
       },
       {
-        "x": 4,
-        "y": 4
-      },
-      {
-        "x": 6,
-        "y": 7
+        "x": 8,
+        "y": 6
       }
     ],
     "loot": [
       {
-        "x": 11,
-        "y": 8
+        "x": 9,
+        "y": 6
       },
       {
         "x": 2,
-        "y": 2
+        "y": 3
       }
     ]
   },
@@ -633,7 +625,7 @@ export const PLACEMENTS = {
       {
         "key": "snake-statue",
         "x": 6,
-        "y": 3.5,
+        "y": 4.3,
         "w": 1,
         "h": 2,
         "rot": 0
@@ -641,7 +633,7 @@ export const PLACEMENTS = {
       {
         "key": "gator-statue",
         "x": 8,
-        "y": 4,
+        "y": 4.5,
         "w": 1,
         "h": 1.5,
         "rot": 0
@@ -664,10 +656,10 @@ export const PLACEMENTS = {
       },
       {
         "key": "courtyard-chest",
-        "x": 7,
-        "y": 4.5,
-        "w": 0.9,
-        "h": 0.9,
+        "x": 7.5,
+        "y": 5.5,
+        "w": 0.5,
+        "h": 0.5,
         "rot": 0
       },
       {
@@ -896,7 +888,7 @@ export const PLACEMENTS = {
       },
       {
         "key": "courtyard-broken-column",
-        "x": 4.5,
+        "x": 5,
         "y": 1.5,
         "w": 1,
         "h": 1.5,
@@ -1177,14 +1169,6 @@ export const PLACEMENTS = {
         "rot": 0
       },
       {
-        "key": "courtyard-rocks",
-        "x": 3,
-        "y": 5,
-        "w": 0.6000000000000001,
-        "h": 0.6000000000000001,
-        "rot": 0
-      },
-      {
         "key": "courtyard-grass-tuft",
         "x": 2,
         "y": 4,
@@ -1215,14 +1199,6 @@ export const PLACEMENTS = {
         "w": 0.6000000000000001,
         "h": 0.6000000000000001,
         "rot": 0
-      },
-      {
-        "key": "courtyard-gold-pile",
-        "x": 9,
-        "y": 3,
-        "w": 0.6000000000000001,
-        "h": 0.6000000000000001,
-        "rot": 0
       }
     ],
     "monsters": [
@@ -1241,8 +1217,8 @@ export const PLACEMENTS = {
     ],
     "loot": [
       {
-        "x": 11,
-        "y": 2
+        "x": 8,
+        "y": 4
       }
     ],
     "portals": [
@@ -1522,8 +1498,8 @@ export const PLACEMENTS = {
     ],
     "loot": [
       {
-        "x": 3,
-        "y": 6
+        "x": 7,
+        "y": 5
       }
     ]
   },
@@ -1740,6 +1716,14 @@ export const PLACEMENTS = {
         "w": 1,
         "h": 1,
         "rot": 0
+      },
+      {
+        "key": "altar-skulls",
+        "x": 2,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
       }
     ],
     "monsters": [
@@ -1748,8 +1732,8 @@ export const PLACEMENTS = {
         "y": 4
       },
       {
-        "x": 7,
-        "y": 6
+        "x": 6,
+        "y": 5
       },
       {
         "x": 11,
@@ -1758,7 +1742,15 @@ export const PLACEMENTS = {
     ],
     "loot": [
       {
-        "x": 5,
+        "x": 1,
+        "y": 4
+      },
+      {
+        "x": 10,
+        "y": 4
+      },
+      {
+        "x": 1,
         "y": 1
       }
     ],
@@ -1929,18 +1921,10 @@ export const PLACEMENTS = {
       },
       {
         "key": "gargoyle-statue",
-        "x": 7,
-        "y": 4,
+        "x": 8,
+        "y": 7.5,
         "w": 1,
         "h": 1.4,
-        "rot": 0
-      },
-      {
-        "key": "sewer-skulls",
-        "x": 3,
-        "y": 9,
-        "w": 1,
-        "h": 1,
         "rot": 0
       },
       {
@@ -1966,16 +1950,16 @@ export const PLACEMENTS = {
         "y": 1
       },
       {
-        "x": 10,
-        "y": 1
-      },
-      {
         "x": 3,
         "y": 6
       },
       {
-        "x": 10,
+        "x": 11,
         "y": 6
+      },
+      {
+        "x": 9,
+        "y": 1
       }
     ],
     "loot": [
@@ -1990,8 +1974,8 @@ export const PLACEMENTS = {
     ],
     "boss": [
       {
-        "x": 7,
-        "y": 6
+        "x": 6,
+        "y": 8
       }
     ],
     "portals": [
@@ -2023,18 +2007,18 @@ export const PLACEMENTS = {
       },
       {
         "key": "sewer-grate",
-        "x": 7,
-        "y": 9,
+        "x": 1,
+        "y": 1,
         "w": 1,
         "h": 1,
         "rot": 0
       },
       {
         "key": "green-font",
-        "x": 13,
-        "y": 4,
-        "w": 1.1,
-        "h": 1.1,
+        "x": 0.5,
+        "y": 6,
+        "w": 0.5,
+        "h": 0.5,
         "rot": 0
       },
       {
@@ -2047,19 +2031,11 @@ export const PLACEMENTS = {
       },
       {
         "key": "rune-altar",
-        "x": 3,
-        "y": 4,
-        "w": 1.4,
-        "h": 1,
-        "rot": 0
-      },
-      {
-        "key": "torch-lit",
-        "x": 1,
-        "y": 6,
+        "x": 0,
+        "y": 5,
         "w": 0.5,
-        "h": 1,
-        "rot": 0
+        "h": 0.5,
+        "rot": 270
       },
       {
         "key": "torch-lit",
@@ -2070,19 +2046,19 @@ export const PLACEMENTS = {
         "rot": 0
       },
       {
-        "key": "sewer-skulls",
-        "x": 9,
-        "y": 9,
-        "w": 1,
-        "h": 1,
+        "key": "throne",
+        "x": 4.5,
+        "y": 4,
+        "w": 0.5,
+        "h": 0.5,
         "rot": 0
       },
       {
-        "key": "throne",
-        "x": 3,
-        "y": 6,
-        "w": 1,
-        "h": 1.3,
+        "key": "green-font",
+        "x": 0.5,
+        "y": 4.5,
+        "w": 0.5,
+        "h": 0.5,
         "rot": 0
       }
     ],
@@ -2096,28 +2072,28 @@ export const PLACEMENTS = {
         "y": 1
       },
       {
-        "x": 3,
-        "y": 6
+        "x": 4,
+        "y": 4
       },
       {
-        "x": 11,
+        "x": 8,
         "y": 6
       }
     ],
     "loot": [
       {
-        "x": 11,
-        "y": 9
+        "x": 4,
+        "y": 6
       },
       {
-        "x": 12,
+        "x": 10,
         "y": 4
       }
     ],
     "boss": [
       {
-        "x": 7,
-        "y": 6
+        "x": 4,
+        "y": 9
       }
     ],
     "portals": [
@@ -2129,15 +2105,15 @@ export const PLACEMENTS = {
         "label": "A long ladder rises all the way to the courtyard sump. Climb it?"
       },
       {
-        "x": 7,
-        "y": 9,
+        "x": 1,
+        "y": 1,
         "to": "under-pyramid-sewer",
         "title": "A shaft down to the pyramid drains",
         "label": "A shaft drops south toward the pyramid cisterns. Descend?"
       },
       {
-        "x": 13,
-        "y": 4,
+        "x": 0,
+        "y": 5,
         "to": "summoning-chamber",
         "title": "The way to the summoning chamber",
         "label": "Green light seeps from a doorway ahead; the summoning of the Avatar. Enter?"
