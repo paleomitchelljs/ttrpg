@@ -160,7 +160,14 @@ export function createCombat(heroes, monsters, rng = Math.random, label = null) 
     combat.combatants.push(fam);
   }
   const events = [
-    { type: 'combat-start', monsters: monsters.map((m) => ({ name: m.name })), label },
+    // Snapshot every combatant's HP at combat open — BEFORE any opening enemy
+    // round is resolved — so the view can render the cards at their pre-round HP
+    // and then animate the first hits landing (rather than showing the damage
+    // already applied). See renderRoster in combatView.
+    {
+      type: 'combat-start', monsters: monsters.map((m) => ({ name: m.name })), label,
+      startHp: Object.fromEntries(combat.combatants.map((c) => [c.id, c.hp.current])),
+    },
     { type: 'initiative', order: order.map((c) => ({ id: c.id, name: c.name, initiative: c.initiative })) },
   ];
   // A downed companion (carried into the fight at 0 HP) never gets a turn

@@ -56,7 +56,7 @@ async function processBatches(els) {
       await presentEvent(els, ev);
       // 'combat-start' clears the stage; repopulate it at once so the party and
       // enemies are visible immediately, not only when the batch finishes.
-      if (ev.type === 'combat-start') renderRoster(els, state);
+      if (ev.type === 'combat-start') renderRoster(els, state, ev.startHp);
     }
     const combat = state.run?.combat?.combat;
     if (combat && !combat.over) renderCombat(els, state, handlers);
@@ -557,7 +557,7 @@ function updateCardHp(cardEl, hp) {
     fill.style.width = `${pct}%`;
     fill.classList.toggle('low', pct <= 35);
   }
-  if (num) num.textContent = `${hp} / ${max} HP`;
+  if (num) num.textContent = `${hp}/${max}`; // match unitEl's initial format
 }
 
 async function attackBeat(els, ev) {
@@ -820,13 +820,13 @@ const ICONS = {
 
 // Draw the combatants with no actions or click handlers — used the instant
 // combat opens so the stage isn't blank while the opening beats replay.
-function renderRoster(els, state) {
+function renderRoster(els, state, startHp) {
   const combat = state.run?.combat?.combat;
   if (!combat) return;
   els.enemies.replaceChildren(
-    ...combat.order.filter((c) => c.side === 'foe').map((m) => unitEl(m, 'enemy', null))
+    ...combat.order.filter((c) => c.side === 'foe').map((m) => unitEl(m, 'enemy', null, startHp))
   );
-  els.player.replaceChildren(...heroesOf(combat).map((h) => unitEl(h, 'hero', null)));
+  els.player.replaceChildren(...heroesOf(combat).map((h) => unitEl(h, 'hero', null, startHp)));
   // The target info strip is only meaningful while the player is choosing an
   // action; keep it empty during the opening beats and enemy turns.
   if (els.targetInfo) els.targetInfo.innerHTML = '';
@@ -877,8 +877,11 @@ export function renderCombat(els, state, handlers) {
   renderActions(els, combat, handlers, null);
 }
 
-function unitEl(c, side, activeId) {
-  const dead = c.hp.current <= 0;
+function unitEl(c, side, activeId, hpAt) {
+  // hpAt (optional) overrides the displayed HP with a snapshot — used at
+  // combat-start to show pre-round HP before the opening hits animate.
+  const cur = hpAt?.[c.id] ?? c.hp.current;
+  const dead = cur <= 0;
   const unit = document.createElement('div');
   unit.className = [
     'unit',
@@ -904,11 +907,11 @@ function unitEl(c, side, activeId) {
     unit.dataset.idle = spritePath(c.anim.idle);
     unit.dataset.attack = spritePath(c.anim.attack);
   }
-  const pct = Math.max(0, Math.round((100 * c.hp.current) / c.hp.max));
+  const pct = Math.max(0, Math.round((100 * cur) / c.hp.max));
   // No name on the card — tap a unit to inspect it (enemy detail is gated by the
   // party's knowledge roll). Keeps the cards compact for a full party on a phone.
   unit.innerHTML = `
-    <div class="hp-num">${c.hp.current}/${c.hp.max}</div>
+    <div class="hp-num">${cur}/${c.hp.max}</div>
     ${!dead && c.luck > 0 ? '<span class="badge-luck luck-emblem" title="a luck token: spend it to reroll a failed roll"></span>' : ''}
     ${faceHtml(c, dead)}
     ${c.fled
