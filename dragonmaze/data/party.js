@@ -107,6 +107,26 @@ export const COMPANIONS = [
     role: 'Barbarian',
     spells: [],
   },
+  {
+    id: 'gowra',
+    name: 'Gowra',
+    kind: 'hero',
+    ac: 12, // leather 11 + DEX 1
+    hpMax: 10, // d8 + CON 2
+    hitDie: 8,
+    // Rolled 3d6 in order and arranged for a priest (WIS prime): 17,14,13,12,12,11.
+    abilities: { str: 1, dex: 1, con: 2, int: 0, wis: 3, cha: 1 },
+    attacks: [{ name: 'Blessed Khopesh', toHit: 2, damage: '1d6', range: 'melee' }],
+    sprite: 'hero_gowra',
+    emoji: '🐍',
+    anim: { idle: 'gowra-idle', attack: 'gowra-attack' },
+    walk: 'gowra-walk',
+    darkvision: true, // Yuan-Ti serpent-sight — widens the party's view underground
+    castStat: 'wis', // divine prayers — a priest of the serpent gods
+    spells: ['healing-word', 'smite', 'drain-life'],
+    blurb: 'A Yuan-Ti priest of the serpent gods; her prayers mend the faithful, and her venom-blessed blade drinks the life of the unworthy.',
+    role: 'Serpent Priest',
+  },
 ];
 
 export function companionById(id) {

@@ -42,6 +42,9 @@ CHARS = [
     ("Turquoise", "turquoise", [
         ("Idle", "turquoise-idle"), ("Attack", "turquoise-attack"),
         ("Walk — side (L/R)", "turquoise-walk"), ("Walk — down", "turquoise-walk-down"), ("Walk — up", "turquoise-walk-up")]),
+    ("Gowra", "gowra", [
+        ("Idle", "gowra-idle"), ("Attack", "gowra-attack"),
+        ("Walk — side (L/R)", "gowra-walk"), ("Walk — down", "gowra-walk-down"), ("Walk — up", "gowra-walk-up")]),
 ]
 
 BG, PANEL, INK, DIM = (26, 23, 34), (46, 43, 56), (222, 217, 233), (150, 143, 170)
