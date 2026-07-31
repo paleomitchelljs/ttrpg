@@ -2889,26 +2889,26 @@
     "index": 4,
     "size": {
       "w": 15,
-      "h": 11
+      "h": 19
     },
-    "theme": "sand",
+    "theme": "palace",
     "difficulty": 3,
     "start": {
-      "x": 1,
-      "y": 1
+      "x": 3,
+      "y": 17
     },
     "doors": [
       {
-        "ch": "3",
-        "x": 6,
+        "ch": "4",
+        "x": 7,
         "y": 0,
-        "to": "courtyard-ne"
+        "to": "temple-depths"
       },
       {
-        "ch": "4",
-        "x": 14,
-        "y": 9,
-        "to": "temple-depths"
+        "ch": "3",
+        "x": 7,
+        "y": 18,
+        "to": "courtyard-ne"
       }
     ],
     "edges": null,
@@ -2950,7 +2950,7 @@
           "prop",
           "door"
         ],
-        "x": 6,
+        "x": 6.45,
         "y": 0,
         "w": 1.1,
         "h": 1.1,
@@ -2958,51 +2958,63 @@
       },
       {
         "type": "decor",
-        "id": "courtyard-door-plain",
+        "id": "courtyard-door-wood",
         "tags": [
           "prop",
           "door"
         ],
-        "x": 14,
-        "y": 9,
+        "x": 6.45,
+        "y": 17.9,
         "w": 1.1,
         "h": 1.1,
-        "rot": 90
+        "rot": 180
       },
       {
         "type": "monster",
-        "x": 7,
+        "x": 1,
         "y": 3,
         "roll": true
       },
       {
         "type": "monster",
+        "x": 9,
+        "y": 5,
+        "roll": true
+      },
+      {
+        "type": "monster",
         "x": 3,
-        "y": 6,
+        "y": 7,
+        "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 13,
+        "y": 9,
         "roll": true
       },
       {
         "type": "monster",
         "x": 11,
-        "y": 6,
+        "y": 13,
         "roll": true
       },
       {
         "type": "loot",
-        "x": 13,
-        "y": 1,
+        "x": 1,
+        "y": 11,
         "roll": true
       },
       {
         "type": "loot",
-        "x": 6,
-        "y": 6,
+        "x": 12,
+        "y": 15,
         "roll": true
       },
       {
         "type": "boss",
-        "x": 7,
-        "y": 9,
+        "x": 11,
+        "y": 1,
         "name": "The Tae Ew Templar",
         "pack": [
           "tae-ew-templar",
@@ -3018,34 +3030,42 @@
   {
     "zone": "lost-temple",
     "sub": "temple-depths",
-    "name": "The Temple Depths",
+    "name": "The Throne Hall of the Tae Ew",
     "index": 5,
     "size": {
       "w": 15,
-      "h": 11
+      "h": 13
     },
-    "theme": "dark",
+    "theme": "palace",
     "difficulty": 4,
     "start": {
-      "x": 1,
-      "y": 1
+      "x": 6,
+      "y": 11
     },
     "doors": [
       {
-        "ch": "4",
-        "x": 1,
+        "ch": "5",
+        "x": 6,
         "y": 0,
-        "to": "throne-palace"
+        "to": "summoning-chamber"
       },
       {
-        "ch": "5",
-        "x": 14,
-        "y": 1,
-        "to": "summoning-chamber"
+        "ch": "4",
+        "x": 7,
+        "y": 12,
+        "to": "throne-palace"
       }
     ],
     "edges": null,
-    "portals": [],
+    "portals": [
+      {
+        "x": 7,
+        "y": 7,
+        "to": "under-pyramid-sewer",
+        "title": "A rusted floor-grate",
+        "label": "Descend into the drains"
+      }
+    ],
     "table": [
       {
         "id": "lizardfolk-warrior",
@@ -3076,45 +3096,131 @@
     "miniboss": null,
     "objects": [
       {
-        "type": "monster",
-        "x": 6,
-        "y": 3,
-        "roll": true
+        "type": "decor",
+        "id": "throne",
+        "tags": [
+          "structure"
+        ],
+        "x": 6.35,
+        "y": 0.15,
+        "w": 1.35,
+        "h": 1.75,
+        "rot": 0
       },
       {
-        "type": "monster",
-        "x": 10,
-        "y": 5,
-        "roll": true
-      },
-      {
-        "type": "monster",
-        "x": 6,
+        "type": "decor",
+        "id": "sewer-grate",
+        "tags": [
+          "floor",
+          "prop"
+        ],
+        "x": 7,
         "y": 7,
-        "roll": true
+        "w": 1,
+        "h": 1,
+        "rot": 0
       },
       {
-        "type": "loot",
+        "type": "decor",
+        "id": "palace-lizard",
+        "tags": [
+          "decor",
+          "temple",
+          "statue"
+        ],
         "x": 3,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "palace-snake",
+        "tags": [
+          "decor",
+          "temple",
+          "statue"
+        ],
+        "x": 11,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-door-wood",
+        "tags": [
+          "prop",
+          "door"
+        ],
+        "x": 6.45,
+        "y": 11.9,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "type": "decor",
+        "id": "courtyard-door-wood",
+        "tags": [
+          "prop",
+          "door"
+        ],
+        "x": 5.45,
+        "y": 0,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "type": "monster",
+        "x": 2,
         "y": 5,
         "roll": true
       },
       {
-        "type": "loot",
-        "x": 10,
-        "y": 7,
+        "type": "monster",
+        "x": 12,
+        "y": 5,
         "roll": true
       },
       {
-        "type": "loot",
-        "x": 1,
+        "type": "monster",
+        "x": 4,
         "y": 9,
         "roll": true
+      },
+      {
+        "type": "monster",
+        "x": 10,
+        "y": 9,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 2,
+        "y": 1,
+        "roll": true
+      },
+      {
+        "type": "loot",
+        "x": 12,
+        "y": 7,
+        "roll": true
+      },
+      {
+        "type": "portal",
+        "x": 7,
+        "y": 7,
+        "to": "under-pyramid-sewer",
+        "title": "A rusted floor-grate"
       },
       {
         "type": "boss",
-        "x": 6,
-        "y": 9,
+        "x": 7,
+        "y": 3,
         "name": "Fright and Terror, the Rift-Guardians",
         "pack": [
           "gargoyle",

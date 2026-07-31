@@ -36,6 +36,23 @@ export const AUTOTILE = {
     },
     fallback: 'sewer2-fill',
   },
+  // The Lost Temple palace (art/palace-sheet.png). Floors are the six cracked/
+  // mossy sandstone variants, shuffled per cell. Walls are DIRECTIONAL, same as
+  // the sewer: a dark stone body (palace-fill) with a lit sandstone cap on each
+  // edge/corner that faces the floor. The sheet only draws a top-edge + a corner
+  // piece, so the four edges and four inner corners are those two rotated 90° at
+  // slice time (palace-w-*, palace-ci-*). Outer/boundary corners fall back to the
+  // plain dark body.
+  palace: {
+    floor: ['palace-floor-a', 'palace-floor-b', 'palace-floor-c', 'palace-floor-d', 'palace-floor-e', 'palace-floor-f'],
+    accent: [],
+    wall: {
+      top: 'palace-w-top', bottom: 'palace-w-bottom', left: 'palace-w-left', right: 'palace-w-right',
+      iNW: 'palace-ci-nw', iNE: 'palace-ci-ne', iSW: 'palace-ci-sw', iSE: 'palace-ci-se',
+      nw: 'palace-fill', ne: 'palace-fill', sw: 'palace-fill', se: 'palace-fill',
+    },
+    fallback: 'palace-fill',
+  },
 };
 
 export function floorVariant(cfg, x, y) {

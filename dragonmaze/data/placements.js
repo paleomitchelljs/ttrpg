@@ -1507,85 +1507,155 @@ export const PLACEMENTS = {
     "decor": [
       {
         "key": "courtyard-door-wood",
-        "x": 6,
+        "x": 6.45,
         "y": 0,
         "w": 1.1,
         "h": 1.1,
         "rot": 0
       },
       {
-        "key": "courtyard-door-plain",
-        "x": 14,
-        "y": 9,
+        "key": "courtyard-door-wood",
+        "x": 6.45,
+        "y": 17.9,
         "w": 1.1,
         "h": 1.1,
-        "rot": 90
+        "rot": 180
       }
     ],
     "monsters": [
       {
-        "x": 7,
+        "x": 1,
         "y": 3
       },
       {
+        "x": 9,
+        "y": 5
+      },
+      {
         "x": 3,
-        "y": 6
+        "y": 7
+      },
+      {
+        "x": 13,
+        "y": 9
       },
       {
         "x": 11,
-        "y": 6
+        "y": 13
       }
     ],
     "loot": [
       {
-        "x": 13,
+        "x": 1,
+        "y": 11
+      },
+      {
+        "x": 12,
+        "y": 15
+      }
+    ],
+    "boss": [
+      {
+        "x": 11,
+        "y": 1
+      }
+    ],
+    "miniboss": [],
+    "portals": []
+  },
+  "temple-depths": {
+    "decor": [
+      {
+        "key": "throne",
+        "x": 6.35,
+        "y": 0.15,
+        "w": 1.35,
+        "h": 1.75,
+        "rot": 0
+      },
+      {
+        "key": "sewer-grate",
+        "x": 7,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "palace-lizard",
+        "x": 3,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "palace-snake",
+        "x": 11,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-door-wood",
+        "x": 6.45,
+        "y": 11.9,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-door-wood",
+        "x": 5.45,
+        "y": 0,
+        "w": 1.1,
+        "h": 1.1,
+        "rot": 0
+      }
+    ],
+    "monsters": [
+      {
+        "x": 2,
+        "y": 5
+      },
+      {
+        "x": 12,
+        "y": 5
+      },
+      {
+        "x": 4,
+        "y": 9
+      },
+      {
+        "x": 10,
+        "y": 9
+      }
+    ],
+    "loot": [
+      {
+        "x": 2,
         "y": 1
       },
       {
-        "x": 6,
-        "y": 6
+        "x": 12,
+        "y": 7
       }
     ],
     "boss": [
       {
         "x": 7,
-        "y": 9
-      }
-    ]
-  },
-  "temple-depths": {
-    "monsters": [
-      {
-        "x": 6,
         "y": 3
-      },
-      {
-        "x": 10,
-        "y": 5
-      },
-      {
-        "x": 6,
-        "y": 7
       }
     ],
-    "loot": [
+    "miniboss": [],
+    "portals": [
       {
-        "x": 3,
-        "y": 5
-      },
-      {
-        "x": 10,
-        "y": 7
-      },
-      {
-        "x": 1,
-        "y": 9
-      }
-    ],
-    "boss": [
-      {
-        "x": 6,
-        "y": 9
+        "x": 7,
+        "y": 7,
+        "to": "under-pyramid-sewer",
+        "title": "A rusted floor-grate",
+        "label": "Descend into the drains"
       }
     ]
   },

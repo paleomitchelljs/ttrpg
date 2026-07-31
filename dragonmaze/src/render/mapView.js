@@ -73,6 +73,20 @@ function facingFor(state) {
   return facingStrips(key, 'f2');
 }
 
+// Shrink the tile so the WHOLE map fits the play area (there is no scroll
+// camera — the entire grid is shown at once). Normal ~15x11 maps keep the CSS
+// clamp size; only oversized hand-authored maps (a tall 15x19 palace, say) get
+// smaller tiles instead of running off the bottom. Set on the map container so
+// the token/props (which use --tile) scale with it.
+function fitTile(container, d) {
+  const top = container.getBoundingClientRect().top;
+  const availH = Math.max(220, window.innerHeight - top - 12);
+  const vmin = Math.min(window.innerWidth, window.innerHeight);
+  const base = Math.min(60, Math.max(22, Math.round(0.06 * vmin))); // mirrors the CSS clamp
+  const tile = Math.max(16, Math.min(base, Math.floor(availH / d.height)));
+  container.style.setProperty('--tile', `${tile}px`);
+}
+
 export function renderMap(container, state) {
   const grid = container.querySelector('#map-grid');
   const token = container.querySelector('#player-token');
@@ -86,6 +100,7 @@ export function renderMap(container, state) {
   const d = run.dungeon;
   const { x: px, y: py } = run.playerPos;
   container.dataset.theme = d.theme ?? 'none';
+  fitTile(container, d);
   grid.style.gridTemplateColumns = `repeat(${d.width}, var(--tile))`;
   const auto = AUTOTILE[d.theme]; // per-cell tileset for this theme, if any
 

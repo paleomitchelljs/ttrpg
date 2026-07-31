@@ -2056,5 +2056,200 @@
       244,
       268
     ]
+  },
+  "palace-floor-a": {
+    "tags": [],
+    "sheet": "palace-sheet.png",
+    "box": [
+      1290,
+      31,
+      161,
+      164
+    ],
+    "role": "floor"
+  },
+  "palace-floor-b": {
+    "tags": [],
+    "sheet": "palace-sheet.png",
+    "box": [
+      1468,
+      31,
+      163,
+      164
+    ],
+    "role": "floor"
+  },
+  "palace-floor-c": {
+    "tags": [],
+    "sheet": "palace-sheet.png",
+    "box": [
+      1646,
+      31,
+      164,
+      164
+    ],
+    "role": "floor"
+  },
+  "palace-floor-d": {
+    "tags": [],
+    "sheet": "palace-sheet.png",
+    "box": [
+      1290,
+      745,
+      161,
+      162
+    ],
+    "role": "floor"
+  },
+  "palace-floor-e": {
+    "tags": [],
+    "sheet": "palace-sheet.png",
+    "box": [
+      1468,
+      745,
+      163,
+      162
+    ],
+    "role": "floor"
+  },
+  "palace-floor-f": {
+    "tags": [],
+    "sheet": "palace-sheet.png",
+    "box": [
+      1646,
+      745,
+      164,
+      162
+    ],
+    "role": "floor"
+  },
+  "palace-gecko": {
+    "tags": [
+      "decor",
+      "temple",
+      "plant"
+    ],
+    "sheet": "palace-sheet.png",
+    "box": [
+      385,
+      394,
+      155,
+      155
+    ]
+  },
+  "palace-arch": {
+    "tags": [
+      "decor",
+      "temple",
+      "structure"
+    ],
+    "sheet": "palace-sheet.png",
+    "box": [
+      567,
+      394,
+      156,
+      155
+    ]
+  },
+  "palace-lizard": {
+    "tags": [
+      "decor",
+      "temple",
+      "statue"
+    ],
+    "sheet": "palace-sheet.png",
+    "box": [
+      385,
+      567,
+      155,
+      161
+    ]
+  },
+  "palace-snake": {
+    "tags": [
+      "decor",
+      "temple",
+      "statue"
+    ],
+    "sheet": "palace-sheet.png",
+    "box": [
+      1290,
+      567,
+      161,
+      161
+    ]
+  },
+  "palace-snake-b": {
+    "tags": [
+      "decor",
+      "temple",
+      "statue"
+    ],
+    "sheet": "palace-sheet.png",
+    "box": [
+      1646,
+      567,
+      164,
+      161
+    ]
+  },
+  "palace-frieze": {
+    "tags": [
+      "decor",
+      "temple",
+      "structure"
+    ],
+    "sheet": "palace-sheet.png",
+    "box": [
+      750,
+      31,
+      157,
+      164
+    ]
+  },
+  "palace-w-bottom": {
+    "tags": [],
+    "sheet": "palace-sheet.png",
+    "role": "wall"
+  },
+  "palace-w-top": {
+    "tags": [],
+    "sheet": "palace-sheet.png",
+    "role": "wall"
+  },
+  "palace-w-right": {
+    "tags": [],
+    "sheet": "palace-sheet.png",
+    "role": "wall"
+  },
+  "palace-w-left": {
+    "tags": [],
+    "sheet": "palace-sheet.png",
+    "role": "wall"
+  },
+  "palace-ci-sw": {
+    "tags": [],
+    "sheet": "palace-sheet.png",
+    "role": "wall"
+  },
+  "palace-ci-se": {
+    "tags": [],
+    "sheet": "palace-sheet.png",
+    "role": "wall"
+  },
+  "palace-ci-ne": {
+    "tags": [],
+    "sheet": "palace-sheet.png",
+    "role": "wall"
+  },
+  "palace-ci-nw": {
+    "tags": [],
+    "sheet": "palace-sheet.png",
+    "role": "wall"
+  },
+  "palace-fill": {
+    "tags": [],
+    "sheet": "palace-sheet.png",
+    "role": "wall"
   }
 }
