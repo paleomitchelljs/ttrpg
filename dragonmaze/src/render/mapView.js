@@ -75,15 +75,17 @@ function facingFor(state) {
 
 // Shrink the tile so the WHOLE map fits the play area (there is no scroll
 // camera — the entire grid is shown at once). Normal ~15x11 maps keep the CSS
-// clamp size; only oversized hand-authored maps (a tall 15x19 palace, say) get
-// smaller tiles instead of running off the bottom. Set on the map container so
-// the token/props (which use --tile) scale with it.
+// clamp size; oversized hand-authored maps (a tall 15x19 palace) get smaller
+// tiles instead of running off the bottom, and a narrow phone bounds the tile by
+// the frame's WIDTH too so the grid never overflows sideways. Set on the map
+// container so the token/props (which use --tile) scale with it.
 function fitTile(container, d) {
   const top = container.getBoundingClientRect().top;
   const availH = Math.max(220, window.innerHeight - top - 12);
+  const availW = Math.max(200, (container.parentElement?.clientWidth ?? window.innerWidth) - 4);
   const vmin = Math.min(window.innerWidth, window.innerHeight);
   const base = Math.min(60, Math.max(22, Math.round(0.06 * vmin))); // mirrors the CSS clamp
-  const tile = Math.max(16, Math.min(base, Math.floor(availH / d.height)));
+  const tile = Math.max(16, Math.min(base, Math.floor(availH / d.height), Math.floor(availW / d.width)));
   container.style.setProperty('--tile', `${tile}px`);
 }
 

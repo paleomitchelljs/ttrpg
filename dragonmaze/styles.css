@@ -1,19 +1,61 @@
-/* Red Dragon Labyrinth — dark cave theme, big readable type for a young
-   player, high contrast, no external fonts. */
+/* Red Dragon Labyrinth — dark-fantasy theme, big readable type for a young
+   player, high contrast, no external fonts. One design system: colour scale,
+   spacing/radius/elevation tokens, a display serif for flavour + a UI sans for
+   chrome. Component styles below build on these tokens. */
 
 :root {
   --tile: clamp(22px, 6vmin, 60px); /* fills more of a desktop; min small enough that a 15-wide map fits a phone */
-  --bg: #14101a;
-  --panel: #221a2c;
-  --panel-2: #2c2138;
-  --ink: #f3ecdd;
-  --ink-dim: #b3a98f;
-  --gold: #e8b93c;
-  --ember: #e05038;
-  --good: #6fce7e;
+
+  /* ---- surfaces (warm obsidian) ---- */
+  --bg: #100d15;
+  --surface: #1b1723;    /* panels, cards */
+  --surface-2: #241f30;  /* raised / hover */
+  --surface-3: #2f2840;  /* active / selected */
+  --line: #3b3449;       /* hairline borders */
+  --panel: var(--surface);      /* legacy aliases kept for map/combat rules */
+  --panel-2: var(--surface-2);
+
+  /* ---- ink ---- */
+  --ink: #f4eede;
+  --ink-dim: #b4ab97;
+  --ink-faint: #7c7566;
+
+  /* ---- accents ---- */
+  --gold: #edc65a;
+  --gold-deep: #a9781d;
+  --ember: #e2593c;
+  --ember-deep: #a63620;
+
+  /* ---- semantics ---- */
+  --good: #63cf88;   /* heal / positive */
+  --hp: #e2593c;     /* health / danger */
+  --mana: #9a6be0;   /* spellcasting */
+  --threat: #c9697c; /* intimidate */
+
+  /* ---- map terrain (kept) ---- */
   --wall: #3b3247;
   --floor: #57492f;
   --floor-lit: #7a6640;
+  --fog: #0b0812;
+
+  /* ---- type ---- */
+  --font-display: 'Iowan Old Style', 'Palatino Linotype', Palatino, 'Book Antiqua', Georgia, serif;
+  --font-ui: system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+  /* ---- spacing / radius / elevation ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --r-sm: 8px;
+  --r-md: 12px;
+  --r-lg: 18px;
+  --r-pill: 999px;
+  --e-1: 0 1px 2px rgba(0, 0, 0, 0.4), 0 3px 10px rgba(0, 0, 0, 0.32);
+  --e-2: 0 12px 36px rgba(0, 0, 0, 0.55);
+  --tap: 44px; /* minimum comfortable touch target */
 }
 
 * { box-sizing: border-box; }
@@ -26,13 +68,18 @@ html, body {
   min-height: 100%;
   background: var(--bg);
   color: var(--ink);
-  font-family: Georgia, 'Times New Roman', serif;
-  font-size: 18px;
+  font-family: var(--font-ui);
+  font-size: 17px;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
 }
+
+/* Display serif carries the fantasy flavour: titles, headings, narrative. */
+h1, h2, h3 { font-family: var(--font-display); }
 
 button { font: inherit; }
 
-.screen { min-height: 100vh; }
+.screen { min-height: 100vh; min-height: 100dvh; }
 
 /* ------------------------------------------------------------- title */
 .title-screen {
@@ -70,55 +117,186 @@ button { font: inherit; }
 
 .title-hoard { color: var(--gold); margin-top: 1.4rem; }
 
-/* ------------------------------------------------------------- buttons */
+/* ------------------------------------------------------------- buttons
+   .btn is the primary (ember) call-to-action — the game's markup already uses
+   it that way everywhere. .btn-small / .zone-btn are the neutral secondaries. */
 .btn {
-  background: var(--ember);
+  background: linear-gradient(180deg, var(--ember) 0%, var(--ember-deep) 100%);
   color: #fff;
-  border: 3px solid #00000055;
-  border-radius: 12px;
-  padding: 0.55em 1.2em;
-  font-size: 1.05rem;
+  border: 1px solid transparent;
+  border-radius: var(--r-md);
+  padding: 0.62em 1.2em;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 1.02rem;
+  line-height: 1.15;
   cursor: pointer;
-  box-shadow: 0 3px 0 #00000066;
+  box-shadow: var(--e-1);
+  transition: filter 0.12s ease, transform 0.06s ease, border-color 0.12s ease;
 }
 
-.btn:hover { filter: brightness(1.12); }
-.btn:active { transform: translateY(2px); box-shadow: 0 1px 0 #00000066; }
+.btn:hover { filter: brightness(1.09); }
+.btn:active { transform: translateY(1px); }
+.btn:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
 
-.btn-big { font-size: 1.35rem; min-width: 12rem; }
-.btn-small { font-size: 0.85rem; background: var(--panel-2); }
+.btn-big { font-size: 1.22rem; min-width: 11rem; padding: 0.72em 1.3em; }
+.btn-small {
+  font-size: 0.85rem;
+  font-weight: 500;
+  background: var(--surface-2);
+  color: var(--ink);
+  border-color: var(--line);
+  box-shadow: none;
+  padding: 0.46em 0.9em;
+}
+.btn-small:hover { background: var(--surface-3); filter: none; }
 
-.menu { display: flex; flex-direction: column; gap: 0.8rem; align-items: center; }
+.menu { display: flex; flex-direction: column; gap: 0.7rem; align-items: center; }
 
 /* ------------------------------------------------------------- HUD */
 #hud {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
-  flex-wrap: wrap;
-  padding: 0.5rem 0.9rem;
-  background: var(--panel);
-  border-bottom: 2px solid #00000066;
+  gap: 0.55rem;
+  padding: 0.5rem 0.8rem;
+  background: linear-gradient(180deg, var(--surface-2), var(--surface));
+  border-bottom: 1px solid var(--line);
 }
+
+/* Leader HP: heart + a slim bar + the number, in one pill. */
+.hud-hp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  padding: 0.28em 0.8em 0.28em 0.62em;
+  color: var(--good);
+  font-variant-numeric: tabular-nums;
+}
+.hud-hp.danger { color: var(--ember); border-color: #6a2f2a; }
+.hud-hp .chip-icon { width: 1.05em; height: 1.05em; flex: none; }
+.hp-track {
+  width: 5rem;
+  height: 8px;
+  background: #00000066;
+  border-radius: var(--r-pill);
+  overflow: hidden;
+  flex: none;
+}
+.hp-track-fill {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: var(--good);
+  border-radius: inherit;
+  transition: width 0.35s ease, background 0.2s;
+}
+.hp-track-fill.low { background: var(--ember); }
+.hud-hp .chip-text { color: var(--ink); font-size: 0.9rem; font-weight: 600; }
+
+.hud-econ { display: inline-flex; gap: 0.45rem; margin-left: auto; }
 
 .hud-chip {
   display: inline-flex;
   align-items: center;
   gap: 0.4em;
-  background: var(--panel-2);
-  border-radius: 9px;
-  padding: 0.25em 0.7em;
-  font-size: 1.02rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  padding: 0.28em 0.85em;
+  font-size: 0.98rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
+.hud-chip .chip-icon { width: 1em; height: 1em; flex: none; }
+.hud-chip.carried { color: var(--ember); }
+.hud-chip.hoard { color: var(--gold); }
 
 .chip-icon { width: 1em; height: 1em; flex: none; }
-
 .hud-sprite { width: 1.6em; height: 1.6em; flex: none; margin: -0.3em 0; }
 
-.hud-chip.danger { background: #5c1f18; color: #ffb4a6; }
+/* ☰ menu — Rest / Save data / Save & Quit tuck in here. */
+.hud-menu { position: relative; flex: none; }
+.hud-menu-btn {
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.12s;
+}
+.hud-menu-btn:hover { background: var(--surface-3); }
+.hud-menu-btn[aria-expanded='true'] { background: var(--surface-3); border-color: var(--ink-faint); }
+.hud-menu-btn svg { width: 1.35rem; height: 1.35rem; }
+.hud-menu-pop {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  z-index: 30;
+  min-width: 15rem;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  box-shadow: var(--e-2);
+  padding: 0.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: modal-pop 0.14s ease;
+}
+.menu-item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  background: transparent;
+  border: none;
+  border-radius: var(--r-sm);
+  color: var(--ink);
+  text-align: left;
+  padding: 0.5rem 0.7rem;
+  cursor: pointer;
+  font-family: var(--font-ui);
+  font-weight: 600;
+  min-height: var(--tap);
+}
+.menu-item:hover { background: var(--surface-3); }
+.menu-item.danger { color: #ff9d8a; }
+.menu-item-sub { color: var(--ink-faint); font-size: 0.76rem; font-weight: 400; }
 
-#hud .btn-small { margin-left: auto; }
+/* Breadcrumb: tier (opens the sheet) · location · depth. */
+.hud-crumb {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+  padding: 0.3rem 0.85rem 0.38rem;
+  background: var(--surface);
+  border-bottom: 1px solid var(--line);
+  color: var(--ink-dim);
+  font-size: 0.86rem;
+}
+.crumb { display: inline-flex; align-items: center; gap: 0.35em; white-space: nowrap; }
+.crumb + .crumb::before { content: '·'; margin-right: 0.55rem; color: var(--ink-faint); }
+.crumb-btn {
+  background: transparent;
+  border: none;
+  color: var(--gold);
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+}
+.crumb-btn:hover { filter: brightness(1.15); }
+.crumb-btn .hud-sprite { width: 1.5em; height: 1.5em; margin: -0.2em 0; }
+.crumb-depth { color: var(--ink-faint); }
 
 /* ------------------------------------------------------------- playfield */
 #playfield {
@@ -126,14 +304,26 @@ button { font: inherit; }
   gap: 1rem;
   padding: 1rem;
   align-items: flex-start;
-  flex-wrap: wrap;
+  justify-content: center;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* The map lives in a frame that flexes to fill the space beside the rail, so
+   the grid sits centred instead of pinned to a corner of a big empty box. */
+#map-frame {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
   justify-content: center;
 }
 
 #map {
-  background: #0b0812;
-  border-radius: 12px;
-  border: 3px solid #00000099;
+  background: radial-gradient(120% 130% at 50% 0%, #1a1422 0%, #0b0812 72%);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--line);
+  box-shadow: var(--e-2), inset 0 0 70px rgba(0, 0, 0, 0.5);
   overflow: hidden;
 }
 
@@ -154,7 +344,12 @@ button { font: inherit; }
 
 /* Seamless dungeon: no per-tile borders or gaps; the grid should read as
    continuous stone and passage, not as boxes. Once seen, always lit. */
-.tile.fog { background: #0b0812; }
+/* Unexplored: a dim, faintly-gridded expanse so a fresh level reads as
+   dungeon-still-to-map rather than an empty black box. */
+.tile.fog {
+  background: #14101d;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.035);
+}
 .tile.fog-dim { opacity: 0.42; } /* the ring two tiles out under a light — partially seen */
 .tile.wall {
   background: #2b2138;
@@ -329,21 +524,28 @@ button { font: inherit; }
 #side {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.6rem;
   width: 320px;
   max-width: 92vw;
+  flex: none;
 }
 
+.hoard-box {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  padding: 0.5rem;
+}
 #hoard-canvas {
   width: 100%;
-  border-radius: 10px;
-  border: 2px solid #00000088;
-  background: #17111c;
+  display: block;
+  border-radius: var(--r-sm);
+  background: #100c16;
 }
 
-.hoard-label { text-align: center; color: var(--gold); font-size: 1.05rem; }
+.hoard-label { text-align: center; color: var(--gold); font-size: 0.96rem; margin-top: 0.35rem; }
 
-.help-note { color: var(--ink-dim); font-size: 0.82rem; margin: 0; }
+.help-note { color: var(--ink-faint); font-size: 0.8rem; margin: 0; text-align: center; }
 
 /* ---------------------------------------- party roster (a horizontal rank of
    compact cards: sprite on top, HP below) */
@@ -359,32 +561,32 @@ button { font: inherit; }
   flex-direction: column;
   align-items: center;
   gap: 0.15rem;
-  width: 4rem;
-  background: var(--panel);
-  border: 1px solid #00000055;
-  border-radius: 8px;
-  padding: 0.35rem 0.2rem;
+  width: 4.2rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 0.4rem 0.2rem;
   cursor: pointer;
   color: var(--ink);
-  font: inherit;
+  font-family: var(--font-ui);
 }
-.roster-row:hover { background: var(--panel-2); }
+.roster-row:hover { background: var(--surface-2); border-color: var(--ink-faint); }
 .roster-face { width: 40px; height: 40px; flex: none; }
 .roster-row .hp-bar { width: 3rem; height: 6px; }
-.roster-levelup { color: var(--gold); font-size: 0.66rem; font-weight: normal; text-align: center; }
-.roster-hp { font-size: 0.78rem; color: var(--ink-dim); }
-#btn-rest { align-self: stretch; }
+.roster-levelup { color: var(--gold); font-size: 0.6rem; font-weight: 700; text-align: center; text-transform: uppercase; letter-spacing: 0.03em; }
+.roster-hp { font-size: 0.76rem; color: var(--ink-dim); font-variant-numeric: tabular-nums; }
 
 /* ------------------------------------------------------------- logs */
 .log {
-  background: var(--panel);
-  border-radius: 10px;
-  border: 2px solid #00000066;
-  padding: 0.6rem 0.8rem;
+  background: var(--surface);
+  border-radius: var(--r-md);
+  border: 1px solid var(--line);
+  padding: 0.6rem 0.85rem;
   height: 11rem;
   overflow-y: auto;
-  font-size: 0.98rem;
-  line-height: 1.35;
+  font-family: var(--font-display); /* narrative flavour reads as serif */
+  font-size: 1rem;
+  line-height: 1.4;
 }
 
 .log p { margin: 0.15rem 0; }
@@ -399,30 +601,40 @@ button { font: inherit; }
 .overlay {
   position: fixed;
   inset: 0;
-  background: #000000b8;
+  background: rgba(6, 4, 10, 0.72);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 1rem;
   z-index: 10;
+  animation: overlay-in 0.16s ease;
 }
+@keyframes overlay-in { from { opacity: 0; } to { opacity: 1; } }
 /* A sheet opened from the party panel must stack above it, not behind. */
 #sheet-overlay { z-index: 20; }
 
+/* One modal shell for combat / result / sheet / party / save-data (all carry
+   either .combat-box or .result-box). */
 .combat-box, .result-box {
-  background: var(--panel);
-  border: 3px solid var(--ember);
-  border-radius: 16px;
-  padding: 1rem 1.2rem;
+  background: linear-gradient(180deg, var(--surface-2) 0%, var(--surface) 22%);
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  padding: 1.1rem 1.2rem;
   width: min(560px, 94vw);
   max-height: 92vh;
+  max-height: 92dvh;
   overflow-y: auto;
+  box-shadow: var(--e-2);
   display: flex;
   flex-direction: column;
   gap: 0.7rem;
+  animation: modal-pop 0.18s cubic-bezier(0.2, 1.3, 0.4, 1);
 }
+@keyframes modal-pop { from { transform: translateY(10px) scale(0.98); opacity: 0; } to { transform: none; opacity: 1; } }
 
-.result-box { border-color: var(--gold); text-align: center; }
+.result-box { text-align: center; }
 .result-box h2 { margin: 0; color: var(--gold); }
 
 /* ------------------------------------------------------------- battle stage
@@ -689,8 +901,8 @@ button { font: inherit; }
 .hp-fill.low { background: var(--ember); }
 .hp-num { font-size: 0.72rem; color: var(--ink-dim); line-height: 1; }
 
-.breath-btn { background: #c2601d; }
-.luck-btn { background: #2f7d4a; }
+.breath-btn { background: linear-gradient(180deg, #d9791f, #b0560f); } /* dragonfire */
+.luck-btn { background: linear-gradient(180deg, #3a9159, #2c7245); }   /* fortune */
 .btn:disabled { opacity: 0.45; cursor: default; transform: none; }
 .btn:disabled:hover { filter: none; }
 
@@ -760,10 +972,11 @@ button { font: inherit; }
   align-items: center;
   justify-content: center;
 }
-.act-btn.has-edge { border-color: var(--gold); box-shadow: 0 3px 0 #00000066, 0 0 10px #e8b93c88; }
-.spell-btn { background: #6a4bbf; }       /* caster purple */
-.intimidate-btn { background: #8a4a5a; }  /* muted threat red */
-.sweep-btn { background: #5f7d3a; }        /* martial green */
+.act-btn.has-edge { border-color: var(--gold); box-shadow: var(--e-1), 0 0 12px #edc65a88; }
+/* action verbs colour-coded by kind, on the shared semantic palette */
+.spell-btn { background: linear-gradient(180deg, var(--mana), #6f42c4); }      /* arcane */
+.intimidate-btn { background: linear-gradient(180deg, var(--threat), #96455a); } /* threat */
+.sweep-btn { background: linear-gradient(180deg, #6f9a42, #4f7a2c); }          /* martial */
 
 .btn-icon { width: 1em; height: 1em; flex: none; }
 
@@ -887,61 +1100,109 @@ button { font: inherit; }
 
 #dpad {
   position: fixed;
-  right: 16px;
-  bottom: 16px;
+  right: 14px;
+  bottom: 14px;
   z-index: 5;
   display: none;
-  grid-template-columns: repeat(3, 56px);
-  grid-template-rows: repeat(3, 56px);
-  gap: 5px;
-  opacity: 0.92;
+  grid-template-columns: repeat(3, 54px);
+  grid-template-rows: repeat(3, 54px);
+  gap: 6px;
 }
 
 .dpad-btn {
-  background: var(--panel-2);
+  display: grid;
+  place-items: center;
+  background: rgba(36, 31, 48, 0.82);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
   color: var(--ink);
-  border: 2px solid #00000088;
-  border-radius: 12px;
-  font-size: 1.35rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-md);
+  font-size: 1.3rem;
+  line-height: 1;
   touch-action: none;
   user-select: none;
   -webkit-user-select: none;
-  box-shadow: 0 3px 0 #00000066;
+  box-shadow: var(--e-1);
 }
 
-.dpad-btn:active { background: var(--ember); }
+.dpad-btn:active { background: var(--ember); color: #fff; }
 .dpad-btn.up { grid-area: 1 / 2; }
 .dpad-btn.left { grid-area: 2 / 1; }
 .dpad-btn.right { grid-area: 2 / 3; }
 .dpad-btn.down { grid-area: 3 / 2; }
 
+/* Show the pad on touch devices, in the compact (phone) layout, and in preview. */
 @media (hover: none) and (pointer: coarse) {
   #dpad { display: grid; }
-  #playfield { padding-bottom: 200px; }
-  /* fat-finger-friendly tap targets (~44px min) */
-  .btn, .zone-btn { min-height: 2.75rem; }
+  #playfield { padding-bottom: 180px; }
+  .btn, .zone-btn, .menu-item, .hud-menu-btn { min-height: var(--tap); } /* fat-finger targets */
 }
-
-/* Narrow screens: keep the primary buttons a single compact row of thumb
-   targets; the spell menu and flee stack below. */
-@media (max-width: 520px) {
-  .act-btn { min-height: 3rem; font-size: 0.98rem; padding: 0.5em 0.15em; }
-  .spell-menu { max-width: 100%; }
-  .btn-big { min-width: 0; width: 100%; }
-  /* Compact combat cards: shrink the card slot and portraits so three fit a
-     phone-width rank, wrapping to a second rank beyond that. */
-  .battle-stage { --unit-w: 4.9rem; min-height: 0; padding: 0.6rem 0.5rem; gap: 0.6rem; }
-  .unit { gap: 0.05rem; padding: 0.25rem 0.15rem; }
-  .unit .combat-sprite { width: 44px; }
-  .unit.hero .combat-sprite { width: 50px; }
-  .unit.dragon .combat-sprite { width: 62px; }
-  .enemy-face { font-size: 1.5rem; width: 44px; }
-  .hp-bar { width: 3.4rem; height: 7px; }
-  .unit-name { font-size: 0.72rem; }
-  .hp-num { font-size: 0.68rem; }
-}
-
+html.compact #dpad { display: grid; }
 body.show-dpad #dpad { display: grid; }
+
+/* ============================================================= compact layout
+   html.compact is toggled by JS at narrow widths (and forced by ?mobile). Living
+   on <html>, it also reaches the body-level overlays — one source of truth for
+   the phone experience. */
+html.compact body { font-size: 16px; }
+
+/* HUD: tighter, still one row; the breadcrumb wraps below it. */
+html.compact #hud { gap: 0.4rem; padding: 0.45rem 0.6rem; }
+html.compact .hud-hp { padding: 0.26em 0.6em 0.26em 0.5em; }
+html.compact .hp-track { width: 3.4rem; }
+html.compact .hud-hp .chip-text,
+html.compact .hud-chip { font-size: 0.88rem; }
+html.compact .hud-econ { gap: 0.35rem; }
+html.compact .hud-chip { padding: 0.26em 0.7em; }
+html.compact .hud-crumb { padding: 0.28rem 0.6rem; font-size: 0.8rem; }
+
+/* Playfield stacks: map on top, rail full-width below, room for the d-pad. */
+html.compact #playfield {
+  flex-direction: column;
+  align-items: stretch;
+  gap: 0.7rem;
+  padding: 0.7rem;
+  padding-bottom: 180px;
+}
+html.compact #side { width: auto; max-width: none; }
+html.compact .log { height: 8.5rem; }
+/* the roster scrolls sideways instead of wrapping to several rows */
+html.compact .party-roster {
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  justify-content: flex-start;
+  padding-bottom: 2px;
+}
+
+/* Combat modal fills the phone; the action bar is a row of big tap targets. */
+html.compact .combat-box, html.compact .result-box { width: 100%; max-height: 94dvh; padding: 0.9rem; }
+html.compact .battle-stage { --unit-w: 4.9rem; min-height: 0; padding: 0.6rem 0.5rem; gap: 0.55rem; }
+html.compact .unit { gap: 0.05rem; padding: 0.25rem 0.15rem; }
+html.compact .unit .combat-sprite { width: 44px; }
+html.compact .unit.hero .combat-sprite { width: 50px; }
+html.compact .unit.dragon .combat-sprite { width: 62px; }
+html.compact .enemy-face { font-size: 1.5rem; width: 44px; }
+html.compact .hp-bar { width: 3.4rem; height: 7px; }
+html.compact .unit-name { font-size: 0.72rem; }
+html.compact .hp-num { font-size: 0.68rem; }
+html.compact .combat-log { height: 7.5rem; }
+html.compact .action-row { max-width: 100%; gap: 0.4rem; }
+html.compact .act-btn { min-height: var(--tap); font-size: 0.98rem; padding: 0.5em 0.2em; }
+html.compact .spell-menu { max-width: 100%; }
+html.compact .btn-big { min-width: 0; width: 100%; }
+
+/* ?mobile preview: frame the page to a phone-width column. A transform on <body>
+   also makes it the containing block for the fixed overlays, so the modals and
+   d-pad sit inside the frame. Dev / self-preview aid — inert without ?mobile. */
+html.force-mobile body {
+  width: 412px;
+  margin: 0 auto;
+  min-height: 100vh;
+  transform: translateZ(0);
+  box-shadow: 0 0 0 100vmax #07050c;
+  overflow-x: hidden;
+}
 
 /* ------------------------------------------------------------- cinematic dice
    BG3-style replay, matching the main portal's DiceOverlay: a tumbling hex

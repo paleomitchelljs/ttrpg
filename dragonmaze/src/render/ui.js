@@ -24,10 +24,19 @@ export function updateHud(state) {
   const run = state.run;
   if (!run) return;
   const hp = run.dragon ? run.dragon.hp : run.party[0]?.hp ?? { current: 0, max: 1 };
+  const pct = Math.max(0, Math.min(100, Math.round((100 * hp.current) / Math.max(1, hp.max))));
+  const low = hp.current <= Math.ceil(hp.max / 3);
   chip('hud-hp', `${hp.current}/${hp.max}`);
-  el('hud-hp').classList.toggle('danger', hp.current <= Math.ceil(hp.max / 3));
+  el('hud-hp').classList.toggle('danger', low);
+  const fill = el('hud-hp').querySelector('.hp-track-fill');
+  if (fill) {
+    fill.style.width = `${pct}%`;
+    fill.classList.toggle('low', low);
+  }
   chip('hud-tier', run.dragon ? cap(run.dragon.tier) : 'The Party');
-  chip('hud-depth', `Depth ${run.dungeon.depth}`);
+  const zone = run.dungeon.zone;
+  el('hud-loc').textContent = zone ? `${zone.name} · ${zone.sub}` : 'The Labyrinth';
+  el('hud-depth').textContent = `Depth ${run.dungeon.depth}`;
   chip('hud-carried', `${run.unbankedGold}`);
   chip('hud-hoard', state.meta.hoardGold.toLocaleString());
   el('hoard-label').textContent = `Hoard: ${state.meta.hoardGold.toLocaleString()} gold`;

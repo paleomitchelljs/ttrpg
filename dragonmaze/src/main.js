@@ -477,12 +477,14 @@ const savedataStatus = (msg, ok = true) => {
   el.textContent = msg;
   el.style.color = ok ? '' : '#ff9d8a';
 };
-ui.el('btn-savedata').addEventListener('click', () => {
+function openSavedata() {
   ui.el('export-box').value = game.exportSave();
   ui.el('import-box').value = '';
   savedataStatus('');
   ui.showOverlay('savedata-overlay', true);
-});
+}
+ui.el('btn-savedata').addEventListener('click', openSavedata);
+ui.el('btn-savedata-ingame').addEventListener('click', openSavedata);
 ui.el('savedata-close').addEventListener('click', () => ui.showOverlay('savedata-overlay', false));
 ui.el('savedata-overlay').addEventListener('click', (ev) => {
   if (ev.target === ui.el('savedata-overlay')) ui.showOverlay('savedata-overlay', false);
@@ -537,6 +539,25 @@ ui.el('party-roster').addEventListener('click', (ev) => {
 
 // Rest between fights (risky).
 ui.el('btn-rest').addEventListener('click', () => game.rest());
+
+// ---- in-game ☰ menu: Rest / Save data / Save & Quit live here so the top bar
+// stays uncluttered. The buttons keep their old ids, so their handlers are
+// wired above/below; here we just open/close the popover.
+const hudMenuBtn = ui.el('hud-menu-btn');
+const hudMenuPop = ui.el('hud-menu-pop');
+function setHudMenu(open) {
+  hudMenuPop.hidden = !open;
+  hudMenuBtn.setAttribute('aria-expanded', String(open));
+}
+hudMenuBtn.addEventListener('click', (ev) => {
+  ev.stopPropagation();
+  setHudMenu(hudMenuPop.hidden);
+});
+hudMenuPop.addEventListener('click', () => setHudMenu(false)); // any choice closes it
+document.addEventListener('click', (ev) => {
+  if (!ui.el('hud-menu').contains(ev.target)) setHudMenu(false);
+});
+document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') setHudMenu(false); });
 
 // ------------------------------------------------------------------ input
 const KEYS = {
@@ -620,6 +641,20 @@ function seedFromUrl() {
     return null;
   }
 }
+
+// ------------------------------------------------------------------ responsive
+// html.compact drives the phone layout in one place — and, being on <html>, it
+// reaches the body-level overlays too (sheet / party / save-data). ?mobile forces
+// it on and frames the page to a phone-width column so the small-screen layout
+// can be previewed on a desktop.
+const forceMobile = new URLSearchParams(location.search).has('mobile');
+if (forceMobile) document.documentElement.classList.add('force-mobile');
+function applyBreakpoint() {
+  const compact = forceMobile || window.innerWidth <= 640;
+  document.documentElement.classList.toggle('compact', compact);
+}
+applyBreakpoint();
+window.addEventListener('resize', applyBreakpoint);
 
 // ------------------------------------------------------------------ boot
 game.init();
