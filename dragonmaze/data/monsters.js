@@ -160,6 +160,7 @@ export const MONSTERS = [
     attacks: [{ name: 'venomous bite', toHit: 4, damage: '1d6', range: 'melee' }],
     sprite: 'monster_spider',
     emoji: '🕷️',
+    anim: { idle: 'spider-idle', attack: 'spider-attack' },
     faction: 'wild',
     parley: 'never',
     goldValue: 3,
@@ -167,6 +168,29 @@ export const MONSTERS = [
     packMax: 4,
     weight: 2,
     morale: 0,
+  },
+  {
+    // Fast, fragile pack-hunter (skirmisher, §20 L2-3): highest DEX in its band
+    // so it acts first, hits accurately for a real die, but folds when the pack
+    // is thinned (morale -1). Attack art spreads its arm-feathers on the pounce.
+    id: 'raptor',
+    name: 'Raptor',
+    kind: 'monster',
+    ac: 14,
+    hpMax: 11,
+    abilities: { str: 1, dex: 3, con: 1, int: -3, wis: 1, cha: -3 },
+    attacks: [{ name: 'raking claws', toHit: 4, damage: '1d8', range: 'melee' }],
+    sprite: 'monster_raptor',
+    emoji: '🦖',
+    anim: { idle: 'raptor-idle', attack: 'raptor-attack' },
+    faction: 'wild',
+    parley: 'never',
+    goldValue: 3,
+    minDepth: 2,
+    maxDepth: 4,
+    packMax: 3,
+    weight: 2,
+    morale: -1,
   },
   {
     id: 'coatl',
@@ -364,6 +388,31 @@ export const MONSTERS = [
     morale: 2,
   },
   // ------------------------------------------------ depth 4
+  {
+    // Brute + signature (§20 L4-6 boss-lite): a slow, heavy biter whose
+    // Petrifying Gaze (a daze cast at DC 10+tier) leaves a hero reeling. Stands
+    // nearly alone — one basilisk is a proper threat, so packMax 1.
+    id: 'basilisk',
+    name: 'Basilisk',
+    kind: 'monster',
+    ac: 15,
+    hpMax: 30,
+    abilities: { str: 3, dex: -1, con: 3, int: -3, wis: 1, cha: -3 },
+    attacks: [{ name: 'crushing bite', toHit: 5, damage: '1d10', range: 'melee' }],
+    castStat: 'con', // its petrifying blood, not intellect — con +3 sharpens the gaze
+    cast: { name: 'Petrifying Gaze', tier: 3, kind: 'daze', chance: 0.35 },
+    sprite: 'monster_basilisk',
+    emoji: '🦎',
+    anim: { idle: 'basilisk-idle', attack: 'basilisk-attack' },
+    faction: 'wild',
+    parley: 'never',
+    goldValue: 9,
+    minDepth: 4,
+    maxDepth: 6,
+    packMax: 1,
+    weight: 2,
+    morale: 1,
+  },
   {
     id: 'sarnak-vampire',
     name: 'Sarnak Bloodseeker',
