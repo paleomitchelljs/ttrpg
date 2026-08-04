@@ -282,6 +282,7 @@
      monster  roll (region table)                            @3,5
      monster  roll (region table)                            @11,6
      loot     roll (gold/tome/den)                           @4,8
+     loot     roll (gold/tome/den)                           @7,5
      boss     The golem of the courtyard [stone-golem] drops thulian-claws @7,2
    grid (M monster · L loot · B boss · b mini · d decor anchor):
      ddddddddddddddd
@@ -289,7 +290,7 @@
      .....#dBd.....d
      ..............d
      ..d.........d.d
-     ...M..#.#.....d
+     ...M..#L#.....d
      ...........M..d
      ..............d
      ....L.......S.d
@@ -435,44 +436,116 @@
      #L#.#.....#.#.#
      #.#.#######.###
      #...#.#...#M..#
-     #.###.#.#.###.#
+     #.###...#.###.#
      #.#...#.#...L.#
-     #.#.#.#.#####.#
+     #.###.#.#####.#
      #..S#.#.#.....#
      #######3#######
 
 == lost-temple / temple-depths  [The Throne Hall of the Tae Ew]
    15x13  theme palace  difficulty 4
-   start 6,11 | door 5->summoning-chamber 6,0 | door 4->throne-palace 7,12 | portal->under-pyramid-sewer 7,7
+   start 6,11 | door 5->summoning-chamber 6,0 | door 4->throne-palace 7,12 | portal->under-pyramid-sewer 4,5
    table: lizardfolk-warrior(w2,≤2)  bone-wraith(w2,≤1)  sarnak-vampire(w1,≤1)
    objects (type · identity · @cell):
      decor    throne (structure) 1.35x1.75 rot0              @6.35,0.15
-     decor    sewer-grate (floor/prop) 1x1 rot0              @7,7
+     decor    sewer-grate (floor/prop) 1x1 rot0              @4,5
      decor    palace-lizard (decor/temple/statue) 1x1 rot0   @3,1
      decor    palace-snake (decor/temple/statue) 1x1 rot0    @11,1
      decor    courtyard-door-wood (prop/door) 1.1x1.1 rot0   @6.45,11.9
      decor    courtyard-door-wood (prop/door) 1.1x1.1 rot0   @5.45,0
-     monster  roll (region table)                            @2,5
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @1,8
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @1,7
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @1,6
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @2,3
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @1,2
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @3,1
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @8,3
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @8,4
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @12,3
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @12,4
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @13,6
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @12,9
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @8,9
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @11,1
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @13,1
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @13,2
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @9,1
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @10,1
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @12,1
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @12,2
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @13,3
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @13,4
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @13,5
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @12,5
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @12,6
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @12,7
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @13,7
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @13,8
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @12,8
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @13,9
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @13,10
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @12,10
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @12,11
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @13,11
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @11,11
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @10,11
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @9,11
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @8,11
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @8,10
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @7,9
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @9,9
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @8,8
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @8,7
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @7,7
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @6,7
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @6,6
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @6,5
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @6,4
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @7,4
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @8,2
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @8,1
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @6,1
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @5,1
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @4,1
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @2,1
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @1,1
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @2,2
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @1,3
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @1,4
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @1,5
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @1,9
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @1,10
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @1,11
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @2,11
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @3,11
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @4,11
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @4,10
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @5,11
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @6,11
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @7,11
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @4,9
+     decor    courtyard-stone-floor (floor) 1x1 rot0         @5,5
+     monster  roll (region table)                            @1,5
      monster  roll (region table)                            @12,5
      monster  roll (region table)                            @4,9
-     monster  roll (region table)                            @10,9
+     monster  roll (region table)                            @9,9
      loot     roll (gold/tome/den)                           @2,1
      loot     roll (gold/tome/den)                           @12,7
-     portal   → under-pyramid-sewer "A rusted floor-grate"   @7,7
-     boss     Fright and Terror, the Rift-Guardians [gargoyle, gargoyle] drops tribal-mask @7,3
+     portal   → under-pyramid-sewer "A rusted floor-grate"   @4,5
+     boss     Fright and Terror, the Rift-Guardians [gargoyle, gargoyle] drops tribal-mask @7,1
    grid (M monster · L loot · B boss · b mini · d decor anchor):
      ######5########
-     #.Ld.......d..#
-     #..#.#.#.#.#..#
-     #......B......#
-     #..#.#.#.#.#..#
-     #.M.........M.#
-     #..#.#.#.#.#..#
-     #......P....L.#
-     #..#.#.#.#.#..#
-     #...M.....M...#
-     #..#.#.#.#.#..#
-     #.....S.......#
+     #dLddddBdddddd#
+     #dd#####d###dd#
+     #dd#####d###dd#
+     #d####ddd###dd#
+     #M##Pdd#####Md#
+     #d####d#####dd#
+     #d####ddd###Ld#
+     #d######d###dd#
+     #d##M##ddM##dd#
+     #d##d###d###dd#
+     #ddddddddddddd#
      #######4#######
 
 == lost-temple / maze-of-doors  [The Maze of Ten Thousand Doors]

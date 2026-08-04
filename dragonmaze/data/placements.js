@@ -925,6 +925,10 @@ export const PLACEMENTS = {
       {
         "x": 4,
         "y": 8
+      },
+      {
+        "x": 7,
+        "y": 5
       }
     ],
     "boss": [
@@ -1559,9 +1563,7 @@ export const PLACEMENTS = {
         "x": 11,
         "y": 1
       }
-    ],
-    "miniboss": [],
-    "portals": []
+    ]
   },
   "temple-depths": {
     "decor": [
@@ -1575,8 +1577,8 @@ export const PLACEMENTS = {
       },
       {
         "key": "sewer-grate",
-        "x": 7,
-        "y": 7,
+        "x": 4,
+        "y": 5,
         "w": 1,
         "h": 1,
         "rot": 0
@@ -1612,11 +1614,587 @@ export const PLACEMENTS = {
         "w": 1.1,
         "h": 1.1,
         "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 1,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 1,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 1,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 2,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 1,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 3,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 8,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 8,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 12,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 12,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 13,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 12,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 8,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 11,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 13,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 13,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 9,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 10,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 12,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 12,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 13,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 13,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 13,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 12,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 12,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 12,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 13,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 13,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 12,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 13,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 13,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 12,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 12,
+        "y": 11,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 13,
+        "y": 11,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 11,
+        "y": 11,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 10,
+        "y": 11,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 9,
+        "y": 11,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 8,
+        "y": 11,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 8,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 7,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 9,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 8,
+        "y": 8,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 8,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 7,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 6,
+        "y": 7,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 6,
+        "y": 6,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 6,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 6,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 7,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 8,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 8,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 6,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 5,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 4,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 2,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 1,
+        "y": 1,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 2,
+        "y": 2,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 1,
+        "y": 3,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 1,
+        "y": 4,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 1,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 1,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 1,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 1,
+        "y": 11,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 2,
+        "y": 11,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 3,
+        "y": 11,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 4,
+        "y": 11,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 4,
+        "y": 10,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 5,
+        "y": 11,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 6,
+        "y": 11,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 7,
+        "y": 11,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 4,
+        "y": 9,
+        "w": 1,
+        "h": 1,
+        "rot": 0
+      },
+      {
+        "key": "courtyard-stone-floor",
+        "x": 5,
+        "y": 5,
+        "w": 1,
+        "h": 1,
+        "rot": 0
       }
     ],
     "monsters": [
       {
-        "x": 2,
+        "x": 1,
         "y": 5
       },
       {
@@ -1628,7 +2206,7 @@ export const PLACEMENTS = {
         "y": 9
       },
       {
-        "x": 10,
+        "x": 9,
         "y": 9
       }
     ],
@@ -1645,14 +2223,13 @@ export const PLACEMENTS = {
     "boss": [
       {
         "x": 7,
-        "y": 3
+        "y": 1
       }
     ],
-    "miniboss": [],
     "portals": [
       {
-        "x": 7,
-        "y": 7,
+        "x": 4,
+        "y": 5,
         "to": "under-pyramid-sewer",
         "title": "A rusted floor-grate",
         "label": "Descend into the drains"
