@@ -6,6 +6,9 @@
 //   'far-light'   — the owner's light reveals farther into the dark (party-wide)
 //   'spell-focus' — the owner's spells fizzle less: casting DC is 1 lower
 //   'drain-boost' — the owner casts Drain Life with advantage
+//
+// `anim` (optional) names sprite strips the way monsters do; without it the
+// combat card falls back to `emoji`. Only the fae drake is drawn so far.
 
 export const FAMILIARS = [
   {
@@ -34,6 +37,7 @@ export const FAMILIARS = [
     name: 'Fae Drake',
     effect: 'spell-focus',
     emoji: '🐲',
+    anim: { idle: 'fae-drake-idle', attack: 'fae-drake-attack' },
     blurb: 'a gossamer-winged dragonet; its presence steadies your casting (spell DC −1)',
   },
   {

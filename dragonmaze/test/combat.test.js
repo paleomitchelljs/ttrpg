@@ -423,4 +423,59 @@ const domCaster = (over = {}) =>
   assert.ok(ev.find((e) => e.type === 'spell-cast')?.success, 'advantage lands the drain the low roll would have flubbed');
 }
 
+// --- 20. the Fae Drake shaves 1 off its owner's casting DC, and says so ---
+{
+  const withFam = () => {
+    const c = hero({ id: 'hero', abilities: { cha: 0 }, castStat: 'cha', spells: ['ember-bolt'] });
+    c.familiar = 'fae-drake';
+    return c;
+  };
+  const plain = () => hero({ id: 'hero', abilities: { cha: 0 }, castStat: 'cha', spells: ['ember-bolt'] });
+  const cast = (h) => {
+    const g = foe({ id: 'goblin', hp: 100, ac: 1000 });
+    const { combat } = createCombat([h], [g], () => 0.5);
+    return playerSpell(heroTurn(combat, 'hero'), 'ember-bolt', g.id, () => 0.5)
+      .find((e) => e.type === 'spell-cast');
+  };
+  const bare = cast(plain());
+  const aided = cast(withFam());
+  assert.equal(bare.dc - aided.dc, 1, 'the drake lowers the casting DC by exactly 1');
+  assert.equal(aided.famAid?.effect, 'spell-focus', 'and the cast credits the drake');
+  assert.equal(bare.famAid, null, 'no familiar, no credit');
+}
+
+// --- 21. the Ember Wisp adds 1 damage to its owner's spells, and says so ---
+{
+  const shoot = (famId) => {
+    const c = hero({ id: 'hero', abilities: { cha: 5 }, castStat: 'cha', spells: ['ember-bolt'] });
+    c.familiar = famId;
+    const g = foe({ id: 'goblin', hp: 100, ac: 1000 });
+    const { combat } = createCombat([c], [g], () => 0.5);
+    const ev = playerSpell(heroTurn(combat, 'hero'), 'ember-bolt', g.id, () => 0.5);
+    return ev.find((e) => e.type === 'spell-hit');
+  };
+  const bare = shoot(null);
+  const aided = shoot('ember-wisp');
+  assert.equal(aided.damage - bare.damage, 1, 'the wisp adds exactly 1 damage');
+  assert.equal(aided.famAid?.effect, 'fire-boost', 'and the hit credits the wisp');
+  assert.equal(bare.famAid, null, 'no familiar, no credit');
+  // a familiar whose knack has nothing to do with damage changes neither
+  const other = shoot('fae-drake');
+  assert.equal(other.damage, bare.damage, 'the drake does not pad damage');
+  assert.equal(other.famAid, null, 'and takes no credit for it');
+}
+
+// --- 22. a drawn familiar carries its sprite strips onto the card ---
+{
+  const drawn = hero({ id: 'aaa' }); drawn.familiar = 'fae-drake';
+  const undrawn = hero({ id: 'bbb' }); undrawn.familiar = 'pack-rat';
+  const { combat } = createCombat([drawn, undrawn], [foe({ id: 'goblin', hp: 100, ac: 12 })], () => 0.5);
+  const fams = Object.fromEntries(
+    combat.combatants.filter((c) => c.minionType === 'familiar').map((c) => [c.ownerId, c])
+  );
+  assert.equal(fams[drawn.id].anim?.idle, 'fae-drake-idle', 'the drake brings its strip');
+  assert.equal(fams[undrawn.id].anim, null, 'an undrawn familiar has none');
+  assert.equal(fams[undrawn.id].emoji, '🐀', 'and falls back to its emoji');
+}
+
 console.log('combat.test.js: all assertions passed ✓');

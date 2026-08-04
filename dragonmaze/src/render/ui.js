@@ -156,12 +156,22 @@ export function showCharacterSheet(subject) {
     <h3>Attacks</h3><ul>${attacks}</ul>
     ${subject.breath ? `<h3>Fire Breath</h3><ul><li>${subject.breath.damage} fire damage to every enemy, save DC ${subject.breath.dc} for half; recharges on a 5+</li></ul>` : ''}
     ${spells}
-    ${subject.familiar ? `<h3>Familiar</h3><ul><li>${subject.familiar.name}: ${subject.familiar.blurb}</li></ul>` : ''}
+    ${subject.familiar ? `<h3>Familiar</h3>${familiarHtml(subject.familiar)}` : ''}
     ${subject.renown?.length ? `<h3>Renown</h3><ul>${subject.renown.map((r) => `<li>${r}</li>`).join('')}</ul>` : ''}
     ${subject.traits?.length ? `<h3>Traits</h3><ul>${subject.traits.map((t) => `<li>${t}</li>`).join('')}</ul>` : ''}
     ${growthHtml(subject)}
     ${equipmentHtml(subject)}`;
   showOverlay('sheet-overlay', true);
+}
+
+// The familiar block: its sprite (drawn familiars) or emoji (the rest) beside
+// the knack it grants, so the sheet says plainly what the creature is doing.
+// `sprite` is a resolved strip path — main.js does the SPRITES lookup.
+function familiarHtml(fam) {
+  const face = fam.sprite
+    ? `<div class="sprite f2 familiar-portrait"><img src="${fam.sprite}" alt=""></div>`
+    : `<div class="familiar-portrait familiar-emoji">${fam.emoji ?? '✦'}</div>`;
+  return `<div class="sheet-familiar">${face}<p><b>${fam.name}</b> — ${fam.blurb}</p></div>`;
 }
 
 const ABILITY_ORDER = [['str', 'STR'], ['dex', 'DEX'], ['con', 'CON'], ['int', 'INT'], ['wis', 'WIS'], ['cha', 'CHA']];

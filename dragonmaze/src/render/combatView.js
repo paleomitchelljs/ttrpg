@@ -127,6 +127,7 @@ async function presentEvent(els, ev) {
     case 'spell-cast': {
       await playCinematic(spellPayload(ev));
       const math = `(${ev.total} vs DC ${ev.dc}, on ${(ev.stat ?? 'cha').toUpperCase()})`;
+      if (ev.famAid) appendLog(els.log, famAidLine(ev.famAid), 'log-dim');
       appendLog(
         els.log,
         ev.success
@@ -157,6 +158,7 @@ async function presentEvent(els, ev) {
         appendLog(els.log, `The bolt sears the ${ev.target} for ${ev.damage}!`, 'log-hit');
         await delay(450);
       }
+      if (ev.famAid) appendLog(els.log, famAidLine(ev.famAid), 'log-dim');
       card?.classList.remove('hit-flash');
       return;
     }
@@ -257,6 +259,7 @@ async function presentEvent(els, ev) {
     }
     case 'spell-wave': {
       appendLog(els.log, `A wave of flame rolls over the enemies! (${ev.total} damage, save DC ${ev.dc})`, 'log-start');
+      if (ev.famAid) appendLog(els.log, famAidLine(ev.famAid), 'log-dim');
       for (const r of ev.results) {
         const card = cardOf(els, r.id);
         if (card) {
@@ -1186,6 +1189,19 @@ function useConsumable(combat, handlers, c) {
     return;
   }
   handlers.onUseItem(c.id, null);
+}
+
+// A familiar's knack is a single point of DC or damage — invisible unless the
+// log says whose doing it was. The engine reports {name, effect} on the event
+// only when the knack actually applied; the phrasing lives here.
+const FAM_AID = {
+  'spell-focus': (name) => `${name} flutters at your shoulder; the words come easier (DC −1).`,
+  'drain-boost': (name) => `${name} hungers with you (cast with advantage).`,
+  'fire-boost': (name) => `${name} fans the flames (+1 damage).`,
+};
+
+function famAidLine(aid) {
+  return (FAM_AID[aid.effect] ?? ((n) => `${n} lends its aid.`))(aid.name);
 }
 
 function appendLog(logEl, text, cls = '') {

@@ -153,6 +153,7 @@ export function createCombat(heroes, monsters, rng = Math.random, label = null) 
       ac: 10,
       hpMax: 1,
       emoji: famData.emoji ?? '✦',
+      anim: famData.anim ?? null, // drawn familiars use sprite strips; the rest keep the emoji
       faction: 'wild',
     });
     fam.inert = true; // never fights, never targeted — a passive boost-carrier
@@ -271,6 +272,21 @@ function familiarDcMod(combat, caster) {
 }
 function familiarCastAdvantage(combat, caster, spell) {
   return !!spell?.drain && familiarActiveFor(combat, caster) && caster?.familiar === 'dusk-bat';
+}
+// What to tell the player when a knack actually changed a roll. The knacks are
+// small numbers buried in the maths (a DC one lower, a die of damage one
+// higher), so without a line in the log there is no way to tell the familiar is
+// doing anything at all. Returns null when nothing applied. The view phrases it.
+function familiarCredit(combat, caster, effect) {
+  if (!familiarActiveFor(combat, caster)) return null;
+  const fam = familiarById(caster.familiar);
+  return fam?.effect === effect ? { name: fam.name, effect } : null;
+}
+// Which knack (if any) shaped the casting check we just made.
+function castCredit(combat, caster, opts) {
+  if (opts.dcMod) return familiarCredit(combat, caster, 'spell-focus');
+  if (opts.advantage) return familiarCredit(combat, caster, 'drain-boost');
+  return null;
 }
 // A real minion just took the slot — the familiar winks out, and its boost with
 // it. Removing it from `combatants` (it was never in `order`) drops it from the
@@ -674,6 +690,7 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random, opts =
     caster: caster.name,
     spellId,
     name: spell.name,
+    famAid: castCredit(combat, caster, castOpts),
     ...cast,
   });
   if (cast.success) {
@@ -763,7 +780,8 @@ function applyCastSuccess(combat, caster, spell, targetId, cast, rng, events) {
     }
     // Shadowdark: damage is the spell's dice only. A natural-20 cast doubles it.
     const rolled = roll(spell.dice, rng).total;
-    const dmg = (cast.crit ? rolled * 2 : rolled) + (spell.drain ? 0 : fireBonus(combat, caster));
+    const boost = spell.drain ? 0 : fireBonus(combat, caster);
+    const dmg = (cast.crit ? rolled * 2 : rolled) + boost;
     const dealt = applyDamage(target, dmg, spell.drain ? 'physical' : 'fire', events);
     let drained = 0;
     if (spell.drain && dealt > 0 && caster.hp.current < caster.hp.max) {
@@ -781,6 +799,7 @@ function applyCastSuccess(combat, caster, spell, targetId, cast, rng, events) {
       casterId: caster.id,
       caster: caster.name,
       casterHpAfter: caster.hp.current,
+      famAid: boost ? familiarCredit(combat, caster, 'fire-boost') : null,
     });
     afterDamage(combat, target, rng, events);
   } else if (spell.target === 'ally') {
@@ -800,7 +819,8 @@ function applyCastSuccess(combat, caster, spell, targetId, cast, rng, events) {
     });
   } else if (spell.target === 'all-enemies') {
     const rolled = roll(spell.dice, rng).total;
-    const total = (cast.crit ? rolled * 2 : rolled) + fireBonus(combat, caster);
+    const waveBoost = fireBonus(combat, caster);
+    const total = (cast.crit ? rolled * 2 : rolled) + waveBoost;
     const targets = livingMonsters(combat);
     const results = [];
     for (const m of targets) {
@@ -808,7 +828,13 @@ function applyCastSuccess(combat, caster, spell, targetId, cast, rng, events) {
       res.damage = applyDamage(m, res.damage, 'fire', events);
       results.push({ id: m.id, name: m.name, hpAfter: m.hp.current, ...res });
     }
-    events.push({ type: 'spell-wave', total, dc: spell.saveDC, results });
+    events.push({
+      type: 'spell-wave',
+      total,
+      dc: spell.saveDC,
+      results,
+      famAid: waveBoost ? familiarCredit(combat, caster, 'fire-boost') : null,
+    });
     for (const m of targets) afterDamage(combat, m, rng, events);
   }
 
@@ -833,7 +859,7 @@ export function spendLuck(combat, rng = Math.random) {
     const spell = spellById(p.spellId);
     const castOpts = { dcMod: familiarDcMod(combat, actor), advantage: familiarCastAdvantage(combat, actor, spell) };
     const cast = resolveSpellCast(actor, spell, rng, castOpts);
-    events.push({ type: 'spell-cast', casterId: actor.id, caster: actor.name, spellId: p.spellId, name: spell.name, reroll: true, ...cast });
+    events.push({ type: 'spell-cast', casterId: actor.id, caster: actor.name, spellId: p.spellId, name: spell.name, reroll: true, famAid: castCredit(combat, actor, castOpts), ...cast });
     if (cast.success) applyCastSuccess(combat, actor, spell, p.targetId, cast, rng, events);
     else finalizeFizzle(combat, actor, p.spellId, cast, rng, events);
   } else {

@@ -297,6 +297,14 @@ game.subscribe((state, events) => {
 });
 
 // ------------------------------------------------------------------ sheets
+// A familiar for the character sheet: its data plus a resolved sprite strip
+// when it has art (only the fae drake so far — the rest show their emoji).
+function familiarInfo(famId) {
+  const fam = familiarById(famId);
+  if (!fam) return null;
+  return { ...fam, sprite: fam.anim ? SPRITES[fam.anim.idle] : null };
+}
+
 function sheetSubject(id) {
   if (id === 'dragon' || id?.startsWith?.('dragon-')) {
     const tier = tierByName(game.state.meta.tier);
@@ -340,7 +348,7 @@ function sheetSubject(id) {
     attacks: c.attacks,
     spells: c.spells.map((sid) => spellById(sid)).filter(Boolean),
     castStat: c.castStat ?? 'cha',
-    familiar: familiarById(c.familiar), // this hero's own familiar, if they took the feat
+    familiar: familiarInfo(c.familiar), // this hero's own familiar, if they took the feat
     traits: c.abilityLabel ? [c.abilityLabel] : [],
     growth: growthInfo(id, c, g),
     equip: equipInfo(id, c.attacks[0]?.name),

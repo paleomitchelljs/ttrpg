@@ -708,7 +708,9 @@ button { font: inherit; }
 .unit.hero.ally-targeted .hp-num::before { content: '✚ '; color: #6cc0ff; }
 /* A familiar: a passive companion sprite, not a fighter — smaller and quiet. */
 .unit.inert { width: calc(var(--unit-w) * 0.72); cursor: default; opacity: 0.9; align-self: flex-end; }
-.unit.inert .enemy-face, .unit.inert .combat-sprite { font-size: 1.5rem; width: 46px; }
+.unit.inert .enemy-face { font-size: 1.5rem; width: 46px; }
+/* (the sprite width lives with the other .combat-sprite sizes below — it has to
+   come after .unit.hero .combat-sprite to win the tie on specificity) */
 .familiar-tag { font-size: 0.62rem; color: #b9a7d6; text-align: center; letter-spacing: 0.02em; }
 .unit.enemy.targeted .combat-sprite,
 .unit.enemy.targeted .enemy-face {
@@ -778,6 +780,12 @@ button { font: inherit; }
 .sheet-blurb { color: var(--ink-dim); margin: 0.2rem 0 0; font-size: 0.9rem; font-style: italic; }
 .sheet-sprite { width: 84px; flex: none; filter: drop-shadow(0 3px 5px #000a); }
 
+/* The familiar block: its portrait beside the knack it grants. */
+.sheet-familiar { display: flex; gap: 0.7rem; align-items: center; }
+.sheet-familiar p { margin: 0; }
+.familiar-portrait { width: 52px; flex: none; filter: drop-shadow(0 2px 4px #000a); }
+.familiar-emoji { font-size: 2rem; line-height: 1; text-align: center; }
+
 /* Equipment: click-to-equip chips with the item's icon. */
 .equip-grid { display: flex; flex-direction: column; gap: 0.5rem; }
 .equip-row { display: flex; align-items: flex-start; gap: 0.5rem; }
@@ -836,6 +844,7 @@ button { font: inherit; }
 
 .unit.hero .combat-sprite { width: 76px; }
 .unit.dragon .combat-sprite { width: 104px; }
+.unit.inert .combat-sprite { width: 52px; } /* a familiar rides small (see .unit.inert) */
 /* monsters stand on the right and face left; mirror right-facing art */
 .unit.enemy .combat-sprite { transform: scaleX(-1); }
 
@@ -1182,6 +1191,7 @@ html.compact .unit { gap: 0.05rem; padding: 0.25rem 0.15rem; }
 html.compact .unit .combat-sprite { width: 44px; }
 html.compact .unit.hero .combat-sprite { width: 50px; }
 html.compact .unit.dragon .combat-sprite { width: 62px; }
+html.compact .unit.inert .combat-sprite { width: 36px; }
 html.compact .enemy-face { font-size: 1.5rem; width: 44px; }
 html.compact .hp-bar { width: 3.4rem; height: 7px; }
 html.compact .unit-name { font-size: 0.72rem; }

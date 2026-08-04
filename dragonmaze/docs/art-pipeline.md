@@ -60,10 +60,22 @@ A character has one **frame strip per animation** (`idle`, `attack`, `walk`,
   `python3 tools/slice_grid.py art/foo-grid.png foo --rows idle attack walk [--flip] [--frame-height 150]`.
   `--flip` mirrors (model art faces right; the party faces left).
 
+- **`tools/slice_faedrake.py`** — a one-off for `art/unprocessed/faedrake.png`,
+  kept because its two tricks generalise to any sheet that isn't flat magenta.
+  (1) The background is a *gradient* plum, and close enough to the drake's own
+  purple that a colour key eats the art — so it flood-fills from the border
+  comparing each pixel to **the neighbour that reached it**, then takes the
+  leftover anti-aliased rim off with passes that only judge pixels *touching*
+  the keyed background. (2) Frames are registered on a hand-listed **eye
+  coordinate** rather than their bounding boxes, so the head holds still and the
+  wings do the moving. It also carries `unveil()`, which lifts a grey smear the
+  source art painted over one wing by inverting the composite.
+
 Output lands in `assets/sprites/<prefix>-<anim>.png` and the manifest is
 rewritten. The game then references e.g. `SPRITES['foo-idle']`. Wire a new
 character by giving it `anim: { idle, attack }` (and `walk`) keys in its data
-(`data/party.js` or `data/monsters.js`) that match the strip names.
+(`data/party.js`, `data/monsters.js`, or `data/familiars.js`) that match the
+strip names.
 
 Superseded art goes to `art/defunct/` (keep it out of the pipeline, keep history).
 

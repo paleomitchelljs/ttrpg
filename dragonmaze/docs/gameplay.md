@@ -339,7 +339,13 @@ level-up feat (one per hero). It rides along as an inert sprite carrying **one
 knack for its owner**: `ember-wisp` (+1 fire spell damage), `pack-rat` (+25% loot
 gold, party-wide), `lantern-beetle` (wider light, party-wide), `fae-drake`
 (spell DC −1), `dusk-bat` (advantage on Drain Life). Wired in combat.js via
-`familiarActiveFor`/`fireBonus`/`familiarDcMod`/`familiarCastAdvantage`.
+`familiarActiveFor`/`fireBonus`/`familiarDcMod`/`familiarCastAdvantage`; the
+out-of-combat two go through `partyHasFamiliar` in gameState.js (`hasLight` for
+the beetle, the loot branch for the rat). When a knack actually changes a roll,
+`familiarCredit` tags the event with `{name, effect}` and the combat log names
+the familiar (`FAM_AID` in combatView.js) — otherwise a −1 DC or +1 damage is
+invisible. A familiar with `anim` strips draws as a sprite on its card
+(`fae-drake` only, so far); the rest fall back to their emoji.
 
 **Spell Focus** talents are generated per school the caster knows
 (`focusTalentsFor` in `data/talents.js`) and give advantage casting that school.
