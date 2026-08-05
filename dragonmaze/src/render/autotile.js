@@ -6,6 +6,19 @@
 // A `d` here is the minimal shape the pickers need:
 //   { width, height, tiles:[[0|1]], water?:[[bool]] }  (tiles: 1 = floor)
 // Bitmask convention for neighbour tests: N=1 E=2 S=4 W=8.
+//
+// OUTER vs INTERNAL walls. A theme may draw its perimeter differently from the
+// partitions standing inside a room — the palace's outer shell is pillars and
+// snake friezes, its internal walls are plain raised stone. Which one a cell is
+// comes from the geometry, not the map text (see outerWalls): a wall cell that
+// can be reached from the map's border through other wall cells belongs to the
+// outer shell; a wall island standing free inside the room is internal. So no
+// map needs re-authoring, and a spur growing off the perimeter reads as part of
+// it, which is what you want.
+//
+// A theme opts in by declaring `wallInner` (and optionally `fallbackInner` /
+// `floorEdge`). Without them every wall keeps using `wall`, so a theme that has
+// only one set — and every map — renders exactly as before.
 
 export const AUTOTILE = {
   sewer: {
@@ -43,6 +56,12 @@ export const AUTOTILE = {
   // piece, so the four edges and four inner corners are those two rotated 90° at
   // slice time (palace-w-*, palace-ci-*). Outer/boundary corners fall back to the
   // plain dark body.
+  //
+  // The outer/internal split is declared but NOT yet wired: `wallInner`,
+  // `fallbackInner` and `floorEdge` are commented out until the two re-exported
+  // sheets are sliced, because a key naming a tile that doesn't exist renders a
+  // blank cell. Uncomment each line as its tile lands; the pickers already route
+  // to them. See docs/art-pipeline.md for what the sheets have to look like.
   palace: {
     floor: ['palace-floor-a', 'palace-floor-b', 'palace-floor-c', 'palace-floor-d', 'palace-floor-e', 'palace-floor-f'],
     accent: [],
@@ -52,12 +71,85 @@ export const AUTOTILE = {
       nw: 'palace-fill', ne: 'palace-fill', sw: 'palace-fill', se: 'palace-fill',
     },
     fallback: 'palace-fill',
+    // wallInner: {
+    //   top: 'palace-in-top', bottom: 'palace-in-bottom', left: 'palace-in-left', right: 'palace-in-right',
+    //   thinH: 'palace-in-run-h', thinV: 'palace-in-run-v',
+    //   iNW: 'palace-in-ci-nw', iNE: 'palace-in-ci-ne', iSW: 'palace-in-ci-sw', iSE: 'palace-in-ci-se',
+    //   nw: 'palace-in-fill', ne: 'palace-in-fill', sw: 'palace-in-fill', se: 'palace-in-fill',
+    // },
+    // fallbackInner: 'palace-in-fill',
+    // floorEdge: { n: 'palace-edge-n', e: 'palace-edge-e', s: 'palace-edge-s', w: 'palace-edge-w' },
   },
 };
 
-export function floorVariant(cfg, x, y) {
+// Which wall cells are the map's outer shell: every wall reachable from the
+// border through orthogonally-adjacent wall. Cached per geometry object — the
+// game hands us the same `run.dungeon` every frame and the editor rebuilds its
+// `d` on each render, so a WeakMap invalidates itself either way and keeps this
+// derived grid out of the save file.
+const OUTER_WALLS = new WeakMap();
+
+export function outerWalls(d) {
+  const hit = OUTER_WALLS.get(d);
+  if (hit) return hit;
+  const { width: W, height: H } = d;
+  const outer = Array.from({ length: H }, () => new Array(W).fill(false));
+  // A map may overrule the inference wholesale (subregion `wallStyle`). A
+  // labyrinth whose every wall runs back to the border infers as ALL outer,
+  // which would panel a corridor maze in ceremonial pillars; 'inner' says to
+  // treat the lot as partitions instead.
+  if (d.wallStyle === 'inner' || d.wallStyle === 'outer') {
+    const all = d.wallStyle === 'outer';
+    for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) outer[y][x] = all && d.tiles[y][x] !== 1;
+    OUTER_WALLS.set(d, outer);
+    return outer;
+  }
+  const stack = [];
+  const seed = (x, y) => {
+    if (d.tiles[y][x] !== 1 && !outer[y][x]) {
+      outer[y][x] = true;
+      stack.push(x, y);
+    }
+  };
+  for (let x = 0; x < W; x++) { seed(x, 0); seed(x, H - 1); }
+  for (let y = 0; y < H; y++) { seed(0, y); seed(W - 1, y); }
+  while (stack.length) {
+    const y = stack.pop(), x = stack.pop();
+    if (x > 0) seed(x - 1, y);
+    if (x < W - 1) seed(x + 1, y);
+    if (y > 0) seed(x, y - 1);
+    if (y < H - 1) seed(x, y + 1);
+  }
+  OUTER_WALLS.set(d, outer);
+  return outer;
+}
+
+/** True when this wall cell is an internal partition rather than outer shell. */
+export function isInnerWall(d, x, y) {
+  return d.tiles[y][x] !== 1 && !outerWalls(d)[y][x];
+}
+
+// The floor a cell draws. A floor tile that touches the OUTER wall can take its
+// own variant (`floorEdge`, keyed by the side the wall is on) — the outer sheet
+// bakes the wall's shadow into the stone beside it, so those tiles only belong
+// against outer wall. Everything else gets the shuffled general floor.
+export function floorVariant(cfg, d, x, y) {
+  const edge = cfg.floorEdge && d && edgeFloorKey(cfg, d, x, y);
+  if (edge) return edge;
   if (cfg.accent?.length && (x * 131 + y * 197) % 100 < 12) return cfg.accent[(x + y) % cfg.accent.length];
   return cfg.floor[(x * 3 + y) % cfg.floor.length];
+}
+
+function edgeFloorKey(cfg, d, x, y) {
+  const outer = outerWalls(d);
+  const o = (xx, yy) => yy >= 0 && yy < d.height && xx >= 0 && xx < d.width && outer[yy][xx];
+  const e = cfg.floorEdge;
+  // Named for the side the wall sits on, so `n` is floor with outer wall above.
+  if (o(x, y - 1)) return e.n;
+  if (o(x, y + 1)) return e.s;
+  if (o(x - 1, y)) return e.w;
+  if (o(x + 1, y)) return e.e;
+  return null;
 }
 
 export function waterKey(cfg, d, x, y) {
@@ -66,26 +158,37 @@ export function waterKey(cfg, d, x, y) {
   return cfg.waterTiles?.[mask] ?? cfg.water; // 0 (isolated) -> plain water pool
 }
 
-// Pick a wall piece from the 8 neighbours: inner corners (two adjacent edges
-// are floor — a wall nub jutting into the room, e.g. a wall-island corner)
-// first, then straight edges, then outer corners (only a diagonal is floor —
-// the map's own boundary corners), else solid fill.
+// Pick a wall piece from the 8 neighbours, out of this cell's set (internal
+// partition or outer shell — see outerWalls). Thin partitions come first: a
+// wall with floor on BOTH opposite sides is a free-standing run, and the
+// edge-based pieces below would draw it as a one-sided edge. Then inner corners
+// (two adjacent edges are floor — a wall nub jutting into the room), straight
+// edges, outer corners (only a diagonal is floor — the map's own boundary
+// corners), else solid fill.
 export function wallKey(cfg, d, x, y) {
   const f = (xx, yy) => yy >= 0 && yy < d.height && xx >= 0 && xx < d.width && d.tiles[yy][xx] === 1;
   const N = f(x, y - 1), E = f(x + 1, y), S = f(x, y + 1), W = f(x - 1, y);
   const NE = f(x + 1, y - 1), SE = f(x + 1, y + 1), SW = f(x - 1, y + 1), NW = f(x - 1, y - 1);
-  const w = cfg.wall;
+  const inner = cfg.wallInner && isInnerWall(d, x, y);
+  const w = inner ? cfg.wallInner : cfg.wall;
+  const fill = (inner ? cfg.fallbackInner : cfg.fallback) ?? cfg.fallback;
+  // A one-cell-thick run: floor on two OPPOSITE sides, which the edge pieces
+  // below can't express (they'd pick whichever side they test first and draw a
+  // one-sided edge). Named for the way the wall runs: floor to the N and S
+  // means the wall runs east-west.
+  if (N && S && !E && !W && w.thinH) return w.thinH;
+  if (E && W && !N && !S && w.thinV) return w.thinV;
   if (S && E) return w.iNW; if (S && W) return w.iNE; if (N && E) return w.iSW; if (N && W) return w.iSE;
   if (S) return w.top; if (N) return w.bottom; if (E) return w.left; if (W) return w.right;
   if (SE) return w.nw; if (SW) return w.ne; if (NE) return w.sw; if (NW) return w.se;
-  return cfg.fallback;
+  return fill;
 }
 
 // The single tile key a cell draws: wall piece for a wall cell, floor/water
 // variant for a floor cell. Matches how mapView splits paintWall vs paintFloor.
 export function autotileKeyAt(cfg, d, x, y) {
   if (d.tiles[y][x] !== 1) return wallKey(cfg, d, x, y);
-  return d.water?.[y]?.[x] && cfg.waterTiles ? waterKey(cfg, d, x, y) : floorVariant(cfg, x, y);
+  return d.water?.[y]?.[x] && cfg.waterTiles ? waterKey(cfg, d, x, y) : floorVariant(cfg, d, x, y);
 }
 
 // Every tile key a theme's autotiler can emit — its whole geometry set. Used to
@@ -95,7 +198,10 @@ export function autotileKeys(cfg) {
   if (cfg.water) keys.add(cfg.water);
   for (const k of Object.values(cfg.waterTiles ?? {})) keys.add(k);
   for (const k of Object.values(cfg.wall ?? {})) keys.add(k);
+  for (const k of Object.values(cfg.wallInner ?? {})) keys.add(k);
+  for (const k of Object.values(cfg.floorEdge ?? {})) keys.add(k);
   if (cfg.fallback) keys.add(cfg.fallback);
+  if (cfg.fallbackInner) keys.add(cfg.fallbackInner);
   return keys;
 }
 

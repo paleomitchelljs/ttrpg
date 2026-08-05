@@ -133,6 +133,11 @@ export function buildZoneDungeon(zoneId, subIndex, seedString, partySize = 1) {
     portals: (place.portals ?? sub.portals ?? []).map((p) => ({ ...p })),
     subId: sub.id,
     theme: sub.theme ?? null,
+    // Override the autotiler's outer-vs-internal wall inference for this map:
+    // 'inner' or 'outer' forces every wall into that set. A labyrinth whose
+    // walls all connect back to the border would otherwise read as one huge
+    // outer shell (see outerWalls in render/autotile.js).
+    wallStyle: sub.wallStyle ?? null,
     zone: {
       id: zone.id,
       name: zone.name,

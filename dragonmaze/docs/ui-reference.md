@@ -184,6 +184,11 @@ ones: `#btn-rest` → `game.rest()`, `#btn-quit` → `game.quitToTitle()`,
   floor/wall background images. Autotiled themes (`AUTOTILE[theme]` in
   `autotile.js`) instead paint per-cell wall/floor keys via `paintWall`/
   `paintFloor` (bitmask neighbour tests, N=1 E=2 S=4 W=8).
+- A theme may carry **two wall sets**: `wall` for the map's outer shell and
+  `wallInner` for free-standing partitions, chosen per cell by `outerWalls(d)`
+  (flood fill from the border through wall; a subregion's `wallStyle` overrules
+  it). `floorEdge` gives floor that abuts an outer wall its own variant. All
+  three are optional — a theme declaring only `wall` renders as it always has.
 - `fitTile(container,d)` sets `--tile` (px) on `#map` so the grid fits: bounded
   by base clamp (`0.06·vmin`, 16–60), available **height**, AND available
   **width** (`#map-frame` clientWidth) — the width bound keeps a wide map from

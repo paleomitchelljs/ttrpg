@@ -144,6 +144,43 @@ These are *scene* tiles: props carry their grass/wall background baked in (a
 "chest" tile is a chest on grass), unlike the detect-style props which are
 isolated on magenta and drop onto any floor.
 
+### Outer vs internal wall sets
+
+A theme can draw its perimeter differently from the partitions inside a room.
+`src/render/autotile.js` decides which a cell is **from the geometry** (see
+`outerWalls`): a wall reachable from the map border through other wall is
+**outer**; a free-standing wall island is **internal**. No map is re-authored.
+A subregion can overrule it with `wallStyle: 'inner' | 'outer'`.
+
+The palace has the keys reserved and commented out in `AUTOTILE.palace` — the
+pickers already route to them, so each one goes live the moment its tile exists:
+
+| key | what it draws |
+|-----|---------------|
+| `wallInner.top/bottom/left/right` | partition with floor on that side |
+| `wallInner.thinH` / `thinV` | a **one-cell-thick** run — floor on both opposite sides. New; the old edge pieces can't express it and drew a one-sided edge |
+| `wallInner.iNW/iNE/iSW/iSE` | partition corner, named for where the wall body sits |
+| `fallbackInner` | enclosed partition interior |
+| `floorEdge.n/e/s/w` | floor that abuts an **outer** wall, named for the side the wall is on. Never used beside an internal wall — the outer sheet bakes the shell's shadow into this stone |
+
+**What a source sheet must satisfy.** The slicer cuts on the magenta grid, so
+each wall run has to sit **centred inside one cell**, not straddling a grid
+line. The current hand-drawn references do not: on the internal sheet the
+vertical run is 127px wide but crosses the column-4/5 line (right 45% of c4,
+left 34% of c5), and the horizontal run is 276px tall, spanning the bottom of
+row 3, all of row 4 and the top 45% of row 5. Cut on that grid, every tile
+carries half a wall. So when re-exporting:
+
+1. One feature per cell, centred, with the cell's full width/height of context.
+2. Draw the horizontal run and the vertical run at the **same thickness** — the
+   references use a 3/4 view where a horizontal wall shows its face and reads
+   ~2× taller, which cannot tile isotropically.
+3. Include a straight run, a corner, a T and a cross for the internal set, so
+   `thinH`/`thinV` and the four `i*` corners all come from drawn art rather
+   than rotation.
+4. Keep the grid lines pure magenta (`is_bg`) and don't let art bleed across
+   them.
+
 ---
 
 ## The editor

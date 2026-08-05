@@ -29,7 +29,7 @@ export function spritePath(key) {
 // we only paint the chosen key onto a DOM tile.
 const bg = (keys) => keys.map((k) => `url("${TILES[k]}")`).join(', ');
 function paintFloor(tile, cfg, d, x, y) {
-  const key = d.water?.[y]?.[x] && cfg.waterTiles ? waterKey(cfg, d, x, y) : floorVariant(cfg, x, y);
+  const key = d.water?.[y]?.[x] && cfg.waterTiles ? waterKey(cfg, d, x, y) : floorVariant(cfg, d, x, y);
   tile.style.backgroundImage = bg([key]);
   tile.style.backgroundSize = '100% 100%';
 }
