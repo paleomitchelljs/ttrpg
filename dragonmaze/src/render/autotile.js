@@ -57,13 +57,19 @@ export const AUTOTILE = {
   // slice time (palace-w-*, palace-ci-*). Outer/boundary corners fall back to the
   // plain dark body.
   //
-  // The outer/internal split is declared but NOT yet wired: `wallInner`,
-  // `fallbackInner` and `floorEdge` are commented out until the two re-exported
-  // sheets are sliced, because a key naming a tile that doesn't exist renders a
-  // blank cell. Uncomment each line as its tile lands; the pickers already route
-  // to them. See docs/art-pipeline.md for what the sheets have to look like.
+  // Its INTERNAL partitions come from a second sheet (art/palace-inner-sheet.png,
+  // cut by tools/slice_palace_inner.py) — raised cobble-and-sandstone walls, no
+  // pillars — and the floor comes from that sheet too, so the two sets share a
+  // stone. `floorEdge` is still unwired: the outer sheet has not been sliced.
   palace: {
-    floor: ['palace-floor-a', 'palace-floor-b', 'palace-floor-c', 'palace-floor-d', 'palace-floor-e', 'palace-floor-f'],
+    // Floor comes from the INTERNAL sheet, which draws its cobble around the
+    // partitions — the internal wall pieces carry that cobble baked into their
+    // floor-facing quadrants, so any other floor shows a seam at every corner.
+    // (The older sandstone palace-floor-a..f are still sliced, now decor-only.)
+    floor: [
+      'palace-in-floor-a', 'palace-in-floor-b', 'palace-in-floor-c', 'palace-in-floor-d', 'palace-in-floor-e',
+      'palace-in-floor-f', 'palace-in-floor-g', 'palace-in-floor-h', 'palace-in-floor-i',
+    ],
     accent: [],
     wall: {
       top: 'palace-w-top', bottom: 'palace-w-bottom', left: 'palace-w-left', right: 'palace-w-right',
@@ -71,14 +77,19 @@ export const AUTOTILE = {
       nw: 'palace-fill', ne: 'palace-fill', sw: 'palace-fill', se: 'palace-fill',
     },
     fallback: 'palace-fill',
-    // wallInner: {
-    //   top: 'palace-in-top', bottom: 'palace-in-bottom', left: 'palace-in-left', right: 'palace-in-right',
-    //   thinH: 'palace-in-run-h', thinV: 'palace-in-run-v',
-    //   iNW: 'palace-in-ci-nw', iNE: 'palace-in-ci-ne', iSW: 'palace-in-ci-sw', iSE: 'palace-in-ci-se',
-    //   nw: 'palace-in-fill', ne: 'palace-in-fill', sw: 'palace-in-fill', se: 'palace-in-fill',
-    // },
-    // fallbackInner: 'palace-in-fill',
-    // floorEdge: { n: 'palace-edge-n', e: 'palace-edge-e', s: 'palace-edge-s', w: 'palace-edge-w' },
+    // Internal partitions, cut from art/palace-inner-sheet.png (see
+    // tools/slice_palace_inner.py). `cross` has no picker case — a wall cell
+    // whose neighbours are all wall is solid, not a junction — so it is listed
+    // here only to keep it out of the decor palette.
+    wallInner: {
+      top: 'palace-in-top', bottom: 'palace-in-bottom', left: 'palace-in-left', right: 'palace-in-right',
+      thinH: 'palace-in-run-h', thinV: 'palace-in-run-v',
+      iNW: 'palace-in-ci-nw', iNE: 'palace-in-ci-ne', iSW: 'palace-in-ci-sw', iSE: 'palace-in-ci-se',
+      nw: 'palace-in-fill', ne: 'palace-in-fill', sw: 'palace-in-fill', se: 'palace-in-fill',
+      endN: 'palace-in-end-n', endE: 'palace-in-end-e', endS: 'palace-in-end-s', endW: 'palace-in-end-w',
+      cross: 'palace-in-cross',
+    },
+    fallbackInner: 'palace-in-fill',
   },
 };
 
@@ -178,6 +189,13 @@ export function wallKey(cfg, d, x, y) {
   // means the wall runs east-west.
   if (N && S && !E && !W && w.thinH) return w.thinH;
   if (E && W && !N && !S && w.thinV) return w.thinV;
+  // A terminus: floor on three sides, so the wall runs off the fourth. Named
+  // for the way the wall CONTINUES. Must be tested before the inner corners,
+  // which would otherwise claim it (floor to the S and E matches iNW).
+  if (E && W && N && !S && w.endS) return w.endS;
+  if (E && W && S && !N && w.endN) return w.endN;
+  if (N && S && E && !W && w.endW) return w.endW;
+  if (N && S && W && !E && w.endE) return w.endE;
   if (S && E) return w.iNW; if (S && W) return w.iNE; if (N && E) return w.iSW; if (N && W) return w.iSE;
   if (S) return w.top; if (N) return w.bottom; if (E) return w.left; if (W) return w.right;
   if (SE) return w.nw; if (SW) return w.ne; if (NE) return w.sw; if (NW) return w.se;

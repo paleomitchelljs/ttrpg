@@ -163,23 +163,45 @@ pickers already route to them, so each one goes live the moment its tile exists:
 | `fallbackInner` | enclosed partition interior |
 | `floorEdge.n/e/s/w` | floor that abuts an **outer** wall, named for the side the wall is on. Never used beside an internal wall — the outer sheet bakes the shell's shadow into this stone |
 
-**What a source sheet must satisfy.** The slicer cuts on the magenta grid, so
-each wall run has to sit **centred inside one cell**, not straddling a grid
-line. The current hand-drawn references do not: on the internal sheet the
-vertical run is 127px wide but crosses the column-4/5 line (right 45% of c4,
-left 34% of c5), and the horizontal run is 276px tall, spanning the bottom of
-row 3, all of row 4 and the top 45% of row 5. Cut on that grid, every tile
-carries half a wall. So when re-exporting:
+### Slicing a sheet that ignores its own grid
 
-1. One feature per cell, centred, with the cell's full width/height of context.
-2. Draw the horizontal run and the vertical run at the **same thickness** — the
-   references use a 3/4 view where a horizontal wall shows its face and reads
-   ~2× taller, which cannot tile isotropically.
-3. Include a straight run, a corner, a T and a cross for the internal set, so
-   `thinH`/`thinV` and the four `i*` corners all come from drawn art rather
-   than rotation.
-4. Keep the grid lines pure magenta (`is_bg`) and don't let art bleed across
-   them.
+`tools/slice_palace_inner.py` cuts the palace's internal set out of
+`art/palace-inner-sheet.png`, which draws one big `+` of raised wall on grey
+cobble. It is worth reading before slicing any sheet whose art doesn't line up
+with its magenta grid, because the same three moves apply.
+
+**1. Heal the grid lines first.** They are opaque 5px lines drawn straight
+*through* the art, so every cut would carry a pink stripe. `heal()` drops the
+outer frame, then inpaints in **two sequential passes** — along x, which fixes
+every vertical line because each row has good pixels either side, then along y,
+which fixes the horizontal lines and the crossings the first pass already
+repaired. One averaged pass does not work: a line's own row is entirely masked,
+so on that axis it has nothing to interpolate from. Output goes to
+`art/palace-inner-clean.png`, which is what `tile-tags.json` boxes index into.
+
+**2. Anchor the cut lattice on the features, not the grid.** Here the N-S band
+is 126px wide but straddles the column-4/5 line, and the E-W wall spans three
+rows. Measured off the art, the band centres on x=618 and the E-W wall's plan
+view on y=508, giving a 160px lattice at `x = 538 + 160k`, `y = 428 + 160m`.
+That lands the straight runs, the crossing and 20 clean floor cells.
+
+**3. Cut corners off an offset lattice.** A `+` contains no L anywhere, so the
+four corners come from a lattice shifted half a tile, which puts each cut on one
+quadrant of the crossing. The two southern corners need a further drop
+(y=668, not 508): in this 3/4 view the wall's south side is its tall brick
+*face*, and floor only reappears below it. Shifting the lattice to harvest
+pieces the sheet never drew as such is the whole reason the set comes out of one
+sheet.
+
+What the sheet cannot give gets synthesised: the sheet terminates only one arm,
+so the other three `end` caps are that tile rotated, and `fill` (an enclosed
+partition, all wall top-surface) is mirror-tiled from the largest clean 90×55
+patch — reflecting rather than repeating so the seams don't read as a grid.
+
+**Still unsliced:** `art/palace-outer-sheet.png`. Cutting it would let
+`floorEdge` go live (floor that abuts the outer shell, carrying its baked
+shadow) and replace the outer wall pieces, which are still the older
+hand-assembled `palace-sheet.png` set.
 
 ---
 

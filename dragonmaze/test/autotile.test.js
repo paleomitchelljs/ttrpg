@@ -179,13 +179,56 @@ const ROOM = geom([
   }
 }
 
-// --- 10. every shipped theme still names only tiles that exist ---
+// --- 10. every shipped theme names only tiles that actually exist ---
+// A key with no tile behind it renders a BLANK cell rather than failing, so
+// this is the guard: check every theme's whole geometry set against the
+// generated manifest.
 {
+  const { TILES } = await import('../src/assets-manifest.js');
   for (const [name, cfg] of Object.entries(AUTOTILE)) {
     for (const k of autotileKeys(cfg)) {
       assert.ok(k && typeof k === 'string' && !k.includes('undefined'), `${name}: bad key ${k}`);
+      assert.ok(TILES[k], `${name} names '${k}', which has no tile in assets/tiles`);
     }
   }
+}
+
+// --- 11. the palace's internal set is complete enough to autotile a room ---
+// Every piece the picker can reach for an internal wall must be declared, or a
+// map with partitions gets holes.
+{
+  const inner = AUTOTILE.palace.wallInner;
+  for (const k of ['top', 'bottom', 'left', 'right', 'thinH', 'thinV',
+                   'iNW', 'iNE', 'iSW', 'iSE', 'endN', 'endE', 'endS', 'endW']) {
+    assert.ok(inner[k], `palace wallInner is missing ${k}`);
+  }
+  // A one-cell-thick L partition, deliberately not touching the border (a wall
+  // that does is outer by design). It exercises a corner, both runs and both
+  // kinds of terminus.
+  const room = geom([
+    '#########',
+    '#.......#',
+    '#.####..#',
+    '#.#.....#',
+    '#.#.....#',
+    '#.......#',
+    '#########',
+  ]);
+  const outerKeys = new Set(Object.values(AUTOTILE.palace.wall));
+  const seen = new Set();
+  for (let y = 1; y < room.height - 1; y++) {
+    for (let x = 1; x < room.width - 1; x++) {
+      if (room.tiles[y][x] === 1) continue;
+      const k = wallKey(AUTOTILE.palace, room, x, y);
+      seen.add(k);
+      assert.ok(k.startsWith('palace-in-'), `interior wall at ${x},${y} drew '${k}'`);
+      assert.ok(!outerKeys.has(k), 'and never an outer-shell piece');
+    }
+  }
+  // the cross should exercise runs, corners and at least one terminus
+  assert.ok([...seen].some((k) => k.includes('run')), 'straight runs used');
+  assert.ok([...seen].some((k) => k.includes('ci-')), 'corners used');
+  assert.ok([...seen].some((k) => k.includes('end-')), 'a terminus used');
 }
 
 console.log('autotile.test.js: all assertions passed ✓');

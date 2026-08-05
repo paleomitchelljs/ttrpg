@@ -2251,5 +2251,283 @@
     "tags": [],
     "sheet": "palace-sheet.png",
     "role": "wall"
+  },
+  "palace-in-ci-se": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "box": [
+      458,
+      348,
+      160,
+      160
+    ],
+    "role": "wall"
+  },
+  "palace-in-ci-sw": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "box": [
+      618,
+      348,
+      160,
+      160
+    ],
+    "role": "wall"
+  },
+  "palace-in-ci-ne": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "box": [
+      458,
+      668,
+      160,
+      160
+    ],
+    "role": "wall"
+  },
+  "palace-in-ci-nw": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "box": [
+      618,
+      668,
+      160,
+      160
+    ],
+    "role": "wall"
+  },
+  "palace-in-run-v": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "box": [
+      538,
+      268,
+      160,
+      160
+    ],
+    "role": "wall"
+  },
+  "palace-in-run-h": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "box": [
+      378,
+      428,
+      160,
+      160
+    ],
+    "role": "wall"
+  },
+  "palace-in-bottom": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "box": [
+      378,
+      348,
+      160,
+      160
+    ],
+    "role": "wall"
+  },
+  "palace-in-top": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "box": [
+      378,
+      668,
+      160,
+      160
+    ],
+    "role": "wall"
+  },
+  "palace-in-left": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "box": [
+      458,
+      268,
+      160,
+      160
+    ],
+    "role": "wall"
+  },
+  "palace-in-right": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "box": [
+      618,
+      268,
+      160,
+      160
+    ],
+    "role": "wall"
+  },
+  "palace-in-cross": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "box": [
+      538,
+      428,
+      160,
+      160
+    ],
+    "role": "wall"
+  },
+  "palace-in-end-w": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "box": [
+      58,
+      428,
+      160,
+      160
+    ],
+    "role": "wall",
+    "from": "palace-in-end-e"
+  },
+  "palace-in-floor-a": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "box": [
+      58,
+      108,
+      160,
+      160
+    ],
+    "role": "floor"
+  },
+  "palace-in-floor-b": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "box": [
+      218,
+      108,
+      160,
+      160
+    ],
+    "role": "floor"
+  },
+  "palace-in-floor-c": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "box": [
+      378,
+      108,
+      160,
+      160
+    ],
+    "role": "floor"
+  },
+  "palace-in-floor-d": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "box": [
+      698,
+      108,
+      160,
+      160
+    ],
+    "role": "floor"
+  },
+  "palace-in-floor-e": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "box": [
+      858,
+      108,
+      160,
+      160
+    ],
+    "role": "floor"
+  },
+  "palace-in-floor-f": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "box": [
+      58,
+      268,
+      160,
+      160
+    ],
+    "role": "floor"
+  },
+  "palace-in-floor-g": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "box": [
+      218,
+      268,
+      160,
+      160
+    ],
+    "role": "floor"
+  },
+  "palace-in-floor-h": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "box": [
+      698,
+      908,
+      160,
+      160
+    ],
+    "role": "floor"
+  },
+  "palace-in-floor-i": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "box": [
+      858,
+      908,
+      160,
+      160
+    ],
+    "role": "floor"
+  },
+  "palace-in-fill": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "box": [
+      575,
+      470,
+      665,
+      525
+    ],
+    "role": "wall"
+  },
+  "palace-in-end-e": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "box": [
+      58,
+      428,
+      160,
+      160
+    ],
+    "role": "wall"
+  },
+  "palace-in-end-s": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "box": [
+      58,
+      428,
+      160,
+      160
+    ],
+    "role": "wall",
+    "from": "palace-in-end-e"
+  },
+  "palace-in-end-n": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "box": [
+      58,
+      428,
+      160,
+      160
+    ],
+    "role": "wall",
+    "from": "palace-in-end-e"
   }
 }
