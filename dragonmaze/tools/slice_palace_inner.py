@@ -40,6 +40,7 @@ from spritelib import write_manifest  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "art" / "palace-inner-sheet.png"
+CORNERS = ROOT / "art" / "palace-inner-corners-sheet.png"
 CLEAN = ROOT / "art" / "palace-inner-clean.png"
 TILES = ROOT / "assets" / "tiles"
 TAGS = ROOT / "data" / "tile-tags.json"
@@ -54,19 +55,17 @@ T = 160  # tile edge, matching the existing palace-* geometry tiles
 # one-cell-thick wall, floor on both opposite sides); the edge pieces are a wall
 # with floor on one side only.
 BOXES = {
-    # --- the four corners, off the half-offset lattice (quadrants of the +) ---
-    "palace-in-ci-se": (458, 348),   # floor NW
-    "palace-in-ci-sw": (618, 348),   # floor NE
-    "palace-in-ci-ne": (458, 668),   # floor SW
-    "palace-in-ci-nw": (618, 668),   # floor SE
     # --- straight one-cell runs, on the feature lattice ---
     "palace-in-run-v": (538, 268),   # N-S wall, floor E and W
     "palace-in-run-h": (378, 428),   # E-W wall, floor N and S
-    # --- edges: wall with floor on one side ---
-    "palace-in-bottom": (378, 348),  # floor to the N
-    "palace-in-top": (378, 668),     # floor to the S
-    "palace-in-left": (458, 268),    # floor to the W
-    "palace-in-right": (618, 268),   # floor to the E
+    # --- edges: wall with floor on ONE side. The box is pulled in tight so the
+    # cell is mostly wall with a ~25px verge of floor: an edge cell belongs to a
+    # thick wall mass, and an earlier cut that gave away half the tile to floor
+    # made every mass look eroded.
+    "palace-in-bottom": (378, 403),  # floor to the N
+    "palace-in-top": (378, 578),     # floor to the S
+    "palace-in-left": (531, 268),    # floor to the W
+    "palace-in-right": (546, 268),   # floor to the E
     # --- junction + terminus ---
     "palace-in-cross": (538, 428),
     "palace-in-end-e": (58, 428),    # the E-W arm's western terminus: wall runs EAST
@@ -89,6 +88,24 @@ WALL_ROLE = {k for k in BOXES if not k.startswith("palace-in-floor")}
 # of repeating keeps the seams from reading as a grid.
 FILL_PATCH = (575, 470, 665, 525)
 
+# The `+` sheet has no L in it anywhere, so an earlier pass cut the corners off a
+# half-offset lattice — which lands each cut on a QUADRANT of the crossing and
+# leaves the arms half-width and hard against a tile edge (64px, vs 130px centred
+# on the runs). Every corner-to-run join stepped. `palace-inner-corners-sheet.png`
+# draws the corners properly, so they come from there instead: cell -> the corner
+# it is, named for where the wall BODY sits.
+CORNER_CELLS = {
+    "palace-in-ci-ne": (1, 1),   # r2c2: solid NE, floor S and W
+    "palace-in-ci-nw": (1, 2),   # r2c3: solid NW, floor S and E
+    "palace-in-ci-se": (2, 1),   # r3c2: solid SE, floor N and W
+}
+# The fourth corner is not drawn. Mirroring the SE one left-to-right keeps the
+# light where it is (top-lit) — a rotation would move it.
+CORNER_MIRROR = ("palace-in-ci-sw", "palace-in-ci-se")
+CORNER_ROWS = [(5, 276), (284, 553), (561, 835)]
+CORNER_COLS = [(4, 280), (288, 568), (576, 847)]
+INSET = 4  # step in off each cell edge, clear of the magenta rules
+
 
 def mirror_tile(patch, size):
     pw, ph = patch.size
@@ -101,6 +118,33 @@ def mirror_tile(patch, size):
             if (j // ph) % 2:
                 p = p.transpose(Image.FLIP_TOP_BOTTOM)
             out.paste(p, (i, j))
+    return out
+
+
+def compose_elbow(fill, run_v, run_h, sides, cap=34):
+    """Build a one-cell-thick corner by lifting the runs' own cap strips.
+
+    The drawn corners are quadrants of a THICK wall mass, so using one where a
+    single-cell wall turns gives a blob visibly fatter than the run either side.
+    An elbow cell is entirely wall — what makes it read as a corner is a lit cap
+    along the two edges that face floor. Taking those strips off `run_v` (which
+    carries caps on its E and W edges) and `run_h` (N and S) makes them line up
+    with the runs by construction: they are the same pixels.
+
+    `sides` is the pair of edges facing floor, e.g. ('S','W') for a wall that
+    continues north and east.
+    """
+    out = fill.copy()
+    w, h = out.size
+    for side in sides:
+        if side == "W":
+            out.paste(run_v.crop((0, 0, cap, h)), (0, 0))
+        elif side == "E":
+            out.paste(run_v.crop((w - cap, 0, w, h)), (w - cap, 0))
+        elif side == "N":
+            out.paste(run_h.crop((0, 0, w, cap)), (0, 0))
+        elif side == "S":
+            out.paste(run_h.crop((0, h - cap, w, h)), (0, h - cap))
     return out
 
 
@@ -171,6 +215,28 @@ def main():
         end.transpose(turn).save(TILES / f"{name}.png")
         tags[name] = {"tags": [], "sheet": CLEAN.name, "box": list(BOXES["palace-in-end-e"]) + [T, T],
                       "role": "wall", "from": "palace-in-end-e"}
+
+    corners = Image.open(CORNERS).convert("RGB")
+    for name, (r, c) in CORNER_CELLS.items():
+        y0, y1 = CORNER_ROWS[r]
+        x0, x1 = CORNER_COLS[c]
+        box = (x0 + INSET, y0 + INSET, x1 - INSET, y1 - INSET)
+        corners.crop(box).resize((T, T), Image.LANCZOS).save(TILES / f"{name}.png")
+        tags[name] = {"tags": [], "sheet": CORNERS.name, "box": list(box), "role": "wall"}
+    want, src = CORNER_MIRROR
+    Image.open(TILES / f"{src}.png").transpose(Image.FLIP_LEFT_RIGHT).save(TILES / f"{want}.png")
+    tags[want] = {**tags[src], "from": src, "mirror": "x"}
+
+    # Thin elbows, welded from the runs (see compose_elbow). Named for where the
+    # wall body sits, so `iNE` continues N and E.
+    rv = Image.open(TILES / "palace-in-run-v.png")
+    rh = Image.open(TILES / "palace-in-run-h.png")
+    body = mirror_tile(clean.crop(FILL_PATCH), T)
+    for name, sides in (("palace-in-el-ne", ("S", "W")), ("palace-in-el-nw", ("S", "E")),
+                        ("palace-in-el-se", ("N", "W")), ("palace-in-el-sw", ("N", "E"))):
+        compose_elbow(body, rv, rh, sides).save(TILES / f"{name}.png")
+        tags[name] = {"tags": [], "sheet": CLEAN.name, "role": "wall",
+                      "from": "composed from palace-in-run-v + palace-in-run-h"}
 
     fill = mirror_tile(clean.crop(FILL_PATCH), T)
     fill.save(TILES / "palace-in-fill.png")

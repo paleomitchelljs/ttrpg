@@ -2254,45 +2254,47 @@
   },
   "palace-in-ci-se": {
     "tags": [],
-    "sheet": "palace-inner-clean.png",
+    "sheet": "palace-inner-corners-sheet.png",
     "box": [
-      458,
-      348,
-      160,
-      160
+      292,
+      565,
+      564,
+      831
     ],
     "role": "wall"
   },
   "palace-in-ci-sw": {
     "tags": [],
-    "sheet": "palace-inner-clean.png",
+    "sheet": "palace-inner-corners-sheet.png",
     "box": [
-      618,
-      348,
-      160,
-      160
+      292,
+      565,
+      564,
+      831
     ],
-    "role": "wall"
+    "role": "wall",
+    "from": "palace-in-ci-se",
+    "mirror": "x"
   },
   "palace-in-ci-ne": {
     "tags": [],
-    "sheet": "palace-inner-clean.png",
+    "sheet": "palace-inner-corners-sheet.png",
     "box": [
-      458,
-      668,
-      160,
-      160
+      292,
+      288,
+      564,
+      549
     ],
     "role": "wall"
   },
   "palace-in-ci-nw": {
     "tags": [],
-    "sheet": "palace-inner-clean.png",
+    "sheet": "palace-inner-corners-sheet.png",
     "box": [
-      618,
-      668,
-      160,
-      160
+      580,
+      288,
+      843,
+      549
     ],
     "role": "wall"
   },
@@ -2323,7 +2325,7 @@
     "sheet": "palace-inner-clean.png",
     "box": [
       378,
-      348,
+      403,
       160,
       160
     ],
@@ -2334,7 +2336,7 @@
     "sheet": "palace-inner-clean.png",
     "box": [
       378,
-      668,
+      578,
       160,
       160
     ],
@@ -2344,7 +2346,7 @@
     "tags": [],
     "sheet": "palace-inner-clean.png",
     "box": [
-      458,
+      531,
       268,
       160,
       160
@@ -2355,7 +2357,7 @@
     "tags": [],
     "sheet": "palace-inner-clean.png",
     "box": [
-      618,
+      546,
       268,
       160,
       160
@@ -2529,5 +2531,29 @@
     ],
     "role": "wall",
     "from": "palace-in-end-e"
+  },
+  "palace-in-el-ne": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "role": "wall",
+    "from": "composed from palace-in-run-v + palace-in-run-h"
+  },
+  "palace-in-el-nw": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "role": "wall",
+    "from": "composed from palace-in-run-v + palace-in-run-h"
+  },
+  "palace-in-el-se": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "role": "wall",
+    "from": "composed from palace-in-run-v + palace-in-run-h"
+  },
+  "palace-in-el-sw": {
+    "tags": [],
+    "sheet": "palace-inner-clean.png",
+    "role": "wall",
+    "from": "composed from palace-in-run-v + palace-in-run-h"
   }
 }

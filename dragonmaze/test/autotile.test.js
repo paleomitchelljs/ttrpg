@@ -225,10 +225,36 @@ const ROOM = geom([
       assert.ok(!outerKeys.has(k), 'and never an outer-shell piece');
     }
   }
-  // the cross should exercise runs, corners and at least one terminus
   assert.ok([...seen].some((k) => k.includes('run')), 'straight runs used');
-  assert.ok([...seen].some((k) => k.includes('ci-')), 'corners used');
   assert.ok([...seen].some((k) => k.includes('end-')), 'a terminus used');
+  // A one-cell wall turning gets the THIN elbow, whose arms are the same pixels
+  // as the runs. The chunky quadrant corner would read as a blob here.
+  assert.ok([...seen].some((k) => k.includes('el-')), 'thin elbows used');
+  assert.ok(![...seen].some((k) => k.includes('ci-')), 'and never a thick-mass corner');
+}
+
+// --- 12. a THICK wall mass turns with the chunky quadrant corner instead ---
+{
+  const mass = geom([
+    '##########',
+    '#........#',
+    '#..####..#',
+    '#..####..#',
+    '#..##....#',
+    '#..##....#',
+    '#........#',
+    '##########',
+  ]);
+  const keys = [];
+  for (let y = 1; y < mass.height - 1; y++) {
+    for (let x = 1; x < mass.width - 1; x++) {
+      if (mass.tiles[y][x] !== 1) keys.push(wallKey(AUTOTILE.palace, mass, x, y));
+    }
+  }
+  assert.ok(keys.every((k) => k.startsWith('palace-in-')), 'the island is internal throughout');
+  assert.ok(keys.some((k) => k.includes('ci-')), 'a thick mass uses the quadrant corner');
+  assert.ok(!keys.some((k) => k.includes('el-')), 'and never the thin elbow');
+  assert.ok(keys.includes('palace-in-fill'), 'its enclosed middle is solid');
 }
 
 console.log('autotile.test.js: all assertions passed ✓');

@@ -185,18 +185,30 @@ rows. Measured off the art, the band centres on x=618 and the E-W wall's plan
 view on y=508, giving a 160px lattice at `x = 538 + 160k`, `y = 428 + 160m`.
 That lands the straight runs, the crossing and 20 clean floor cells.
 
-**3. Cut corners off an offset lattice.** A `+` contains no L anywhere, so the
-four corners come from a lattice shifted half a tile, which puts each cut on one
-quadrant of the crossing. The two southern corners need a further drop
-(y=668, not 508): in this 3/4 view the wall's south side is its tall brick
-*face*, and floor only reappears below it. Shifting the lattice to harvest
-pieces the sheet never drew as such is the whole reason the set comes out of one
-sheet.
+**3. Corners come from a second sheet.** A `+` contains no L anywhere. Cutting
+them off a half-offset lattice (one quadrant of the crossing per tile) *looks*
+clever and does not work: it leaves the arms half-width and hard against a tile
+edge — 64px, against the runs' 130px centred — so every corner-to-run join
+steps. `art/palace-inner-corners-sheet.png` draws three of them properly
+(`ci-ne`, `ci-nw`, `ci-se`); the fourth is the SE one mirrored left-to-right,
+which keeps the light on top where a rotation would move it.
 
-What the sheet cannot give gets synthesised: the sheet terminates only one arm,
-so the other three `end` caps are that tile rotated, and `fill` (an enclosed
-partition, all wall top-surface) is mirror-tiled from the largest clean 90×55
-patch — reflecting rather than repeating so the seams don't read as a grid.
+**Two corner regimes.** Those drawn corners are quadrants of a THICK wall mass.
+Where a *one-cell-thick* wall turns, they read as a blob fatter than the run
+either side, so `compose_elbow` builds a thin elbow instead by lifting the
+runs' own cap strips onto a fill body — the same pixels, so the widths agree by
+construction. `wallKey` picks between them on the diagonal behind the bend:
+floor there means a thin wall turning (`elNW`…), wall means the corner of a mass
+(`iNW`…).
+
+The rest is synthesised: the sheet terminates only one arm, so the other three
+`end` caps are that tile rotated, and `fill` (an enclosed partition, all wall
+top-surface) is mirror-tiled from the largest clean 90×55 patch — reflecting
+rather than repeating so the seams don't read as a grid.
+
+**Edge boxes are cut tight.** An edge cell (floor on one side) belongs to a
+thick mass, so its box leaves only a ~25px verge of floor. An earlier cut gave
+away half the tile and every wall mass looked eroded.
 
 **Still unsliced:** `art/palace-outer-sheet.png`. Cutting it would let
 `floorEdge` go live (floor that abuts the outer shell, carrying its baked

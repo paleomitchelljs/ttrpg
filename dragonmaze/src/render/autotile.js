@@ -85,6 +85,7 @@ export const AUTOTILE = {
       top: 'palace-in-top', bottom: 'palace-in-bottom', left: 'palace-in-left', right: 'palace-in-right',
       thinH: 'palace-in-run-h', thinV: 'palace-in-run-v',
       iNW: 'palace-in-ci-nw', iNE: 'palace-in-ci-ne', iSW: 'palace-in-ci-sw', iSE: 'palace-in-ci-se',
+      elNW: 'palace-in-el-nw', elNE: 'palace-in-el-ne', elSW: 'palace-in-el-sw', elSE: 'palace-in-el-se',
       nw: 'palace-in-fill', ne: 'palace-in-fill', sw: 'palace-in-fill', se: 'palace-in-fill',
       endN: 'palace-in-end-n', endE: 'palace-in-end-e', endS: 'palace-in-end-s', endW: 'palace-in-end-w',
       cross: 'palace-in-cross',
@@ -196,7 +197,15 @@ export function wallKey(cfg, d, x, y) {
   if (E && W && S && !N && w.endN) return w.endN;
   if (N && S && E && !W && w.endW) return w.endW;
   if (N && S && W && !E && w.endE) return w.endE;
-  if (S && E) return w.iNW; if (S && W) return w.iNE; if (N && E) return w.iSW; if (N && W) return w.iSE;
+  // Two adjacent sides are floor, so the wall turns here. WHICH corner piece
+  // depends on how thick the wall is: if the diagonal behind the bend is floor
+  // too, this is a one-cell-thick wall turning (a thin elbow whose arms match
+  // the straight runs); if it is wall, the cell is the corner of a thick mass
+  // and wants the chunky quadrant piece.
+  if (S && E) return NW && w.elNW ? w.elNW : w.iNW;
+  if (S && W) return NE && w.elNE ? w.elNE : w.iNE;
+  if (N && E) return SW && w.elSW ? w.elSW : w.iSW;
+  if (N && W) return SE && w.elSE ? w.elSE : w.iSE;
   if (S) return w.top; if (N) return w.bottom; if (E) return w.left; if (W) return w.right;
   if (SE) return w.nw; if (SW) return w.ne; if (NE) return w.sw; if (NW) return w.se;
   return fill;
