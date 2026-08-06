@@ -49,48 +49,39 @@ export const AUTOTILE = {
     },
     fallback: 'sewer2-fill',
   },
-  // The Lost Temple palace (art/palace-sheet.png). Floors are the six cracked/
-  // mossy sandstone variants, shuffled per cell. Walls are DIRECTIONAL, same as
-  // the sewer: a dark stone body (palace-fill) with a lit sandstone cap on each
-  // edge/corner that faces the floor. The sheet only draws a top-edge + a corner
-  // piece, so the four edges and four inner corners are those two rotated 90° at
-  // slice time (palace-w-*, palace-ci-*). Outer/boundary corners fall back to the
-  // plain dark body.
+  // The Lost Temple palace — one sheet, one look. art/palace-room-sheet.png is a
+  // finished room, so the ring, the floor and the internal runs all come out of
+  // it together (tools/slice_palace_room.py); a wall tile's baked floor-facing
+  // edge therefore matches the floor beside it, which the older three-sheet mix
+  // never managed.
   //
-  // Its INTERNAL partitions come from a second sheet (art/palace-inner-sheet.png,
-  // cut by tools/slice_palace_inner.py) — raised cobble-and-sandstone walls, no
-  // pillars — and the floor comes from that sheet too, so the two sets share a
-  // stone. `floorEdge` is still unwired: the outer sheet has not been sliced.
+  // `palace-o-*` is the outer ring, `palace-r-*` the interior pieces. The two
+  // share a brick, so the outer/inner split here buys the thin-wall vocabulary
+  // (runs, elbows, ends) rather than a different material.
   palace: {
-    // Floor comes from the INTERNAL sheet, which draws its cobble around the
-    // partitions — the internal wall pieces carry that cobble baked into their
-    // floor-facing quadrants, so any other floor shows a seam at every corner.
-    // (The older sandstone palace-floor-a..f are still sliced, now decor-only.)
     floor: [
-      'palace-in-floor-a', 'palace-in-floor-b', 'palace-in-floor-c', 'palace-in-floor-d', 'palace-in-floor-e',
-      'palace-in-floor-f', 'palace-in-floor-g', 'palace-in-floor-h', 'palace-in-floor-i',
+      'palace-r-floor-a', 'palace-r-floor-b', 'palace-r-floor-c', 'palace-r-floor-d', 'palace-r-floor-e',
+      'palace-r-floor-f', 'palace-r-floor-g', 'palace-r-floor-h', 'palace-r-floor-i',
     ],
     accent: [],
     wall: {
-      top: 'palace-w-top', bottom: 'palace-w-bottom', left: 'palace-w-left', right: 'palace-w-right',
-      iNW: 'palace-ci-nw', iNE: 'palace-ci-ne', iSW: 'palace-ci-sw', iSE: 'palace-ci-se',
-      nw: 'palace-fill', ne: 'palace-fill', sw: 'palace-fill', se: 'palace-fill',
+      top: 'palace-o-top', bottom: 'palace-o-bottom', left: 'palace-o-left', right: 'palace-o-right',
+      nw: 'palace-o-nw', ne: 'palace-o-ne', sw: 'palace-o-sw', se: 'palace-o-se',
+      iNW: 'palace-r-ci-nw', iNE: 'palace-r-ci-ne', iSW: 'palace-r-ci-sw', iSE: 'palace-r-ci-se',
     },
-    fallback: 'palace-fill',
-    // Internal partitions, cut from art/palace-inner-sheet.png (see
-    // tools/slice_palace_inner.py). `cross` has no picker case — a wall cell
-    // whose neighbours are all wall is solid, not a junction — so it is listed
-    // here only to keep it out of the decor palette.
+    fallback: 'palace-r-fill',
+    // The interior adds what a ring has no need of: one-cell runs, the elbows
+    // they turn through, and termini. Its edge pieces are the ring's, since a
+    // thick partition presents the same face as the shell does.
     wallInner: {
-      top: 'palace-in-top', bottom: 'palace-in-bottom', left: 'palace-in-left', right: 'palace-in-right',
-      thinH: 'palace-in-run-h', thinV: 'palace-in-run-v',
-      iNW: 'palace-in-ci-nw', iNE: 'palace-in-ci-ne', iSW: 'palace-in-ci-sw', iSE: 'palace-in-ci-se',
-      elNW: 'palace-in-el-nw', elNE: 'palace-in-el-ne', elSW: 'palace-in-el-sw', elSE: 'palace-in-el-se',
-      nw: 'palace-in-fill', ne: 'palace-in-fill', sw: 'palace-in-fill', se: 'palace-in-fill',
-      endN: 'palace-in-end-n', endE: 'palace-in-end-e', endS: 'palace-in-end-s', endW: 'palace-in-end-w',
-      cross: 'palace-in-cross',
+      top: 'palace-o-top', bottom: 'palace-o-bottom', left: 'palace-o-left', right: 'palace-o-right',
+      nw: 'palace-r-fill', ne: 'palace-r-fill', sw: 'palace-r-fill', se: 'palace-r-fill',
+      thinH: 'palace-r-run-h', thinV: 'palace-r-run-v',
+      iNW: 'palace-r-ci-nw', iNE: 'palace-r-ci-ne', iSW: 'palace-r-ci-sw', iSE: 'palace-r-ci-se',
+      elNW: 'palace-r-ci-nw', elNE: 'palace-r-ci-ne', elSW: 'palace-r-ci-sw', elSE: 'palace-r-ci-se',
+      endN: 'palace-r-end-n', endE: 'palace-r-end-e', endS: 'palace-r-end-s', endW: 'palace-r-end-w',
     },
-    fallbackInner: 'palace-in-fill',
+    fallbackInner: 'palace-r-fill',
   },
 };
 

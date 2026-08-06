@@ -163,57 +163,41 @@ pickers already route to them, so each one goes live the moment its tile exists:
 | `fallbackInner` | enclosed partition interior |
 | `floorEdge.n/e/s/w` | floor that abuts an **outer** wall, named for the side the wall is on. Never used beside an internal wall — the outer sheet bakes the shell's shadow into this stone |
 
-### Slicing a sheet that ignores its own grid
+### Slicing a whole theme off one sheet
 
-`tools/slice_palace_inner.py` cuts the palace's internal set out of
-`art/palace-inner-sheet.png`, which draws one big `+` of raised wall on grey
-cobble. It is worth reading before slicing any sheet whose art doesn't line up
-with its magenta grid, because the same three moves apply.
+`tools/slice_palace_room.py` cuts the entire palace out of
+`art/palace-room-sheet.png`, a finished 8×8 room: outer ring, two doors, cobble
+floor, and internal wall runs. Taking every piece from one sheet is the point —
+a wall tile bakes the floor into its floor-facing edge, so a floor cut from
+anywhere else seams against it at every wall. The theme used to be stitched from
+three sheets and did exactly that.
 
-**1. Heal the grid lines first.** They are opaque 5px lines drawn straight
-*through* the art, so every cut would carry a pink stripe. `heal()` drops the
-outer frame, then inpaints in **two sequential passes** — along x, which fixes
-every vertical line because each row has good pixels either side, then along y,
-which fixes the horizontal lines and the crossings the first pass already
-repaired. One averaged pass does not work: a line's own row is entirely masked,
-so on that axis it has nothing to interpolate from. Output goes to
-`art/palace-inner-clean.png`, which is what `tile-tags.json` boxes index into.
+Two problems are worth knowing because they recur on any hand-drawn sheet.
 
-**2. Anchor the cut lattice on the features, not the grid.** Here the N-S band
-is 126px wide but straddles the column-4/5 line, and the E-W wall spans three
-rows. Measured off the art, the band centres on x=618 and the E-W wall's plan
-view on y=508, giving a 160px lattice at `x = 538 + 160k`, `y = 428 + 160m`.
-That lands the straight runs, the crossing and 20 clean floor cells.
+**Arms that don't agree.** Hand-drawn wall runs vary: on this sheet anywhere
+from 39% to 67% of a cell wide, with the centre wandering ±20px. Cut as drawn,
+every corner-to-run join steps sideways and changes width. `normalise()` warps
+each piece so its arms land on one shared band — a piecewise-linear resample
+pinning `[0, lo, hi, N-1]` to `[0, TLO, THI, N-1]`, which moves the arm without
+distorting the tile's border. The band is measured from the edges the wall
+actually leaves through, so a corner gets corrected on both axes at once. Any
+set where the pieces are drawn independently needs this.
 
-**3. Corners come from a second sheet.** A `+` contains no L anywhere. Cutting
-them off a half-offset lattice (one quadrant of the crossing per tile) *looks*
-clever and does not work: it leaves the arms half-width and hard against a tile
-edge — 64px, against the runs' 130px centred — so every corner-to-run join
-steps. `art/palace-inner-corners-sheet.png` draws three of them properly
-(`ci-ne`, `ci-nw`, `ci-se`); the fourth is the SE one mirrored left-to-right,
-which keeps the light on top where a rotation would move it.
+**A truncated sheet.** This one's last column is 83px and last row 119px against
+~145 elsewhere, so the ring's east and south are cut off. They come from
+mirroring the west and north — exact for a symmetric ring, and better than
+stretching a partial cell.
 
-**Two corner regimes.** Those drawn corners are quadrants of a THICK wall mass.
-Where a *one-cell-thick* wall turns, they read as a blob fatter than the run
-either side, so `compose_elbow` builds a thin elbow instead by lifting the
-runs' own cap strips onto a fill body — the same pixels, so the widths agree by
-construction. `wallKey` picks between them on the diagonal behind the bend:
-floor there means a thin wall turning (`elNW`…), wall means the corner of a mass
-(`iNW`…).
+Where a sheet's *background* fights back rather than its geometry, see
+`tools/slice_faedrake.py`: it flood-fills a gradient background by comparing
+each pixel to the neighbour that reached it, and lifts a painted-on veil by
+inverting the composite. A related trick, for grid rules drawn *through* the
+art: inpaint them in two sequential passes, along x then along y. One averaged
+pass cannot work — a rule's own row is entirely masked, so on that axis there is
+nothing to interpolate from.
 
-The rest is synthesised: the sheet terminates only one arm, so the other three
-`end` caps are that tile rotated, and `fill` (an enclosed partition, all wall
-top-surface) is mirror-tiled from the largest clean 90×55 patch — reflecting
-rather than repeating so the seams don't read as a grid.
-
-**Edge boxes are cut tight.** An edge cell (floor on one side) belongs to a
-thick mass, so its box leaves only a ~25px verge of floor. An earlier cut gave
-away half the tile and every wall mass looked eroded.
-
-**Still unsliced:** `art/palace-outer-sheet.png`. Cutting it would let
-`floorEdge` go live (floor that abuts the outer shell, carrying its baked
-shadow) and replace the outer wall pieces, which are still the older
-hand-assembled `palace-sheet.png` set.
+**Still unsliced:** nothing for the palace. The sewer theme is still the older
+`sewer2-*` rotation set.
 
 ---
 

@@ -2057,72 +2057,6 @@
       268
     ]
   },
-  "palace-floor-a": {
-    "tags": [],
-    "sheet": "palace-sheet.png",
-    "box": [
-      1290,
-      31,
-      161,
-      164
-    ],
-    "role": "floor"
-  },
-  "palace-floor-b": {
-    "tags": [],
-    "sheet": "palace-sheet.png",
-    "box": [
-      1468,
-      31,
-      163,
-      164
-    ],
-    "role": "floor"
-  },
-  "palace-floor-c": {
-    "tags": [],
-    "sheet": "palace-sheet.png",
-    "box": [
-      1646,
-      31,
-      164,
-      164
-    ],
-    "role": "floor"
-  },
-  "palace-floor-d": {
-    "tags": [],
-    "sheet": "palace-sheet.png",
-    "box": [
-      1290,
-      745,
-      161,
-      162
-    ],
-    "role": "floor"
-  },
-  "palace-floor-e": {
-    "tags": [],
-    "sheet": "palace-sheet.png",
-    "box": [
-      1468,
-      745,
-      163,
-      162
-    ],
-    "role": "floor"
-  },
-  "palace-floor-f": {
-    "tags": [],
-    "sheet": "palace-sheet.png",
-    "box": [
-      1646,
-      745,
-      164,
-      162
-    ],
-    "role": "floor"
-  },
   "palace-gecko": {
     "tags": [
       "decor",
@@ -2207,353 +2141,356 @@
       164
     ]
   },
-  "palace-w-bottom": {
+  "palace-o-top": {
     "tags": [],
-    "sheet": "palace-sheet.png",
-    "role": "wall"
-  },
-  "palace-w-top": {
-    "tags": [],
-    "sheet": "palace-sheet.png",
-    "role": "wall"
-  },
-  "palace-w-right": {
-    "tags": [],
-    "sheet": "palace-sheet.png",
-    "role": "wall"
-  },
-  "palace-w-left": {
-    "tags": [],
-    "sheet": "palace-sheet.png",
-    "role": "wall"
-  },
-  "palace-ci-sw": {
-    "tags": [],
-    "sheet": "palace-sheet.png",
-    "role": "wall"
-  },
-  "palace-ci-se": {
-    "tags": [],
-    "sheet": "palace-sheet.png",
-    "role": "wall"
-  },
-  "palace-ci-ne": {
-    "tags": [],
-    "sheet": "palace-sheet.png",
-    "role": "wall"
-  },
-  "palace-ci-nw": {
-    "tags": [],
-    "sheet": "palace-sheet.png",
-    "role": "wall"
-  },
-  "palace-fill": {
-    "tags": [],
-    "sheet": "palace-sheet.png",
-    "role": "wall"
-  },
-  "palace-in-ci-se": {
-    "tags": [],
-    "sheet": "palace-inner-corners-sheet.png",
-    "box": [
-      292,
-      565,
-      564,
-      831
-    ],
-    "role": "wall"
-  },
-  "palace-in-ci-sw": {
-    "tags": [],
-    "sheet": "palace-inner-corners-sheet.png",
-    "box": [
-      292,
-      565,
-      564,
-      831
-    ],
+    "sheet": "palace-room-sheet.png",
     "role": "wall",
-    "from": "palace-in-ci-se",
+    "box": [
+      290,
+      0,
+      140,
+      142
+    ]
+  },
+  "palace-o-left": {
+    "tags": [],
+    "sheet": "palace-room-sheet.png",
+    "role": "wall",
+    "box": [
+      0,
+      145,
+      142,
+      144
+    ]
+  },
+  "palace-o-nw": {
+    "tags": [],
+    "sheet": "palace-room-sheet.png",
+    "role": "wall",
+    "box": [
+      0,
+      0,
+      142,
+      142
+    ]
+  },
+  "palace-o-door-n": {
+    "tags": [],
+    "sheet": "palace-room-sheet.png",
+    "role": "wall",
+    "box": [
+      433,
+      0,
+      144,
+      142
+    ]
+  },
+  "palace-o-door-s": {
+    "tags": [],
+    "sheet": "palace-room-sheet.png",
+    "role": "wall",
+    "box": [
+      433,
+      1025,
+      144,
+      119
+    ]
+  },
+  "palace-o-bottom": {
+    "tags": [],
+    "sheet": "palace-room-sheet.png",
+    "role": "wall",
+    "box": [
+      290,
+      0,
+      140,
+      142
+    ],
+    "from": "palace-o-top",
+    "mirror": "y"
+  },
+  "palace-o-right": {
+    "tags": [],
+    "sheet": "palace-room-sheet.png",
+    "role": "wall",
+    "box": [
+      0,
+      145,
+      142,
+      144
+    ],
+    "from": "palace-o-left",
     "mirror": "x"
   },
-  "palace-in-ci-ne": {
+  "palace-o-ne": {
     "tags": [],
-    "sheet": "palace-inner-corners-sheet.png",
+    "sheet": "palace-room-sheet.png",
+    "role": "wall",
     "box": [
-      292,
-      288,
-      564,
-      549
+      0,
+      0,
+      142,
+      142
     ],
-    "role": "wall"
+    "from": "palace-o-nw",
+    "mirror": "x"
   },
-  "palace-in-ci-nw": {
+  "palace-o-sw": {
     "tags": [],
-    "sheet": "palace-inner-corners-sheet.png",
+    "sheet": "palace-room-sheet.png",
+    "role": "wall",
+    "box": [
+      0,
+      0,
+      142,
+      142
+    ],
+    "from": "palace-o-nw",
+    "mirror": "y"
+  },
+  "palace-o-se": {
+    "tags": [],
+    "sheet": "palace-room-sheet.png",
+    "role": "wall",
+    "box": [
+      0,
+      0,
+      142,
+      142
+    ],
+    "from": "palace-o-nw",
+    "mirror": "xy"
+  },
+  "palace-r-ci-se": {
+    "tags": [],
+    "sheet": "palace-room-sheet.png",
+    "role": "wall",
+    "box": [
+      290,
+      145,
+      140,
+      144
+    ],
+    "normalised": true
+  },
+  "palace-r-ci-ne": {
+    "tags": [],
+    "sheet": "palace-room-sheet.png",
+    "role": "wall",
+    "box": [
+      290,
+      292,
+      140,
+      141
+    ],
+    "normalised": true
+  },
+  "palace-r-ci-sw": {
+    "tags": [],
+    "sheet": "palace-room-sheet.png",
+    "role": "wall",
     "box": [
       580,
-      288,
-      843,
-      549
+      292,
+      143,
+      141
     ],
-    "role": "wall"
+    "normalised": true
   },
-  "palace-in-run-v": {
+  "palace-r-ci-nw": {
     "tags": [],
-    "sheet": "palace-inner-clean.png",
-    "box": [
-      538,
-      268,
-      160,
-      160
-    ],
-    "role": "wall"
-  },
-  "palace-in-run-h": {
-    "tags": [],
-    "sheet": "palace-inner-clean.png",
-    "box": [
-      378,
-      428,
-      160,
-      160
-    ],
-    "role": "wall"
-  },
-  "palace-in-bottom": {
-    "tags": [],
-    "sheet": "palace-inner-clean.png",
-    "box": [
-      378,
-      403,
-      160,
-      160
-    ],
-    "role": "wall"
-  },
-  "palace-in-top": {
-    "tags": [],
-    "sheet": "palace-inner-clean.png",
-    "box": [
-      378,
-      578,
-      160,
-      160
-    ],
-    "role": "wall"
-  },
-  "palace-in-left": {
-    "tags": [],
-    "sheet": "palace-inner-clean.png",
-    "box": [
-      531,
-      268,
-      160,
-      160
-    ],
-    "role": "wall"
-  },
-  "palace-in-right": {
-    "tags": [],
-    "sheet": "palace-inner-clean.png",
-    "box": [
-      546,
-      268,
-      160,
-      160
-    ],
-    "role": "wall"
-  },
-  "palace-in-cross": {
-    "tags": [],
-    "sheet": "palace-inner-clean.png",
-    "box": [
-      538,
-      428,
-      160,
-      160
-    ],
-    "role": "wall"
-  },
-  "palace-in-end-w": {
-    "tags": [],
-    "sheet": "palace-inner-clean.png",
-    "box": [
-      58,
-      428,
-      160,
-      160
-    ],
+    "sheet": "palace-room-sheet.png",
     "role": "wall",
-    "from": "palace-in-end-e"
-  },
-  "palace-in-floor-a": {
-    "tags": [],
-    "sheet": "palace-inner-clean.png",
     "box": [
-      58,
-      108,
-      160,
-      160
+      580,
+      584,
+      143,
+      147
     ],
-    "role": "floor"
+    "normalised": true
   },
-  "palace-in-floor-b": {
+  "palace-r-run-v": {
     "tags": [],
-    "sheet": "palace-inner-clean.png",
-    "box": [
-      218,
-      108,
-      160,
-      160
-    ],
-    "role": "floor"
-  },
-  "palace-in-floor-c": {
-    "tags": [],
-    "sheet": "palace-inner-clean.png",
-    "box": [
-      378,
-      108,
-      160,
-      160
-    ],
-    "role": "floor"
-  },
-  "palace-in-floor-d": {
-    "tags": [],
-    "sheet": "palace-inner-clean.png",
-    "box": [
-      698,
-      108,
-      160,
-      160
-    ],
-    "role": "floor"
-  },
-  "palace-in-floor-e": {
-    "tags": [],
-    "sheet": "palace-inner-clean.png",
-    "box": [
-      858,
-      108,
-      160,
-      160
-    ],
-    "role": "floor"
-  },
-  "palace-in-floor-f": {
-    "tags": [],
-    "sheet": "palace-inner-clean.png",
-    "box": [
-      58,
-      268,
-      160,
-      160
-    ],
-    "role": "floor"
-  },
-  "palace-in-floor-g": {
-    "tags": [],
-    "sheet": "palace-inner-clean.png",
-    "box": [
-      218,
-      268,
-      160,
-      160
-    ],
-    "role": "floor"
-  },
-  "palace-in-floor-h": {
-    "tags": [],
-    "sheet": "palace-inner-clean.png",
-    "box": [
-      698,
-      908,
-      160,
-      160
-    ],
-    "role": "floor"
-  },
-  "palace-in-floor-i": {
-    "tags": [],
-    "sheet": "palace-inner-clean.png",
-    "box": [
-      858,
-      908,
-      160,
-      160
-    ],
-    "role": "floor"
-  },
-  "palace-in-fill": {
-    "tags": [],
-    "sheet": "palace-inner-clean.png",
-    "box": [
-      575,
-      470,
-      665,
-      525
-    ],
-    "role": "wall"
-  },
-  "palace-in-end-e": {
-    "tags": [],
-    "sheet": "palace-inner-clean.png",
-    "box": [
-      58,
-      428,
-      160,
-      160
-    ],
-    "role": "wall"
-  },
-  "palace-in-end-s": {
-    "tags": [],
-    "sheet": "palace-inner-clean.png",
-    "box": [
-      58,
-      428,
-      160,
-      160
-    ],
+    "sheet": "palace-room-sheet.png",
     "role": "wall",
-    "from": "palace-in-end-e"
-  },
-  "palace-in-end-n": {
-    "tags": [],
-    "sheet": "palace-inner-clean.png",
     "box": [
-      58,
-      428,
-      160,
-      160
+      580,
+      436,
+      143,
+      145
     ],
-    "role": "wall",
-    "from": "palace-in-end-e"
+    "normalised": true
   },
-  "palace-in-el-ne": {
+  "palace-r-run-h": {
     "tags": [],
-    "sheet": "palace-inner-clean.png",
+    "sheet": "palace-room-sheet.png",
     "role": "wall",
-    "from": "composed from palace-in-run-v + palace-in-run-h"
+    "box": [
+      290,
+      734,
+      140,
+      140
+    ],
+    "normalised": true
   },
-  "palace-in-el-nw": {
+  "palace-r-end-w": {
     "tags": [],
-    "sheet": "palace-inner-clean.png",
+    "sheet": "palace-room-sheet.png",
     "role": "wall",
-    "from": "composed from palace-in-run-v + palace-in-run-h"
+    "box": [
+      433,
+      145,
+      144,
+      144
+    ],
+    "normalised": true
   },
-  "palace-in-el-se": {
+  "palace-r-end-n": {
     "tags": [],
-    "sheet": "palace-inner-clean.png",
+    "sheet": "palace-room-sheet.png",
     "role": "wall",
-    "from": "composed from palace-in-run-v + palace-in-run-h"
+    "box": [
+      433,
+      734,
+      144,
+      140
+    ],
+    "normalised": true
   },
-  "palace-in-el-sw": {
+  "palace-r-floor-a": {
     "tags": [],
-    "sheet": "palace-inner-clean.png",
+    "sheet": "palace-room-sheet.png",
+    "role": "floor",
+    "box": [
+      145,
+      145,
+      142,
+      144
+    ]
+  },
+  "palace-r-floor-b": {
+    "tags": [],
+    "sheet": "palace-room-sheet.png",
+    "role": "floor",
+    "box": [
+      580,
+      145,
+      143,
+      144
+    ]
+  },
+  "palace-r-floor-c": {
+    "tags": [],
+    "sheet": "palace-room-sheet.png",
+    "role": "floor",
+    "box": [
+      726,
+      145,
+      143,
+      144
+    ]
+  },
+  "palace-r-floor-d": {
+    "tags": [],
+    "sheet": "palace-room-sheet.png",
+    "role": "floor",
+    "box": [
+      145,
+      292,
+      142,
+      141
+    ]
+  },
+  "palace-r-floor-e": {
+    "tags": [],
+    "sheet": "palace-room-sheet.png",
+    "role": "floor",
+    "box": [
+      726,
+      292,
+      143,
+      141
+    ]
+  },
+  "palace-r-floor-f": {
+    "tags": [],
+    "sheet": "palace-room-sheet.png",
+    "role": "floor",
+    "box": [
+      145,
+      436,
+      142,
+      145
+    ]
+  },
+  "palace-r-floor-g": {
+    "tags": [],
+    "sheet": "palace-room-sheet.png",
+    "role": "floor",
+    "box": [
+      290,
+      436,
+      140,
+      145
+    ]
+  },
+  "palace-r-floor-h": {
+    "tags": [],
+    "sheet": "palace-room-sheet.png",
+    "role": "floor",
+    "box": [
+      290,
+      877,
+      140,
+      145
+    ]
+  },
+  "palace-r-floor-i": {
+    "tags": [],
+    "sheet": "palace-room-sheet.png",
+    "role": "floor",
+    "box": [
+      580,
+      877,
+      143,
+      145
+    ]
+  },
+  "palace-r-end-e": {
+    "tags": [],
+    "sheet": "palace-room-sheet.png",
     "role": "wall",
-    "from": "composed from palace-in-run-v + palace-in-run-h"
+    "box": [
+      433,
+      145,
+      144,
+      144
+    ],
+    "normalised": true,
+    "from": "palace-r-end-w"
+  },
+  "palace-r-end-s": {
+    "tags": [],
+    "sheet": "palace-room-sheet.png",
+    "role": "wall",
+    "box": [
+      433,
+      734,
+      144,
+      140
+    ],
+    "normalised": true,
+    "from": "palace-r-end-n"
+  },
+  "palace-r-fill": {
+    "tags": [],
+    "sheet": "palace-room-sheet.png",
+    "role": "wall",
+    "box": [
+      872,
+      0,
+      140,
+      70
+    ]
   }
 }
