@@ -60,7 +60,16 @@ const TILE_BRUSHES = [
 function subPlace() {
   const P = place[sub.id] ?? (place[sub.id] = {});
   for (const k of KINDS) P[k] ??= [];
+  P.baseTiles ??= {}; // "x,y" -> tile key, pinned over the autotiler
   return P;
+}
+
+// Pin (or, with a null key, un-pin) one cell's base tile. The autotiler is
+// right nearly everywhere; this is for the cells where it isn't.
+function pinBase(x, y, key) {
+  const P = subPlace();
+  if (key) P.baseTiles[`${x},${y}`] = key;
+  else delete P.baseTiles[`${x},${y}`];
 }
 function selObj() { return sel ? subPlace()[sel.kind]?.[sel.i] ?? null : null; }
 function subById(id) {
@@ -92,6 +101,7 @@ function stampIntoCells(cells, b) {
   for (const c of cells) {
     const [x, y] = c.split(',').map(Number);
     if (b.kind === 'decor') P.decor.push({ key: b.key, x, y, w: deco.w, h: deco.h, rot: deco.rot });
+    else if (b.kind === 'base') pinBase(x, y, b.key);
     else if (b.kind === 'tile') paintCell(x, y, b.ch);
     else P[b.kind].push({ x, y });
   }
@@ -146,6 +156,44 @@ function fillTilebar() {
     .join('');
   $('tilebar').querySelectorAll('button').forEach((b) => (b.onclick = () => setBrush({ kind: 'tile', ch: b.dataset.ch })));
 }
+// The base-tile palette: every key this region's theme can autotile with, so a
+// cell can be re-pointed at any of them. Ordered so the pieces you reach for
+// (floors, then the geometry) sit together, and prefixed by an Auto swatch that
+// hands the cell back to the autotiler.
+function baseKeysForTheme() {
+  const cfg = AUTOTILE[sub.theme];
+  if (!cfg) return [];
+  const seen = new Set();
+  const push = (k) => { if (k && !seen.has(k)) seen.add(k); };
+  (cfg.floor ?? []).forEach(push);
+  (cfg.accent ?? []).forEach(push);
+  push(cfg.water);
+  Object.values(cfg.waterTiles ?? {}).forEach(push);
+  Object.values(cfg.wall ?? {}).forEach(push);
+  Object.values(cfg.wallInner ?? {}).forEach(push);
+  Object.values(cfg.floorEdge ?? {}).forEach(push);
+  push(cfg.fallback);
+  push(cfg.fallbackInner);
+  return [...seen];
+}
+
+function fillBasebar() {
+  const keys = baseKeysForTheme();
+  const box = $('basebar');
+  if (!keys.length) {
+    box.innerHTML = '<span class="palnote">this region has no autotiler</span>';
+    return;
+  }
+  const on = (k) => brush?.kind === 'base' && brush.key === k;
+  const auto = `<div class="swatch base ${brush?.kind === 'base' && !brush.key ? 'on' : ''}" data-bk=""><span>auto</span></div>`;
+  box.innerHTML = auto + keys
+    .map((k) => `<div class="swatch base ${on(k) ? 'on' : ''}" data-bk="${k}" title="${k}"><img src="${tileSrc(k)}"><span>${k.replace(/^[a-z0-9]+-/, '')}</span></div>`)
+    .join('');
+  box.querySelectorAll('.swatch').forEach((el) => {
+    el.onclick = () => setBrush({ kind: 'base', key: el.dataset.bk || null });
+  });
+}
+
 function fillPalette() {
   $('tagfilter').innerHTML = ['all', ...allTags(), 'untagged', 'hidden']
     .map((t) => `<button data-t="${t}" class="${t === activeTag ? 'on' : ''}">${t}</button>`)
@@ -184,13 +232,13 @@ function setBrush(b) {
     stampIntoCells(cellSel, b);
     cellSel.clear();
     sel = null;
-    fillMarkerbar(); fillTilebar(); fillPalette(); render();
+    fillMarkerbar(); fillTilebar(); fillBasebar(); fillPalette(); render();
     return;
   }
   const same = brush && b && brush.kind === b.kind && brush.key === b.key && brush.ch === b.ch;
   brush = same ? null : b;
   sel = null;
-  fillMarkerbar(); fillTilebar(); fillPalette(); render();
+  fillMarkerbar(); fillTilebar(); fillBasebar(); fillPalette(); render();
 }
 
 // ---------------------------------------------------------------- mode switch
@@ -216,8 +264,8 @@ $('mEnemies').onclick = () => setMode('enemies');
 $('mItems').onclick = () => setMode('items');
 
 // ---------------------------------------------------------------- map: dropdowns
-$('zoneSel').onchange = (e) => { zone = ZONES[+e.target.value]; sub = zone.subregions[0]; sel = null; cellSel.clear(); fillRegions(); fillTilebar(); render(); };
-$('regionSel').onchange = (e) => { sub = zone.subregions[+e.target.value]; sel = null; cellSel.clear(); fillTilebar(); render(); };
+$('zoneSel').onchange = (e) => { zone = ZONES[+e.target.value]; sub = zone.subregions[0]; sel = null; cellSel.clear(); fillRegions(); fillTilebar(); fillBasebar(); render(); };
+$('regionSel').onchange = (e) => { sub = zone.subregions[+e.target.value]; sel = null; cellSel.clear(); fillTilebar(); fillBasebar(); render(); };
 function fillZones() { $('zoneSel').innerHTML = ZONES.map((z, i) => `<option value="${i}">${z.name ?? z.id}</option>`).join(''); }
 function fillRegions() { $('regionSel').innerHTML = zone.subregions.map((s, i) => `<option value="${i}">${s.name ?? s.id}</option>`).join(''); }
 
@@ -237,11 +285,14 @@ function autotileView() {
       height: rows.length,
       tiles: rows.map((r) => [...r].map((ch) => (ch === '#' ? 0 : 1))),
       water: rows.map((r) => [...r].map((ch) => ch === '~')),
+      baseTiles: subPlace().baseTiles, // hand-pinned cells win over the autotiler
+
     },
   };
 }
 function render() {
   const rows = sub.map, H = rows.length, W = rows[0].length;
+  const pinnedHere = subPlace().baseTiles;
   const edges = sub.edges ?? {};
   const at = autotileView();
   // Autotiled cells carry their own tile background, so suppress the CSS theme
@@ -261,6 +312,7 @@ function render() {
     if (ch === 'S') cls += ' mark';
     if (ch !== '#' && ((x === W - 1 && edges.e) || (x === 0 && edges.w) || (y === H - 1 && edges.s) || (y === 0 && edges.n))) cls += ' edge';
     if (cellSel.has(`${x},${y}`)) cls += ' selcell';
+    if (pinnedHere[`${x},${y}`]) cls += ' pinned';
     let style = `left:${x * TS}px;top:${y * TS}px;width:${TS}px;height:${TS}px`;
     if (at) style += `;background:url('${tileSrc(autotileKeyAt(at.cfg, at.d, x, y))}') 0 0/100% 100%`;
     // A badge keeps start/exit/doors legible over the autotiled art.
@@ -314,6 +366,7 @@ function markerEl(kind, m, i) {
 function placeBrush(x, y) {
   const P = subPlace();
   if (brush.kind === 'decor') { P.decor.push({ key: brush.key, x, y, w: deco.w, h: deco.h, rot: deco.rot }); sel = { kind: 'decor', i: P.decor.length - 1 }; }
+  else if (brush.kind === 'base') { pinBase(x, y, brush.key); sel = null; }
   else if (brush.kind === 'tile') { paintCell(x, y, brush.ch); sel = null; }
   else { P[brush.kind].push({ x, y }); sel = { kind: brush.kind, i: P[brush.kind].length - 1 }; }
 }
@@ -492,7 +545,7 @@ function act(a) {
 }
 document.addEventListener('keydown', (e) => {
   if (mode !== 'map' || e.target.tagName === 'INPUT' || e.target.tagName === 'SELECT') return;
-  if (e.key === 'Escape') { cellSel.clear(); sel = null; brush = null; fillMarkerbar(); fillTilebar(); fillPalette(); render(); return; }
+  if (e.key === 'Escape') { cellSel.clear(); sel = null; brush = null; fillMarkerbar(); fillTilebar(); fillBasebar(); fillPalette(); render(); return; }
   const o = selObj(); if (!o) return;
   const step = sel.kind === 'decor' ? 0.5 : 1;
   if (e.key === 'ArrowLeft') o.x -= step;
@@ -513,6 +566,9 @@ $('saveBtn').onclick = async () => {
   for (const [id, P] of Object.entries(place)) {
     const kept = {};
     for (const k of KINDS) if (P[k]?.length) kept[k] = P[k];
+    // baseTiles is a map, not one of the KINDS arrays — carry it separately, and
+    // only when it holds something, so untouched regions stay out of the file.
+    if (P.baseTiles && Object.keys(P.baseTiles).length) kept.baseTiles = P.baseTiles;
     if (Object.keys(kept).length) out[id] = kept;
   }
   try {
@@ -933,6 +989,6 @@ async function saveZoneField(field, value) {
 $('inspector').addEventListener('click', onRegionAction);
 
 // ---------------------------------------------------------------- boot
-fillZones(); fillRegions(); fillMarkerbar(); fillTilebar();
+fillZones(); fillRegions(); fillMarkerbar(); fillTilebar(); fillBasebar();
 await loadTiles();
 render();

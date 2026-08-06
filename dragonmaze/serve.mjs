@@ -102,10 +102,12 @@ const server = createServer(async (req, res) => {
         '//   { subId: { decor:  [{ key, x, y, w, h, rot }],\n' +
         '//              monsters:[{ x, y, id? }],   loot:    [{ x, y, item? }],\n' +
         '//              boss:    [{ x, y }],        miniboss:[{ x, y }],\n' +
-        '//              portals: [{ x, y, to, title?, label? }] } }\n' +
+        '//              portals: [{ x, y, to, title?, label? }],\n' +
+        '//              baseTiles: { "x,y": tileKey } } }\n' +
         '// A monster/loot with no id/item rolls from the region table at load; a\n' +
         '// pinned id/item is authored here. A portal is a walk-onto tile that prompts\n' +
-        '// travel to `to` (another subregion). decor is cosmetic. Safe to hand-edit.\n' +
+        '// travel to `to` (another subregion). decor is cosmetic. baseTiles pins one\n' +
+        '// cell to a specific tile, overriding the autotiler there. Safe to hand-edit.\n' +
         `export const PLACEMENTS = ${JSON.stringify(data, null, 2)};\n`;
       await writeFile(join(root, 'data', 'placements.js'), body);
       // Keep the readable dump in step with every save, from the just-saved

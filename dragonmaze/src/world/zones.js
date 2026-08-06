@@ -133,6 +133,9 @@ export function buildZoneDungeon(zoneId, subIndex, seedString, partySize = 1) {
     portals: (place.portals ?? sub.portals ?? []).map((p) => ({ ...p })),
     subId: sub.id,
     theme: sub.theme ?? null,
+    // Hand-pinned base tiles from the editor, "x,y" -> tile key. Overrides the
+    // autotiler for those cells only (see autotileKeyAt).
+    baseTiles: place.baseTiles ?? null,
     // Override the autotiler's outer-vs-internal wall inference for this map:
     // 'inner' or 'outer' forces every wall into that set. A labyrinth whose
     // walls all connect back to the border would otherwise read as one huge

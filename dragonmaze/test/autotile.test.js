@@ -5,6 +5,7 @@
 import assert from 'node:assert/strict';
 import {
   AUTOTILE,
+  autotileKeyAt,
   outerWalls,
   isInnerWall,
   wallKey,
@@ -251,6 +252,24 @@ const ROOM = geom([
   }
   assert.ok(keys.some((k) => k.includes('ci-')), 'a thick mass turns with a corner piece');
   assert.ok(keys.includes(AUTOTILE.palace.fallbackInner), 'its enclosed middle is solid');
+}
+
+// --- 13. a hand-pinned cell overrides the autotiler, and only that cell ---
+{
+  const cfg = AUTOTILE.palace;
+  const bare = autotileKeyAt(cfg, ROOM, 3, 2);          // an island wall cell
+  const bareFloor = autotileKeyAt(cfg, ROOM, 1, 1);
+  const pinned = { ...ROOM, baseTiles: { '3,2': 'palace-o-nw', '1,1': 'palace-r-fill' } };
+  assert.equal(autotileKeyAt(cfg, pinned, 3, 2), 'palace-o-nw', 'the pinned wall cell takes its key');
+  assert.equal(autotileKeyAt(cfg, pinned, 1, 1), 'palace-r-fill', 'a floor cell can be pinned too');
+  assert.equal(autotileKeyAt(cfg, pinned, 4, 2), autotileKeyAt(cfg, ROOM, 4, 2), 'its neighbour is untouched');
+  assert.notEqual(bare, 'palace-o-nw', 'the pin really did change something');
+  assert.ok(bareFloor, 'and the unpinned floor still resolves');
+  // pinning does not disturb the geometry the pickers read
+  assert.equal(wallKey(cfg, pinned, 3, 2), wallKey(cfg, ROOM, 3, 2), 'wallKey itself is unaffected');
+  // an empty or absent map behaves exactly as before
+  assert.equal(autotileKeyAt(cfg, { ...ROOM, baseTiles: {} }, 3, 2), bare, 'an empty pin map is a no-op');
+  assert.equal(autotileKeyAt(cfg, { ...ROOM, baseTiles: null }, 3, 2), bare, 'so is a null one');
 }
 
 console.log('autotile.test.js: all assertions passed ✓');

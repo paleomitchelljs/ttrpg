@@ -205,6 +205,13 @@ export function wallKey(cfg, d, x, y) {
 // The single tile key a cell draws: wall piece for a wall cell, floor/water
 // variant for a floor cell. Matches how mapView splits paintWall vs paintFloor.
 export function autotileKeyAt(cfg, d, x, y) {
+  // A hand-pinned cell wins outright. The autotiler picks from geometry alone,
+  // which is right nearly everywhere and occasionally wrong in a way no rule
+  // will fix — a doorway that wants a specific jamb, a mass whose corner reads
+  // badly. `baseTiles` (authored in the editor, stored per subregion in
+  // placements.js) is the escape hatch: one cell, one key, no rule change.
+  const pinned = d.baseTiles?.[`${x},${y}`];
+  if (pinned) return pinned;
   if (d.tiles[y][x] !== 1) return wallKey(cfg, d, x, y);
   return d.water?.[y]?.[x] && cfg.waterTiles ? waterKey(cfg, d, x, y) : floorVariant(cfg, d, x, y);
 }

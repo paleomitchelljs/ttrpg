@@ -60,7 +60,8 @@ subregion (`sub`) holds the geometry and the identity tables:
            monsters:[{ x, y, id? }],              // id pinned, else rolls the region table
            loot:    [{ x, y, item? }],            // item pinned, else rolls gold/tome/den
            boss:    [{ x, y }], miniboss:[{ x, y }],  // spawns sub.boss / sub.miniboss
-           portals: [{ x, y, to, title?, label? }] } }  // walk-onto travel trigger → sub `to`
+           portals: [{ x, y, to, title?, label? }],     // walk-onto travel trigger → sub `to`
+           baseTiles: { "x,y": tileKey } } }            // pins one cell's tile, over the autotiler
 ```
 
 A monster/loot with **no** `id`/`item` rolls on the seeded world RNG at load (so
@@ -91,6 +92,19 @@ Buttons: `Floor . / Wall # / Start S / Exit E`, plus one `Door n→dest` per ent
 in `sub.doors`. Click a cell to paint it; **drag to paint a run**. Painting `Start`
 moves the single `S` (clears the old one). Painted regions are flagged dirty and
 written back to `zones.js` on **Save** (via `/save-map`).
+
+**Base tile art** (`#basebar`) — pins one cell to a specific tile, overriding the
+autotiler *there only*. The palette lists every key the region's theme can
+autotile with (floors, wall pieces, water, fills), plus an **auto** swatch that
+hands the cell back. Click a swatch, then click a cell; pinned cells carry a gold
+inset outline so you can see which ones you've taken off the autotiler. Works
+with a shift-selection too — pick a swatch and the whole selection is pinned at
+once. Stored as `baseTiles` in `placements.js`, read by `autotileKeyAt`, so the
+crawler renders exactly what the editor shows.
+
+Reach for it when the autotiler is *right by its own rules and wrong for the
+map* — a doorway wanting a particular jamb, a corner that reads badly at one
+junction. Changing a rule to fix one cell usually breaks three others.
 
 **Add to map** (`#markerbar`) — the marker brushes: 👹 Monster · 💰 Treasure ·
 💀 Boss · 👺 Mini · 🕳️ Portal. Click a brush, then click the map to drop one. This

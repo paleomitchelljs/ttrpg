@@ -7,7 +7,7 @@ import { monsterById } from '../../data/monsters.js';
 import { companionById } from '../../data/party.js';
 import { SPRITES, TILES } from '../assets-manifest.js';
 import TILE_TAGS from '../../data/tile-tags.json' with { type: 'json' };
-import { AUTOTILE, floorVariant, waterKey, wallKey } from './autotile.js';
+import { AUTOTILE, autotileKeyAt } from './autotile.js';
 
 // Flat ground decor (grass, floor slabs) must NOT cast the raised-prop drop
 // shadow — a shadow only reads right for things standing up off the ground
@@ -28,13 +28,15 @@ export function spritePath(key) {
 // in the shared ./autotile.js so the zone editor renders it identically. Here
 // we only paint the chosen key onto a DOM tile.
 const bg = (keys) => keys.map((k) => `url("${TILES[k]}")`).join(', ');
+// Both paths go through autotileKeyAt rather than calling the pickers direct,
+// so a cell pinned in the editor (`d.baseTiles`) overrides here exactly as it
+// does on the editor's own stage.
 function paintFloor(tile, cfg, d, x, y) {
-  const key = d.water?.[y]?.[x] && cfg.waterTiles ? waterKey(cfg, d, x, y) : floorVariant(cfg, d, x, y);
-  tile.style.backgroundImage = bg([key]);
+  tile.style.backgroundImage = bg([autotileKeyAt(cfg, d, x, y)]);
   tile.style.backgroundSize = '100% 100%';
 }
 function paintWall(tile, cfg, d, x, y) {
-  tile.style.backgroundImage = bg([wallKey(cfg, d, x, y)]); // opaque: floor baked in
+  tile.style.backgroundImage = bg([autotileKeyAt(cfg, d, x, y)]); // opaque: floor baked in
   tile.style.backgroundSize = '100% 100%';
 }
 

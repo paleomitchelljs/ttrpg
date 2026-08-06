@@ -184,6 +184,10 @@ ones: `#btn-rest` → `game.rest()`, `#btn-quit` → `game.quitToTitle()`,
   floor/wall background images. Autotiled themes (`AUTOTILE[theme]` in
   `autotile.js`) instead paint per-cell wall/floor keys via `paintWall`/
   `paintFloor` (bitmask neighbour tests, N=1 E=2 S=4 W=8).
+- Any cell can be **pinned** to a specific tile: `d.baseTiles["x,y"]` (authored in
+  the editor, stored per subregion in `placements.js`) short-circuits
+  `autotileKeyAt`, so the pickers are bypassed for that cell alone. Both
+  `paintWall` and `paintFloor` go through `autotileKeyAt` for this reason.
 - A theme may carry **two wall sets**: `wall` for the map's outer shell and
   `wallInner` for free-standing partitions, chosen per cell by `outerWalls(d)`
   (flood fill from the border through wall; a subregion's `wallStyle` overrules
