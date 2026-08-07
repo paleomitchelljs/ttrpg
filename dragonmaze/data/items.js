@@ -1,11 +1,28 @@
 // Magic items — pure data, drawn directly from the 5e adventure guides in
 // dungeons/ ("Treasure of Guk"; "Treasures of the God-City"). They are RARE:
 // they drop only from named boss packs (and, later, quests) — never from
-// ordinary loot piles or wandering monsters. `zone` ties an item to its
-// dungeon's pool; bosses can name preferred drops.
-// mods: toHit / damage (flat) / ac / hpMax / init / regen. bane: 'undead' adds
-// +2 damage against undead targets. regen: N heals N HP at the start of each of
-// the wearer's combat turns, and N per step taken out in the dungeon.
+// ordinary loot piles or wandering monsters.
+//
+// **One item, one boss.** Every item is named by exactly one boss's `drops` in
+// data/zones.js, and a boss carries exactly one item. There is no zone-wide
+// fallback pool: an item no boss names simply cannot be found. Bosses stay dead
+// (meta.defeatedBosses) and the drop is a single 50% roll, so a boss with two
+// items could only ever yield one — hence one apiece. `zone` is now just
+// bookkeeping for which dungeon an item belongs to.
+//
+// mods:
+//   toHit / damage    flat bonuses on the wielder's attack (damage folds into
+//                     the dice expression, so a crit doubles it)
+//   ac / hpMax / init armour class, max HP, initiative
+//   regen             N HP at the start of each combat turn, and N per step
+//                     taken out in the dungeon
+//   str/dex/con/int/wis/cha   raises the ability score itself, so every roll
+//                     that reads it improves. DEX additionally gives AC and
+//                     sharpens a finesse weapon; CON additionally gives max HP
+//                     (see applyEquipment / the party HP setup in gameState).
+//   castDC            shifts the caster's spell DC (negative is easier)
+//   intimidate        bonus on Intimidate checks
+// bane: 'undead' adds +2 damage against undead targets.
 //
 // A 'shield' item only pays out to someone with a hand free — a two-handed
 // weapon cancels it, the same rule as the shield a hero already carries
@@ -167,16 +184,40 @@ export const ITEMS = [
     name: 'Lizardskin Tribal Mask',
     slot: 'trinket',
     zone: 'lost-temple',
-    mods: { toHit: 1 },
-    blurb: 'the fear it wears becomes yours to aim (+1 to hit)',
+    mods: { dex: 1 },
+    blurb: 'you move as the lizard moves, quick and low (+1 DEX)',
   },
   {
     id: 'idol-of-thule',
     name: 'Idol of Thule',
     slot: 'trinket',
     zone: 'lost-temple',
-    mods: { damage: 1, hpMax: 1 },
-    blurb: 'a sliver of the god-city’s dread (+1 damage, +1 max HP)',
+    mods: { intimidate: 2 },
+    blurb: 'a sliver of the god-city’s dread; hold it up and they remember (+2 to Intimidate)',
+  },
+  {
+    id: 'shard-of-golem-stone',
+    name: 'Shard of Golem Stone',
+    slot: 'trinket',
+    zone: 'lost-temple',
+    mods: { ac: 1 },
+    blurb: 'a chip of the courtyard sentinel, and it still refuses to break (+1 AC)',
+  },
+  {
+    id: 'metal-wand',
+    name: 'Metal Wand',
+    slot: 'trinket',
+    zone: 'lost-temple',
+    mods: { castDC: -1 },
+    blurb: 'cold iron drawn from the drain-golem’s core; the words come easier (−1 to your spell DCs)',
+  },
+  {
+    id: 'darkforge-breastplate',
+    name: 'Darkforge Breastplate',
+    slot: 'armor',
+    zone: 'lost-temple',
+    mods: { ac: 1, con: 2 },
+    blurb: 'crusader plate beaten in a lightless forge (+1 AC, +2 CON)',
   },
   // ---------------------------------------------- Common gear (treasure.png art)
   // Plainer finds spread across the zones' boss pools. `tile` links the sliced
@@ -202,9 +243,9 @@ export const ITEMS = [
     blurb: 'wear it and they follow your lead (+2 max HP, +1 initiative)',
   },
   {
-    id: 'shield-round', name: 'Round Shield', slot: 'armor', zone: 'lost-temple',
+    id: 'shield-round', name: 'Round Shield', slot: 'shield', zone: 'lost-temple',
     tile: 'shield-round', mods: { ac: 1 },
-    blurb: 'banded oak and iron, quick to raise (+1 AC)',
+    blurb: 'banded oak and iron, quick to raise (+1 AC, needs a hand free)',
   },
   {
     id: 'amulet-sun', name: 'Sun Amulet', slot: 'trinket', zone: 'lost-temple',

@@ -275,7 +275,7 @@ export const ZONES = [
           { id: 'giant-spider', weight: 2, packMax: 2 },
           { id: 'giant-rat', weight: 1, packMax: 3 },
         ],
-        boss: { name: 'The golem of the courtyard', monsterIds: ['stone-golem'], drops: ['thulian-claws'] },
+        boss: { name: 'The golem of the courtyard', monsterIds: ['stone-golem'], drops: ['shard-of-golem-stone'] },
         map: [
           '#######3#######',
           '......#.#.....#',
@@ -358,7 +358,7 @@ export const ZONES = [
           { id: 'sarnak-vampire', weight: 1, packMax: 1 },
           { id: 'giant-spider', weight: 1, packMax: 2 },
         ],
-        boss: { name: 'The Tae Ew Templar', monsterIds: ['tae-ew-templar', 'lizardfolk-warrior'], drops: ['rubicite-greaves', 'lizardscale-cloak'] },
+        boss: { name: 'The Tae Ew Templar', monsterIds: ['tae-ew-templar', 'lizardfolk-warrior'], drops: ['thulian-claws'] },
         map: [
           '#######4#######',
           '#.............#',
@@ -393,7 +393,7 @@ export const ZONES = [
           { id: 'bone-wraith', weight: 2, packMax: 1 },
           { id: 'sarnak-vampire', weight: 1, packMax: 1 },
         ],
-        boss: { name: 'Fright and Terror, the Rift-Guardians', monsterIds: ['gargoyle', 'gargoyle'], drops: ['tribal-mask'] },
+        boss: { name: 'Fright and Terror, the Rift-Guardians', monsterIds: ['gargoyle', 'gargoyle'], drops: ['aegis-of-the-serpent'] },
         map: [
           '######5########',
           '#.............#',
@@ -425,7 +425,7 @@ export const ZONES = [
           { id: 'giant-spider', weight: 2, packMax: 2 },
           { id: 'green-slime', weight: 1, packMax: 2 },
         ],
-        boss: { name: 'The Clay Golem of the Maze', monsterIds: ['clay-golem'], drops: ['thulian-claws'] },
+        boss: { name: 'The Clay Golem of the Maze', monsterIds: ['clay-golem'], drops: ['tribal-mask'] },
         map: [
           '######6########',
           '#S.#...#...#..#',
@@ -451,8 +451,8 @@ export const ZONES = [
           { id: 'giant-snake', weight: 2, packMax: 2 },
           { id: 'gargoyle', weight: 1, packMax: 1 },
         ],
-        miniboss: { name: 'The Tae Ew Crusader', monsterIds: ['lizardman-crusader', 'lizardfolk-warrior'] },
-        boss: { name: 'The Lizardman Archon', monsterIds: ['lizardman-archon', 'lizardman-crusader'], drops: ['rubicite-breastplate'] },
+        miniboss: { name: 'The Tae Ew Crusader', monsterIds: ['lizardman-crusader', 'lizardfolk-warrior'], drops: ['darkforge-breastplate'] },
+        boss: { name: 'The Lizardman Archon', monsterIds: ['lizardman-archon', 'lizardman-crusader'], drops: ['idol-of-thule'] },
         map: [
           '#6#############',
           '#S............#',
@@ -488,7 +488,7 @@ export const ZONES = [
           { id: 'giant-rat', weight: 2, packMax: 3 },
           { id: 'giant-snake', weight: 1, packMax: 2 },
         ],
-        boss: { name: 'The Sluicewarden Gators', monsterIds: ['alligator', 'alligator', 'green-slime'] },
+        boss: { name: 'The Sluicewarden Gators', monsterIds: ['alligator', 'alligator', 'green-slime'], drops: ['lizardscale-cloak'] },
         map: [
           '######E########',
           '#.....S##.....#',
@@ -516,7 +516,7 @@ export const ZONES = [
           { id: 'fungus-man', weight: 2, packMax: 2 },
           { id: 'giant-spider', weight: 1, packMax: 2 },
         ],
-        boss: { name: 'The Rat King', monsterIds: ['giant-rat', 'giant-rat', 'green-slime'] },
+        boss: { name: 'The Rat King', monsterIds: ['giant-rat', 'giant-rat', 'green-slime'], drops: ['shield-round'] },
         map: [
           '###############',
           '#...##.S.##...#',
@@ -544,7 +544,7 @@ export const ZONES = [
           { id: 'alligator', weight: 2, packMax: 2 },
           { id: 'gargoyle', weight: 1, packMax: 1 },
         ],
-        boss: { name: 'The Iron Golem of the Drains', monsterIds: ['iron-golem'], drops: ['idol-of-thule'] },
+        boss: { name: 'The Iron Golem of the Drains', monsterIds: ['iron-golem'], drops: ['metal-wand'] },
         map: [
           '#######7#######',
           '#.........##..#',
@@ -572,7 +572,7 @@ export const ZONES = [
           { id: 'gargoyle', weight: 2, packMax: 1 },
           { id: 'green-slime', weight: 1, packMax: 2 },
         ],
-        boss: { name: 'The Fear-Touched Gargoyles', monsterIds: ['gargoyle', 'gargoyle', 'bone-wraith'], drops: ['rubicite-breastplate'] },
+        boss: { name: 'The Fear-Touched Gargoyles', monsterIds: ['gargoyle', 'gargoyle', 'bone-wraith'], drops: ['rubicite-greaves'] },
         map: [
           '###############',
           '#......S......#',

@@ -564,7 +564,8 @@ check('chooseAdvance refuses a talent whose prerequisites are unmet', () => {
 });
 
 check('items are well-formed', () => {
-  const MODS = ['toHit', 'damage', 'ac', 'hpMax', 'init', 'regen'];
+  const MODS = ['toHit', 'damage', 'ac', 'hpMax', 'init', 'regen', 'castDC', 'intimidate',
+    'str', 'dex', 'con', 'int', 'wis', 'cha'];
   for (const item of ITEMS) {
     assert.ok(SLOTS.includes(item.slot), `${item.id} slot`);
     assert.ok(Object.keys(item.mods).every((k) => MODS.includes(k)), `${item.id} mods`);
@@ -572,8 +573,56 @@ check('items are well-formed', () => {
   }
   assert.ok(SLOTS.includes('shield'), 'there is a shield slot');
   assert.ok(ITEMS.some((i) => i.slot === 'shield'), 'and shields to put in it');
-  // The Rubicite plate is the regenerating one.
   assert.equal(itemById('rubicite-breastplate').mods.regen, 1, 'rubicite knits 1 HP back');
+});
+
+check('every item is named by at most one boss', () => {
+  const named = new Map();
+  for (const z of ZONES) {
+    for (const sub of z.subregions ?? []) {
+      for (const b of [sub.boss, sub.miniboss]) {
+        for (const id of b?.drops ?? []) {
+          assert.ok(itemById(id), `${id} is a real item`);
+          named.set(id, (named.get(id) ?? 0) + 1);
+        }
+      }
+    }
+  }
+  const shared = [...named].filter(([, n]) => n > 1).map(([id]) => id);
+  assert.deepEqual(shared, [], 'no item drops from two different bosses');
+  // The Rubicite Breastplate belongs to the Avatar of Fear alone.
+  const avatar = ZONES.flatMap((z) => z.subregions ?? [])
+    .map((s) => s.boss).find((b) => b?.name.includes('Avatar of Fear'));
+  assert.deepEqual(avatar.drops, ['rubicite-breastplate'], 'the Avatar carries the plate');
+});
+
+check('the Lost Temple is one item per boss, and nothing is stranded', () => {
+  // Bosses stay dead and the drop is a single 50% roll, so a boss carrying two
+  // items could only ever yield one of them. One apiece keeps the set findable.
+  const temple = ZONES.find((z) => z.id === 'lost-temple');
+  const bosses = (temple.subregions ?? []).flatMap((s) => [s.boss, s.miniboss]).filter(Boolean);
+  for (const b of bosses) {
+    assert.equal((b.drops ?? []).length, 1, `${b.name} carries exactly one item`);
+  }
+  // Every Lost Temple item has a boss (bar the one still awaiting a home).
+  const named = new Set(bosses.flatMap((b) => b.drops));
+  const stranded = ITEMS.filter((i) => i.zone === 'lost-temple' && !named.has(i.id)).map((i) => i.id);
+  assert.deepEqual(stranded, ['amulet-sun'], 'only the Sun Amulet is still unplaced');
+});
+
+check('item mods reach the engine: wand, idol, and an ability item', () => {
+  assert.equal(itemById('metal-wand').mods.castDC, -1, 'the wand eases the DC');
+  assert.equal(itemById('idol-of-thule').mods.intimidate, 2, 'the idol sharpens fear');
+  assert.equal(itemById('tribal-mask').mods.dex, 1, 'the mask is a DEX item');
+  assert.deepEqual(itemById('darkforge-breastplate').mods, { ac: 1, con: 2 }, 'darkforge plate');
+  assert.equal(itemById('shard-of-golem-stone').mods.ac, 1, 'the shard is armour');
+
+  // A caster holding the wand casts against a DC one lower.
+  const caster = { abilities: { int: 0 }, castStat: 'int', talents: [] };
+  const spell = spellById('ember-bolt');
+  const plain = resolveSpellCast(caster, spell, () => 0.5, {});
+  const wanded = resolveSpellCast(caster, spell, () => 0.5, { dcMod: -1 });
+  assert.equal(plain.dc - wanded.dc, 1, 'the wand takes a point off the DC');
 });
 
 check('portal characters convert into sane companions', () => {

@@ -54,6 +54,8 @@ export function makeCombatant(data) {
     recoveredThisCombat: false, // Arcane Recovery: one saved fizzle per fight
     focus: null, // the one focus spell this caster is concentrating on, if any
     regen: data.regen ?? 0, // HP knitted back at the start of each of their turns
+    castDC: data.castDC ?? 0, // gear that shifts this caster's spell DC (Metal Wand)
+    intimidate: data.intimidate ?? 0, // gear that sharpens Intimidate (Idol of Thule)
     burned: [],
     goldValue: data.goldValue ?? 0,
     morale: data.morale ?? null,

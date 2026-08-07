@@ -333,6 +333,13 @@ function equippedItems(charKey) {
     .filter(Boolean);
 }
 
+const ABILITY_KEYS = ['str', 'dex', 'con', 'int', 'wis', 'cha'];
+
+/** Max-HP an item grants: hpMax outright, plus what its CON bonus is worth. */
+function equipmentHp(charKey) {
+  return equipmentMod(charKey, 'hpMax') + equipmentMod(charKey, 'con');
+}
+
 function equipmentMod(charKey, field) {
   return equippedItems(charKey).reduce((sum, item) => sum + (item.mods[field] ?? 0), 0);
 }
@@ -484,12 +491,12 @@ export function enterLabyrinth(seed) {
     : generateDungeon(seed, depth, 1 + partyIds.length));
   // The party can delve alone, on the dragon's behalf — but never empty.
   const partyMode = state.meta.mode === 'party' && partyIds.length > 0;
-  const dragonMax = tier.hpMax + equipmentMod('dragon', 'hpMax');
+  const dragonMax = tier.hpMax + equipmentHp('dragon');
   state.run = {
     dragon: partyMode ? null : { tier: tier.tier, hp: { current: dragonMax, max: dragonMax } },
     party: partyIds.map((id) => {
       const c = heroWithGrowth(id);
-      const max = c.hpMax + equipmentMod(id, 'hpMax');
+      const max = c.hpMax + equipmentHp(id);
       return { id, hp: { current: max, max } };
     }),
     unbankedGold: 0,
@@ -1256,6 +1263,22 @@ function applyEquipment(c, charKey) {
   c.ac += sum('ac');
   c.initBonus = sum('init');
   c.regen = (c.regen ?? 0) + sum('regen'); // Rubicite and its kin mend as you go
+  c.castDC = sum('castDC'); // the Metal Wand: negative makes every spell easier
+  c.intimidate = sum('intimidate'); // the Idol of Thule
+  // An ability item raises the score itself, so everything that rolls that
+  // ability improves for free (initiative and DEX saves, a caster's DC, a
+  // parley's CHA). DEX also buys AC and sharpens a finesse weapon, the way an
+  // ability increase does; CON's max HP is added where party HP is built, so
+  // the run's own HP numbers agree with the combatant's.
+  for (const ab of ABILITY_KEYS) {
+    const n = sum(ab);
+    if (!n) continue;
+    c.abilities[ab] = (c.abilities[ab] ?? 0) + n;
+    if (ab === 'dex') {
+      c.ac += n;
+      for (const a of c.attacks) if (a.stat === 'dex') a.toHit += n;
+    }
+  }
   for (const item of worn) {
     if (item.bane) c.bane = item.bane;
   }
@@ -1335,15 +1358,12 @@ function finishCombat(events) {
       run.quest = null;
     }
 
-    // Magic items come ONLY from named bosses (and quests): first from the
-    // boss's own hoard list, then the dungeon's wider treasure pool.
+    // Magic items come ONLY from the named boss that carries them. There is no
+    // zone-wide fallback: an item no boss lists cannot be found, which keeps
+    // "this boss drops this thing" a promise the player can rely on.
     if (slain.length && bossName) {
       const owned = state.meta.inventory;
-      const preferred = (bossDrops ?? []).filter((id) => !owned.includes(id));
-      const zoneId = run.dungeon.zone?.id ?? null;
-      const pool = preferred.length
-        ? preferred.map(itemById).filter(Boolean)
-        : ITEMS.filter((i) => i.zone === zoneId && !owned.includes(i.id));
+      const pool = (bossDrops ?? []).filter((id) => !owned.includes(id)).map(itemById).filter(Boolean);
       if (pool.length && liveRNG() < victoryDropChance(true)) {
         const found = pool[Math.floor(liveRNG() * pool.length)];
         state.meta.inventory.push(found.id);

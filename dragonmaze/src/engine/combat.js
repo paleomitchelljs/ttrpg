@@ -807,7 +807,10 @@ export function playerIntimidate(combat, targetId, rng = Math.random) {
     return events;
   }
   const dc = 12 + target.morale;
-  const check = resolveParleyCheck(actor, dc, rng, { advantage: actor.talents?.includes('silver-tongue') });
+  const check = resolveParleyCheck(actor, dc, rng, {
+    advantage: actor.talents?.includes('silver-tongue'),
+    mod: actor.intimidate ?? 0, // the Idol of Thule
+  });
   events.push({ type: 'intimidate', actor: actor.name, target: target.name, targetId: target.id, ...check });
   if (check.success) {
     target.panicked = true;
@@ -845,7 +848,9 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random, opts =
   if (!spell || !caster.spells.includes(spellId) || caster.burned.includes(spellId)) return events;
 
   const castOpts = {
-    dcMod: familiarDcMod(combat, caster),
+    // The Metal Wand's castDC rides the same lever the Fae Drake pulls; they
+    // stack. castCredit only names the familiar when the familiar is the reason.
+    dcMod: familiarDcMod(combat, caster) + (caster.castDC ?? 0),
     advantage: familiarCastAdvantage(combat, caster, spell), // Dusk Bat: advantage on Drain Life
   };
   const cast = resolveSpellCast(caster, spell, rng, castOpts);
@@ -1057,7 +1062,7 @@ export function spendLuck(combat, rng = Math.random) {
   const events = [{ type: 'luck-spent', actorId: actor.id, actor: actor.name, kind: p.kind }];
   if (p.kind === 'cast') {
     const spell = spellById(p.spellId);
-    const castOpts = { dcMod: familiarDcMod(combat, actor), advantage: familiarCastAdvantage(combat, actor, spell) };
+    const castOpts = { dcMod: familiarDcMod(combat, actor) + (actor.castDC ?? 0), advantage: familiarCastAdvantage(combat, actor, spell) };
     const cast = resolveSpellCast(actor, spell, rng, castOpts);
     events.push({ type: 'spell-cast', casterId: actor.id, caster: actor.name, spellId: p.spellId, name: spell.name, reroll: true, famAid: castCredit(combat, actor, castOpts), ...cast });
     if (cast.success) applyCastSuccess(combat, actor, spell, p.targetId, cast, rng, events);

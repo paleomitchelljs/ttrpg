@@ -117,7 +117,16 @@ weapon's whole power is its die plus its properties.
   and a hand free; 0 otherwise.
 
 **Slots** (`SLOTS` in items.js): `weapon`, `shield`, `armor`, `trinket`. Item
-`mods` are `toHit / damage / ac / hpMax / init / regen`. `applyEquipment` drops
+`mods` are `toHit / damage / ac / hpMax / init / regen`, plus `castDC` (shifts the
+wearer's spell DC — the Metal Wand's −1 stacks with the Fae Drake's),
+`intimidate` (bonus on Intimidate checks — the Idol of Thule), and the six
+**ability scores** (`str`…`cha`). An ability mod raises the score itself, so
+every roll that reads it improves for free (initiative, DEX saves, a caster's
+stat, a parley's CHA); DEX additionally buys AC and sharpens a finesse weapon
+the way an ability increase does, and CON's max HP is added by `equipmentHp`
+where the run's party HP is built, so the run and the combatant agree.
+*Nothing rolls CON today, so a CON item reads purely as max HP.*
+`applyEquipment` drops
 **shield items entirely** when the wearer's weapon is two-handed (the sheet's
 shield row says "no hand free"), sums the rest, and folds the damage bonus
 through `bumpDamage`. `regen: N` heals N HP at the start of each combat turn
@@ -481,9 +490,14 @@ Recall (un-burn all spells), Potion of Warding (+2 AC 3 rounds), Vial of Venom
 damage?, ac?, hpMax?, init?}, bane?}`. `bane: 'undead'` adds +2 damage vs undead.
 Equipped via `equip(charKey, slot, itemId)`; folded into a combatant by
 `applyEquipment` (to-hit/damage via `bumpDamage`, AC, `initBonus`, `bane`) and
-into HP by `equipmentMod(charKey,'hpMax')` at delve start. **Items drop only from
-named bosses** (preferred `bossDrops` first, then the zone's item pool) at
-`victoryDropChance(true)` (0.5), and from pinned zone caches.
+into HP by `equipmentHp(charKey)` (its `hpMax` plus what its `con` is worth) at
+delve start. **Items drop only from the one named boss that carries them**, at
+`victoryDropChance(true)` (0.5), plus pinned zone caches. There is **no
+zone-wide fallback pool**: an item no boss lists cannot be found. Bosses stay
+dead (`meta.defeatedBosses`) and the drop is a single roll, so a boss carrying
+two items could only ever yield one — the Lost Temple is authored one apiece
+(asserted in dice.test.js). *Guk still has bosses with two drops and items no
+boss names; it is queued for the same pass.*
 
 ---
 
@@ -558,7 +572,7 @@ reveal. Never announced.
 | A spell | `data/spells.js` | `tier` sets DC; `target` + effect flags; `tome:false` if not learnable. |
 | A talent | `data/talents.js` | Read by `heroWithGrowth` (passive) or the engine (action). |
 | A consumable | `data/consumables.js` | `use` object; `tile` art key. |
-| A magic item | `data/items.js` | `slot` + `mods` + `zone`; drops from bosses only. |
+| A magic item | `data/items.js` | `slot` + `mods` + `zone`; then name it in exactly one boss's `drops` in `data/zones.js`, or it can never be found. |
 | A familiar | `data/familiars.js` | Add the `effect` key + wire it in combat.js/gameState.js. |
 | A dragon tier | `data/dragonProgression.js` | `hoardToNext` gates the climb. |
 | A zone | `data/zones.js` (geometry + tables) **and** `data/placements.js` (where things sit) | ASCII map + `subregions`/`doors`/`boss`. Placements are hand-made with the tile editor — see [`editor-guide.md`](editor-guide.md). |
