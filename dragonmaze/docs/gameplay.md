@@ -375,7 +375,7 @@ the familiar (`FAM_AID` in combatView.js) — otherwise a −1 DC or +1 damage i
 invisible. The bat's advantage additionally shows as two dice on the cast
 cinematic (see `resolveSpellCast` in §5). Note the bat's knack keys off
 `spell.drain`, so it only ever fires for `drain-life` — i.e. only for Spawnee. A familiar with `anim` strips draws as a sprite on its card
-(`fae-drake` only, so far); the rest fall back to their emoji.
+(`fae-drake` and `dusk-bat`); the rest fall back to their emoji.
 
 **Spell Focus** talents are generated per school the caster knows
 (`focusTalentsFor` in `data/talents.js`) and give advantage casting that school.

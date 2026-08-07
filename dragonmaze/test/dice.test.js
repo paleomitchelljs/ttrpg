@@ -447,6 +447,11 @@ check('resistances, abilities, familiars, and tomes hold together', () => {
 check('spellblade companion and familiars are well-formed', () => {
   assert.equal(FAMILIARS.length, 5);
   for (const f of FAMILIARS) assert.ok(f.id && f.name && f.blurb);
+  // A drawn familiar's strips must actually exist; the rest ride their emoji.
+  for (const f of FAMILIARS.filter((x) => x.anim)) {
+    for (const key of Object.values(f.anim)) assert.ok(SPRITES[key], `${f.id} strip ${key}`);
+  }
+  assert.ok(FAMILIARS.find((f) => f.id === 'dusk-bat').anim?.idle, 'the dusk bat is drawn');
   const sb = companionById('dragonkin-spellblade');
   assert.ok(sb, 'spellblade exists');
   for (const id of sb.spells) assert.ok(spellById(id));

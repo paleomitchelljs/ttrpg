@@ -60,6 +60,15 @@ A character has one **frame strip per animation** (`idle`, `attack`, `walk`,
   `python3 tools/slice_grid.py art/foo-grid.png foo --rows idle attack walk [--flip] [--frame-height 150]`.
   `--flip` mirrors (model art faces right; the party faces left).
 
+- **`tools/slice_duskbat.py`** — a one-off for `art/dusk-bat-grid.png`, and the
+  short version of the registration trick below. The sheet is flat magenta, so
+  keying is trivial, but the two poses' bounding boxes disagree wildly (469×506
+  raised wings against 579×305 spread ones) — `slice_grid.py` bboxes each pose
+  independently and centres it, so the bat would jump half its body per frame.
+  This tool finds the **amber eye** in each pose (the only warm colour on a grey
+  bat, so no hand-listed coordinates) and lays both on one canvas with the eyes
+  on the same pixel. Frames are mirrored by default: the source faces left,
+  familiars render unmirrored on the hero side, and they should face the foes.
 - **`tools/slice_faedrake.py`** — a one-off for `art/unprocessed/faedrake.png`,
   kept because its two tricks generalise to any sheet that isn't flat magenta.
   (1) The background is a *gradient* plum, and close enough to the drake's own

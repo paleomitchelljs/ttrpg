@@ -298,7 +298,7 @@ game.subscribe((state, events) => {
 
 // ------------------------------------------------------------------ sheets
 // A familiar for the character sheet: its data plus a resolved sprite strip
-// when it has art (only the fae drake so far — the rest show their emoji).
+// when it has art (the fae drake and the dusk bat — the rest show their emoji).
 function familiarInfo(famId) {
   const fam = familiarById(famId);
   if (!fam) return null;
