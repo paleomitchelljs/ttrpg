@@ -733,4 +733,81 @@ const dummy = (over = {}) =>
   assert.ok(!events.some((e) => e.type === 'regen' && e.id === h.id), 'nothing to knit at full HP');
 }
 
+// --- 33a. the focus check is rerolled every round it's held ---
+{
+  const c = hero({ id: 'hero', abilities: { int: 8 }, castStat: 'int', spells: ['acid-arrow', 'magic-missile'] });
+  c.luck = 0;
+  const g = dummy({ hp: 400 });
+  const { combat } = createCombat([c], [g], () => 0.5);
+  playerSpell(heroTurn(combat, 'hero'), 'acid-arrow', g.id, () => 0.5);
+  let checks = 0;
+  let ticks = 0;
+  for (let round = 0; round < 4; round++) {
+    for (const e of runAiTurns(combat, () => 0.5)) {
+      if (e.type === 'focus-check' && e.trigger === 'turn') checks++;
+      if (e.type === 'focus-tick') ticks++;
+    }
+    // spend the turn casting something else — the thread must survive it
+    playerSpell(heroTurn(combat, 'hero'), 'magic-missile', g.id, () => 0.5);
+  }
+  assert.equal(checks, 4, 'one upkeep check at the start of each of her turns');
+  assert.equal(ticks, 4, 'and the acid bites on each one she holds');
+  assert.equal(c.focus?.spellId, 'acid-arrow', 'unbroken');
+  assert.equal(c.focus?.spellId, 'acid-arrow', 'still concentrating after four rounds of casting');
+}
+
+// --- 33b. a hit rattles concentration; a miss does not ---
+{
+  const focused = (foeToHit) => {
+    const c = hero({ id: 'hero', abilities: { int: 8 }, castStat: 'int', spells: ['acid-arrow'] });
+    c.luck = 0;
+    const g = foe({ id: 'goblin', hp: 400, ac: 12,
+      attacks: [{ name: 'bite', toHit: foeToHit, damage: '1d4' }] });
+    const { combat } = createCombat([c], [g], () => 0.5);
+    playerSpell(heroTurn(combat, 'hero'), 'acid-arrow', g.id, () => 0.5);
+    return runAiTurns(combat, () => 0.5).filter((e) => e.type === 'focus-check');
+  };
+  // The goblin swings and misses: no damage, so nothing shakes her.
+  const missed = focused(-100);
+  assert.ok(!missed.some((e) => e.trigger === 'damage'), 'a miss forces no check');
+  assert.equal(missed.filter((e) => e.trigger === 'turn').length, 1, 'just the turn upkeep');
+  // The goblin connects: an immediate check on top of the turn's.
+  const hit = focused(100);
+  assert.ok(hit.some((e) => e.trigger === 'damage'), 'a landed blow forces one');
+}
+
+// --- 33. one focus at a time — but an ordinary spell keeps the thread ---
+{
+  const caster = (spells) => {
+    const c = hero({ id: 'hero', abilities: { int: 8 }, castStat: 'int', spells });
+    c.luck = 0;
+    return c;
+  };
+  // Shadowdark's limit is one FOCUS spell at a time, not one spell at a time.
+  // Slinging a Magic Missile mid-concentration is legal and must not drop it.
+  {
+    const c = caster(['acid-arrow', 'magic-missile']);
+    const g = dummy();
+    const { combat } = createCombat([c], [g], () => 0.5);
+    playerSpell(heroTurn(combat, 'hero'), 'acid-arrow', g.id, () => 0.5);
+    assert.equal(c.focus?.spellId, 'acid-arrow', 'focusing on the arrow');
+    const ev = playerSpell(heroTurn(combat, 'hero'), 'magic-missile', g.id, () => 0.5);
+    assert.ok(ev.find((e) => e.type === 'spell-cast')?.success, 'the missile flies');
+    assert.equal(c.focus?.spellId, 'acid-arrow', 'and the arrow is still held');
+    assert.ok(g.conditions.some((k) => k.id === 'acid-burn'), 'still eating at the foe');
+    assert.ok(!ev.some((e) => e.type === 'focus-end'), 'nothing let go');
+  }
+  // Starting a SECOND focus spell does release the first.
+  {
+    const c = caster(['acid-arrow', 'hold-person']);
+    const g = dummy({ abilities: { wis: -10 } }); // will fail the hold save
+    const { combat } = createCombat([c], [g], () => 0.5);
+    playerSpell(heroTurn(combat, 'hero'), 'acid-arrow', g.id, () => 0.5);
+    const ev = playerSpell(heroTurn(combat, 'hero'), 'hold-person', g.id, () => 0.5);
+    assert.equal(ev.find((e) => e.type === 'focus-end')?.reason, 'recast', 'the arrow is released');
+    assert.equal(c.focus?.spellId, 'hold-person', 'the hold is what she holds now');
+    assert.ok(!g.conditions.some((k) => k.id === 'acid-burn'), 'and the acid stops');
+  }
+}
+
 console.log('combat.test.js: all assertions passed ✓');

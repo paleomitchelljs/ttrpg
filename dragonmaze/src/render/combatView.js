@@ -46,14 +46,14 @@ function condStartLine(ev) {
   return (COND_START[ev.cond] ?? ((e) => `${e.name} takes hold of ${e.who}.`))(ev);
 }
 
-// Why a concentration ended. All of these are worth noticing — 'recast' most of
-// all, since it's the price of the spell the player just chose to cast.
+// Why a concentration ended. 'recast' is the one-focus-at-a-time rule biting:
+// the player started a second focus spell, so the first let go.
 const FOCUS_END = {
   lost: (ev) => `${ev.caster}'s concentration slips — ${ev.name} ends.`,
   mishap: (ev) => `${ev.caster}'s focus shatters! ${ev.name} is lost until you rest.`,
   down: (ev) => `${ev.caster} falls, and ${ev.name} unravels.`,
   'target-gone': (ev) => `${ev.name} has nothing left to hold.`,
-  recast: (ev) => `${ev.caster} lets ${ev.name} go to work another spell.`,
+  recast: (ev) => `${ev.caster} releases ${ev.name} to take up another focus.`,
 };
 
 // ---------------------------------------------------------------- queue
@@ -399,9 +399,12 @@ async function presentEvent(els, ev) {
         : `The ${ev.who} shrugs off ${ev.name}!`, 'log-miss');
       return delay(280);
     case 'focus-check':
-      // Only the losses are narrated here — a held focus speaks through its
-      // effect (the acid tick below), and a line every single turn is noise.
-      return;
+      // A failure narrates itself through the focus-end that follows. A success
+      // gets a dim line so the upkeep roll is visible every round — without it
+      // the check looks like it isn't happening at all.
+      if (!ev.success) return;
+      appendLog(els.log, `${ev.caster} holds ${ev.name}. (${ev.total} vs DC ${ev.dc}${ev.trigger === 'damage' ? ', shaken by the hit' : ''})`, 'log-dim');
+      return delay(140);
     case 'focus-tick': {
       const card = cardOf(els, ev.targetId);
       if (card) { card.classList.add('hit-flash'); updateCardHp(card, ev.hpAfter); }

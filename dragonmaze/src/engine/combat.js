@@ -192,7 +192,7 @@ function checkFocus(combat, caster, rng, events, trigger) {
     targetId: target.id, target: target.name, damage: dealt,
     hpAfter: target.hp.current, dtype: f.dtype ?? 'fire', crit: check.crit,
   });
-  afterDamage(combat, target, rng, events);
+  afterDamage(combat, target, rng, events, dealt);
   caster.focusChecking = false;
 }
 
@@ -466,10 +466,11 @@ function triggerMorale(combat, monster, rng, events) {
 }
 
 /** Consequences of damage: deaths rattle allies, wounds rattle the victim. */
-function afterDamage(combat, target, rng, events) {
+function afterDamage(combat, target, rng, events, dealt = 0) {
   // Being struck rattles concentration: an immediate focus check, per the
-  // Shadowdark rule that damage or distraction forces one.
-  if (target.focus) checkFocus(combat, target, rng, events, 'damage');
+  // Shadowdark rule that *damage* forces one. A miss is not damage — this is
+  // called after every swing, landed or not, so the amount has to be passed in.
+  if (dealt > 0 && target.focus) checkFocus(combat, target, rng, events, 'damage');
   if (target.hp.current <= 0) {
     if (isFoe(target)) {
       events.push({ type: 'death', id: target.id, who: target.name, goldValue: target.goldValue });
@@ -551,7 +552,7 @@ export function runAiTurns(combat, rng = Math.random) {
       ...res,
     });
     if (target.kind === 'dragon' && checkDefeat(combat, events)) return events;
-    afterDamage(combat, target, rng, events);
+    afterDamage(combat, target, rng, events, res.hit ? res.damage : 0);
     if (checkDefeat(combat, events)) return events;
     advanceTurn(combat, events, rng);
   }
@@ -588,7 +589,7 @@ function takeMinionTurn(combat, minion, rng, events) {
     targetHpAfter: target.hp.current,
     ...res,
   });
-  afterDamage(combat, target, rng, events);
+  afterDamage(combat, target, rng, events, res.hit ? res.damage : 0);
   checkVictory(combat, events);
 }
 
@@ -641,7 +642,7 @@ function takeMonsterCast(combat, monster, rng, events) {
   }
   events.push({ type: 'monster-spell-hit', casterId: monster.id, caster: monster.name, targetId: target.id, target: target.name, damage: dealt, hpAfter: target.hp.current, kind: c.kind });
   if (target.kind === 'dragon') { checkDefeat(combat, events); return true; }
-  afterDamage(combat, target, rng, events);
+  afterDamage(combat, target, rng, events, dealt);
   checkDefeat(combat, events);
   return true;
 }
@@ -691,7 +692,7 @@ export function playerAttack(combat, targetId, rng = Math.random, opts = {}) {
       targetHpAfter: target.hp.current,
       ...res,
     });
-    afterDamage(combat, target, rng, events);
+    afterDamage(combat, target, rng, events, res.hit ? res.damage : 0);
     if (!livingMonsters(combat).length) break;
   }
   if (!acted) return events;
@@ -727,7 +728,7 @@ export function playerBreath(combat, rng = Math.random) {
     results.push({ id: m.id, name: m.name, hpAfter: m.hp.current, ...res });
   }
   events.push({ type: 'breath', total, rolls: dmg.rolls, dc: spec.dc, results });
-  for (const m of targets) afterDamage(combat, m, rng, events);
+  for (const r of results) afterDamage(combat, targets.find((m) => m.id === r.id), rng, events, r.damage);
   if (!checkVictory(combat, events)) advanceTurn(combat, events, rng);
   return events;
 }
@@ -751,7 +752,7 @@ export function playerSweep(combat, rng = Math.random) {
     results.push({ id: m.id, name: m.name, hit: res.hit, damage: dealt, hpAfter: m.hp.current });
   }
   events.push({ type: 'sweep', actor: actor.name, actorId: actor.id, results });
-  for (const m of targets) afterDamage(combat, m, rng, events);
+  for (const r of results) afterDamage(combat, targets.find((m) => m.id === r.id), rng, events, r.damage);
   if (!checkVictory(combat, events)) advanceTurn(combat, events, rng);
   return events;
 }
@@ -847,14 +848,10 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random, opts =
   const spell = spellById(spellId);
   if (!spell || !caster.spells.includes(spellId) || caster.burned.includes(spellId)) return events;
 
-  // Working any new magic drops the thread you were holding. Shadowdark's text
-  // only forbids running two *focus* spells at once, but a caster who can keep
-  // an Acid Arrow eating while throwing Magic Missiles isn't concentrating on
-  // anything — so here a focus costs you your casting, not just your focus slot.
-  // Breaking on the attempt (not on success) keeps it simple: choosing to cast
-  // is the moment you let go.
-  breakFocus(combat, caster, 'recast', events);
-
+  // NB: casting an ordinary spell does NOT drop a focus. Shadowdark's limit is
+  // one focus spell at a time, not one spell at a time — a caster keeps the
+  // thread while slinging Magic Missiles, and only starting a *second* focus
+  // spell releases the first (see applySpellCond -> breakFocus 'recast').
   const castOpts = {
     // The Metal Wand's castDC rides the same lever the Fae Drake pulls; they
     // stack. castCredit only names the familiar when the familiar is the reason.
@@ -1008,7 +1005,7 @@ function applyCastSuccess(combat, caster, spell, targetId, cast, rng, events) {
     if (spell.cond || spell.focus) {
       if (alive(target)) applySpellCond(combat, caster, target, spell, cast, rng, events);
     }
-    afterDamage(combat, target, rng, events);
+    afterDamage(combat, target, rng, events, dealt);
   } else if (spell.target === 'ally') {
     const target =
       combat.order.find((c) => c.id === targetId && onHeroSide(c)) ?? caster;
@@ -1048,7 +1045,7 @@ function applyCastSuccess(combat, caster, spell, targetId, cast, rng, events) {
       results,
       famAid: waveBoost ? familiarCredit(combat, caster, 'fire-boost') : null,
     });
-    for (const m of targets) afterDamage(combat, m, rng, events);
+    for (const r of results) afterDamage(combat, targets.find((m) => m.id === r.id), rng, events, r.damage);
   }
 
   if (!checkVictory(combat, events)) advanceTurn(combat, events, rng);
@@ -1089,7 +1086,7 @@ export function spendLuck(combat, rng = Math.random) {
         attackerSide: actor.side, targetId: target.id, target: target.name, targetKind: target.kind,
         targetSide: target.side, targetHpAfter: target.hp.current, reroll: true, ...res,
       });
-      afterDamage(combat, target, rng, events);
+      afterDamage(combat, target, rng, events, res.hit ? res.damage : 0);
     }
     if (!checkVictory(combat, events)) advanceTurn(combat, events, rng);
   }
@@ -1149,15 +1146,16 @@ export function playerUseItem(combat, item, targetId, rng = Math.random) {
   } else if (u.target === 'enemy') {
     const target = combat.order.find((c) => c.id === targetId && isFoe(c) && alive(c)) ?? livingMonsters(combat)[0];
     if (target) {
+      let dealt = 0;
       if (u.damage) {
-        const dealt = applyDamage(target, roll(u.damage, rng).total, u.dtype ?? 'physical', events);
+        dealt = applyDamage(target, roll(u.damage, rng).total, u.dtype ?? 'physical', events);
         events.push({ type: 'item-hit', targetId: target.id, target: target.name, damage: dealt, hpAfter: target.hp.current, dtype: u.dtype ?? 'physical' });
       }
       if (u.condition) {
         addCondition(target, u.condition);
         events.push({ type: 'condition-applied', targetId: target.id, target: target.name, cond: u.condition.id });
       }
-      afterDamage(combat, target, rng, events);
+      afterDamage(combat, target, rng, events, dealt);
     }
   } else if (u.target === 'all-enemies') {
     const targets = livingMonsters(combat);
@@ -1172,7 +1170,7 @@ export function playerUseItem(combat, item, targetId, rng = Math.random) {
       if (u.condition) addCondition(m, u.condition);
     }
     events.push({ type: 'item-wave', total, dc: u.saveDC ?? null, dtype: u.dtype ?? 'fire', cond: u.condition?.id ?? null, results });
-    for (const m of targets) afterDamage(combat, m, rng, events);
+    for (const r of results) afterDamage(combat, targets.find((m) => m.id === r.id), rng, events, r.damage);
   }
 
   if (!checkVictory(combat, events)) advanceTurn(combat, events, rng);

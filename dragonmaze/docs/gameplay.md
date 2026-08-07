@@ -403,14 +403,15 @@ cast mod`). `tome: false` = innate/class-only, never learnable from a found tome
 - **`focus: {dice?, cond}`** — Shadowdark's **Focus**. The caster carries
   `focus = {spellId, name, targetId, condId, dice, dtype}` and the target carries
   the condition tagged `focusOf: <casterId>`. Rules, per the system guide: one
-  focus at a time — in fact **casting anything at all** drops it, on the
-  attempt, not on success (`breakFocus(..., 'recast')` at the top of
-  `playerSpell`). *This is stricter than the book*, which only forbids two focus
-  spells running together; a caster who can keep an Acid Arrow eating while
-  throwing Magic Missiles isn't concentrating on anything. A
+  focus at a time — starting a second one releases the first
+  (`applySpellCond` → `breakFocus(..., 'recast')`). An **ordinary spell does not
+  break it**: the limit is one *focus* spell, not one spell, so a caster keeps
+  the thread while slinging Magic Missiles. A
   spellcasting check at the **start of each of the caster's turns** keeps it up
   (`beginTurn` → `checkFocus`, wired into `advanceTurn`, which now takes `rng`);
-  **taking a hit forces an immediate check** (`afterDamage` → `checkFocus`); an
+  **taking a hit forces an immediate check** (`afterDamage` → `checkFocus`, only
+  when `dealt > 0` — `afterDamage` runs after every swing, landed or not, so the
+  damage is passed in and a miss shakes nothing); an
   ordinary failure just ends it, but a **natural 1 is a full critical failure**
   (burned until rest, plus `applyCastMishap`). Focus also ends if the caster
   falls or the target dies. A `focus.dice` spell deals that die to the target on
