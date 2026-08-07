@@ -355,7 +355,6 @@ export const ZONES = [
         doors: { 3: 'courtyard-ne', 4: 'temple-depths' },
         table: [
           { id: 'lizardfolk-warrior', weight: 3, packMax: 2 },
-          { id: 'sarnak-vampire', weight: 1, packMax: 1 },
           { id: 'giant-spider', weight: 1, packMax: 2 },
         ],
         boss: { name: 'The Tae Ew Templar', monsterIds: ['tae-ew-templar', 'lizardfolk-warrior'], drops: ['thulian-claws'] },
@@ -391,7 +390,6 @@ export const ZONES = [
         table: [
           { id: 'lizardfolk-warrior', weight: 2, packMax: 2 },
           { id: 'bone-wraith', weight: 2, packMax: 1 },
-          { id: 'sarnak-vampire', weight: 1, packMax: 1 },
         ],
         map: [
           '######5########',

@@ -92,6 +92,11 @@ Lifecycle entry points: `init()` (boot, load save), `newGame(seed?)`,
   guessed from gear names (`WEAPON_DICE`); sprite strip by class; portal spells
   mapped to nearest in-game spell by keyword. Stored in `meta.customCharacters`.
 
+`heroWithGear(id)` is the **display** hero: `heroWithGrowth` plus equipment, the
+same numbers combat will build. Anything that *shows* a hero (the character
+sheet) uses this — without it an equipped +1 AC trinket read as inert, because
+`heroWithGrowth` deliberately stops short of gear.
+
 `heroWithGrowth(id)` is the canonical "resolved hero": folds level-up choices
 (ability increases, talents, learned spells, familiar) and found tomes onto the
 base template. Always build combatants from this, never the raw template.

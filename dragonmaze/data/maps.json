@@ -1456,12 +1456,12 @@
       }
     ],
     "boss": {
-      "name": "The golem of the courtyard",
+      "name": "The Stone Golem",
       "monsterIds": [
         "stone-golem"
       ],
       "drops": [
-        "thulian-claws"
+        "shard-of-golem-stone"
       ]
     },
     "miniboss": null,
@@ -1933,12 +1933,12 @@
         "type": "boss",
         "x": 7,
         "y": 2,
-        "name": "The golem of the courtyard",
+        "name": "The Stone Golem",
         "pack": [
           "stone-golem"
         ],
         "drops": [
-          "thulian-claws"
+          "shard-of-golem-stone"
         ]
       }
     ]
@@ -2926,11 +2926,6 @@
         "packMax": 2
       },
       {
-        "id": "sarnak-vampire",
-        "weight": 1,
-        "packMax": 1
-      },
-      {
         "id": "giant-spider",
         "weight": 1,
         "packMax": 2
@@ -2943,8 +2938,7 @@
         "lizardfolk-warrior"
       ],
       "drops": [
-        "rubicite-greaves",
-        "lizardscale-cloak"
+        "thulian-claws"
       ]
     },
     "miniboss": null,
@@ -3027,8 +3021,7 @@
           "lizardfolk-warrior"
         ],
         "drops": [
-          "rubicite-greaves",
-          "lizardscale-cloak"
+          "thulian-claws"
         ]
       }
     ]
@@ -3082,23 +3075,9 @@
         "id": "bone-wraith",
         "weight": 2,
         "packMax": 1
-      },
-      {
-        "id": "sarnak-vampire",
-        "weight": 1,
-        "packMax": 1
       }
     ],
-    "boss": {
-      "name": "Fright and Terror, the Rift-Guardians",
-      "monsterIds": [
-        "gargoyle",
-        "gargoyle"
-      ],
-      "drops": [
-        "tribal-mask"
-      ]
-    },
+    "boss": null,
     "miniboss": null,
     "objects": [
       {
@@ -4091,14 +4070,9 @@
         "type": "boss",
         "x": 7,
         "y": 1,
-        "name": "Fright and Terror, the Rift-Guardians",
-        "pack": [
-          "gargoyle",
-          "gargoyle"
-        ],
-        "drops": [
-          "tribal-mask"
-        ]
+        "name": null,
+        "pack": [],
+        "drops": []
       }
     ]
   },
@@ -4171,7 +4145,7 @@
         "clay-golem"
       ],
       "drops": [
-        "thulian-claws"
+        "tribal-mask"
       ]
     },
     "miniboss": null,
@@ -4215,7 +4189,7 @@
           "clay-golem"
         ],
         "drops": [
-          "thulian-claws"
+          "tribal-mask"
         ]
       }
     ]
@@ -4270,7 +4244,7 @@
         "lizardman-crusader"
       ],
       "drops": [
-        "rubicite-breastplate"
+        "idol-of-thule"
       ]
     },
     "miniboss": {
@@ -4278,6 +4252,9 @@
       "monsterIds": [
         "lizardman-crusader",
         "lizardfolk-warrior"
+      ],
+      "drops": [
+        "darkforge-breastplate"
       ]
     },
     "objects": [
@@ -4315,7 +4292,7 @@
           "lizardman-crusader"
         ],
         "drops": [
-          "rubicite-breastplate"
+          "idol-of-thule"
         ]
       },
       {
@@ -4392,14 +4369,7 @@
         "packMax": 2
       }
     ],
-    "boss": {
-      "name": "The Sluicewarden Gators",
-      "monsterIds": [
-        "alligator",
-        "alligator",
-        "green-slime"
-      ]
-    },
+    "boss": null,
     "miniboss": null,
     "objects": [
       {
@@ -4548,14 +4518,7 @@
         "packMax": 2
       }
     ],
-    "boss": {
-      "name": "The Rat King",
-      "monsterIds": [
-        "giant-rat",
-        "giant-rat",
-        "green-slime"
-      ]
-    },
+    "boss": null,
     "miniboss": null,
     "objects": [
       {
@@ -4695,12 +4658,8 @@
         "type": "boss",
         "x": 6,
         "y": 1,
-        "name": "The Rat King",
-        "pack": [
-          "giant-rat",
-          "giant-rat",
-          "green-slime"
-        ],
+        "name": null,
+        "pack": [],
         "drops": []
       }
     ]
@@ -4773,7 +4732,7 @@
         "iron-golem"
       ],
       "drops": [
-        "idol-of-thule"
+        "metal-wand"
       ]
     },
     "miniboss": null,
@@ -4939,7 +4898,7 @@
           "iron-golem"
         ],
         "drops": [
-          "idol-of-thule"
+          "metal-wand"
         ]
       }
     ]
@@ -5006,17 +4965,7 @@
         "packMax": 2
       }
     ],
-    "boss": {
-      "name": "The Fear-Touched Gargoyles",
-      "monsterIds": [
-        "gargoyle",
-        "gargoyle",
-        "bone-wraith"
-      ],
-      "drops": [
-        "rubicite-breastplate"
-      ]
-    },
+    "boss": null,
     "miniboss": null,
     "objects": [
       {
@@ -5183,15 +5132,9 @@
         "type": "boss",
         "x": 4,
         "y": 9,
-        "name": "The Fear-Touched Gargoyles",
-        "pack": [
-          "gargoyle",
-          "gargoyle",
-          "bone-wraith"
-        ],
-        "drops": [
-          "rubicite-breastplate"
-        ]
+        "name": null,
+        "pack": [],
+        "drops": []
       }
     ]
   },

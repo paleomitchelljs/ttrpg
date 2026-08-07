@@ -1331,6 +1331,25 @@ function applyEquipment(c, charKey) {
   }
 }
 
+/**
+ * A hero as they actually stand, gear and all — the same numbers the combat
+ * engine will build, for anything that *shows* a hero rather than fights with
+ * them. `heroWithGrowth` deliberately stops at level-up folds, so without this
+ * the character sheet reported a bare AC and a +1 ring appeared to do nothing.
+ */
+export function heroWithGear(id) {
+  const hero = heroWithGrowth(id);
+  if (!hero) return null;
+  const view = {
+    ...hero,
+    abilities: { ...hero.abilities },
+    attacks: hero.attacks.map((a) => ({ ...a })),
+  };
+  applyEquipment(view, id);
+  view.hpMax = hero.hpMax + equipmentHp(id);
+  return view;
+}
+
 /** Does this character's equipped shield actually do anything? */
 function shieldIdle(charKey) {
   const hero = heroWithGrowth(charKey);

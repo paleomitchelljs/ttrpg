@@ -330,7 +330,9 @@ function sheetSubject(id) {
       equip: equipInfo('dragon', tier.attacks[0]?.name),
     };
   }
-  const c = game.heroWithGrowth(id);
+  // Gear included: the sheet shows the hero as they'll actually walk into the
+  // next fight, so an equipped +1 AC trinket reads on the AC line.
+  const c = game.heroWithGear(id);
   if (!c) return null;
   const slot = game.state.run?.party.find((pm) => pm.id === id);
   const g = game.state.meta.heroGrowth?.[id] ?? { xp: 0, level: 1, pending: 0, choices: [] };

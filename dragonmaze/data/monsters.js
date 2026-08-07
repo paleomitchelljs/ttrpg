@@ -441,7 +441,7 @@ export const MONSTERS = [
     goldValue: 10,
     minDepth: 4,
     packMax: 1,
-    weight: 2,
+    weight: 0, // shelved: drawn and statted, but named by no zone table yet
     morale: 2,
   },
   {

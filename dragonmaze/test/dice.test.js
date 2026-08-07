@@ -567,6 +567,46 @@ check('chooseAdvance refuses a talent whose prerequisites are unmet', () => {
   game.state.meta.heroGrowth = {};
 });
 
+check('the sheet shows a hero wearing their gear', () => {
+  // heroWithGrowth stops at level-up folds by design; without heroWithGear the
+  // character sheet reported a bare AC and an equipped +1 trinket looked inert.
+  const game = gameState;
+  const base = companionById('beren');
+  game.state.meta.inventory = ['shard-of-golem-stone', 'darkforge-breastplate'];
+  game.state.meta.equipment = { beren: { trinket: 'shard-of-golem-stone' } };
+  assert.equal(game.heroWithGrowth('beren').ac, base.ac, 'the growth view stays bare');
+  assert.equal(game.heroWithGear('beren').ac, base.ac + 1, 'the sheet view wears the shard');
+
+  // CON from gear shows as max HP on the same view.
+  game.state.meta.equipment = { beren: { armor: 'darkforge-breastplate' } };
+  const plated = game.heroWithGear('beren');
+  assert.equal(plated.ac, base.ac + 1, 'darkforge +1 AC');
+  assert.equal(plated.hpMax, base.hpMax + 2, 'and its +2 CON as HP');
+
+  game.state.meta.equipment = {};
+  game.state.meta.inventory = [];
+  assert.equal(game.heroWithGear('beren').ac, base.ac, 'bare again once stripped');
+});
+
+check('shelved monsters are drawn but unreachable', () => {
+  for (const id of ['lich', 'sarnak-vampire']) {
+    const m = monsterById(id);
+    assert.ok(m, `${id} exists`);
+    assert.equal(m.weight, 0, `${id} is out of every random roll`);
+    assert.ok(SPRITES[m.anim.idle] && SPRITES[m.anim.attack], `${id} is drawn`);
+  }
+  // ...and named by no zone table, so nothing can spawn them yet.
+  const tabled = new Set();
+  for (const z of ZONES) {
+    for (const sub of z.subregions ?? []) {
+      for (const e of sub.table ?? []) tabled.add(e.id);
+      for (const b of [sub.boss, sub.miniboss]) for (const id of b?.monsterIds ?? []) tabled.add(id);
+    }
+  }
+  assert.ok(!tabled.has('lich'), 'the lich is unplaced');
+  assert.ok(!tabled.has('sarnak-vampire'), 'the bloodseeker is shelved');
+});
+
 check('items are well-formed', () => {
   const MODS = ['toHit', 'damage', 'ac', 'hpMax', 'init', 'regen', 'castDC', 'intimidate',
     'str', 'dex', 'con', 'int', 'wis', 'cha'];

@@ -283,7 +283,7 @@
      monster  roll (region table)                            @11,6
      loot     roll (gold/tome/den)                           @4,8
      loot     roll (gold/tome/den)                           @7,5
-     boss     The golem of the courtyard [stone-golem] drops thulian-claws @7,2
+     boss     The Stone Golem [stone-golem] drops shard-of-golem-stone @7,2
    grid (M monster · L loot · B boss · b mini · d decor anchor):
      ddddddddddddddd
      ......ddd.....d
@@ -409,7 +409,7 @@
 == lost-temple / throne-palace  [The Temple-Palace]
    15x19  theme palace  difficulty 3
    start 3,17 | door 4->temple-depths 7,0 | door 3->courtyard-ne 7,18
-   table: lizardfolk-warrior(w3,≤2)  sarnak-vampire(w1,≤1)  giant-spider(w1,≤2)
+   table: lizardfolk-warrior(w3,≤2)  giant-spider(w1,≤2)
    objects (type · identity · @cell):
      decor    courtyard-door-wood (prop/door) 1.1x1.1 rot0   @6.45,0
      decor    courtyard-door-wood (prop/door) 1.1x1.1 rot180 @6.45,17.9
@@ -420,7 +420,7 @@
      monster  roll (region table)                            @11,13
      loot     roll (gold/tome/den)                           @1,11
      loot     roll (gold/tome/den)                           @12,15
-     boss     The Tae Ew Templar [tae-ew-templar, lizardfolk-warrior] drops rubicite-greaves, lizardscale-cloak @11,1
+     boss     The Tae Ew Templar [tae-ew-templar, lizardfolk-warrior] drops thulian-claws @11,1
    grid (M monster · L loot · B boss · b mini · d decor anchor):
      #######4#######
      #..........B..#
@@ -445,7 +445,7 @@
 == lost-temple / temple-depths  [The Throne Hall of the Tae Ew]
    15x13  theme palace  difficulty 4
    start 6,11 | door 5->summoning-chamber 6,0 | door 4->throne-palace 7,12 | portal->under-pyramid-sewer 4,5
-   table: lizardfolk-warrior(w2,≤2)  bone-wraith(w2,≤1)  sarnak-vampire(w1,≤1)
+   table: lizardfolk-warrior(w2,≤2)  bone-wraith(w2,≤1)
    objects (type · identity · @cell):
      decor    throne (structure) 1.35x1.75 rot0              @6.35,0.15
      decor    sewer-grate (floor/prop) 1x1 rot0              @4,5
@@ -532,7 +532,7 @@
      loot     roll (gold/tome/den)                           @2,1
      loot     roll (gold/tome/den)                           @12,7
      portal   → under-pyramid-sewer "A rusted floor-grate"   @4,5
-     boss     Fright and Terror, the Rift-Guardians [gargoyle, gargoyle] drops tribal-mask @7,1
+     boss     (none defined) []                              @7,1
    grid (M monster · L loot · B boss · b mini · d decor anchor):
      ######5########
      #dLddddBdddddd#
@@ -558,7 +558,7 @@
      monster  roll (region table)                            @12,6
      loot     roll (gold/tome/den)                           @10,1
      loot     roll (gold/tome/den)                           @5,8
-     boss     The Clay Golem of the Maze [clay-golem] drops thulian-claws @12,8
+     boss     The Clay Golem of the Maze [clay-golem] drops tribal-mask @12,8
    grid (M monster · L loot · B boss · b mini · d decor anchor):
      ######6########
      #S.#...#..L#..#
@@ -581,7 +581,7 @@
      loot     roll (gold/tome/den)                           @12,3
      loot     roll (gold/tome/den)                           @6,5
      loot     roll (gold/tome/den)                           @9,9
-     boss     The Lizardman Archon [lizardman-archon, lizardman-crusader] drops rubicite-breastplate @6,9
+     boss     The Lizardman Archon [lizardman-archon, lizardman-crusader] drops idol-of-thule @6,9
      miniboss The Tae Ew Crusader [lizardman-crusader, lizardfolk-warrior] @5,3
    grid (M monster · L loot · B boss · b mini · d decor anchor):
      #6#############
@@ -644,7 +644,7 @@
      loot     roll (gold/tome/den)                           @13,9
      portal   → courtyard-sewer "A ladder up to the courtyard drains" @2,1
      portal   → under-pyramid-sewer "A channel to the pyramid drains" @13,4
-     boss     The Rat King [giant-rat, giant-rat, green-slime] @6,1
+     boss     (none defined) []                              @6,1
    grid (M monster · L loot · B boss · b mini · d decor anchor):
      ###############
      #.P.##BS.##d..#
@@ -679,7 +679,7 @@
      loot     roll (gold/tome/den)                           @12,9
      portal   → under-maze-sewer "A channel back to the maze drains" @1,4
      portal   → under-palace-sewer "A shaft up to the palace drains" @12,1
-     boss     The Iron Golem of the Drains [iron-golem] drops idol-of-thule @6,8
+     boss     The Iron Golem of the Drains [iron-golem] drops metal-wand @6,8
    grid (M monster · L loot · B boss · b mini · d decor anchor):
      #######7#######
      #..M.....M##P.#
@@ -715,7 +715,7 @@
      portal   → courtyard-sewer "A long ladder up to the courtyard" @1,9
      portal   → under-pyramid-sewer "A shaft down to the pyramid drains" @1,1
      portal   → summoning-chamber "The way to the summoning chamber" @0,5
-     boss     The Fear-Touched Gargoyles [gargoyle, gargoyle, bone-wraith] drops rubicite-breastplate @4,9
+     boss     (none defined) []                              @4,9
    grid (M monster · L loot · B boss · b mini · d decor anchor):
      ###############
      #P.M...S...M..#
