@@ -12,7 +12,8 @@ import { COMPANIONS, companionById } from '../data/party.js';
 import { itemById } from '../data/items.js';
 import { FAMILIARS, familiarById } from '../data/familiars.js';
 import { spellById, SPELLS as SPELLS_ALL } from '../data/spells.js';
-import { TALENTS, talentById, focusTalentsFor } from '../data/talents.js';
+import { TALENTS, talentById, focusTalentsFor, weaponTalentsFor } from '../data/talents.js';
+import * as talentsRef from '../data/talents.js';
 import * as rulesRef from './engine/rules.js';
 import { SPRITES } from './assets-manifest.js';
 
@@ -352,7 +353,7 @@ function sheetSubject(id) {
     familiar: familiarInfo(c.familiar), // this hero's own familiar, if they took the feat
     traits: c.abilityLabel ? [c.abilityLabel] : [],
     growth: growthInfo(id, c, g),
-    equip: equipInfo(id, c.attacks[0]?.name),
+    equip: equipInfo(id, c.attacks[0]?.name, !!c.attacks[0]?.twoHanded),
   };
 }
 
@@ -362,9 +363,19 @@ function sheetSubject(id) {
 function growthInfo(id, c, g) {
   const pend = game.pendingAdvances(id);
   const chosen = c.talents ?? [];
-  const talentOptions = [...TALENTS, ...focusTalentsFor(c.spells)]
+  // Weapon Focus/Master exist per weapon type this hero actually wields, the way
+  // Spell Focus exists per school they know. A talent whose prerequisites aren't
+  // met is still listed — locked, with what it wants — so the tree is visible
+  // from level 3 rather than being a surprise later.
+  const talentOptions = [...TALENTS, ...weaponTalentsFor(c.attacks), ...focusTalentsFor(c.spells)]
     .filter((t) => (!t.caster || c.castStat) && (t.repeatable || !chosen.includes(t.id)))
-    .map((t) => ({ id: t.id, name: t.name, blurb: t.blurb }));
+    .map((t) => ({
+      id: t.id,
+      name: t.name,
+      blurb: t.blurb,
+      locked: !talentsRef.meetsRequires(t, chosen),
+      requiresLabel: t.requiresLabel ?? null,
+    }));
   return {
     level: g.level,
     xp: g.xp,
@@ -399,7 +410,7 @@ function learnableSpells(id, level) {
   );
 }
 
-function equipInfo(charKey, weapon = null) {
+function equipInfo(charKey, weapon = null, twoHanded = false) {
   const taken = {};
   for (const [key, slots] of Object.entries(game.state.meta.equipment ?? {})) {
     for (const id of Object.values(slots)) taken[id] = key;
@@ -410,6 +421,7 @@ function equipInfo(charKey, weapon = null) {
     inventory: game.state.meta.inventory ?? [],
     taken,
     weapon, // the character's default (mundane) weapon — shown as the weapon slot's base
+    twoHanded, // both hands on the weapon: the shield slot pays out nothing
   };
 }
 

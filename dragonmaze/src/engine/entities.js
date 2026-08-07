@@ -53,6 +53,7 @@ export function makeCombatant(data) {
     talents: [...(data.talents ?? [])], // chosen level-up talents (Cleave, Flurry, …)
     recoveredThisCombat: false, // Arcane Recovery: one saved fizzle per fight
     focus: null, // the one focus spell this caster is concentrating on, if any
+    regen: data.regen ?? 0, // HP knitted back at the start of each of their turns
     burned: [],
     goldValue: data.goldValue ?? 0,
     morale: data.morale ?? null,

@@ -815,6 +815,10 @@ html.compact .badge-cond { font-size: 0.5rem; }
 .equip-grid { display: flex; flex-direction: column; gap: 0.5rem; }
 .equip-row { display: flex; align-items: flex-start; gap: 0.5rem; }
 .equip-slot { width: 3.5rem; flex: none; text-transform: capitalize; color: var(--ink-dim); font-size: 0.8rem; padding-top: 0.35rem; }
+/* A slot that can't pay out (a shield behind a two-handed weapon) says why on
+   its own line, and its chips dim — they still equip, they just do nothing. */
+.equip-slot em { display: block; font-style: normal; font-size: 0.62rem; line-height: 1.15; opacity: 0.75; }
+.equip-row.idle .equip-chips { opacity: 0.55; }
 .equip-chips { display: flex; flex-wrap: wrap; gap: 0.35rem; flex: 1; }
 .equip-chip { display: flex; align-items: center; gap: 0.3rem; background: #2e2b38; border: 2px solid #43404f; border-radius: 7px; padding: 3px 7px 3px 3px; cursor: pointer; color: #d8d3e9; font: inherit; line-height: 1; }
 .equip-chip:hover { border-color: #6c86d0; }

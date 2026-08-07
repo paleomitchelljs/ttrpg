@@ -201,7 +201,13 @@ function growthHtml(subject) {
     const opt = (type, id, label, blurb) =>
       `<option value="${type}:${id}"${blurb ? ` title="${attr(blurb)}"` : ''}>${label}</option>`;
     const group = (label, opts) => (opts ? `<optgroup label="${label}">${opts}</optgroup>` : '');
-    const talents = group('Talents', g.talentOptions.map((t) => opt('talent', t.id, t.name, t.blurb)).join(''));
+    // A talent whose prerequisites aren't met is shown greyed with what it
+    // wants, so the tree reads as a path rather than as a missing option.
+    const talentOpt = (t) =>
+      t.locked
+        ? `<option value="talent:${t.id}" disabled${t.blurb ? ` title="${attr(t.blurb)}"` : ''}>${t.name} — needs ${attr(t.requiresLabel ?? 'more training')}</option>`
+        : opt('talent', t.id, t.name, t.blurb);
+    const talents = group('Talents', g.talentOptions.map(talentOpt).join(''));
     // Only spells of a tier the caster has reached are offered (main.js
     // learnableSpells); the tier is on the label so the gate is visible.
     const spells = group('Spells', g.learnable.map((sp) => opt('spell', sp.id, `Learn ${sp.name} (tier ${sp.tier ?? 1})`, sp.blurb)).join(''));
@@ -239,10 +245,13 @@ function equipmentHtml(subject) {
     const title = item ? item.blurb.replace(/"/g, '') : isBaseWeapon ? `${baseWeapon}: your default weapon` : 'unequip';
     return `<button class="equip-chip${equipped ? ' on' : ''}${wornByOther ? ' worn' : ''}" data-char="${charKey}" data-slot="${slot}" data-item="${item?.id ?? ''}" title="${title}">${icon}<span class="equip-name">${label}${wornByOther ? ' · worn' : ''}</span></button>`;
   };
+  // A two-handed weapon leaves no hand for a shield, so that row says so rather
+  // than letting the player equip one that quietly does nothing.
   const rows = SLOTS.map((slot) => {
+    const idle = slot === 'shield' && subject.equip.twoHanded;
     const options = ITEMS.filter((i) => i.slot === slot && subject.equip.inventory.includes(i.id));
     const chips = [chip(slot, null), ...options.map((i) => chip(slot, i))].join('');
-    return `<div class="equip-row"><span class="equip-slot">${slot}</span><div class="equip-chips">${chips}</div></div>`;
+    return `<div class="equip-row${idle ? ' idle' : ''}"><span class="equip-slot">${slot}${idle ? '<em>no hand free</em>' : ''}</span><div class="equip-chips">${chips}</div></div>`;
   }).join('');
   return `<h3>Equipment</h3><div class="equip-grid">${rows}</div>
     <p class="sheet-blurb">changes take effect at the next labyrinth</p>`;

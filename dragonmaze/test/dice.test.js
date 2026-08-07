@@ -22,12 +22,14 @@ import { SPELLS, spellById } from '../data/spells.js';
 import { ZONES } from '../data/zones.js';
 import { buildZoneDungeon } from '../src/world/zones.js';
 import { FAMILIARS } from '../data/familiars.js';
-import { ITEMS } from '../data/items.js';
+import { ITEMS, SLOTS, itemById } from '../data/items.js';
 import { bumpDamage, victoryDropChance, levelForXp, LEVEL_XP, hpPerLevel, canLearnSpell } from '../src/engine/rules.js';
 import * as gameState from '../src/state/gameState.js';
 import { migrate, SAVE_VERSION } from '../src/state/save.js';
 import { portalToCompanion } from '../src/state/importHero.js';
 import { COMPANIONS, companionById } from '../data/party.js';
+import { WEAPONS, weaponById, attackFor, shieldAcFor } from '../data/weapons.js';
+import { talentById, meetsRequires, weaponTalentsFor } from '../data/talents.js';
 import { resolveSpellCast } from '../src/engine/rules.js';
 import { makeCombatant, makeDragonCombatant } from '../src/engine/entities.js';
 import { tierByName } from '../data/dragonProgression.js';
@@ -478,12 +480,100 @@ check('victory drops favor bosses', () => {
   assert.ok(victoryDropChance(true) > victoryDropChance(false));
 });
 
+check('weapons: types, finesse, and two-handed blocking a shield', () => {
+  for (const w of WEAPONS) {
+    assert.ok(w.id && w.name && w.type && w.damage, `${w.id} well-formed`);
+    assert.ok(/^\d+d\d+$/.test(w.damage), `${w.id} damage is a plain die`);
+  }
+  // Finesse swings off DEX only when DEX is actually the better arm.
+  const rapier = weaponById('rapier');
+  assert.equal(attackFor(rapier, { str: 1, dex: 4 }).stat, 'dex', 'a duelist uses DEX');
+  assert.equal(attackFor(rapier, { str: 4, dex: 1 }).stat, 'str', 'a strong arm still may');
+  assert.equal(attackFor(rapier, { str: 1, dex: 4 }).toHit, 5, 'DEX 4 + trained 1');
+  // A non-finesse weapon is STR whatever the DEX.
+  assert.equal(attackFor(weaponById('warhammer'), { str: 3, dex: 9 }).stat, 'str');
+  // Two hands on the weapon, no hand for a shield.
+  const shielded = { shield: true };
+  assert.equal(shieldAcFor(shielded, weaponById('warhammer')), 2, 'one-handed: shield counts');
+  assert.equal(shieldAcFor(shielded, weaponById('greataxe')), 0, 'two-handed: it does not');
+  assert.equal(shieldAcFor({}, weaponById('warhammer')), 0, 'no shield, no bonus');
+
+  // The roster is built from weapons, so every hero has a typed attack.
+  for (const c of COMPANIONS) {
+    assert.ok(c.attacks[0].type, `${c.id} has a weapon type`);
+    assert.ok(weaponById(c.weapon), `${c.id} carries a real weapon`);
+  }
+  const beren = companionById('beren');
+  assert.equal(beren.ac, 16, "Beren's 14 + his shield's 2");
+  assert.equal(companionById('turquoise').attacks[0].twoHanded, true, 'the greataxe needs both hands');
+});
+
+check('talent tree: prerequisites gate the showy talents', () => {
+  assert.ok(meetsRequires(talentById('wf-sword'), []), 'a Weapon Focus is open from the start');
+  assert.ok(!meetsRequires(talentById('wm-sword'), []), 'Master needs its Focus');
+  assert.ok(meetsRequires(talentById('wm-sword'), ['wf-sword']), 'and is open once you have it');
+  assert.ok(!meetsRequires(talentById('flurry'), ['wf-sword']), 'Flurry needs a Master, not a Focus');
+  assert.ok(meetsRequires(talentById('flurry'), ['wf-sword', 'wm-sword']), 'a Master unlocks Flurry');
+  assert.ok(meetsRequires(talentById('flurry'), ['wf-axe', 'wm-axe']), 'any Master will do');
+  assert.ok(!meetsRequires(talentById('cleave'), ['wf-sword']), 'Cleave wants a chopping weapon');
+  assert.ok(meetsRequires(talentById('cleave'), ['wf-axe']), 'an Axe Focus unlocks Cleave');
+  assert.ok(meetsRequires(talentById('armor'), []), 'the flat talents stay open');
+
+  // Options are generated per weapon type the character actually wields.
+  const offered = weaponTalentsFor(companionById('turquoise').attacks).map((t) => t.id);
+  assert.deepEqual(offered, ['wf-axe', 'wm-axe'], 'the axe-wielder is offered axe talents');
+});
+
+check('weapon talents sharpen only their own weapon type', () => {
+  const game = gameState;
+  const base = companionById('turquoise');
+  game.state.meta.heroGrowth = {
+    turquoise: {
+      xp: 700, level: 5, choices: [
+        { type: 'talent', talentId: 'wf-axe' },
+        { type: 'talent', talentId: 'wm-axe' },
+      ],
+    },
+  };
+  const grown = game.heroWithGrowth('turquoise');
+  assert.equal(grown.attacks[0].toHit, base.attacks[0].toHit + 1, 'Axe Focus: +1 to hit');
+  assert.equal(grown.attacks[0].damage, bumpDamage(base.attacks[0].damage, 1), 'Axe Master: +1 damage');
+
+  // A sword talent does nothing for an axe.
+  game.state.meta.heroGrowth = {
+    turquoise: { xp: 700, level: 5, choices: [{ type: 'talent', talentId: 'wf-sword' }] },
+  };
+  const wrong = game.heroWithGrowth('turquoise');
+  assert.equal(wrong.attacks[0].toHit, base.attacks[0].toHit, 'a Sword Focus misses the axe');
+  game.state.meta.heroGrowth = {};
+});
+
+check('chooseAdvance refuses a talent whose prerequisites are unmet', () => {
+  const game = gameState;
+  game.state.meta.heroGrowth = { turquoise: { xp: 700, level: 5, choices: [] } };
+  const taken = () => game.state.meta.heroGrowth.turquoise.choices.map((c) => c.talentId);
+  game.chooseAdvance('turquoise', 'talent', 'flurry');
+  assert.deepEqual(taken(), [], 'Flurry is refused with no Master');
+  game.chooseAdvance('turquoise', 'talent', 'wf-axe');
+  assert.deepEqual(taken(), ['wf-axe'], 'the Focus is allowed');
+  game.chooseAdvance('turquoise', 'talent', 'flurry');
+  assert.deepEqual(taken(), ['wf-axe'], 'still refused — a Focus is not a Master');
+  game.chooseAdvance('turquoise', 'talent', 'wm-axe');
+  assert.deepEqual(taken(), ['wf-axe', 'wm-axe'], 'the Master is allowed');
+  game.state.meta.heroGrowth = {};
+});
+
 check('items are well-formed', () => {
+  const MODS = ['toHit', 'damage', 'ac', 'hpMax', 'init', 'regen'];
   for (const item of ITEMS) {
-    assert.ok(['weapon', 'armor', 'trinket'].includes(item.slot), `${item.id} slot`);
-    assert.ok(Object.keys(item.mods).every((k) => ['toHit', 'damage', 'ac', 'hpMax', 'init'].includes(k)), `${item.id} mods`);
+    assert.ok(SLOTS.includes(item.slot), `${item.id} slot`);
+    assert.ok(Object.keys(item.mods).every((k) => MODS.includes(k)), `${item.id} mods`);
     assert.ok(item.blurb, `${item.id} blurb`);
   }
+  assert.ok(SLOTS.includes('shield'), 'there is a shield slot');
+  assert.ok(ITEMS.some((i) => i.slot === 'shield'), 'and shields to put in it');
+  // The Rubicite plate is the regenerating one.
+  assert.equal(itemById('rubicite-breastplate').mods.regen, 1, 'rubicite knits 1 HP back');
 });
 
 check('portal characters convert into sane companions', () => {
@@ -721,9 +811,11 @@ check('ASI and talent advances fold into the hero template', () => {
   const grown = game.heroWithGrowth('spawnee');
   assert.equal(grown.abilities.str, base.abilities.str + 1, 'STR ASI raises the score');
   assert.equal(grown.abilities.dex, base.abilities.dex + 1, 'DEX ASI raises the score');
-  // STR + DEX both sharpen the attack; DEX also gives AC (+ the armor talent).
-  // Shadowdark: weapon damage is the die alone, so raising STR never pads it.
-  assert.equal(grown.attacks[0].toHit, base.attacks[0].toHit + 2, 'STR + DEX both add to hit');
+  // Only the arm that actually swings the weapon sharpens the attack: Spawnee's
+  // longsword is a STR weapon, so her DEX increase does nothing for it (it still
+  // buys AC). Shadowdark: weapon damage is the die alone, so STR never pads it.
+  assert.equal(grown.attacks[0].stat, 'str', 'a longsword is swung with STR');
+  assert.equal(grown.attacks[0].toHit, base.attacks[0].toHit + 1, 'only the STR ASI sharpens it');
   assert.equal(grown.attacks[0].damage, base.attacks[0].damage, 'weapon damage stays the die (no STR bonus)');
   assert.equal(grown.ac, base.ac + 2, 'DEX ASI +1 and the +1 AC talent');
   assert.ok(grown.talents.includes('cleave'), 'Cleave talent recorded');

@@ -11,14 +11,22 @@
 
 import { bumpDamage } from '../engine/rules.js';
 
+// Gear name -> [damage die, weapon type]. The type groups it for the Weapon
+// Focus / Weapon Master talents (see data/weapons.js); anything unrecognised
+// stays untyped and simply gets no weapon talents offered.
 const WEAPON_DICE = [
-  [/greatsword|great sword|greataxe/i, '1d12'],
-  [/longsword|bastard sword|warhammer/i, '1d8'],
-  [/axe|morningstar/i, '1d8'],
-  [/mace|hammer|flail|spear|javelin|shortsword|short sword/i, '1d6'],
-  [/bow|crossbow|sling/i, '1d6'],
-  [/dagger|knife|staff|club|cudgel/i, '1d4'],
-  [/sword|blade|rapier|scimitar/i, '1d6'],
+  [/greatsword|great sword/i, '1d12', 'sword'],
+  [/greataxe/i, '1d12', 'axe'],
+  [/longsword|bastard sword/i, '1d8', 'sword'],
+  [/warhammer/i, '1d8', 'hammer'],
+  [/axe/i, '1d8', 'axe'],
+  [/morningstar|mace|hammer|flail/i, '1d6', 'hammer'],
+  [/shortsword|short sword/i, '1d6', 'sword'],
+  [/spear|javelin/i, '1d6', null],
+  [/bow|crossbow|sling/i, '1d6', null],
+  [/dagger|knife/i, '1d4', 'dagger'],
+  [/staff|club|cudgel/i, '1d4', 'staff'],
+  [/sword|blade|rapier|scimitar/i, '1d6', 'sword'],
 ];
 
 const STRIP_BY_CLASS = [
@@ -54,11 +62,13 @@ export function portalToCompanion(char) {
     const level = char.level ?? 1;
     const gear = char.gear ?? [];
     let dice = '1d4';
+    let weaponType = null;
     let weaponName = 'improvised strike';
-    for (const [re, d] of WEAPON_DICE) {
+    for (const [re, d, type] of WEAPON_DICE) {
       const found = gear.find((g) => g?.name && re.test(g.name));
       if (found) {
         dice = d;
+        weaponType = type;
         weaponName = found.name.toLowerCase();
         break;
       }
@@ -89,6 +99,10 @@ export function portalToCompanion(char) {
         toHit: Math.max(abilities.str, abilities.dex) + Math.floor(level / 2),
         damage: bumpDamage(dice, Math.max(abilities.str, 0)),
         range: 'melee',
+        // The weapon's family, so Weapon Focus / Weapon Master talents can find
+        // it. `stat` is left unset: an imported hero's to-hit was already the
+        // better of STR/DEX, so both increases keep counting (heroWithGrowth).
+        type: weaponType,
       }],
       sprite: 'hero_imported',
       emoji: '❖',

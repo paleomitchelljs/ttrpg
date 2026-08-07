@@ -3,10 +3,15 @@
 // they drop only from named boss packs (and, later, quests) — never from
 // ordinary loot piles or wandering monsters. `zone` ties an item to its
 // dungeon's pool; bosses can name preferred drops.
-// mods: toHit / damage (flat) / ac / hpMax / init. bane: 'undead' adds +2
-// damage against undead targets.
+// mods: toHit / damage (flat) / ac / hpMax / init / regen. bane: 'undead' adds
+// +2 damage against undead targets. regen: N heals N HP at the start of each of
+// the wearer's combat turns, and N per step taken out in the dungeon.
+//
+// A 'shield' item only pays out to someone with a hand free — a two-handed
+// weapon cancels it, the same rule as the shield a hero already carries
+// (shieldAcFor in data/weapons.js).
 
-export const SLOTS = ['weapon', 'armor', 'trinket'];
+export const SLOTS = ['weapon', 'shield', 'armor', 'trinket'];
 
 export const ITEMS = [
   // ---------------------------------------------- Upper Guk
@@ -49,6 +54,14 @@ export const ITEMS = [
     zone: 'upper-guk',
     mods: { init: 2 },
     blurb: 'sound the alarm before they do (+2 initiative)',
+  },
+  {
+    id: 'guktan-warshield',
+    name: 'Guktan War-Shield',
+    slot: 'shield',
+    zone: 'upper-guk',
+    mods: { ac: 1 },
+    blurb: 'a croaker\u2019s broad shell-shield (+1 AC, needs a hand free)',
   },
   // ---------------------------------------------- Lower Guk
   {
@@ -100,6 +113,14 @@ export const ITEMS = [
     mods: { ac: 1, hpMax: 1 },
     blurb: 'Vethyl’s cast-off shroud, cold and dry (+1 AC, +1 max HP)',
   },
+  {
+    id: 'drowned-bulwark',
+    name: 'Bulwark of the Drowned',
+    slot: 'shield',
+    zone: 'lower-guk',
+    mods: { ac: 2 },
+    blurb: 'a sunken tower-shield, still barring the way (+2 AC, needs a hand free)',
+  },
   // ---------------------------------------------- The Lost Temple
   {
     id: 'thulian-claws',
@@ -114,8 +135,16 @@ export const ITEMS = [
     name: 'Rubicite Breastplate',
     slot: 'armor',
     zone: 'lost-temple',
-    mods: { ac: 2 },
-    blurb: 'the red ore of legend, warm to the touch (+2 AC)',
+    mods: { ac: 2, regen: 1 },
+    blurb: 'the red ore of legend, warm to the touch — it knits what it can (+2 AC, +1 HP each combat turn and each step you walk)',
+  },
+  {
+    id: 'aegis-of-the-serpent',
+    name: 'Aegis of the Serpent',
+    slot: 'shield',
+    zone: 'lost-temple',
+    mods: { ac: 1, hpMax: 2 },
+    blurb: 'coiled bronze that turns a blow aside (+1 AC, +2 max HP, needs a hand free)',
   },
   {
     id: 'rubicite-greaves',

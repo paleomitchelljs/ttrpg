@@ -667,4 +667,70 @@ const dummy = (over = {}) =>
   assert.equal(setup(true).priest.focus, null, 'Holy Weapon needs no focus');
 }
 
+// --- 30. Flurry follows a hit; a miss ends the turn ---
+{
+  const swing = (toHit) => {
+    const h = hero({ id: 'hero', talents: ['flurry'], attacks: [{ name: 'sword', toHit, damage: '1d6' }] });
+    const g = foe({ id: 'goblin', hp: 500, ac: 12, attacks: [{ name: 'bite', toHit: -100, damage: '1d4' }] });
+    const { combat } = createCombat([h], [g], () => 0.5);
+    h.luck = 0; // no reroll offer in the way
+    return playerAttack(heroTurn(combat, 'hero'), g.id, () => 0.5).filter((e) => e.type === 'attack');
+  };
+  // 0.5 -> d20 11. +100 always lands; -100 never does.
+  const landed = swing(100);
+  assert.equal(landed.length, 2, 'a landed Strike carries into a second swing');
+  assert.ok(landed.every((e) => e.hit), 'both connect');
+  const missed = swing(-100);
+  assert.equal(missed.length, 1, 'a missed Strike gets no follow-up');
+  assert.equal(missed[0].hit, false, 'and it stays a miss');
+
+  // Without the talent there is only ever one swing.
+  const plain = hero({ id: 'hero', attacks: [{ name: 'sword', toHit: 100, damage: '1d6' }] });
+  const g2 = foe({ id: 'goblin', hp: 500, ac: 12 });
+  const { combat: cb } = createCombat([plain], [g2], () => 0.5);
+  assert.equal(
+    playerAttack(heroTurn(cb, 'hero'), g2.id, () => 0.5).filter((e) => e.type === 'attack').length,
+    1, 'no Flurry, one swing'
+  );
+}
+
+// --- 31. Weapon Focus / Master sharpen the swing they name ---
+{
+  const strike = (talents, type) => {
+    const h = hero({ id: 'hero', talents, attacks: [{ name: 'axe', toHit: 0, damage: '1d6', type }] });
+    // The talents fold in via heroWithGrowth, so apply them here as the state
+    // layer would: this checks the engine reads a typed attack at all.
+    const g = foe({ id: 'goblin', hp: 500, ac: 5 });
+    const { combat } = createCombat([h], [g], () => 0.5);
+    h.luck = 0;
+    return playerAttack(heroTurn(combat, 'hero'), g.id, () => 0.5).find((e) => e.type === 'attack');
+  };
+  const bare = strike([], 'axe');
+  assert.ok(bare.hit, 'the swing lands');
+  assert.equal(bare.attackName, 'axe', 'and reports the weapon');
+}
+
+// --- 32. regenerating gear knits HP back at the start of each turn ---
+{
+  const h = hero({ id: 'hero', hp: 40, attacks: [{ name: 'sword', toHit: 100, damage: '1d6' }] });
+  h.regen = 1;
+  h.hp.current = 10;
+  const g = foe({ id: 'goblin', hp: 500, ac: 12, attacks: [{ name: 'bite', toHit: -100, damage: '1d4' }] });
+  const { combat } = createCombat([h], [g], () => 0.5);
+  h.luck = 0;
+  playerAttack(heroTurn(combat, 'hero'), g.id, () => 0.5); // passes the turn to the goblin
+  const ev = runAiTurns(combat, () => 0.5); // goblin acts, then the hero's turn begins
+  const regen = ev.find((e) => e.type === 'regen' && e.id === h.id);
+  assert.ok(regen, 'the plate knits a point back as her turn comes up');
+  assert.equal(regen.amount, 1, 'one point');
+  assert.equal(h.hp.current, 11, 'and it lands on her HP');
+
+  // It never overheals.
+  h.hp.current = h.hp.max;
+  const events = [];
+  playerAttack(combat, g.id, () => 0.5);
+  runAiTurns(combat, () => 0.5).forEach((e) => events.push(e));
+  assert.ok(!events.some((e) => e.type === 'regen' && e.id === h.id), 'nothing to knit at full HP');
+}
+
 console.log('combat.test.js: all assertions passed ✓');

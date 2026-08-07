@@ -18,7 +18,7 @@ live** (`liveRNG` / `Math.random`). Both from `src/engine/rng.js`.
 ## 1. Architecture & data flow
 
 ```
-data/*.js  (content: monsters, spells, party, zones, items, …)
+data/*.js  (content: monsters, spells, weapons, talents, party, zones, items, …)
    │
 src/world/*  maze.js (procedural) · zones.js (hand-authored) → a `dungeon` object
    │            encounters.js (which monsters) · loot.js (treasure)
@@ -82,8 +82,11 @@ Lifecycle entry points: `init()` (boot, load save), `newGame(seed?)`,
   `beren` (warrior, `beast-dread`+`animal-friend` traits), `turquoise` (Yuan-Ti
   barbarian, `relentless`, `darkvision`), `gowra` (Yuan-Ti WIS priest,
   heal/smite). Key fields: `hitDie` (HP/level), `abilities` (modifiers),
-  `attacks` (`{name, toHit, damage, range}`), `castStat`, `spells`, `traits`,
-  `ability` (engine keyword), `darkvision`.
+  `weapon` (a `data/weapons.js` id), `shield`, `castStat`, `spells`, `traits`,
+  `ability` (engine keyword), `darkvision`. **`attacks` is generated, not
+  written**: `COMPANIONS` maps the roster through `attackFor`, so the die and the
+  to-hit move together and can't drift, and a hero's shield AC is folded in by
+  `shieldAcFor`.
 - **Imported heroes** (`src/state/importHero.js`): the Shadowdark portal's
   exported JSON → companions. Scores → modifiers `floor((s−10)/2)`; weapon die
   guessed from gear names (`WEAPON_DICE`); sprite strip by class; portal spells
@@ -92,6 +95,34 @@ Lifecycle entry points: `init()` (boot, load save), `newGame(seed?)`,
 `heroWithGrowth(id)` is the canonical "resolved hero": folds level-up choices
 (ability increases, talents, learned spells, familiar) and found tomes onto the
 base template. Always build combatants from this, never the raw template.
+
+---
+
+## 3b. Weapons & equipment slots (`data/weapons.js`, `data/items.js`)
+
+`WEAPONS` is the catalogue every armed character draws from:
+`{id, name, type, damage, props?}`. Shadowdark's rule holds — a weapon deals its
+**die only**, and an ability modifier sharpens the swing, never the damage — so a
+weapon's whole power is its die plus its properties.
+
+- **`type`** (`sword` / `axe` / `hammer` / `dagger` / `staff`) groups weapons for
+  the Weapon Focus / Weapon Master talents.
+- **`props`**: `finesse` swings off DEX when DEX is the better arm;
+  `two-handed` leaves no hand for a shield.
+- **`attackFor(weapon, abilities, trained, name?)`** builds the attack line:
+  `toHit = (finesse && dex > str ? dex : str) + TRAINED_BONUS (1)`, damage = the
+  weapon's die. It records `stat` (which arm swings) so a later ability increase
+  raises the right one, and `type`/`twoHanded` for the talent and shield rules.
+- **`shieldAcFor(hero, weapon)`** — `SHIELD_AC` (2) for a hero with `shield: true`
+  and a hand free; 0 otherwise.
+
+**Slots** (`SLOTS` in items.js): `weapon`, `shield`, `armor`, `trinket`. Item
+`mods` are `toHit / damage / ac / hpMax / init / regen`. `applyEquipment` drops
+**shield items entirely** when the wearer's weapon is two-handed (the sheet's
+shield row says "no hand free"), sums the rest, and folds the damage bonus
+through `bumpDamage`. `regen: N` heals N HP at the start of each combat turn
+(`beginTurn` → a `regen` event) and N per step walked in the dungeon (the loop in
+`move`). The Rubicite Breastplate is the one that has it.
 
 ---
 
@@ -252,9 +283,11 @@ opening HP (for the pre-round render, see combatView). Foes/minions run via
 
 ### Player actions (all return event arrays; gameState wraps each in `resolvePlayerAction`)
 
-- **`playerAttack(combat, targetId)`** — `Strike`/`Bite`. `flurry` talent strikes
-  twice; `bane: 'undead'` adds +2 vs undead; striking a `panicked` foe rolls with
-  advantage. A missed final swing with luck left **defers** for a luck reroll.
+- **`playerAttack(combat, targetId)`** — `Strike`/`Bite`. The `flurry` talent
+  lets a **landed** swing carry into a second one (a miss ends the turn — it is
+  not two free attacks); `bane: 'undead'` adds +2 vs undead; striking a
+  `panicked` or `disable`d foe rolls with advantage. A missed final swing with
+  luck left **defers** for a luck reroll.
 - **`playerBreath(combat)`** — dragon only, one damage roll, every foe DEX-saves
   for half; spends the charge (recharges d6≥5 when the dragon's turn next comes).
 - **`playerSweep(combat)`** — `cleave` talent: one attack roll vs every foe, each
@@ -488,8 +521,22 @@ reveal. Never announced.
   and talents (3/5/7/9) become **pending advances** (`pendingAdvances`), spent on
   the character sheet via `chooseAdvance(charId, type, arg)` (`asi` | `talent` |
   `spell` | `familiar` — the last three share the talent slot).
-- **Talents** (`data/talents.js`): `armor` (+1 AC, repeatable), `cleave`, `flurry`,
-  `arcane-recovery` (caster), `silver-tongue`, plus generated `focus-<school>`.
+- **Talents** (`data/talents.js`): `armor` (+1 AC, repeatable),
+  `arcane-recovery` (caster), `silver-tongue`, the gated `cleave` and `flurry`,
+  plus two **generated** families — `focus-<school>` (Spell Focus, one per school
+  the caster knows, via `focusTalentsFor`) and `wf-<type>` / `wm-<type>` (Weapon
+  Focus +1 to hit / Weapon Master +1 damage, one pair per weapon type the
+  character wields, via `weaponTalentsFor`). The weapon pair folds in
+  `heroWithGrowth`, matching on `attack.type`, so a Sword Focus does nothing for
+  an axe.
+- **The talent tree.** Shadowdark's own talents are small and flat, so the showy
+  ones sit behind prerequisites rather than on the level-3 menu: `wm-<type>`
+  needs its `wf-<type>`; `flurry` needs any Weapon Master (`anyPrefix: 'wm-'`);
+  `cleave` needs an Axe or Hammer Focus. `meetsRequires(talent, chosenIds)`
+  checks `requires: {all?, any?, anyPrefix?}`; `chooseAdvance` refuses an unmet
+  pick, and the sheet lists it **disabled** with its `requiresLabel` so the path
+  is visible from level 3. Talents already chosen under older rules are
+  grandfathered — only new picks are checked.
 - **Dragon tiers** (`data/dragonProgression.js`): wyrmling → young → adult →
   ancient, each with `hpMax`, `ac`, `abilities`, bite `attacks`, `breath`, and
   `hoardToNext`. Growth is **hoard-gated** (`tierAfterBanking` / `checkTierUp` at

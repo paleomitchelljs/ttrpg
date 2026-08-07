@@ -15,7 +15,7 @@ import { consumableById } from '../../data/consumables.js';
 import { parseHeroExport } from './importHero.js';
 import { bumpDamage, resolveParleyCheck, canLearnSpell } from '../engine/rules.js';
 import { SPELLS } from '../../data/spells.js';
-import { talentById } from '../../data/talents.js';
+import { talentById, meetsRequires } from '../../data/talents.js';
 import { makeCombatant, makeDragonCombatant } from '../engine/entities.js';
 import {
   createCombat,
@@ -213,9 +213,12 @@ export function heroWithGrowth(id) {
     if (ab === 'dex') dexGain = delta;
   }
   // Shadowdark: a higher STR/DEX sharpens the attack roll, but weapon damage is
-  // the die alone — raising a stat never pads damage.
+  // the die alone — raising a stat never pads damage. Each attack knows which
+  // arm swings it (`stat`, set by attackFor — finesse weapons ride DEX), so
+  // only that stat's increase counts. Imported heroes predating `stat` take
+  // both, as they always did.
   hero.attacks.forEach((a) => {
-    a.toHit += strGain + dexGain;
+    a.toHit += a.stat === 'dex' ? dexGain : a.stat === 'str' ? strGain : strGain + dexGain;
   });
   hero.ac += dexGain;
 
@@ -237,6 +240,18 @@ export function heroWithGrowth(id) {
     if (c.type === 'hp') hero.hpMax += 2;
     if (c.type === 'ac') hero.ac += 1;
   }
+  // Weapon Focus / Weapon Master sharpen only the weapon type they name — the
+  // flat, Shadowdark-sized talents the showier ones are gated behind.
+  for (const tid of hero.talents) {
+    const t = talentById(tid);
+    if (!t?.weaponType) continue;
+    for (const a of hero.attacks) {
+      if (a.type !== t.weaponType) continue;
+      if (tid.startsWith('wf-')) a.toHit += 1;
+      else if (tid.startsWith('wm-')) a.damage = bumpDamage(a.damage, 1);
+    }
+  }
+
   // Spells learned from found tomes (a caster studies them — no talent slot).
   for (const sid of tomes) if (!hero.spells.includes(sid)) hero.spells.push(sid);
   return hero;
@@ -269,6 +284,9 @@ export function chooseAdvance(charId, type, arg = null) {
     if (!t) return;
     if (t.caster && !heroById(charId)?.castStat) return;
     if (!t.repeatable && g.choices.some((c) => c.type === 'talent' && c.talentId === arg)) return;
+    // The showy talents sit behind a short tree (see data/talents.js).
+    const taken = g.choices.filter((c) => c.type === 'talent').map((c) => c.talentId);
+    if (!meetsRequires(t, taken)) return;
     g.choices.push({ type: 'talent', talentId: arg });
   } else if (type === 'spell') {
     if (pend.talent <= 0) return; // learning a spell spends a talent slot
@@ -690,6 +708,20 @@ export function move(dx, dy) {
   run.playerPos = { x, y };
   reveal(run);
   const events = [{ type: 'moved', x, y }];
+  // Regenerating gear (Rubicite) knits a point back with every step walked, the
+  // out-of-combat half of what it does each turn in a fight.
+  for (const slot of run.party) {
+    const r = equipmentMod(slot.id, 'regen');
+    if (r > 0 && slot.hp.current > 0 && slot.hp.current < slot.hp.max) {
+      slot.hp.current = Math.min(slot.hp.max, slot.hp.current + r);
+    }
+  }
+  if (run.dragon) {
+    const r = equipmentMod('dragon', 'regen');
+    if (r > 0 && run.dragon.hp.current > 0) {
+      run.dragon.hp.current = Math.min(run.dragon.hp.max, run.dragon.hp.current + r);
+    }
+  }
 
   const lootIdx = d.loot.findIndex((l) => l.x === x && l.y === y);
   if (lootIdx >= 0) {
@@ -1214,17 +1246,32 @@ function resolveLuckChoice(resolve) {
 
 /** Fold a character's equipped item mods into its combatant. */
 function applyEquipment(c, charKey) {
-  const toHit = equipmentMod(charKey, 'toHit');
-  const damage = equipmentMod(charKey, 'damage');
-  c.ac += equipmentMod(charKey, 'ac');
-  c.initBonus = equipmentMod(charKey, 'init');
-  for (const item of equippedItems(charKey)) {
+  // A two-handed weapon leaves no hand for a shield, so a shield in the slot
+  // pays out nothing — the same rule as the shield a hero already carries
+  // (shieldAcFor in data/weapons.js). It stays equipped, it just does nothing
+  // until they take up a one-handed weapon.
+  const twoHanded = !!c.attacks?.[0]?.twoHanded;
+  const worn = equippedItems(charKey).filter((it) => !(it.slot === 'shield' && twoHanded));
+  const sum = (field) => worn.reduce((n, it) => n + (it.mods[field] ?? 0), 0);
+  c.ac += sum('ac');
+  c.initBonus = sum('init');
+  c.regen = (c.regen ?? 0) + sum('regen'); // Rubicite and its kin mend as you go
+  for (const item of worn) {
     if (item.bane) c.bane = item.bane;
   }
+  const toHit = sum('toHit');
+  const damage = sum('damage');
   for (const attack of c.attacks) {
     attack.toHit += toHit;
     attack.damage = bumpDamage(attack.damage, damage);
   }
+}
+
+/** Does this character's equipped shield actually do anything? */
+function shieldIdle(charKey) {
+  const hero = heroWithGrowth(charKey);
+  if (!hero?.attacks?.[0]?.twoHanded) return false;
+  return equippedItems(charKey).some((it) => it.slot === 'shield');
 }
 
 function syncDragonHp() {

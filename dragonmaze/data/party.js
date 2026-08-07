@@ -1,3 +1,5 @@
+import { weaponById, attackFor, shieldAcFor } from './weapons.js';
+
 // Recruitable companions — pure data, same combatant schema as monsters.
 // Spawnee is a friendly vampire spawn warrior with a few limited vampire
 // powers; the swashbuckler knows the whole spellbook; the spellblade
@@ -10,7 +12,7 @@
 // shield); a weapon deals its die ONLY (no ability bonus on damage), and the
 // attack bonus is the wielding ability's modifier + a small trained bump.
 
-export const COMPANIONS = [
+const ROSTER = [
   {
     id: 'spawnee',
     name: 'Spawnee',
@@ -19,7 +21,7 @@ export const COMPANIONS = [
     hpMax: 12, // d10 + CON 2
     hitDie: 10,
     abilities: { str: 2, dex: 2, con: 2, int: 1, wis: 0, cha: 2 },
-    attacks: [{ name: 'Longsword', toHit: 3, damage: '1d8', range: 'melee' }],
+    weapon: 'longsword',
     sprite: 'hero_spawnee',
     emoji: '🌙',
     anim: { idle: 'spawnee-idle', attack: 'spawnee-attack' },
@@ -44,7 +46,7 @@ export const COMPANIONS = [
     hpMax: 9, // d8 + CON 1
     hitDie: 8,
     abilities: { str: 1, dex: 4, con: 1, int: 0, wis: 0, cha: 1 },
-    attacks: [{ name: 'Rapier', toHit: 5, damage: '1d6', range: 'melee' }],
+    weapon: 'rapier', // finesse, so her DEX 4 does the swinging
     sprite: 'hero_swashbuckler',
     emoji: '🗡️',
     anim: { idle: 'swash-idle', attack: 'swash-attack' },
@@ -61,7 +63,7 @@ export const COMPANIONS = [
     hpMax: 9, // d8 + CON 1
     hitDie: 8,
     abilities: { str: 2, dex: 1, con: 1, int: 3, wis: 1, cha: 1 },
-    attacks: [{ name: 'Longsword', toHit: 3, damage: '1d8', range: 'melee' }],
+    weapon: 'longsword',
     sprite: 'hero_spellblade',
     emoji: '🔥',
     anim: { idle: 'spellblade-idle', attack: 'spellblade-attack' },
@@ -78,11 +80,12 @@ export const COMPANIONS = [
     id: 'beren',
     name: 'Beren',
     kind: 'hero',
-    ac: 16, // chainmail 13 + DEX 1 + shield 2
+    ac: 14, // chainmail 13 + DEX 1; the shield's +2 is added from the slot
     hpMax: 12, // d10 + CON 2
     hitDie: 10,
     abilities: { str: 3, dex: 1, con: 2, int: 0, wis: 1, cha: 1 },
-    attacks: [{ name: 'Warhammer', toHit: 4, damage: '1d8', range: 'melee' }],
+    weapon: 'warhammer',
+    shield: true, // one-handed hammer, so the shield's +2 AC counts
     sprite: 'hero_beren',
     emoji: '🗡️',
     anim: { idle: 'beren-idle', attack: 'beren-attack' },
@@ -101,7 +104,7 @@ export const COMPANIONS = [
     hpMax: 13, // d10 + CON 3
     hitDie: 10,
     abilities: { str: 4, dex: 2, con: 3, int: -1, wis: 0, cha: 0 },
-    attacks: [{ name: 'Greataxe', toHit: 5, damage: '1d10', range: 'melee' }],
+    weapon: 'greataxe', // two-handed: no shield for her, ever
     sprite: 'hero_turquoise',
     emoji: '🪓',
     anim: { idle: 'turquoise-idle', attack: 'turquoise-attack' },
@@ -122,7 +125,8 @@ export const COMPANIONS = [
     hitDie: 8,
     // Rolled 3d6 in order and arranged for a priest (WIS prime): 17,14,13,12,12,11.
     abilities: { str: 1, dex: 1, con: 2, int: 0, wis: 3, cha: 1 },
-    attacks: [{ name: 'Blessed Khopesh', toHit: 2, damage: '1d6', range: 'melee' }],
+    weapon: 'khopesh',
+    weaponName: 'Blessed Khopesh',
     sprite: 'hero_gowra',
     emoji: '🐍',
     anim: { idle: 'gowra-idle', attack: 'gowra-attack' },
@@ -136,6 +140,18 @@ export const COMPANIONS = [
     role: 'Serpent Priest',
   },
 ];
+
+// Every companion's attack line is built from their weapon, not written by
+// hand, so a weapon change moves the die and the to-hit together. A hero who
+// carries a shield gets its AC here too, unless their weapon needs both hands.
+export const COMPANIONS = ROSTER.map((c) => {
+  const weapon = weaponById(c.weapon);
+  return {
+    ...c,
+    attacks: [attackFor(weapon, c.abilities, c.trained, c.weaponName)],
+    ac: c.ac + shieldAcFor(c, weapon),
+  };
+});
 
 export function companionById(id) {
   return COMPANIONS.find((c) => c.id === id);

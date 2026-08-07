@@ -196,8 +196,16 @@ function checkFocus(combat, caster, rng, events, trigger) {
   caster.focusChecking = false;
 }
 
-/** Start of a combatant's turn: keep any focus they're holding alive. */
+/**
+ * Start of a combatant's turn: mend what regenerating gear knits back, then
+ * keep any focus they're holding alive.
+ */
 function beginTurn(combat, c, rng, events) {
+  if (c?.regen > 0 && alive(c) && c.hp.current < c.hp.max) {
+    const healed = Math.min(c.regen, c.hp.max - c.hp.current);
+    c.hp.current += healed;
+    events.push({ type: 'regen', id: c.id, who: c.name, amount: healed, hpAfter: c.hp.current });
+  }
   if (c?.focus) checkFocus(combat, c, rng, events, 'turn');
 }
 
@@ -646,12 +654,15 @@ export function playerAttack(combat, targetId, rng = Math.random, opts = {}) {
   const events = [];
   if (!isPlayerTurn(combat)) return events;
   const actor = currentCombatant(combat);
-  // Flurry (talent) strikes twice in one turn; each swing re-picks a live foe.
-  const strikes = actor.talents?.includes('flurry') ? 2 : 1;
+  // Flurry (talent) lets a landed Strike carry into a second swing — it follows
+  // a hit, it isn't two free attacks a turn. Each swing re-picks a live foe.
+  const flurry = !!actor.talents?.includes('flurry');
+  const maxStrikes = flurry ? 2 : 1;
   let acted = false;
   let lastRes = null;
   let lastTarget = null;
-  for (let i = 0; i < strikes; i++) {
+  for (let i = 0; i < maxStrikes; i++) {
+    if (i > 0 && !lastRes?.hit) break; // the first swing missed: no follow-up
     const target =
       combat.order.find((c) => c.id === targetId && isFoe(c) && alive(c)) ??
       livingMonsters(combat)[0];
