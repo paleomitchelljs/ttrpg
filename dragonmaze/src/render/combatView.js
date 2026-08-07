@@ -963,7 +963,9 @@ function faceHtml(c, dead) {
     // hero side art faces left natively; flip heroes to face the enemy column.
     // enemy art is mirrored by CSS unless it already faces left (facesLeft).
     const cls = c.kind === 'hero' ? ' flip' : c.facesLeft ? ' no-mirror' : '';
-    return `<div class="combat-sprite sprite f2${cls}"><img src="${spritePath(c.anim.idle)}" alt="${c.name}"></div>`;
+    // `beat` art (wings, not a body idling) runs its two frames faster.
+    const rate = c.anim.beat ? ' beat' : '';
+    return `<div class="combat-sprite sprite f2${cls}${rate}"><img src="${spritePath(c.anim.idle)}" alt="${c.name}"></div>`;
   }
   return `<div class="enemy-face">${dead ? '☠' : c.emoji}</div>`;
 }

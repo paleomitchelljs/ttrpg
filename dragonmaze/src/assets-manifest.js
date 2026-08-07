@@ -27,6 +27,8 @@ export const SPRITES = {
   'dragon-fly-up': './assets/sprites/dragon-fly-up.png',
   'dragon-idle': './assets/sprites/dragon-idle.png',
   'dusk-bat-idle': './assets/sprites/dusk-bat-idle.png',
+  'ember-spirit-attack': './assets/sprites/ember-spirit-attack.png',
+  'ember-spirit-idle': './assets/sprites/ember-spirit-idle.png',
   'evil-eye-attack': './assets/sprites/evil-eye-attack.png',
   'evil-eye-idle': './assets/sprites/evil-eye-idle.png',
   'fae-drake-attack': './assets/sprites/fae-drake-attack.png',

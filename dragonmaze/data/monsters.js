@@ -743,6 +743,9 @@ export const MONSTERS = [
     abilities: { str: 1, dex: 2, con: 0, int: 0, wis: 0, cha: 0 },
     attacks: [{ name: 'searing touch', toHit: 4, damage: '1d6', range: 'melee' }],
     emoji: '🔥',
+    // Drawn facing right (tools/slice_ember.py): mirrored when it turns up as a
+    // foe, left alone when Summon Ember Spirit puts it on the hero side.
+    anim: { idle: 'ember-spirit-idle', attack: 'ember-spirit-attack' },
     faction: 'wild',
     parley: 'never',
     goldValue: 0,

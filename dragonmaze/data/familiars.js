@@ -16,6 +16,9 @@ export const FAMILIARS = [
     name: 'Ember Wisp',
     effect: 'fire-boost',
     emoji: '🔥',
+    // Shares the summoned Ember Spirit's art — same creature, one kept and one
+    // conjured. Inert as a familiar, so it needs only the idle strip.
+    anim: { idle: 'ember-spirit-idle' },
     blurb: 'a mote of living flame; all your fire burns 1 hotter',
   },
   {
@@ -47,7 +50,8 @@ export const FAMILIARS = [
     emoji: '🦇',
     // Two frames of wingbeat, eye-registered so the head holds still
     // (tools/slice_duskbat.py). Inert, so it never needs an attack strip.
-    anim: { idle: 'dusk-bat-idle' },
+    // `beat` runs the pair fast enough to read as a wingbeat (see .sprite.beat).
+    anim: { idle: 'dusk-bat-idle', beat: true },
     // Drain Life is Spawnee's alone, so this knack only ever fires for her —
     // the blurb says so plainly, or it reads as a trap pick for anyone else.
     blurb: 'a leathery night-flitter that hungers with you; advantage when you cast Drain Life (Spawnee only)',

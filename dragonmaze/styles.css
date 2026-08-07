@@ -434,8 +434,13 @@ button { font: inherit; }
   image-rendering: pixelated;
 }
 
-.sprite.f2 img { animation: sprite-run 0.9s steps(2) infinite; }
-.sprite.f4 img { animation: sprite-run 0.8s steps(4) infinite; }
+.sprite.f2 img { animation: sprite-run var(--sprite-rate, 0.9s) steps(2) infinite; }
+.sprite.f4 img { animation: sprite-run var(--sprite-rate, 0.8s) steps(4) infinite; }
+/* A wingbeat has to run quicker than a body's idle sway. At the default 0.9s a
+   two-frame flap holds each pose for 0.45s, which reads as a slow pose swap
+   rather than a beat — especially on a familiar's 52px card. Opt in with
+   `anim: { beat: true }` in the creature's data. */
+.sprite.beat { --sprite-rate: 0.34s; }
 .sprite.static img { animation: none; }
 .sprite.flip { transform: scaleX(-1); }
 

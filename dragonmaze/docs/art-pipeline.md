@@ -60,6 +60,18 @@ A character has one **frame strip per animation** (`idle`, `attack`, `walk`,
   `python3 tools/slice_grid.py art/foo-grid.png foo --rows idle attack walk [--flip] [--frame-height 150]`.
   `--flip` mirrors (model art faces right; the party faces left).
 
+- **`tools/slice_ember.py`** — a one-off for `art/ember-spirit-grid.png` (2×2:
+  idle pair on top, fire-breathing pair below; the second idle pose is drawn
+  facing left and gets mirrored back into line). `slice_grid.py` is wrong here
+  for the same reason as the bat: the breath is inside the bounding box and
+  grows from a puff to a long jet, so centring each pose would drag the
+  salamander backwards every time it exhaled. Poses register on **the nose and
+  the ground** instead. The snout can't be found automatically — the animal is
+  fire-coloured throughout, and the flame plume is as tall as the body, so
+  neither colour nor silhouette height finds it — so the two breathing poses
+  carry a hand-measured `nose_x`, like the faedrake's eye list. All four frames
+  share one canvas so idle and attack keep the same scale and footing when the
+  card swaps strips mid-swing.
 - **`tools/slice_duskbat.py`** — a one-off for `art/dusk-bat-grid.png`, and the
   short version of the registration trick below. The sheet is flat magenta, so
   keying is trivial, but the two poses' bounding boxes disagree wildly (469×506

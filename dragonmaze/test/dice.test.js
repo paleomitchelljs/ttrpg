@@ -448,8 +448,11 @@ check('spellblade companion and familiars are well-formed', () => {
   assert.equal(FAMILIARS.length, 5);
   for (const f of FAMILIARS) assert.ok(f.id && f.name && f.blurb);
   // A drawn familiar's strips must actually exist; the rest ride their emoji.
+  // `anim` also carries non-strip flags (e.g. `beat`), so only check the names.
   for (const f of FAMILIARS.filter((x) => x.anim)) {
-    for (const key of Object.values(f.anim)) assert.ok(SPRITES[key], `${f.id} strip ${key}`);
+    for (const [k, v] of Object.entries(f.anim)) {
+      if (typeof v === 'string') assert.ok(SPRITES[v], `${f.id} ${k} strip ${v}`);
+    }
   }
   assert.ok(FAMILIARS.find((f) => f.id === 'dusk-bat').anim?.idle, 'the dusk bat is drawn');
   const sb = companionById('dragonkin-spellblade');

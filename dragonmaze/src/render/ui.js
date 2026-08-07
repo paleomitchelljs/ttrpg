@@ -169,7 +169,7 @@ export function showCharacterSheet(subject) {
 // `sprite` is a resolved strip path — main.js does the SPRITES lookup.
 function familiarHtml(fam) {
   const face = fam.sprite
-    ? `<div class="sprite f2 familiar-portrait"><img src="${fam.sprite}" alt=""></div>`
+    ? `<div class="sprite f2 familiar-portrait${fam.anim?.beat ? ' beat' : ''}"><img src="${fam.sprite}" alt=""></div>`
     : `<div class="familiar-portrait familiar-emoji">${fam.emoji ?? '✦'}</div>`;
   return `<div class="sheet-familiar">${face}<p><b>${fam.name}</b> — ${fam.blurb}</p></div>`;
 }
