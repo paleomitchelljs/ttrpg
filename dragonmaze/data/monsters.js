@@ -742,6 +742,34 @@ export const MONSTERS = [
     weight: 1,
     morale: null,
   },
+  // Drawn and statted, but not yet placed: `weight: 0` keeps it out of every
+  // random encounter roll, so it appears only where a zone table or a boss names
+  // it outright. Waiting on a dungeon deep enough to deserve it.
+  {
+    id: 'lich',
+    name: 'The Lich',
+    kind: 'monster',
+    ac: 16,
+    hpMax: 45,
+    abilities: { str: 1, dex: 2, con: 3, int: 5, wis: 3, cha: 3 },
+    attacks: [{ name: 'withering touch', toHit: 7, damage: '1d10', range: 'melee' }],
+    castStat: 'int',
+    cast: { name: 'Soul Rend', tier: 3, kind: 'drain', dice: '2d6', chance: 0.5 },
+    emoji: '☠️',
+    anim: { idle: 'lich-idle', attack: 'lich-attack' },
+    walk: 'lich-walk',
+    undead: true,
+    // Bones shrug off blades, and there is no life in it left to drain.
+    resist: ['physical', 'drain'],
+    ability: 'lifedrain',
+    faction: 'undead',
+    parley: 'wary', // it can talk; that is what makes it worse
+    goldValue: 35,
+    minDepth: 8,
+    packMax: 1,
+    weight: 0,
+    morale: null,
+  },
   // Conjured, not encountered: summoned as an ally (see the summon spell). Not in
   // any zone table (weight 0), no loot; renders as its emoji.
   {

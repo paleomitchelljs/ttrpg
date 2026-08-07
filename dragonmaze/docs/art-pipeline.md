@@ -60,6 +60,17 @@ A character has one **frame strip per animation** (`idle`, `attack`, `walk`,
   `python3 tools/slice_grid.py art/foo-grid.png foo --rows idle attack walk [--flip] [--frame-height 150]`.
   `--flip` mirrors (model art faces right; the party faces left).
 
+- **`tools/slice_biped.py`** — general, not a one-off: a grid of standing-creature
+  poses, one row per animation, registered on **the feet**. For sheets where the
+  character stands on the ground in every pose and the poses differ above the
+  waist. `slice_grid.py` bboxes each pose and centres it, so an outflung arm
+  shoves the figure sideways and it appears to slide along the ground; anchoring
+  on the horizontal centre of the feet (found in a band at the bottom of each
+  pose, below anything an arm or a cloak is doing) leaves the body planted while
+  the arm widens the frame. All rows share one canvas, so idle/walk/attack keep
+  a common scale and footing. `--flip` mirrors; `--foot-band` tunes how far up
+  from the ground counts as feet.
+  `python3 tools/slice_biped.py art/lich-grid.png lich --rows idle walk attack`
 - **`tools/slice_ember.py`** — a one-off for `art/ember-spirit-grid.png` (2×2:
   idle pair on top, fire-breathing pair below; the second idle pose is drawn
   facing left and gets mirrored back into line). `slice_grid.py` is wrong here
