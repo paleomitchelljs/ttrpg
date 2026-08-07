@@ -373,20 +373,53 @@ check('Beren cows beasts: wild monsters check morale at disadvantage', () => {
   assert.ok(!res.pass && res.disadvantage, 'disadvantage takes the worse roll and routs');
 });
 
-check('drain life steals at most half the damage', () => {
+check('drain life steals everything it deals, and never overheals', () => {
+  const drain = (startHp) => {
+    const spawnee = makeCombatant(companionById('spawnee'));
+    spawnee.hp.current = startHp;
+    const rat = makeCombatant(monsterById('giant-rat'));
+    rat.hp.current = rat.hp.max = 100;
+    const { combat } = createCombat([spawnee], [rat], () => 0.5);
+    while (combat.order[combat.turnIndex].id !== spawnee.id)
+      combat.turnIndex = (combat.turnIndex + 1) % combat.order.length;
+    // 0.7 -> d20 15 (a clean success, not a nat-20 crit); 1d8 -> 6. Shadowdark
+    // spell damage is the dice only, with no ability modifier folded in.
+    return { hit: playerSpell(combat, 'drain-life', rat.id, () => 0.7).find((e) => e.type === 'spell-hit'), spawnee };
+  };
+  const hurt = drain(1);
+  assert.equal(hurt.hit.damage, 6, 'spell damage is the dice only — no ability bonus');
+  assert.equal(hurt.hit.drained, 6, 'she keeps every point she takes');
+  assert.equal(hurt.spawnee.hp.current, 7, 'and it lands on her HP');
+  // Bounded by what she is missing — a drain never pushes her past full.
+  const grazed = drain(hurt.spawnee.hp.max - 2);
+  assert.equal(grazed.hit.drained, 2, 'lifesteal stops at her missing HP');
+  assert.equal(grazed.spawnee.hp.current, grazed.spawnee.hp.max, 'topped up, never over');
+});
+
+check('drain is its own damage type — physical resistance no longer halves it', () => {
+  // An iron golem resists ['physical', 'fire']. A life-drain is neither, so it
+  // lands whole (it used to ride on 'physical' and get halved).
   const spawnee = makeCombatant(companionById('spawnee'));
   spawnee.hp.current = 1;
-  const rat = makeCombatant(monsterById('giant-rat'));
-  rat.hp.current = rat.hp.max = 100;
-  const { combat } = createCombat([spawnee], [rat], () => 0.5);
+  const golem = makeCombatant(monsterById('iron-golem'));
+  golem.hp.current = golem.hp.max = 100;
+  assert.ok(golem.resist.includes('physical'), 'the golem does resist physical');
+  const { combat } = createCombat([spawnee], [golem], () => 0.5);
   while (combat.order[combat.turnIndex].id !== spawnee.id)
     combat.turnIndex = (combat.turnIndex + 1) % combat.order.length;
-  // 0.7 -> d20 15 (a clean success, not a nat-20 crit); 1d6 -> 5. Shadowdark
-  // spell damage is the dice only, with no ability modifier folded in.
-  const evs = playerSpell(combat, 'drain-life', rat.id, () => 0.7);
-  const hit = evs.find((e) => e.type === 'spell-hit');
-  assert.equal(hit.damage, 5, 'spell damage is the dice only — no ability bonus');
-  assert.equal(hit.drained, 3, 'lifesteal capped at half the damage');
+  const evs = playerSpell(combat, 'drain-life', golem.id, () => 0.7);
+  assert.equal(evs.find((e) => e.type === 'resist'), undefined, 'nothing halves the drain');
+  assert.equal(evs.find((e) => e.type === 'spell-hit').damage, 6, 'full 1d8 lands');
+});
+
+check('drain life is Spawnee\'s alone — unlearnable, and hers only', () => {
+  const drainSpell = SPELLS.find((s) => s.id === 'drain-life');
+  assert.equal(drainSpell.tome, false, 'never offered by a tome or a level-up pick');
+  const starters = COMPANIONS.filter((c) => (c.spells ?? []).includes('drain-life'));
+  assert.deepEqual(starters.map((c) => c.id), ['spawnee'], 'only Spawnee opens with it');
+  const gowra = companionById('gowra');
+  assert.ok(!gowra.spells.includes('drain-life'), 'Gowra no longer drains');
+  assert.deepEqual(gowra.spells.sort(), ['healing-word', 'smite'], 'she keeps her two prayers');
 });
 
 check('resistances, abilities, familiars, and tomes hold together', () => {

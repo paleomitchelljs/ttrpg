@@ -103,16 +103,19 @@ export const SPELLS = [
 
 SPELLS.push(
   {
+    // Spawnee's signature. `tome: false` keeps it off both learning paths (found
+    // tomes and the level-up pick), so the only way to have it is to start with
+    // it — and she is the only one who does.
     id: 'drain-life',
     name: 'Drain Life',
     tier: 2,
     castDC: 12,
     target: 'enemy',
-    dice: '1d6',
+    dice: '1d8',
     drain: true,
     school: 'drain',
     tome: false,
-    blurb: 'darkness leaps from her hand, and she keeps half of what it takes (1d6)',
+    blurb: 'darkness leaps from her hand, and she keeps every drop of what it takes (1d8)',
   },
   {
     id: 'dominate-undead',

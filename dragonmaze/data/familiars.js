@@ -45,7 +45,9 @@ export const FAMILIARS = [
     name: 'Dusk Bat',
     effect: 'drain-boost',
     emoji: '🦇',
-    blurb: 'a leathery night-flitter that hungers with you; advantage when you cast Drain Life',
+    // Drain Life is Spawnee's alone, so this knack only ever fires for her —
+    // the blurb says so plainly, or it reads as a trap pick for anyone else.
+    blurb: 'a leathery night-flitter that hungers with you; advantage when you cast Drain Life (Spawnee only)',
   },
 ];
 

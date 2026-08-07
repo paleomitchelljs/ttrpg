@@ -30,6 +30,10 @@ const SPELL_MENU = Symbol('spell-menu');
 // sentinel: "Item" was chosen, so renderActions shows the pouch submenu
 const ITEM_MENU = Symbol('item-menu');
 
+// What a damage type is *called* when a resistance halves it. 'physical' is a
+// blow; a drain is a pull at the life rather than a hit. Falls back to 'blow'.
+const DTYPE_NOUN = { fire: 'flame', drain: 'hunger', physical: 'blow' };
+
 // ---------------------------------------------------------------- queue
 const batches = [];
 let processing = false;
@@ -363,7 +367,7 @@ async function presentEvent(els, ev) {
       return;
     }
     case 'resist': {
-      appendLog(els.log, `The ${ev.who} shrugs off half the ${ev.dtype === 'fire' ? 'flame' : 'blow'}!`, 'log-miss');
+      appendLog(els.log, `The ${ev.who} shrugs off half the ${DTYPE_NOUN[ev.dtype] ?? 'blow'}!`, 'log-miss');
       return delay(250);
     }
     case 'vulnerable': {

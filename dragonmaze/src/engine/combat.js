@@ -782,11 +782,16 @@ function applyCastSuccess(combat, caster, spell, targetId, cast, rng, events) {
     const rolled = roll(spell.dice, rng).total;
     const boost = spell.drain ? 0 : fireBonus(combat, caster);
     const dmg = (cast.crit ? rolled * 2 : rolled) + boost;
-    const dealt = applyDamage(target, dmg, spell.drain ? 'physical' : 'fire', events);
+    // Drain has its own damage type. It used to ride on 'physical', which meant
+    // a skeleton's resistance to blades — and an iron golem's — halved a spell
+    // that isn't a blow at all. Nothing resists 'drain' today; a monster that
+    // should (something with no life to take) can just list it in `resist`.
+    const dealt = applyDamage(target, dmg, spell.drain ? 'drain' : 'fire', events);
     let drained = 0;
     if (spell.drain && dealt > 0 && caster.hp.current < caster.hp.max) {
-      // lifesteal is capped at half the damage — no full heal-tanking off one mob
-      drained = Math.min(Math.ceil(dealt / 2), caster.hp.max - caster.hp.current);
+      // A vampire keeps everything she takes: the caster heals the full damage
+      // dealt, bounded only by her missing HP (it never overheals).
+      drained = Math.min(dealt, caster.hp.max - caster.hp.current);
       caster.hp.current += drained;
     }
     events.push({

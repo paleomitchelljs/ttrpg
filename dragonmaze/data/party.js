@@ -32,7 +32,8 @@ export const COMPANIONS = [
     role: 'Vampire Spawn',
     castStat: 'cha', // innate blood-magic — force of will
     // Both tier 2: innate vampire powers, not spells she studied, so they're
-    // hers from the start rather than gated by maxSpellTier.
+    // hers from the start rather than gated by maxSpellTier. Drain Life is hers
+    // exclusively — no other hero starts with it, and it can't be learned.
     spells: ['drain-life', 'dominate-undead'],
   },
   {
@@ -128,10 +129,10 @@ export const COMPANIONS = [
     walk: 'gowra-walk',
     darkvision: true, // Yuan-Ti serpent-sight — widens the party's view underground
     castStat: 'wis', // divine prayers — a priest of the serpent gods
-    // Cure Wounds and Smite are tier 1; the venom-drain (tier 2) is the gift of
-    // her serpent gods, granted rather than learned.
-    spells: ['healing-word', 'smite', 'drain-life'],
-    blurb: 'A Yuan-Ti priest of the serpent gods; her prayers mend the faithful, and her venom-blessed blade drinks the life of the unworthy.',
+    // Two tier-1 prayers, the Shadowdark level-1 priest's allotment. Life-drain
+    // is Spawnee's alone (see drain-life in data/spells.js).
+    spells: ['healing-word', 'smite'],
+    blurb: 'A Yuan-Ti priest of the serpent gods; her prayers mend the faithful, and her venom-blessed khopesh answers the unworthy.',
     role: 'Serpent Priest',
   },
 ];

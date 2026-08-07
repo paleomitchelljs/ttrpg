@@ -81,7 +81,7 @@ Lifecycle entry points: `init()` (boot, load save), `newGame(seed?)`,
   no magic), `dragonkin-spellblade` (INT arcanist, tier-1 offensive book),
   `beren` (warrior, `beast-dread`+`animal-friend` traits), `turquoise` (Yuan-Ti
   barbarian, `relentless`, `darkvision`), `gowra` (Yuan-Ti WIS priest,
-  heal/smite/drain). Key fields: `hitDie` (HP/level), `abilities` (modifiers),
+  heal/smite). Key fields: `hitDie` (HP/level), `abilities` (modifiers),
   `attacks` (`{name, toHit, damage, range}`), `castStat`, `spells`, `traits`,
   `ability` (engine keyword), `darkvision`.
 - **Imported heroes** (`src/state/importHero.js`): the Shadowdark portal's
@@ -203,7 +203,7 @@ The single home for every game number — nothing elsewhere hard-codes a rule.
   a caster *learns* a spell: the level-up pick (`chooseAdvance('spell')`, offered
   via `learnableSpells` in main.js), and found tomes (the loot branch in
   gameState.js). A character's **starting** list is authored data and may carry a
-  signature power above tier (Spawnee's vampiric drain, Gowra's serpent prayers).
+  signature power above tier (Spawnee's vampiric drain, which is hers alone).
 - **Parley/renown**: `resolveParleyCheck` (CHA + `mod` vs DC, nat-20/nat-1 rule),
   `parleyDC` (11 willing / 13 wary), `dispositionLabel`, `FACTION_ENEMIES`,
   `clampRep` (band −10..+10).
@@ -279,7 +279,10 @@ rerolled, not a whole flurry.
 
 ### Damage model (`applyDamage`)
 
-Types `'physical' | 'fire'` (+ item types `poison`/`acid`). Order: `resist`
+Types `'physical' | 'fire' | 'drain'` (+ item types `poison`/`acid`). No monster
+currently resists `'drain'`; one that should (something with no life to take)
+just lists it in `resist`. `DTYPE_NOUN` in combatView.js names each in the log.
+Order: `resist`
 (half, min 1) / `vulnerable` (double) → **ward** (`tempHp` from Potion of Warding
 soaks first) → `relentless` (first killing blow leaves 1 HP, once) → HP.
 Monster abilities (`ability` keyword): `regenerate` (+2 HP at turn start),
@@ -321,7 +324,9 @@ mishaps (`applyCastMishap`: half a 1d4 backlash, half dazed).
 Spell schema: `{id, name, tier, castDC (=10+tier, mirror), target, dice?, school,
 tome?, plus effect flags}`. `target`: `'enemy'` (one foe), `'ally'` (one hero —
 works on the fallen), `'all-enemies'` (each DEX-saves vs `saveDC` for half),
-`'self'` (conjuration). Effect flags: `drain` (deal + heal half, capped),
+`'self'` (conjuration). Effect flags: `drain` (deal `'drain'`-typed damage — its own type, so physical
+resistance no longer halves it — then heal the caster the full damage dealt,
+bounded by their missing HP, never an overheal),
 `dominate` (convert a foe to a minion), `summon: '<monsterId>'` (conjure a minion).
 `tome: false` = innate/class-only, never learnable from a found tome.
 
@@ -341,7 +346,7 @@ Current spellbook, by tier —
 **tier 1:** `ember-bolt` (fire 1d6), `magic-missile` (force 1d4, always cast with
 advantage, `tome`), `burning-hands` (fire 1d6 all, `saveDC` 11, `tome`), `smite`
 (radiant 1d6, `tome`), `healing-word`/Cure Wounds (holy 1d6 heal, revives).
-**tier 2:** `drain-life` (1d6 + lifesteal, `tome:false`), `dominate-undead`
+**tier 2:** `drain-life` (1d8 + full lifesteal, `tome:false`), `dominate-undead`
 (`dominate`, `tome:false`), `summon-ember` (`summon: 'ember-spirit'`, `tome`).
 **tier 3:** `flame-wave`/Fireball (fire 3d6 all, `saveDC` 13), `lightning-bolt`
 (storm 3d6 all, `tome`).
@@ -349,7 +354,7 @@ advantage, `tome`), `burning-hands` (fire 1d6 all, `saveDC` 11, `tome`), `smite`
 Starting books stay inside tier 1 except for innate powers: the spellblade opens
 with ember-bolt / magic-missile / burning-hands / cure wounds (Fireball and
 Lightning Bolt are hers to learn at 5th), Spawnee with her tier-2 vampire powers,
-Gowra with cure wounds, smite, and her granted drain. Imported portal casters map
+Gowra with her two tier-1 prayers (cure wounds, smite). Imported portal casters map
 by keyword (`mapSpell` in importHero.js) and land on tier-1 spells only.
 
 **Minions** (`applyCastSuccess`, one per caster): `summon` inserts a temporary
@@ -369,7 +374,7 @@ the beetle, the loot branch for the rat). When a knack actually changes a roll,
 the familiar (`FAM_AID` in combatView.js) — otherwise a −1 DC or +1 damage is
 invisible. The bat's advantage additionally shows as two dice on the cast
 cinematic (see `resolveSpellCast` in §5). Note the bat's knack keys off
-`spell.drain`, so it only ever fires for `drain-life`. A familiar with `anim` strips draws as a sprite on its card
+`spell.drain`, so it only ever fires for `drain-life` — i.e. only for Spawnee. A familiar with `anim` strips draws as a sprite on its card
 (`fae-drake` only, so far); the rest fall back to their emoji.
 
 **Spell Focus** talents are generated per school the caster knows
