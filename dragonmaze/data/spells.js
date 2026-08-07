@@ -121,17 +121,19 @@ SPELLS.push(
   {
     id: 'acid-arrow',
     name: 'Acid Arrow',
-    // Shadowdark books this at tier 2; it sits at tier 1 here so a 1st-level
-    // caster has a focus spell to learn, with tier-1 dice (1d4) to match.
+    // Shadowdark books this at tier 2, partly for its *far* range. This game has
+    // no range bands at all, so that half of the spell simply doesn't exist —
+    // it sits at tier 1 (where a 1st-level caster can learn a focus spell) and
+    // keeps the book's 1d6 to pay for what the missing range took away.
     tier: 1,
     castDC: 11,
     target: 'enemy',
-    dice: '1d4',
+    dice: '1d6',
     dtype: 'acid',
-    focus: { dice: '1d4', cond: { id: 'acid-burn', dtype: 'acid' } },
+    focus: { dice: '1d6', cond: { id: 'acid-burn', dtype: 'acid' } },
     school: 'acid',
     tome: true,
-    blurb: 'a dart of acid that keeps eating: 1d4 now, and 1d4 more each round you focus',
+    blurb: 'a dart of acid that keeps eating: 1d6 now, and 1d6 more each round you focus',
   },
   {
     id: 'holy-weapon',

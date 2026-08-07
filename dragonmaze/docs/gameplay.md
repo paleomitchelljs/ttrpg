@@ -384,7 +384,7 @@ Current spellbook, by tier —
 **tier 1:** `ember-bolt` (fire 1d6), `magic-missile` (force 1d4, always cast with
 advantage, `tome`), `burning-hands` (fire 1d6 all, `saveDC` 11, `tome`), `smite`
 (radiant 1d6, `tome`), `healing-word`/Cure Wounds (holy 1d6 heal, revives),
-`acid-arrow` (acid 1d4 on impact **+ 1d4 per focused turn**), `sleep`
+`acid-arrow` (acid 1d6 on impact **+ 1d6 per focused turn**), `sleep`
 (`disable` 1d4 rounds, wakes on damage, `bossImmune`), `holy-weapon` (ally buff,
 +1 hit/+1 damage, 5 rounds).
 **tier 2:** `drain-life` (1d8 + full lifesteal, `tome:false`), `dominate-undead`
@@ -393,8 +393,10 @@ advantage, `tome`), `burning-hands` (fire 1d6 all, `saveDC` 11, `tome`), `smite`
 **tier 3:** `flame-wave`/Fireball (fire 3d6 all, `saveDC` 13), `lightning-bolt`
 (storm 3d6 all, `tome`).
 
-Acid Arrow sits at tier 1 (Shadowdark books it at tier 2) so a 1st-level caster
-has a focus spell to learn; its dice are tier-1 sized to match.
+Acid Arrow sits at tier 1 though Shadowdark books it at tier 2 — partly for its
+*far* range, and this game has no range bands at all, so that half of the spell
+doesn't exist. It keeps the book's 1d6 to pay for what the missing range took
+away, and tier 1 is where a 1st-level caster can actually learn a focus spell.
 
 Starting books stay inside tier 1 except for innate powers: the spellblade opens
 with ember-bolt / magic-missile / burning-hands / cure wounds / acid-arrow / sleep
