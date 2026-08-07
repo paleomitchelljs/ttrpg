@@ -49,11 +49,15 @@ export const AUTOTILE = {
     },
     fallback: 'sewer2-fill',
   },
-  // The Lost Temple palace — one sheet, one look. art/palace-room-sheet.png is a
+  // The Lost Temple palace — one sheet, one look. art/palace-hall-sheet.png is a
   // finished room, so the ring, the floor and the internal runs all come out of
-  // it together (tools/slice_palace_room.py); a wall tile's baked floor-facing
-  // edge therefore matches the floor beside it, which the older three-sheet mix
-  // never managed.
+  // it together (tools/slice_palace_hall.py); a wall tile's baked floor-facing
+  // edge therefore matches the floor beside it.
+  //
+  // Cut on a 224px source cell, which puts an internal run at **40% of the
+  // tile** — thin and centred, with floor either side, so partitions read as
+  // something you walk beside rather than a slab. The previous cut
+  // (slice_palace_room.py, art/palace-room-sheet.png) made them 84%.
   //
   // `palace-o-*` is the outer ring, `palace-r-*` the interior pieces. The two
   // share a brick, so the outer/inner split here buys the thin-wall vocabulary
@@ -78,7 +82,7 @@ export const AUTOTILE = {
       nw: 'palace-r-fill', ne: 'palace-r-fill', sw: 'palace-r-fill', se: 'palace-r-fill',
       thinH: 'palace-r-run-h', thinV: 'palace-r-run-v',
       iNW: 'palace-r-ci-nw', iNE: 'palace-r-ci-ne', iSW: 'palace-r-ci-sw', iSE: 'palace-r-ci-se',
-      elNW: 'palace-r-ci-nw', elNE: 'palace-r-ci-ne', elSW: 'palace-r-ci-sw', elSE: 'palace-r-ci-se',
+      elNW: 'palace-r-el-nw', elNE: 'palace-r-el-ne', elSW: 'palace-r-el-sw', elSE: 'palace-r-el-se',
       endN: 'palace-r-end-n', endE: 'palace-r-end-e', endS: 'palace-r-end-s', endW: 'palace-r-end-w',
     },
     fallbackInner: 'palace-r-fill',

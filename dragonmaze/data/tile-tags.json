@@ -1,2496 +1,2510 @@
 {
   "altar-skulls": {
-    "tags": [
-      "prop",
-      "structure"
-    ],
-    "sheet": "sewer-decor-a-sheet.png",
     "box": [
       1215,
       18,
       183,
       168
+    ],
+    "sheet": "sewer-decor-a-sheet.png",
+    "tags": [
+      "prop",
+      "structure"
     ]
   },
   "amulet-sun": {
-    "tags": [
-      "item",
-      "gear",
-      "trinket"
-    ],
-    "sheet": "treasure.png",
     "box": [
       908,
       674,
       92,
       92
+    ],
+    "sheet": "treasure.png",
+    "tags": [
+      "item",
+      "gear",
+      "trinket"
     ]
   },
   "brazier1": {
-    "tags": [
-      "prop",
-      "light"
-    ],
-    "sheet": "temple-exterior-sheet.png",
     "box": [
       840,
       544,
       76,
       152
-    ]
-  },
-  "brazier2": {
+    ],
+    "sheet": "temple-exterior-sheet.png",
     "tags": [
       "prop",
       "light"
-    ],
-    "sheet": "temple-exterior-sheet.png",
+    ]
+  },
+  "brazier2": {
     "box": [
       1116,
       548,
       80,
       148
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "tags": [
+      "prop",
+      "light"
     ]
   },
   "building-snake": {
-    "tags": [
-      "building"
-    ],
-    "sheet": "temple-exterior-sheet.png",
     "box": [
       528,
       712,
       344,
       280
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "tags": [
+      "building"
     ]
   },
   "chainmail": {
-    "tags": [
-      "item",
-      "gear",
-      "armor"
-    ],
-    "sheet": "treasure.png",
     "box": [
       908,
       292,
       94,
       90
+    ],
+    "sheet": "treasure.png",
+    "tags": [
+      "item",
+      "gear",
+      "armor"
     ]
   },
   "coin-purse": {
-    "tags": [
-      "item",
-      "loot",
-      "treasure"
-    ],
-    "sheet": "treasure.png",
     "box": [
       926,
       394,
       60,
       74
+    ],
+    "sheet": "treasure.png",
+    "tags": [
+      "item",
+      "loot",
+      "treasure"
     ]
   },
   "courtyard-archway": {
-    "tags": [
-      "prop",
-      "door"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       149,
       289,
       66,
       64
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "prop",
+      "door"
     ]
   },
   "courtyard-broken-column": {
-    "tags": [
-      "prop"
-    ],
-    "sheet": "decor-clean-sheet.png",
     "box": [
       80,
       104,
       168,
       292
+    ],
+    "sheet": "decor-clean-sheet.png",
+    "tags": [
+      "prop"
     ]
   },
   "courtyard-bush": {
-    "tags": [
-      "prop",
-      "plant"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       808,
       433,
       65,
       64
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "prop",
+      "plant"
     ]
   },
   "courtyard-chest": {
-    "tags": [
-      "prop",
-      "treasure"
-    ],
-    "sheet": "decor-clean-sheet.png",
     "box": [
       404,
       184,
       216,
       192
+    ],
+    "sheet": "decor-clean-sheet.png",
+    "tags": [
+      "prop",
+      "treasure"
     ]
   },
   "courtyard-door-plain": {
-    "tags": [
-      "prop",
-      "door"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       223,
       289,
       65,
       64
-    ]
-  },
-  "courtyard-door-wood": {
+    ],
+    "sheet": "courtyard-sheet.png",
     "tags": [
       "prop",
       "door"
-    ],
-    "sheet": "courtyard-sheet.png",
+    ]
+  },
+  "courtyard-door-wood": {
     "box": [
       76,
       289,
       65,
       64
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "prop",
+      "door"
     ]
   },
   "courtyard-gold-pile": {
-    "tags": [
-      "prop",
-      "treasure"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       515,
       505,
       64,
       63
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "prop",
+      "treasure"
     ]
   },
   "courtyard-grass": {
-    "tags": [
-      "floor",
-      "grass"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       76,
       218,
       65,
       63
-    ]
-  },
-  "courtyard-grass-flower": {
+    ],
+    "sheet": "courtyard-sheet.png",
     "tags": [
       "floor",
       "grass"
-    ],
-    "sheet": "courtyard-sheet.png",
+    ]
+  },
+  "courtyard-grass-flower": {
     "box": [
       4,
       218,
       64,
       63
-    ]
-  },
-  "courtyard-grass-palm": {
+    ],
+    "sheet": "courtyard-sheet.png",
     "tags": [
       "floor",
       "grass"
-    ],
-    "sheet": "courtyard-sheet.png",
+    ]
+  },
+  "courtyard-grass-palm": {
     "box": [
       443,
       218,
       64,
       63
-    ]
-  },
-  "courtyard-grass-tuft": {
+    ],
+    "sheet": "courtyard-sheet.png",
     "tags": [
       "floor",
       "grass"
-    ],
-    "sheet": "courtyard-sheet.png",
+    ]
+  },
+  "courtyard-grass-tuft": {
     "box": [
       149,
       218,
       66,
       63
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "floor",
+      "grass"
     ]
   },
   "courtyard-rocks": {
-    "tags": [
-      "prop"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       881,
       433,
       66,
       64
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "prop"
     ]
   },
   "courtyard-stone-cracked": {
-    "tags": [
-      "floor"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       515,
       433,
       64,
       64
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "floor"
     ]
   },
   "courtyard-stone-floor": {
-    "tags": [
-      "floor"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       661,
       505,
       65,
       63
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "floor"
     ]
   },
   "courtyard-wall-brick": {
-    "tags": [
-      "wall"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       149,
       146,
       66,
       64
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "wall"
     ]
   },
   "courtyard-wall-brick-top": {
-    "tags": [
-      "wall"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       587,
       74,
       66,
       64
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "wall"
     ]
   },
   "courtyard-wall-corner": {
-    "tags": [
-      "wall",
-      "corner"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       4,
       4,
       64,
       62
-    ]
-  },
-  "courtyard-wall-corner-bottom": {
+    ],
+    "sheet": "courtyard-sheet.png",
     "tags": [
       "wall",
       "corner"
-    ],
-    "sheet": "courtyard-sheet.png",
+    ]
+  },
+  "courtyard-wall-corner-bottom": {
     "box": [
       4,
       289,
       64,
       64
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "wall",
+      "corner"
     ]
   },
   "courtyard-wall-crack": {
-    "tags": [
-      "wall"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       76,
       74,
       65,
       64
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "wall"
     ]
   },
   "courtyard-wall-crack2": {
-    "tags": [
-      "wall"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       149,
       74,
       66,
       64
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "wall"
     ]
   },
   "courtyard-wall-decor": {
-    "tags": [
-      "wall"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       223,
       74,
       65,
       64
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "wall"
     ]
   },
   "courtyard-wall-end-left": {
-    "tags": [
-      "wall",
-      "corner"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       515,
       4,
       64,
       62
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "wall",
+      "corner"
     ]
   },
   "courtyard-wall-end-right": {
-    "tags": [
-      "wall",
-      "corner"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       443,
       4,
       64,
       62
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "wall",
+      "corner"
     ]
   },
   "courtyard-wall-fill-edge-a": {
-    "tags": [
-      "wall"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       443,
       146,
       64,
       64
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "wall"
     ]
   },
   "courtyard-wall-fill-edge-b": {
-    "tags": [
-      "wall"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       515,
       146,
       64,
       64
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "wall"
     ]
   },
   "courtyard-wall-gate": {
-    "tags": [
-      "wall",
-      "door"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       808,
       4,
       65,
       62
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "wall",
+      "door"
     ]
   },
   "courtyard-wall-grass-edge-a": {
-    "tags": [
-      "wall"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       443,
       74,
       64,
       64
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "wall"
     ]
   },
   "courtyard-wall-grass-edge-b": {
-    "tags": [
-      "wall"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       515,
       74,
       64,
       64
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "wall"
     ]
   },
   "courtyard-wall-side": {
-    "tags": [
-      "wall",
-      "corner"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       4,
       74,
       64,
       64
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "wall",
+      "corner"
     ]
   },
   "courtyard-wall-side2": {
-    "tags": [
-      "wall"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       515,
       289,
       64,
       64
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "wall"
     ]
   },
   "courtyard-wall-top": {
-    "tags": [
-      "wall"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       76,
       4,
       65,
       62
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "wall"
     ]
   },
   "courtyard-wall-vine": {
-    "tags": [
-      "wall"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       296,
       74,
       66,
       64
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "wall"
     ]
   },
   "courtyard-wall-vine2": {
-    "tags": [
-      "wall"
-    ],
-    "sheet": "courtyard-sheet.png",
     "box": [
       370,
       74,
       65,
       64
+    ],
+    "sheet": "courtyard-sheet.png",
+    "tags": [
+      "wall"
     ]
   },
   "courtyard-well": {
-    "tags": [
-      "structure"
-    ],
-    "sheet": "decor-clean-sheet.png",
     "box": [
       744,
       164,
       224,
       232
+    ],
+    "sheet": "decor-clean-sheet.png",
+    "tags": [
+      "structure"
     ]
   },
   "crate": {
-    "tags": [
-      "prop"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
     "box": [
       1572,
       690,
       72,
       90
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "tags": [
+      "prop"
     ]
   },
   "crates": {
-    "tags": [
-      "prop"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
     "box": [
       1677,
       669,
       126,
       111
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "tags": [
+      "prop"
     ]
   },
   "crown": {
-    "tags": [
-      "item",
-      "gear",
-      "trinket"
-    ],
-    "sheet": "treasure.png",
     "box": [
       708,
       106,
       90,
       76
+    ],
+    "sheet": "treasure.png",
+    "tags": [
+      "item",
+      "gear",
+      "trinket"
     ]
   },
   "flaming-pitch": {
-    "tags": [
-      "item",
-      "consumable",
-      "offensive"
-    ],
-    "sheet": "treasure.png",
     "box": [
       1318,
       488,
       72,
       82
+    ],
+    "sheet": "treasure.png",
+    "tags": [
+      "item",
+      "consumable",
+      "offensive"
     ]
   },
   "gargoyle-statue": {
-    "tags": [
-      "statue",
-      "structure"
-    ],
-    "sheet": "sewer-decor-b-sheet.png",
     "box": [
       21,
       27,
       81,
       117
+    ],
+    "sheet": "sewer-decor-b-sheet.png",
+    "tags": [
+      "statue",
+      "structure"
     ]
   },
   "gator-statue": {
-    "tags": [
-      "statue"
-    ],
-    "sheet": "temple-exterior-sheet.png",
     "box": [
       156,
       524,
       104,
       172
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "tags": [
+      "statue"
     ]
   },
   "gold-coins": {
-    "tags": [
-      "item",
-      "loot",
-      "treasure"
-    ],
-    "sheet": "treasure.png",
     "box": [
       808,
       390,
       92,
       84
+    ],
+    "sheet": "treasure.png",
+    "tags": [
+      "item",
+      "loot",
+      "treasure"
     ]
   },
   "gold-hoard": {
-    "tags": [
-      "treasure"
-    ],
-    "sheet": "sewer-loot-sheet.png",
     "box": [
       24,
       39,
       345,
       303
+    ],
+    "sheet": "sewer-loot-sheet.png",
+    "tags": [
+      "treasure"
     ]
   },
   "grease": {
-    "tags": [
-      "item",
-      "consumable",
-      "offensive"
-    ],
-    "sheet": "treasure.png",
     "box": [
       1124,
       104,
       62,
       82
+    ],
+    "sheet": "treasure.png",
+    "tags": [
+      "item",
+      "consumable",
+      "offensive"
     ]
   },
   "green-font": {
-    "tags": [
-      "structure",
-      "prop"
-    ],
-    "sheet": "sewer-loot-sheet.png",
     "box": [
       408,
       0,
       357,
       342
+    ],
+    "sheet": "sewer-loot-sheet.png",
+    "tags": [
+      "structure",
+      "prop"
     ]
   },
   "key-brass": {
-    "tags": [
-      "item",
-      "loot"
-    ],
-    "sheet": "treasure.png",
     "box": [
       1014,
       102,
       78,
       84
-    ]
-  },
-  "magic-tome": {
+    ],
+    "sheet": "treasure.png",
     "tags": [
       "item",
       "loot"
-    ],
-    "sheet": "treasure.png",
+    ]
+  },
+  "magic-tome": {
     "box": [
       512,
       290,
       82,
       90
-    ]
-  },
-  "panel-croc": {
-    "tags": [
-      "wall",
-      "prop"
-    ],
-    "sheet": "temple-panels-sheet.png",
-    "box": [
-      9,
-      6,
-      141,
-      156
-    ]
-  },
-  "panel-mask": {
-    "tags": [
-      "wall",
-      "statue"
-    ],
-    "sheet": "temple-panels-sheet.png",
-    "box": [
-      615,
-      6,
-      141,
-      156
-    ]
-  },
-  "panel-snake": {
-    "tags": [
-      "wall",
-      "prop"
-    ],
-    "sheet": "temple-panels-sheet.png",
-    "box": [
-      312,
-      6,
-      141,
-      156
-    ]
-  },
-  "potion-healing": {
-    "tags": [
-      "item",
-      "consumable",
-      "potion"
     ],
     "sheet": "treasure.png",
-    "box": [
-      20,
-      6,
-      66,
-      94
-    ]
-  },
-  "potion-mana": {
-    "tags": [
-      "item",
-      "consumable",
-      "potion"
-    ],
-    "sheet": "treasure.png",
-    "box": [
-      120,
-      6,
-      64,
-      94
-    ]
-  },
-  "potion-protection": {
-    "tags": [
-      "item",
-      "consumable",
-      "potion"
-    ],
-    "sheet": "treasure.png",
-    "box": [
-      220,
-      6,
-      64,
-      94
-    ]
-  },
-  "pyramid-capstone": {
-    "tags": [
-      "prop",
-      "structure"
-    ],
-    "sheet": "sewer-loot-sheet.png",
-    "box": [
-      822,
-      18,
-      306,
-      324
-    ]
-  },
-  "ring-ruby": {
-    "tags": [
-      "item",
-      "gear",
-      "trinket"
-    ],
-    "sheet": "treasure.png",
-    "box": [
-      712,
-      586,
-      82,
-      74
-    ]
-  },
-  "round-hut": {
-    "tags": [
-      "building"
-    ],
-    "sheet": "temple-exterior-sheet.png",
-    "box": [
-      276,
-      708,
-      228,
-      284
-    ]
-  },
-  "rune-altar": {
-    "tags": [
-      "structure",
-      "prop"
-    ],
-    "sheet": "sewer-decor-b-sheet.png",
-    "box": [
-      132,
-      39,
-      165,
-      105
-    ]
-  },
-  "sat-floor-0-0": {
-    "tags": [
-      "floor",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      18,
-      22,
-      126,
-      132
-    ]
-  },
-  "sat-floor-0-1": {
-    "tags": [
-      "floor",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      18,
-      142,
-      126,
-      252
-    ]
-  },
-  "sat-floor-1-0": {
-    "tags": [
-      "floor",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      132,
-      22,
-      240,
-      132
-    ]
-  },
-  "sat-floor-1-1": {
-    "tags": [
-      "floor",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      132,
-      142,
-      240,
-      252
-    ]
-  },
-  "sat-floor-2-0": {
-    "tags": [
-      "floor",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      246,
-      22,
-      354,
-      132
-    ]
-  },
-  "sat-floor-2-1": {
-    "tags": [
-      "floor",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      246,
-      142,
-      354,
-      252
-    ]
-  },
-  "sat-floor-3-0": {
-    "tags": [
-      "floor",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      360,
-      22,
-      468,
-      132
-    ]
-  },
-  "sat-floor-3-1": {
-    "tags": [
-      "floor",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      360,
-      142,
-      468,
-      252
-    ]
-  },
-  "sat-floor-4-0": {
-    "tags": [
-      "floor",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      474,
-      22,
-      582,
-      132
-    ]
-  },
-  "sat-floor-4-1": {
-    "tags": [
-      "floor",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      474,
-      142,
-      582,
-      252
-    ]
-  },
-  "sat-floor-5-0": {
-    "tags": [
-      "floor",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      588,
-      22,
-      696,
-      132
-    ]
-  },
-  "sat-wall-0-3": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      18,
-      382,
-      126,
-      492
-    ]
-  },
-  "sat-wall-0-4": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      18,
-      502,
-      126,
-      612
-    ]
-  },
-  "sat-wall-1-3": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      132,
-      382,
-      240,
-      492
-    ]
-  },
-  "sat-wall-1-4": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      132,
-      502,
-      240,
-      612
-    ]
-  },
-  "sat-wall-10-0": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      1158,
-      22,
-      1266,
-      132
-    ]
-  },
-  "sat-wall-10-1": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      1158,
-      142,
-      1266,
-      252
-    ]
-  },
-  "sat-wall-11-0": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      1272,
-      22,
-      1380,
-      132
-    ]
-  },
-  "sat-wall-2-3": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      246,
-      382,
-      354,
-      492
-    ]
-  },
-  "sat-wall-2-4": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      246,
-      502,
-      354,
-      612
-    ]
-  },
-  "sat-wall-3-3": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      360,
-      382,
-      468,
-      492
-    ]
-  },
-  "sat-wall-4-3": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      474,
-      382,
-      582,
-      492
-    ]
-  },
-  "sat-wall-5-3": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      588,
-      382,
-      696,
-      492
-    ]
-  },
-  "sat-wall-6-0": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      702,
-      22,
-      810,
-      132
-    ]
-  },
-  "sat-wall-6-1": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      702,
-      142,
-      810,
-      252
-    ]
-  },
-  "sat-wall-6-2": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      702,
-      262,
-      810,
-      372
-    ]
-  },
-  "sat-wall-7-0": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      816,
-      22,
-      924,
-      132
-    ]
-  },
-  "sat-wall-7-1": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      816,
-      142,
-      924,
-      252
-    ]
-  },
-  "sat-wall-7-2": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      816,
-      262,
-      924,
-      372
-    ]
-  },
-  "sat-wall-8-0": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      930,
-      22,
-      1038,
-      132
-    ]
-  },
-  "sat-wall-8-1": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      930,
-      142,
-      1038,
-      252
-    ]
-  },
-  "sat-wall-8-2": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      930,
-      262,
-      1038,
-      372
-    ]
-  },
-  "sat-wall-9-0": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      1044,
-      22,
-      1152,
-      132
-    ]
-  },
-  "sat-wall-9-1": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      1044,
-      142,
-      1152,
-      252
-    ]
-  },
-  "sat-wall-9-2": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": [
-      1044,
-      262,
-      1152,
-      372
-    ]
-  },
-  "sat-wall-cor-se": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": "derived"
-  },
-  "sat-wall-cor-sw": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": "derived"
-  },
-  "sat-wall-left": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": "derived"
-  },
-  "sat-wall-right": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": "derived"
-  },
-  "sat-wall-w": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-autotile-sheet.png",
-    "box": "mirror sat-wall-0-3"
-  },
-  "scimitar": {
-    "tags": [
-      "item",
-      "gear",
-      "weapon"
-    ],
-    "sheet": "treasure.png",
-    "box": [
-      4,
-      126,
-      292,
-      116
-    ]
-  },
-  "scroll": {
     "tags": [
       "item",
       "loot"
-    ],
-    "sheet": "treasure.png",
-    "box": [
-      712,
-      6,
-      84,
-      86
-    ]
-  },
-  "sewer-archway": {
-    "tags": [
-      "door",
-      "structure"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      1551,
-      288,
-      132,
-      132
-    ]
-  },
-  "sewer-bone": {
-    "tags": [
-      "prop"
-    ],
-    "sheet": "sewer-decor-a-sheet.png",
-    "box": [
-      630,
-      45,
-      138,
-      129
-    ]
-  },
-  "sewer-brazier": {
-    "tags": [
-      "light",
-      "prop"
-    ],
-    "sheet": "sewer-decor-a-sheet.png",
-    "box": [
-      843,
-      6,
-      123,
-      180
-    ]
-  },
-  "sewer-canal": {
-    "tags": [
-      "floor",
-      "water"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      366,
-      801,
-      147,
-      159
-    ]
-  },
-  "sewer-canal-bend": {
-    "tags": [
-      "floor",
-      "water"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      537,
-      801,
-      150,
-      159
-    ]
-  },
-  "sewer-column": {
-    "tags": [
-      "structure"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      813,
-      630,
-      69,
-      159
-    ]
-  },
-  "sewer-floor": {
-    "tags": [
-      "floor"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      198,
-      213,
-      171,
-      171
-    ]
-  },
-  "sewer-floor-dirt": {
-    "tags": [
-      "floor"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      1125,
-      267,
-      162,
-      159
-    ]
-  },
-  "sewer-floor-moss": {
-    "tags": [
-      "floor"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      1308,
-      267,
-      159,
-      162
-    ]
-  },
-  "sewer-gate": {
-    "tags": [
-      "door"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      1710,
-      288,
-      129,
-      132
-    ]
-  },
-  "sewer-grate": {
-    "tags": [
-      "floor",
-      "prop"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      1125,
-      852,
-      96,
-      102
-    ]
-  },
-  "sewer-lever": {
-    "tags": [
-      "prop"
-    ],
-    "sheet": "sewer-decor-a-sheet.png",
-    "box": [
-      231,
-      15,
-      147,
-      171
-    ]
-  },
-  "sewer-mushrooms": {
-    "tags": [
-      "plant"
-    ],
-    "sheet": "sewer-decor-a-sheet.png",
-    "box": [
-      414,
-      36,
-      174,
-      135
-    ]
-  },
-  "sewer-rune": {
-    "tags": [
-      "prop"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      1374,
-      852,
-      96,
-      102
-    ]
-  },
-  "sewer-skeleton": {
-    "tags": [
-      "prop"
-    ],
-    "sheet": "sewer-decor-b-sheet.png",
-    "box": [
-      870,
-      78,
-      90,
-      60
-    ]
-  },
-  "sewer-skulls": {
-    "tags": [
-      "prop"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      1374,
-      675,
-      96,
-      102
-    ]
-  },
-  "sewer-slime": {
-    "tags": [
-      "prop"
-    ],
-    "sheet": "sewer-decor-a-sheet.png",
-    "box": [
-      6,
-      51,
-      186,
-      129
-    ]
-  },
-  "sewer-sludge": {
-    "tags": [
-      "floor",
-      "water"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      189,
-      801,
-      150,
-      159
-    ]
-  },
-  "sewer-wall": {
-    "tags": [
-      "wall"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      1125,
-      45,
-      162,
-      159
-    ]
-  },
-  "sewer-water": {
-    "tags": [
-      "floor",
-      "water"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      12,
-      801,
-      150,
-      159
-    ]
-  },
-  "sewer-water-edge": {
-    "tags": [
-      "floor",
-      "water"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      714,
-      801,
-      174,
-      159
-    ]
-  },
-  "sewer-waterfall": {
-    "tags": [
-      "water"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      915,
-      678,
-      171,
-      282
-    ]
-  },
-  "sewer2-c-ne": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sewer2-c-nw": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sewer2-c-se": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sewer2-c-sw": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sewer2-ci-ne": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "toprep1.png",
-    "box": "derived"
-  },
-  "sewer2-ci-nw": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "toprep2.png",
-    "box": "derived"
-  },
-  "sewer2-ci-se": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "toprep1.png",
-    "box": "derived (vertical flip)"
-  },
-  "sewer2-ci-sw": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "toprep2.png",
-    "box": "derived (vertical flip)"
-  },
-  "sewer2-fill": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sewer2-floor": {
-    "tags": [
-      "floor",
-      "autotile"
-    ],
-    "sheet": "sewer2-floor.png",
-    "box": [
-      0,
-      0,
-      256,
-      256
-    ]
-  },
-  "sewer2-floor2": {
-    "tags": [
-      "floor",
-      "autotile"
-    ],
-    "sheet": "sewer2-floor2.png",
-    "box": [
-      0,
-      0,
-      256,
-      256
-    ]
-  },
-  "sewer2-w-bottom": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sewer2-w-left": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sewer2-w-right": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sewer2-w-top": {
-    "tags": [
-      "wall",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sewer2-water": {
-    "tags": [
-      "floor",
-      "water",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": [
-      300,
-      570,
-      130,
-      130
-    ]
-  },
-  "shield-round": {
-    "tags": [
-      "item",
-      "gear",
-      "armor"
-    ],
-    "sheet": "treasure.png",
-    "box": [
-      1210,
-      290,
-      90,
-      92
-    ]
-  },
-  "snake-statue": {
-    "tags": [
-      "statue"
-    ],
-    "sheet": "temple-exterior-sheet.png",
-    "box": [
-      28,
-      524,
-      124,
-      176
-    ]
-  },
-  "snakestatue": {
-    "tags": [
-      "statue"
-    ],
-    "sheet": "temple-exterior-sheet.png",
-    "box": [
-      28,
-      524,
-      124,
-      176
-    ]
-  },
-  "snakewall": {
-    "tags": [
-      "wall"
-    ],
-    "sheet": "temple-exterior-sheet.png",
-    "box": [
-      604,
-      256,
-      128,
-      116
-    ]
-  },
-  "stone-hut": {
-    "tags": [
-      "building"
-    ],
-    "sheet": "temple-exterior-sheet.png",
-    "box": [
-      16,
-      716,
-      252,
-      276
-    ]
-  },
-  "sw-cor-ne": {
-    "tags": [
-      "floor",
-      "water",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sw-cor-nw": {
-    "tags": [
-      "floor",
-      "water",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sw-cor-se": {
-    "tags": [
-      "floor",
-      "water",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sw-cor-sw": {
-    "tags": [
-      "floor",
-      "water",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sw-cross": {
-    "tags": [
-      "floor",
-      "water",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sw-str-h": {
-    "tags": [
-      "floor",
-      "water",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sw-str-v": {
-    "tags": [
-      "floor",
-      "water",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sw-tee-esw": {
-    "tags": [
-      "floor",
-      "water",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sw-tee-nes": {
-    "tags": [
-      "floor",
-      "water",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sw-tee-new": {
-    "tags": [
-      "floor",
-      "water",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "sw-tee-nsw": {
-    "tags": [
-      "floor",
-      "water",
-      "autotile"
-    ],
-    "sheet": "sewer-hd-sheet.png",
-    "box": "derived"
-  },
-  "throne": {
-    "tags": [
-      "structure"
-    ],
-    "sheet": "sewer-decor-a-sheet.png",
-    "box": [
-      1044,
-      0,
-      120,
-      186
-    ]
-  },
-  "torch-item": {
-    "tags": [
-      "item",
-      "loot"
-    ],
-    "sheet": "treasure.png",
-    "box": [
-      1236,
-      198,
-      42,
-      88
-    ]
-  },
-  "torch-lit": {
-    "tags": [
-      "light",
-      "prop"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      1248,
-      675,
-      96,
-      102
-    ]
-  },
-  "torch-out": {
-    "tags": [
-      "light",
-      "prop"
-    ],
-    "sheet": "sewer-tileset-sheet.png",
-    "box": [
-      1125,
-      675,
-      96,
-      102
-    ]
-  },
-  "vial-caustic": {
-    "tags": [
-      "item",
-      "consumable",
-      "offensive"
-    ],
-    "sheet": "treasure.png",
-    "box": [
-      418,
-      6,
-      66,
-      94
-    ]
-  },
-  "vial-poison": {
-    "tags": [
-      "item",
-      "consumable",
-      "offensive"
-    ],
-    "sheet": "treasure.png",
-    "box": [
-      330,
-      8,
-      44,
-      90
-    ]
-  },
-  "wall-a": {
-    "tags": [
-      "wall"
-    ],
-    "sheet": "temple-exterior-sheet.png",
-    "box": [
-      26,
-      18,
-      72,
-      72
-    ]
-  },
-  "wall-b": {
-    "tags": [
-      "wall"
-    ],
-    "sheet": "temple-exterior-sheet.png",
-    "box": [
-      128,
-      18,
-      72,
-      72
-    ]
-  },
-  "wall-c": {
-    "tags": [
-      "wall"
-    ],
-    "sheet": "temple-exterior-sheet.png",
-    "box": [
-      236,
-      18,
-      72,
-      72
-    ]
-  },
-  "wall-col": {
-    "tags": [
-      "wall",
-      "corner"
-    ],
-    "sheet": "temple-exterior-sheet.png",
-    "box": [
-      1145,
-      286,
-      60,
-      92
-    ]
-  },
-  "wall-temple": {
-    "tags": [
-      "wall",
-      "floor"
-    ],
-    "sheet": "temple-exterior-sheet.png",
-    "box": [
-      188,
-      296,
-      64,
-      64
-    ]
-  },
-  "well": {
-    "tags": [
-      "structure"
-    ],
-    "sheet": "temple-exterior-sheet.png",
-    "box": [
-      1224,
-      724,
-      244,
-      268
-    ]
-  },
-  "palace-gecko": {
-    "tags": [
-      "decor",
-      "temple",
-      "plant"
-    ],
-    "sheet": "palace-sheet.png",
-    "box": [
-      385,
-      394,
-      155,
-      155
     ]
   },
   "palace-arch": {
-    "tags": [
-      "decor",
-      "temple",
-      "structure"
-    ],
-    "sheet": "palace-sheet.png",
     "box": [
       567,
       394,
       156,
       155
-    ]
-  },
-  "palace-lizard": {
-    "tags": [
-      "decor",
-      "temple",
-      "statue"
     ],
     "sheet": "palace-sheet.png",
-    "box": [
-      385,
-      567,
-      155,
-      161
-    ]
-  },
-  "palace-snake": {
-    "tags": [
-      "decor",
-      "temple",
-      "statue"
-    ],
-    "sheet": "palace-sheet.png",
-    "box": [
-      1290,
-      567,
-      161,
-      161
-    ]
-  },
-  "palace-snake-b": {
-    "tags": [
-      "decor",
-      "temple",
-      "statue"
-    ],
-    "sheet": "palace-sheet.png",
-    "box": [
-      1646,
-      567,
-      164,
-      161
-    ]
-  },
-  "palace-frieze": {
     "tags": [
       "decor",
       "temple",
       "structure"
-    ],
-    "sheet": "palace-sheet.png",
+    ]
+  },
+  "palace-frieze": {
     "box": [
       750,
       31,
       157,
       164
+    ],
+    "sheet": "palace-sheet.png",
+    "tags": [
+      "decor",
+      "temple",
+      "structure"
     ]
   },
-  "palace-o-top": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
-    "role": "wall",
+  "palace-gecko": {
     "box": [
-      290,
-      0,
-      140,
-      142
+      385,
+      394,
+      155,
+      155
+    ],
+    "sheet": "palace-sheet.png",
+    "tags": [
+      "decor",
+      "temple",
+      "plant"
     ]
   },
-  "palace-o-left": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
-    "role": "wall",
+  "palace-lizard": {
     "box": [
-      0,
-      145,
-      142,
-      144
-    ]
-  },
-  "palace-o-nw": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
-    "role": "wall",
-    "box": [
-      0,
-      0,
-      142,
-      142
-    ]
-  },
-  "palace-o-door-n": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
-    "role": "wall",
-    "box": [
-      433,
-      0,
-      144,
-      142
-    ]
-  },
-  "palace-o-door-s": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
-    "role": "wall",
-    "box": [
-      433,
-      1025,
-      144,
-      119
+      385,
+      567,
+      155,
+      161
+    ],
+    "sheet": "palace-sheet.png",
+    "tags": [
+      "decor",
+      "temple",
+      "statue"
     ]
   },
   "palace-o-bottom": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
-    "role": "wall",
-    "box": [
-      290,
-      0,
-      140,
-      142
-    ],
     "from": "palace-o-top",
-    "mirror": "y"
-  },
-  "palace-o-right": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
     "role": "wall",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "wall"
+    ]
+  },
+  "palace-o-door-n": {
     "box": [
-      0,
-      145,
-      142,
-      144
+      508,
+      20,
+      224,
+      224
     ],
-    "from": "palace-o-left",
-    "mirror": "x"
+    "role": "wall",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "door"
+    ]
+  },
+  "palace-o-door-s": {
+    "from": "palace-o-door-n",
+    "role": "wall",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "door"
+    ]
+  },
+  "palace-o-left": {
+    "box": [
+      20,
+      448,
+      224,
+      224
+    ],
+    "role": "wall",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "wall"
+    ]
   },
   "palace-o-ne": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
-    "role": "wall",
-    "box": [
-      0,
-      0,
-      142,
-      142
-    ],
     "from": "palace-o-nw",
-    "mirror": "x"
+    "role": "wall",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "wall"
+    ]
   },
-  "palace-o-sw": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
-    "role": "wall",
+  "palace-o-nw": {
     "box": [
-      0,
-      0,
-      142,
-      142
+      20,
+      20,
+      224,
+      224
     ],
-    "from": "palace-o-nw",
-    "mirror": "y"
+    "role": "wall",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "wall"
+    ]
+  },
+  "palace-o-right": {
+    "from": "palace-o-left",
+    "role": "wall",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "wall"
+    ]
   },
   "palace-o-se": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
-    "role": "wall",
-    "box": [
-      0,
-      0,
-      142,
-      142
-    ],
     "from": "palace-o-nw",
-    "mirror": "xy"
-  },
-  "palace-r-ci-se": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
     "role": "wall",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "wall"
+    ]
+  },
+  "palace-o-sw": {
+    "from": "palace-o-nw",
+    "role": "wall",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "wall"
+    ]
+  },
+  "palace-o-top": {
     "box": [
-      290,
-      145,
-      140,
-      144
+      850,
+      20,
+      224,
+      224
     ],
-    "normalised": true
+    "role": "wall",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "wall"
+    ]
   },
   "palace-r-ci-ne": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
+    "from": "palace-r-el-ne",
     "role": "wall",
-    "box": [
-      290,
-      292,
-      140,
-      141
-    ],
-    "normalised": true
-  },
-  "palace-r-ci-sw": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
-    "role": "wall",
-    "box": [
-      580,
-      292,
-      143,
-      141
-    ],
-    "normalised": true
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "wall"
+    ]
   },
   "palace-r-ci-nw": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
+    "from": "palace-r-el-nw",
     "role": "wall",
-    "box": [
-      580,
-      584,
-      143,
-      147
-    ],
-    "normalised": true
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "wall"
+    ]
   },
-  "palace-r-run-v": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
+  "palace-r-ci-se": {
+    "from": "palace-r-el-se",
     "role": "wall",
-    "box": [
-      580,
-      436,
-      143,
-      145
-    ],
-    "normalised": true
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "wall"
+    ]
   },
-  "palace-r-run-h": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
+  "palace-r-ci-sw": {
+    "from": "palace-r-el-sw",
     "role": "wall",
-    "box": [
-      290,
-      734,
-      140,
-      140
-    ],
-    "normalised": true
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "wall"
+    ]
   },
-  "palace-r-end-w": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
+  "palace-r-el-ne": {
+    "box": [
+      248,
+      328,
+      224,
+      224
+    ],
     "role": "wall",
-    "box": [
-      433,
-      145,
-      144,
-      144
-    ],
-    "normalised": true
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "wall"
+    ]
   },
-  "palace-r-end-n": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
+  "palace-r-el-nw": {
+    "box": [
+      693,
+      323,
+      224,
+      224
+    ],
     "role": "wall",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "wall"
+    ]
+  },
+  "palace-r-el-se": {
+    "from": "palace-r-el-sw",
+    "role": "wall",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "wall"
+    ]
+  },
+  "palace-r-el-sw": {
     "box": [
-      433,
-      734,
-      144,
-      140
+      848,
+      688,
+      224,
+      224
     ],
-    "normalised": true
-  },
-  "palace-r-floor-a": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
-    "role": "floor",
-    "box": [
-      145,
-      145,
-      142,
-      144
-    ]
-  },
-  "palace-r-floor-b": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
-    "role": "floor",
-    "box": [
-      580,
-      145,
-      143,
-      144
-    ]
-  },
-  "palace-r-floor-c": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
-    "role": "floor",
-    "box": [
-      726,
-      145,
-      143,
-      144
-    ]
-  },
-  "palace-r-floor-d": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
-    "role": "floor",
-    "box": [
-      145,
-      292,
-      142,
-      141
-    ]
-  },
-  "palace-r-floor-e": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
-    "role": "floor",
-    "box": [
-      726,
-      292,
-      143,
-      141
-    ]
-  },
-  "palace-r-floor-f": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
-    "role": "floor",
-    "box": [
-      145,
-      436,
-      142,
-      145
-    ]
-  },
-  "palace-r-floor-g": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
-    "role": "floor",
-    "box": [
-      290,
-      436,
-      140,
-      145
-    ]
-  },
-  "palace-r-floor-h": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
-    "role": "floor",
-    "box": [
-      290,
-      877,
-      140,
-      145
-    ]
-  },
-  "palace-r-floor-i": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
-    "role": "floor",
-    "box": [
-      580,
-      877,
-      143,
-      145
+    "role": "wall",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "wall"
     ]
   },
   "palace-r-end-e": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
+    "from": "palace-r-end-n",
     "role": "wall",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "wall"
+    ]
+  },
+  "palace-r-end-n": {
     "box": [
-      433,
-      145,
-      144,
-      144
+      848,
+      918,
+      224,
+      224
     ],
-    "normalised": true,
-    "from": "palace-r-end-w"
+    "role": "wall",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "wall"
+    ]
   },
   "palace-r-end-s": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
+    "from": "palace-r-end-n",
     "role": "wall",
-    "box": [
-      433,
-      734,
-      144,
-      140
-    ],
-    "normalised": true,
-    "from": "palace-r-end-n"
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "wall"
+    ]
+  },
+  "palace-r-end-w": {
+    "from": "palace-r-end-n",
+    "role": "wall",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "wall"
+    ]
   },
   "palace-r-fill": {
-    "tags": [],
-    "sheet": "palace-room-sheet.png",
     "role": "wall",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "wall"
+    ]
+  },
+  "palace-r-floor-a": {
     "box": [
-      872,
-      0,
       140,
-      70
+      570,
+      224,
+      224
+    ],
+    "role": "floor",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "floor"
+    ]
+  },
+  "palace-r-floor-b": {
+    "box": [
+      140,
+      602,
+      224,
+      224
+    ],
+    "role": "floor",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "floor"
+    ]
+  },
+  "palace-r-floor-c": {
+    "box": [
+      140,
+      634,
+      224,
+      224
+    ],
+    "role": "floor",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "floor"
+    ]
+  },
+  "palace-r-floor-d": {
+    "box": [
+      140,
+      666,
+      224,
+      224
+    ],
+    "role": "floor",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "floor"
+    ]
+  },
+  "palace-r-floor-e": {
+    "box": [
+      140,
+      698,
+      224,
+      224
+    ],
+    "role": "floor",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "floor"
+    ]
+  },
+  "palace-r-floor-f": {
+    "box": [
+      140,
+      730,
+      224,
+      224
+    ],
+    "role": "floor",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "floor"
+    ]
+  },
+  "palace-r-floor-g": {
+    "box": [
+      140,
+      762,
+      224,
+      224
+    ],
+    "role": "floor",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "floor"
+    ]
+  },
+  "palace-r-floor-h": {
+    "box": [
+      140,
+      794,
+      224,
+      224
+    ],
+    "role": "floor",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "floor"
+    ]
+  },
+  "palace-r-floor-i": {
+    "box": [
+      140,
+      826,
+      224,
+      224
+    ],
+    "role": "floor",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "floor"
+    ]
+  },
+  "palace-r-run-h": {
+    "box": [
+      560,
+      344,
+      224,
+      224
+    ],
+    "role": "wall",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "wall"
+    ]
+  },
+  "palace-r-run-v": {
+    "box": [
+      248,
+      180,
+      224,
+      224
+    ],
+    "role": "wall",
+    "sheet": "palace-hall-sheet.png",
+    "tags": [
+      "wall"
+    ]
+  },
+  "palace-snake": {
+    "box": [
+      1290,
+      567,
+      161,
+      161
+    ],
+    "sheet": "palace-sheet.png",
+    "tags": [
+      "decor",
+      "temple",
+      "statue"
+    ]
+  },
+  "palace-snake-b": {
+    "box": [
+      1646,
+      567,
+      164,
+      161
+    ],
+    "sheet": "palace-sheet.png",
+    "tags": [
+      "decor",
+      "temple",
+      "statue"
+    ]
+  },
+  "panel-croc": {
+    "box": [
+      9,
+      6,
+      141,
+      156
+    ],
+    "sheet": "temple-panels-sheet.png",
+    "tags": [
+      "wall",
+      "prop"
+    ]
+  },
+  "panel-mask": {
+    "box": [
+      615,
+      6,
+      141,
+      156
+    ],
+    "sheet": "temple-panels-sheet.png",
+    "tags": [
+      "wall",
+      "statue"
+    ]
+  },
+  "panel-snake": {
+    "box": [
+      312,
+      6,
+      141,
+      156
+    ],
+    "sheet": "temple-panels-sheet.png",
+    "tags": [
+      "wall",
+      "prop"
+    ]
+  },
+  "potion-healing": {
+    "box": [
+      20,
+      6,
+      66,
+      94
+    ],
+    "sheet": "treasure.png",
+    "tags": [
+      "item",
+      "consumable",
+      "potion"
+    ]
+  },
+  "potion-mana": {
+    "box": [
+      120,
+      6,
+      64,
+      94
+    ],
+    "sheet": "treasure.png",
+    "tags": [
+      "item",
+      "consumable",
+      "potion"
+    ]
+  },
+  "potion-protection": {
+    "box": [
+      220,
+      6,
+      64,
+      94
+    ],
+    "sheet": "treasure.png",
+    "tags": [
+      "item",
+      "consumable",
+      "potion"
+    ]
+  },
+  "pyramid-capstone": {
+    "box": [
+      822,
+      18,
+      306,
+      324
+    ],
+    "sheet": "sewer-loot-sheet.png",
+    "tags": [
+      "prop",
+      "structure"
+    ]
+  },
+  "ring-ruby": {
+    "box": [
+      712,
+      586,
+      82,
+      74
+    ],
+    "sheet": "treasure.png",
+    "tags": [
+      "item",
+      "gear",
+      "trinket"
+    ]
+  },
+  "round-hut": {
+    "box": [
+      276,
+      708,
+      228,
+      284
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "tags": [
+      "building"
+    ]
+  },
+  "rune-altar": {
+    "box": [
+      132,
+      39,
+      165,
+      105
+    ],
+    "sheet": "sewer-decor-b-sheet.png",
+    "tags": [
+      "structure",
+      "prop"
+    ]
+  },
+  "sat-floor-0-0": {
+    "box": [
+      18,
+      22,
+      126,
+      132
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "floor",
+      "autotile"
+    ]
+  },
+  "sat-floor-0-1": {
+    "box": [
+      18,
+      142,
+      126,
+      252
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "floor",
+      "autotile"
+    ]
+  },
+  "sat-floor-1-0": {
+    "box": [
+      132,
+      22,
+      240,
+      132
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "floor",
+      "autotile"
+    ]
+  },
+  "sat-floor-1-1": {
+    "box": [
+      132,
+      142,
+      240,
+      252
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "floor",
+      "autotile"
+    ]
+  },
+  "sat-floor-2-0": {
+    "box": [
+      246,
+      22,
+      354,
+      132
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "floor",
+      "autotile"
+    ]
+  },
+  "sat-floor-2-1": {
+    "box": [
+      246,
+      142,
+      354,
+      252
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "floor",
+      "autotile"
+    ]
+  },
+  "sat-floor-3-0": {
+    "box": [
+      360,
+      22,
+      468,
+      132
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "floor",
+      "autotile"
+    ]
+  },
+  "sat-floor-3-1": {
+    "box": [
+      360,
+      142,
+      468,
+      252
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "floor",
+      "autotile"
+    ]
+  },
+  "sat-floor-4-0": {
+    "box": [
+      474,
+      22,
+      582,
+      132
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "floor",
+      "autotile"
+    ]
+  },
+  "sat-floor-4-1": {
+    "box": [
+      474,
+      142,
+      582,
+      252
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "floor",
+      "autotile"
+    ]
+  },
+  "sat-floor-5-0": {
+    "box": [
+      588,
+      22,
+      696,
+      132
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "floor",
+      "autotile"
+    ]
+  },
+  "sat-wall-0-3": {
+    "box": [
+      18,
+      382,
+      126,
+      492
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-0-4": {
+    "box": [
+      18,
+      502,
+      126,
+      612
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-1-3": {
+    "box": [
+      132,
+      382,
+      240,
+      492
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-1-4": {
+    "box": [
+      132,
+      502,
+      240,
+      612
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-10-0": {
+    "box": [
+      1158,
+      22,
+      1266,
+      132
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-10-1": {
+    "box": [
+      1158,
+      142,
+      1266,
+      252
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-11-0": {
+    "box": [
+      1272,
+      22,
+      1380,
+      132
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-2-3": {
+    "box": [
+      246,
+      382,
+      354,
+      492
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-2-4": {
+    "box": [
+      246,
+      502,
+      354,
+      612
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-3-3": {
+    "box": [
+      360,
+      382,
+      468,
+      492
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-4-3": {
+    "box": [
+      474,
+      382,
+      582,
+      492
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-5-3": {
+    "box": [
+      588,
+      382,
+      696,
+      492
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-6-0": {
+    "box": [
+      702,
+      22,
+      810,
+      132
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-6-1": {
+    "box": [
+      702,
+      142,
+      810,
+      252
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-6-2": {
+    "box": [
+      702,
+      262,
+      810,
+      372
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-7-0": {
+    "box": [
+      816,
+      22,
+      924,
+      132
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-7-1": {
+    "box": [
+      816,
+      142,
+      924,
+      252
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-7-2": {
+    "box": [
+      816,
+      262,
+      924,
+      372
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-8-0": {
+    "box": [
+      930,
+      22,
+      1038,
+      132
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-8-1": {
+    "box": [
+      930,
+      142,
+      1038,
+      252
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-8-2": {
+    "box": [
+      930,
+      262,
+      1038,
+      372
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-9-0": {
+    "box": [
+      1044,
+      22,
+      1152,
+      132
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-9-1": {
+    "box": [
+      1044,
+      142,
+      1152,
+      252
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-9-2": {
+    "box": [
+      1044,
+      262,
+      1152,
+      372
+    ],
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-cor-se": {
+    "box": "derived",
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-cor-sw": {
+    "box": "derived",
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-left": {
+    "box": "derived",
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-right": {
+    "box": "derived",
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sat-wall-w": {
+    "box": "mirror sat-wall-0-3",
+    "sheet": "sewer-autotile-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "scimitar": {
+    "box": [
+      4,
+      126,
+      292,
+      116
+    ],
+    "sheet": "treasure.png",
+    "tags": [
+      "item",
+      "gear",
+      "weapon"
+    ]
+  },
+  "scroll": {
+    "box": [
+      712,
+      6,
+      84,
+      86
+    ],
+    "sheet": "treasure.png",
+    "tags": [
+      "item",
+      "loot"
+    ]
+  },
+  "sewer-archway": {
+    "box": [
+      1551,
+      288,
+      132,
+      132
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "tags": [
+      "door",
+      "structure"
+    ]
+  },
+  "sewer-bone": {
+    "box": [
+      630,
+      45,
+      138,
+      129
+    ],
+    "sheet": "sewer-decor-a-sheet.png",
+    "tags": [
+      "prop"
+    ]
+  },
+  "sewer-brazier": {
+    "box": [
+      843,
+      6,
+      123,
+      180
+    ],
+    "sheet": "sewer-decor-a-sheet.png",
+    "tags": [
+      "light",
+      "prop"
+    ]
+  },
+  "sewer-canal": {
+    "box": [
+      366,
+      801,
+      147,
+      159
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "tags": [
+      "floor",
+      "water"
+    ]
+  },
+  "sewer-canal-bend": {
+    "box": [
+      537,
+      801,
+      150,
+      159
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "tags": [
+      "floor",
+      "water"
+    ]
+  },
+  "sewer-column": {
+    "box": [
+      813,
+      630,
+      69,
+      159
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "tags": [
+      "structure"
+    ]
+  },
+  "sewer-floor": {
+    "box": [
+      198,
+      213,
+      171,
+      171
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "tags": [
+      "floor"
+    ]
+  },
+  "sewer-floor-dirt": {
+    "box": [
+      1125,
+      267,
+      162,
+      159
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "tags": [
+      "floor"
+    ]
+  },
+  "sewer-floor-moss": {
+    "box": [
+      1308,
+      267,
+      159,
+      162
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "tags": [
+      "floor"
+    ]
+  },
+  "sewer-gate": {
+    "box": [
+      1710,
+      288,
+      129,
+      132
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "tags": [
+      "door"
+    ]
+  },
+  "sewer-grate": {
+    "box": [
+      1125,
+      852,
+      96,
+      102
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "tags": [
+      "floor",
+      "prop"
+    ]
+  },
+  "sewer-lever": {
+    "box": [
+      231,
+      15,
+      147,
+      171
+    ],
+    "sheet": "sewer-decor-a-sheet.png",
+    "tags": [
+      "prop"
+    ]
+  },
+  "sewer-mushrooms": {
+    "box": [
+      414,
+      36,
+      174,
+      135
+    ],
+    "sheet": "sewer-decor-a-sheet.png",
+    "tags": [
+      "plant"
+    ]
+  },
+  "sewer-rune": {
+    "box": [
+      1374,
+      852,
+      96,
+      102
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "tags": [
+      "prop"
+    ]
+  },
+  "sewer-skeleton": {
+    "box": [
+      870,
+      78,
+      90,
+      60
+    ],
+    "sheet": "sewer-decor-b-sheet.png",
+    "tags": [
+      "prop"
+    ]
+  },
+  "sewer-skulls": {
+    "box": [
+      1374,
+      675,
+      96,
+      102
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "tags": [
+      "prop"
+    ]
+  },
+  "sewer-slime": {
+    "box": [
+      6,
+      51,
+      186,
+      129
+    ],
+    "sheet": "sewer-decor-a-sheet.png",
+    "tags": [
+      "prop"
+    ]
+  },
+  "sewer-sludge": {
+    "box": [
+      189,
+      801,
+      150,
+      159
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "tags": [
+      "floor",
+      "water"
+    ]
+  },
+  "sewer-wall": {
+    "box": [
+      1125,
+      45,
+      162,
+      159
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "tags": [
+      "wall"
+    ]
+  },
+  "sewer-water": {
+    "box": [
+      12,
+      801,
+      150,
+      159
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "tags": [
+      "floor",
+      "water"
+    ]
+  },
+  "sewer-water-edge": {
+    "box": [
+      714,
+      801,
+      174,
+      159
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "tags": [
+      "floor",
+      "water"
+    ]
+  },
+  "sewer-waterfall": {
+    "box": [
+      915,
+      678,
+      171,
+      282
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "tags": [
+      "water"
+    ]
+  },
+  "sewer2-c-ne": {
+    "box": "derived",
+    "sheet": "sewer-hd-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sewer2-c-nw": {
+    "box": "derived",
+    "sheet": "sewer-hd-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sewer2-c-se": {
+    "box": "derived",
+    "sheet": "sewer-hd-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sewer2-c-sw": {
+    "box": "derived",
+    "sheet": "sewer-hd-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sewer2-ci-ne": {
+    "box": "derived",
+    "sheet": "toprep1.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sewer2-ci-nw": {
+    "box": "derived",
+    "sheet": "toprep2.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sewer2-ci-se": {
+    "box": "derived (vertical flip)",
+    "sheet": "toprep1.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sewer2-ci-sw": {
+    "box": "derived (vertical flip)",
+    "sheet": "toprep2.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sewer2-fill": {
+    "box": "derived",
+    "sheet": "sewer-hd-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sewer2-floor": {
+    "box": [
+      0,
+      0,
+      256,
+      256
+    ],
+    "sheet": "sewer2-floor.png",
+    "tags": [
+      "floor",
+      "autotile"
+    ]
+  },
+  "sewer2-floor2": {
+    "box": [
+      0,
+      0,
+      256,
+      256
+    ],
+    "sheet": "sewer2-floor2.png",
+    "tags": [
+      "floor",
+      "autotile"
+    ]
+  },
+  "sewer2-w-bottom": {
+    "box": "derived",
+    "sheet": "sewer-hd-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sewer2-w-left": {
+    "box": "derived",
+    "sheet": "sewer-hd-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sewer2-w-right": {
+    "box": "derived",
+    "sheet": "sewer-hd-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sewer2-w-top": {
+    "box": "derived",
+    "sheet": "sewer-hd-sheet.png",
+    "tags": [
+      "wall",
+      "autotile"
+    ]
+  },
+  "sewer2-water": {
+    "box": [
+      300,
+      570,
+      130,
+      130
+    ],
+    "sheet": "sewer-hd-sheet.png",
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ]
+  },
+  "shield-round": {
+    "box": [
+      1210,
+      290,
+      90,
+      92
+    ],
+    "sheet": "treasure.png",
+    "tags": [
+      "item",
+      "gear",
+      "armor"
+    ]
+  },
+  "snake-statue": {
+    "box": [
+      28,
+      524,
+      124,
+      176
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "tags": [
+      "statue"
+    ]
+  },
+  "snakestatue": {
+    "box": [
+      28,
+      524,
+      124,
+      176
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "tags": [
+      "statue"
+    ]
+  },
+  "snakewall": {
+    "box": [
+      604,
+      256,
+      128,
+      116
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "tags": [
+      "wall"
+    ]
+  },
+  "stone-hut": {
+    "box": [
+      16,
+      716,
+      252,
+      276
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "tags": [
+      "building"
+    ]
+  },
+  "sw-cor-ne": {
+    "box": "derived",
+    "sheet": "sewer-hd-sheet.png",
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ]
+  },
+  "sw-cor-nw": {
+    "box": "derived",
+    "sheet": "sewer-hd-sheet.png",
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ]
+  },
+  "sw-cor-se": {
+    "box": "derived",
+    "sheet": "sewer-hd-sheet.png",
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ]
+  },
+  "sw-cor-sw": {
+    "box": "derived",
+    "sheet": "sewer-hd-sheet.png",
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ]
+  },
+  "sw-cross": {
+    "box": "derived",
+    "sheet": "sewer-hd-sheet.png",
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ]
+  },
+  "sw-str-h": {
+    "box": "derived",
+    "sheet": "sewer-hd-sheet.png",
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ]
+  },
+  "sw-str-v": {
+    "box": "derived",
+    "sheet": "sewer-hd-sheet.png",
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ]
+  },
+  "sw-tee-esw": {
+    "box": "derived",
+    "sheet": "sewer-hd-sheet.png",
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ]
+  },
+  "sw-tee-nes": {
+    "box": "derived",
+    "sheet": "sewer-hd-sheet.png",
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ]
+  },
+  "sw-tee-new": {
+    "box": "derived",
+    "sheet": "sewer-hd-sheet.png",
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ]
+  },
+  "sw-tee-nsw": {
+    "box": "derived",
+    "sheet": "sewer-hd-sheet.png",
+    "tags": [
+      "floor",
+      "water",
+      "autotile"
+    ]
+  },
+  "throne": {
+    "box": [
+      1044,
+      0,
+      120,
+      186
+    ],
+    "sheet": "sewer-decor-a-sheet.png",
+    "tags": [
+      "structure"
+    ]
+  },
+  "torch-item": {
+    "box": [
+      1236,
+      198,
+      42,
+      88
+    ],
+    "sheet": "treasure.png",
+    "tags": [
+      "item",
+      "loot"
+    ]
+  },
+  "torch-lit": {
+    "box": [
+      1248,
+      675,
+      96,
+      102
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "tags": [
+      "light",
+      "prop"
+    ]
+  },
+  "torch-out": {
+    "box": [
+      1125,
+      675,
+      96,
+      102
+    ],
+    "sheet": "sewer-tileset-sheet.png",
+    "tags": [
+      "light",
+      "prop"
+    ]
+  },
+  "vial-caustic": {
+    "box": [
+      418,
+      6,
+      66,
+      94
+    ],
+    "sheet": "treasure.png",
+    "tags": [
+      "item",
+      "consumable",
+      "offensive"
+    ]
+  },
+  "vial-poison": {
+    "box": [
+      330,
+      8,
+      44,
+      90
+    ],
+    "sheet": "treasure.png",
+    "tags": [
+      "item",
+      "consumable",
+      "offensive"
+    ]
+  },
+  "wall-a": {
+    "box": [
+      26,
+      18,
+      72,
+      72
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "tags": [
+      "wall"
+    ]
+  },
+  "wall-b": {
+    "box": [
+      128,
+      18,
+      72,
+      72
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "tags": [
+      "wall"
+    ]
+  },
+  "wall-c": {
+    "box": [
+      236,
+      18,
+      72,
+      72
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "tags": [
+      "wall"
+    ]
+  },
+  "wall-col": {
+    "box": [
+      1145,
+      286,
+      60,
+      92
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "tags": [
+      "wall",
+      "corner"
+    ]
+  },
+  "wall-temple": {
+    "box": [
+      188,
+      296,
+      64,
+      64
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "tags": [
+      "wall",
+      "floor"
+    ]
+  },
+  "well": {
+    "box": [
+      1224,
+      724,
+      244,
+      268
+    ],
+    "sheet": "temple-exterior-sheet.png",
+    "tags": [
+      "structure"
     ]
   }
 }

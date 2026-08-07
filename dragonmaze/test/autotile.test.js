@@ -227,9 +227,11 @@ const ROOM = geom([
   }
   assert.ok([...seen].some((k) => k.includes('run')), 'straight runs used');
   assert.ok([...seen].some((k) => k.includes('end-')), 'a terminus used');
-  // A one-cell wall turning gets the THIN elbow, whose arms are the same pixels
-  // as the runs. The chunky quadrant corner would read as a blob here.
-  assert.ok([...seen].some((k) => k.includes('ci-')), 'corner pieces used');
+  // A one-cell wall turning gets the THIN elbow ('el-'), whose arms are the same
+  // pixels as the runs. The chunky quadrant corner ('ci-') is for a thick mass
+  // and would read as a blob on a one-cell partition.
+  assert.ok([...seen].some((k) => k.includes('el-')), 'thin elbows used');
+  assert.ok(![...seen].some((k) => k.includes('ci-')), 'and no chunky corner on a thin wall');
 }
 
 // --- 12. a THICK wall mass turns with the chunky quadrant corner instead ---

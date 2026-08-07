@@ -197,6 +197,29 @@ pickers already route to them, so each one goes live the moment its tile exists:
 
 ### Slicing a whole theme off one sheet
 
+**The palace, current cut:** `tools/slice_palace_hall.py` cuts the whole theme
+out of `art/palace-hall-sheet.png` — ring, both doors, floor, thin runs, elbows,
+termini. The whole thing hangs off one number: a **224px source cell** (7 of the
+floor pattern's 32px periods) holds the sheet's 90px brick run in the middle
+with ~67px of floor either side, so an internal wall lands at **40% of the
+finished 160px tile**. That is what makes palace corridors read as narrow halls
+you walk beside rather than slabs. `--contact` writes
+`docs/palace-hall-tiles.png` to review every piece at once.
+
+Two things to know when re-cutting it. **Every box must dodge the sheet's own
+furniture**: the north wall has a door at x≈545-690 and an internal run hanging
+off it at x≈318-403, so `palace-o-top` is taken from x 850 where the wall is
+clear; floor variants come only from x<400, y>527, west of the lower structures
+and south of the upper ones. Getting this wrong is quiet — a floor tile with a
+brick corner baked in tiles into a grid of stamps across the whole map. **Pieces
+the sheet doesn't draw are mirrored**, which is exact because the room is drawn
+symmetrically.
+
+`slice_palace_room.py` and `art/palace-room-sheet.png` are the previous cut,
+kept for reference. Its walls filled 84% of a tile and had to be warped onto a
+common band because they were hand-drawn at inconsistent widths.
+
+
 `tools/slice_palace_room.py` cuts the entire palace out of
 `art/palace-room-sheet.png`, a finished 8×8 room: outer ring, two doors, cobble
 floor, and internal wall runs. Taking every piece from one sheet is the point —
