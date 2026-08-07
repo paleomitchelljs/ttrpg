@@ -18,7 +18,10 @@ import {
   heroesOf,
 } from '../src/engine/combat.js';
 import { makeSeededRNG } from '../src/engine/rng.js';
+import { maxSpellTier, canLearnSpell } from '../src/engine/rules.js';
 import { consumableById } from '../data/consumables.js';
+import { spellById } from '../data/spells.js';
+import { companionById } from '../data/party.js';
 
 const hero = (over = {}) =>
   makeCombatant({ id: 'hero', name: 'Hero', kind: 'hero', ac: 12, hp: 40, abilities: { dex: 1 },
@@ -476,6 +479,68 @@ const domCaster = (over = {}) =>
   assert.equal(fams[drawn.id].anim?.idle, 'fae-drake-idle', 'the drake brings its strip');
   assert.equal(fams[undrawn.id].anim, null, 'an undrawn familiar has none');
   assert.equal(fams[undrawn.id].emoji, '🐀', 'and falls back to its emoji');
+}
+
+// --- 23. a cast with advantage reports BOTH dice, so the view can show them ---
+{
+  // Two rolls: 2 then 15. Advantage keeps the 15 and the event carries both.
+  const rolls = () => { let i = 0; const seq = [0.05, 0.7, 0.5]; return () => (i < seq.length ? seq[i++] : 0.5); };
+  const castWith = (over, spellId) => {
+    const c = hero({ id: 'hero', abilities: { cha: 0 }, castStat: 'cha', spells: [spellId], ...over });
+    if (over.familiar) c.familiar = over.familiar;
+    const g = foe({ id: 'goblin', hp: 100, ac: 1000 });
+    const { combat } = createCombat([c], [g], () => 0.5);
+    return playerSpell(heroTurn(combat, 'hero'), spellId, g.id, rolls()).find((e) => e.type === 'spell-cast');
+  };
+
+  // Magic Missile carries its own advantage (Shadowdark) — no talent, no familiar.
+  const mm = castWith({}, 'magic-missile');
+  assert.equal(mm.mode, 'advantage', 'Magic Missile always rolls with advantage');
+  assert.equal(mm.advSource, 'spell', 'and the spell itself is the source');
+  assert.deepEqual(mm.dieRolls, [2, 15], 'both dice ride out on the event');
+  assert.equal(mm.natural, 15, 'the kept die is the better one');
+
+  // The Dusk Bat supplies it for Drain Life, and says so.
+  const bat = castWith({ familiar: 'dusk-bat' }, 'drain-life');
+  assert.equal(bat.mode, 'advantage', 'the Dusk Bat grants advantage on Drain Life');
+  assert.equal(bat.advSource, 'familiar', 'credited to the familiar');
+  assert.equal(bat.dieRolls.length, 2, 'and two dice reach the view');
+  assert.equal(bat.famAid?.effect, 'drain-boost', 'the log line still names the bat');
+
+  // A Spell Focus talent supplies it for its own school.
+  const focus = castWith({ talents: ['focus-fire'] }, 'ember-bolt');
+  assert.equal(focus.advSource, 'focus', 'Fire Focus grants advantage on a fire spell');
+
+  // No source: one die, straight, and nothing to explain.
+  const plain = castWith({}, 'ember-bolt');
+  assert.equal(plain.mode, 'straight', 'an unaided cast rolls once');
+  assert.equal(plain.advSource, null, 'with no advantage to credit');
+  assert.deepEqual(plain.dieRolls, [2], 'and reports the single die');
+}
+
+// --- 24. spell tiers gate learning, and nobody opens play above their tier ---
+{
+  assert.equal(maxSpellTier(1), 1, 'a 1st-level caster reaches tier 1');
+  assert.equal(maxSpellTier(2), 1, 'still tier 1 at 2nd');
+  assert.equal(maxSpellTier(3), 2, 'tier 2 opens at 3rd');
+  assert.equal(maxSpellTier(5), 3, 'tier 3 opens at 5th');
+  assert.equal(maxSpellTier(9), 5, 'tier 5 opens at 9th');
+  assert.equal(maxSpellTier(20), 5, 'and stops there');
+
+  const fireball = spellById('flame-wave');
+  const burningHands = spellById('burning-hands');
+  assert.equal(fireball.tier, 3, 'Fireball is tier 3');
+  assert.equal(burningHands.tier, 1, 'Burning Hands is its tier-1 stand-in');
+  assert.ok(!canLearnSpell(1, fireball), 'a 1st-level caster cannot learn Fireball');
+  assert.ok(canLearnSpell(5, fireball), 'a 5th-level caster can');
+  assert.ok(canLearnSpell(1, burningHands), 'Burning Hands is open from 1st');
+
+  // The arcanist starts inside tier 1 rather than holding two tier-3 spells.
+  const blade = companionById('dragonkin-spellblade');
+  for (const sid of blade.spells) {
+    assert.ok(spellById(sid), `${sid} is a real spell`);
+    assert.ok(canLearnSpell(1, spellById(sid)), `the Spellblade opens with ${sid} inside tier 1`);
+  }
 }
 
 console.log('combat.test.js: all assertions passed ✓');

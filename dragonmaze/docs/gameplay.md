@@ -78,7 +78,7 @@ Lifecycle entry points: `init()` (boot, load save), `newGame(seed?)`,
 - **Companions** are combatant templates (same schema as monsters). Built-ins:
   `spawnee` (vampire-spawn warrior, `relentless`, `darkvision`, casts
   drain-life/dominate-undead on CHA), `dragonkin-swashbuckler` (pure DEX duelist,
-  no magic), `dragonkin-spellblade` (INT arcanist, full offensive spellbook),
+  no magic), `dragonkin-spellblade` (INT arcanist, tier-1 offensive book),
   `beren` (warrior, `beast-dread`+`animal-friend` traits), `turquoise` (Yuan-Ti
   barbarian, `relentless`, `darkvision`), `gowra` (Yuan-Ti WIS priest,
   heal/smite/drain). Key fields: `hitDie` (HP/level), `abilities` (modifiers),
@@ -141,7 +141,7 @@ exists yet; add one in `hasLight`.
 ### Loot pickup (`move`)
 
 Walking onto a loot cell (`dungeon.loot`) resolves by type: `tome` → a random
-caster with an unknown tome spell learns it (else +25 gold); `item` → a pinned
+caster with an unknown tome spell **within their tier** learns it (else +25 gold); `item` → a pinned
 magic item into `inventory` (else +20 gold if owned); `consumable` → into the
 pouch; else gold (× `lootScale(depth)`, +25% with the `pack-rat` familiar). Loot
 tables: `data/treasure.js` (d6 gold table), rolled in `src/world/loot.js` with
@@ -191,8 +191,19 @@ The single home for every game number — nothing elsewhere hard-codes a rule.
 - **`resolveSpellCast(caster, spell, rng, opts)`** — `d20 + castStat mod +
   spellPower` vs DC (`10 + spell.tier`, `opts.dcMod` shifts it). Nat 20 always
   succeeds **and crits** (doubles the effect); nat 1 always fizzles. Advantage
-  from Spell Focus (`focus-<school>` talent), `spell.castAdvantage` (Magic
-  Missile), or `opts.advantage` (familiar knacks).
+  from `spell.castAdvantage` (Magic Missile), Spell Focus (`focus-<school>`
+  talent), or `opts.advantage` (familiar knacks) — in that precedence, reported
+  as `advSource: 'spell'|'focus'|'familiar'`. Returns `dieRolls`/`mode` alongside
+  the kept `natural`, so a cast's advantage draws both dice in the cinematic the
+  way an attack's does (`spellPayload`/`castAdvWhy` in combatView.js name the
+  source on the ▲ banner and in the log).
+- **Spell tiers**: `maxSpellTier(level)` — a caster reaches a new tier every
+  other level (tier 1 at 1st, 2 at 3rd, 3 at 5th, 4 at 7th, 5 at 9th, capped by
+  `MAX_SPELL_TIER` = 5). `canLearnSpell(level, spell)` gates every path by which
+  a caster *learns* a spell: the level-up pick (`chooseAdvance('spell')`, offered
+  via `learnableSpells` in main.js), and found tomes (the loot branch in
+  gameState.js). A character's **starting** list is authored data and may carry a
+  signature power above tier (Spawnee's vampiric drain, Gowra's serpent prayers).
 - **Parley/renown**: `resolveParleyCheck` (CHA + `mod` vs DC, nat-20/nat-1 rule),
   `parleyDC` (11 willing / 13 wary), `dispositionLabel`, `FACTION_ENEMIES`,
   `clampRep` (band −10..+10).
@@ -322,12 +333,24 @@ knows a spell if it's in their resolved `spells` and not in `burned`. On success
 also mishaps. Burned lists mirror to `run.burnedSpells` between fights
 (`syncDragonHp`).
 
-Current spellbook: `ember-bolt` (fire 1d6), `magic-missile` (force 1d4, cast with
-advantage, `tome`), `smite` (radiant 1d6, `tome`), `healing-word`/Cure Wounds
-(holy 1d6 heal, revives), `flame-wave`/Fireball (fire 3d6 all, `saveDC` 13),
-`lightning-bolt` (storm 3d6 all, `tome`), `drain-life` (1d6 + lifesteal,
-`tome:false`), `dominate-undead` (`dominate`, `tome:false`), `summon-ember`
-(`summon: 'ember-spirit'`, `tome`).
+`tier` sets the DC **and** gates learning (`canLearnSpell`, §5) — tier 1 from
+1st level, tier 2 from 3rd, tier 3 from 5th. The level-up dropdown labels each
+offer with its tier.
+
+Current spellbook, by tier —
+**tier 1:** `ember-bolt` (fire 1d6), `magic-missile` (force 1d4, always cast with
+advantage, `tome`), `burning-hands` (fire 1d6 all, `saveDC` 11, `tome`), `smite`
+(radiant 1d6, `tome`), `healing-word`/Cure Wounds (holy 1d6 heal, revives).
+**tier 2:** `drain-life` (1d6 + lifesteal, `tome:false`), `dominate-undead`
+(`dominate`, `tome:false`), `summon-ember` (`summon: 'ember-spirit'`, `tome`).
+**tier 3:** `flame-wave`/Fireball (fire 3d6 all, `saveDC` 13), `lightning-bolt`
+(storm 3d6 all, `tome`).
+
+Starting books stay inside tier 1 except for innate powers: the spellblade opens
+with ember-bolt / magic-missile / burning-hands / cure wounds (Fireball and
+Lightning Bolt are hers to learn at 5th), Spawnee with her tier-2 vampire powers,
+Gowra with cure wounds, smite, and her granted drain. Imported portal casters map
+by keyword (`mapSpell` in importHero.js) and land on tier-1 spells only.
 
 **Minions** (`applyCastSuccess`, one per caster): `summon` inserts a temporary
 ally right after the caster in the order; `dominate` flips a foe to `side:'ally'`
@@ -344,7 +367,9 @@ out-of-combat two go through `partyHasFamiliar` in gameState.js (`hasLight` for
 the beetle, the loot branch for the rat). When a knack actually changes a roll,
 `familiarCredit` tags the event with `{name, effect}` and the combat log names
 the familiar (`FAM_AID` in combatView.js) — otherwise a −1 DC or +1 damage is
-invisible. A familiar with `anim` strips draws as a sprite on its card
+invisible. The bat's advantage additionally shows as two dice on the cast
+cinematic (see `resolveSpellCast` in §5). Note the bat's knack keys off
+`spell.drain`, so it only ever fires for `drain-life`. A familiar with `anim` strips draws as a sprite on its card
 (`fae-drake` only, so far); the rest fall back to their emoji.
 
 **Spell Focus** talents are generated per school the caster knows

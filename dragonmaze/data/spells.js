@@ -12,7 +12,11 @@
 // target: 'enemy' (one foe), 'ally' (one hero — works on the fallen!),
 // 'all-enemies' (everyone saves vs saveDC for half), 'self' (conjuration).
 // `school` groups spells for the Spell Focus talent (advantage on that school).
-// `tier` sets the DC and, at the table, when a caster could learn the spell.
+// `tier` sets the DC and gates learning: a caster unlocks a tier every other
+// level (1st/3rd/5th/7th/9th — see maxSpellTier in engine/rules.js), so Fireball
+// is out of reach until 5th and a level-1 arcanist burns things with Burning
+// Hands instead. Only *learning* is gated; a character's starting list is
+// authored and may carry a signature power above their tier.
 
 export const SPELLS = [
   {
@@ -32,16 +36,28 @@ export const SPELLS = [
     castDC: 11,
     target: 'enemy',
     dice: '1d4',
-    castAdvantage: true, // Shadowdark: you cast Magic Missile with advantage
+    castAdvantage: true, // Shadowdark: you always cast Magic Missile with advantage
     school: 'force',
     tome: true,
     blurb: 'unerring darts of force; advantage to cast, never a whiff (1d4)',
   },
   {
+    id: 'burning-hands',
+    name: 'Burning Hands',
+    tier: 1,
+    castDC: 11,
+    target: 'all-enemies',
+    dice: '1d6',
+    saveDC: 11,
+    school: 'fire',
+    tome: true,
+    blurb: 'a sheet of flame washes over every enemy, save for half (1d6)',
+  },
+  {
     id: 'smite',
     name: 'Smite',
-    tier: 2,
-    castDC: 12,
+    tier: 1, // a single 1d6 on one foe — the same weight as Ember Bolt
+    castDC: 11,
     target: 'enemy',
     dice: '1d6',
     school: 'radiant',

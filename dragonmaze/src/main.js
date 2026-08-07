@@ -375,7 +375,7 @@ function growthInfo(id, c, g) {
     abilities: c.abilities,
     abilityCap: rulesRef.ABILITY_CAP,
     talentOptions,
-    learnable: c.castStat ? learnableSpells(id) : [],
+    learnable: c.castStat ? learnableSpells(id, g.level) : [],
     // A familiar is a talent-slot pick that belongs to THIS hero — offered until
     // they have one; choosing it opens the familiar menu.
     familiarOptions: c.familiar ? [] : FAMILIARS.map((f) => ({ id: f.id, name: f.name, blurb: f.blurb })),
@@ -388,9 +388,14 @@ function nextLevelXp(level) {
   return level < LEVEL_XP.length ? LEVEL_XP[level] : null;
 }
 
-function learnableSpells(id) {
+// What a caster may learn now: an unknown tome spell of a tier they've reached
+// (a new tier every other level — see maxSpellTier). Out-of-tier spells simply
+// aren't offered, so Fireball waits for 5th.
+function learnableSpells(id, level) {
   const known = game.heroWithGrowth(id)?.spells ?? [];
-  return SPELLS_ALL.filter((sp) => sp.tome !== false && !known.includes(sp.id));
+  return SPELLS_ALL.filter(
+    (sp) => sp.tome !== false && !known.includes(sp.id) && rulesRef.canLearnSpell(level, sp)
+  );
 }
 
 function equipInfo(charKey, weapon = null) {

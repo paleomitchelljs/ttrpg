@@ -126,7 +126,8 @@ async function presentEvent(els, ev) {
     }
     case 'spell-cast': {
       await playCinematic(spellPayload(ev));
-      const math = `(${ev.total} vs DC ${ev.dc}, on ${(ev.stat ?? 'cha').toUpperCase()})`;
+      const why = castAdvWhy(ev);
+      const math = `(${ev.total} vs DC ${ev.dc}, on ${(ev.stat ?? 'cha').toUpperCase()}${ev.advantage ? `, advantage${why ? ` from ${why}` : ''}` : ''})`;
       if (ev.famAid) appendLog(els.log, famAidLine(ev.famAid), 'log-dim');
       appendLog(
         els.log,
@@ -656,13 +657,24 @@ function breathPayload(ev) {
   };
 }
 
+// Why a cast rolled two dice — named on the advantage banner so the player can
+// see the knack working (Magic Missile's own advantage, a Focus talent, a
+// familiar) rather than guessing at it.
+function castAdvWhy(ev) {
+  if (ev.advSource === 'spell') return ev.name;
+  if (ev.advSource === 'focus') return 'Spell Focus';
+  if (ev.advSource === 'familiar') return ev.famAid?.name ?? 'your familiar';
+  return null;
+}
+
 function spellPayload(ev) {
   return {
     title: `${ev.caster} casts ${ev.name}!`,
     sides: 20,
-    rolls: [ev.natural],
+    rolls: ev.dieRolls ?? [ev.natural],
     kept: ev.natural,
-    mode: 'straight',
+    mode: ev.mode ?? 'straight',
+    modeWhy: castAdvWhy(ev),
     parts: ev.bonus ? [{ label: (ev.stat ?? 'cha').toUpperCase(), value: ev.bonus }] : [],
     total: ev.total,
     targetLabel: `DC ${ev.dc}`,
@@ -690,7 +702,7 @@ function playCinematic(p) {
         <div class="dice-title">${p.title}</div>
         ${p.targetLabel ? `<div class="dice-target">vs ${p.targetLabel}</div>` : ''}
         <div class="dice-tray">${p.rolls.map(() => dieHtml(p.sides, small)).join('')}</div>
-        ${p.mode === 'advantage' ? '<div class="dice-mode">▲ advantage, keep the best</div>' : ''}
+        ${p.mode === 'advantage' ? `<div class="dice-mode">▲ advantage${p.modeWhy ? ` (${p.modeWhy})` : ''}, keep the best</div>` : ''}
         ${p.mode === 'disadvantage' ? '<div class="dice-mode">▼ disadvantage, keep the worst</div>' : ''}
         <div class="dice-parts">${p.parts
           .filter((x) => x.value !== 0)

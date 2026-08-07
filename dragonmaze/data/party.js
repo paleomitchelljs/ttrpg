@@ -31,6 +31,8 @@ export const COMPANIONS = [
     blurb: 'A friendly vampire spawn warrior; her stolen life keeps her on her feet, and the mindless dead answer to her.',
     role: 'Vampire Spawn',
     castStat: 'cha', // innate blood-magic — force of will
+    // Both tier 2: innate vampire powers, not spells she studied, so they're
+    // hers from the start rather than gated by maxSpellTier.
     spells: ['drain-life', 'dominate-undead'],
   },
   {
@@ -66,7 +68,10 @@ export const COMPANIONS = [
     blurb: 'The party’s arcanist: fire in one hand, mending in the other.',
     role: 'Arcane Spellblade',
     castStat: 'int', // trained arcane magic
-    spells: ['ember-bolt', 'magic-missile', 'healing-word', 'flame-wave', 'lightning-bolt'],
+    // A level-1 arcanist knows tier-1 spells only (see maxSpellTier). Fireball
+    // and Lightning Bolt are tier 3 — hers to learn at 5th, from a level-up
+    // pick or a found tome. Burning Hands is the tier-1 way to burn a whole room.
+    spells: ['ember-bolt', 'magic-missile', 'burning-hands', 'healing-word'],
   },
   {
     id: 'beren',
@@ -123,6 +128,8 @@ export const COMPANIONS = [
     walk: 'gowra-walk',
     darkvision: true, // Yuan-Ti serpent-sight — widens the party's view underground
     castStat: 'wis', // divine prayers — a priest of the serpent gods
+    // Cure Wounds and Smite are tier 1; the venom-drain (tier 2) is the gift of
+    // her serpent gods, granted rather than learned.
     spells: ['healing-word', 'smite', 'drain-life'],
     blurb: 'A Yuan-Ti priest of the serpent gods; her prayers mend the faithful, and her venom-blessed blade drinks the life of the unworthy.',
     role: 'Serpent Priest',

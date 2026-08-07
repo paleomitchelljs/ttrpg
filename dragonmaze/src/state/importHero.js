@@ -29,8 +29,11 @@ const STRIP_BY_CLASS = [
 
 function mapSpell(name) {
   if (/heal|cure|mend|restor/i.test(name)) return 'healing-word';
-  if (/wave|blast|burst|storm|fear|sleep/i.test(name)) return 'flame-wave';
-  if (/fire|burn|flame|bolt|missile|zap|shock/i.test(name)) return 'ember-bolt';
+  if (/missile/i.test(name)) return 'magic-missile';
+  // Anything room-wide lands on the tier-1 Burning Hands, not the tier-3
+  // Fireball — an imported level-1 caster shouldn't arrive holding a Fireball.
+  if (/wave|blast|burst|storm|fear|sleep|hands/i.test(name)) return 'burning-hands';
+  if (/fire|burn|flame|bolt|zap|shock/i.test(name)) return 'ember-bolt';
   return null;
 }
 

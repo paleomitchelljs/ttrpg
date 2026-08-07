@@ -468,7 +468,16 @@ check('portal characters convert into sane companions', () => {
     hp: { max: 6 }, ac: 11, gear: [{ name: 'Staff' }],
     spells: ['Burning Hands', 'Cure Wounds'],
   });
-  assert.deepEqual(caster.spells.sort(), ['ember-bolt', 'healing-word']);
+  // Burning Hands now maps to the real tier-1 spell, not the nearest bolt.
+  assert.deepEqual(caster.spells.sort(), ['burning-hands', 'healing-word']);
+  // An imported level-1 caster never arrives holding a tier-3 spell.
+  const areaCaster = portalToCompanion({
+    name: 'Boomy', classId: 'wizard', level: 1,
+    stats: { STR: 8, DEX: 12, CON: 10, INT: 16, WIS: 10, CHA: 12 },
+    hp: { max: 6 }, ac: 11, gear: [{ name: 'Staff' }],
+    spells: ['Sleep', 'Magic Missile'],
+  });
+  assert.deepEqual(areaCaster.spells.sort(), ['burning-hands', 'magic-missile']);
   assert.equal(portalToCompanion({ nonsense: true }), null);
   assert.equal(portalToCompanion(null), null);
 });

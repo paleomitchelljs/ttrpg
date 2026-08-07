@@ -202,7 +202,9 @@ function growthHtml(subject) {
       `<option value="${type}:${id}"${blurb ? ` title="${attr(blurb)}"` : ''}>${label}</option>`;
     const group = (label, opts) => (opts ? `<optgroup label="${label}">${opts}</optgroup>` : '');
     const talents = group('Talents', g.talentOptions.map((t) => opt('talent', t.id, t.name, t.blurb)).join(''));
-    const spells = group('Spells', g.learnable.map((sp) => opt('spell', sp.id, `Learn ${sp.name}`, sp.blurb)).join(''));
+    // Only spells of a tier the caster has reached are offered (main.js
+    // learnableSpells); the tier is on the label so the gate is visible.
+    const spells = group('Spells', g.learnable.map((sp) => opt('spell', sp.id, `Learn ${sp.name} (tier ${sp.tier ?? 1})`, sp.blurb)).join(''));
     const familiar = group('Familiar', (g.familiarOptions ?? []).map((f) => opt('familiar', f.id, f.name, f.blurb)).join(''));
     const kinds = ['a talent', g.learnable.length && 'a spell', g.familiarOptions?.length && 'a familiar'].filter(Boolean);
     html += `

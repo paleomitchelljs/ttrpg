@@ -13,7 +13,7 @@ import { familiarById } from '../../data/familiars.js';
 import { ITEMS, itemById } from '../../data/items.js';
 import { consumableById } from '../../data/consumables.js';
 import { parseHeroExport } from './importHero.js';
-import { bumpDamage, resolveParleyCheck } from '../engine/rules.js';
+import { bumpDamage, resolveParleyCheck, canLearnSpell } from '../engine/rules.js';
 import { SPELLS } from '../../data/spells.js';
 import { talentById } from '../../data/talents.js';
 import { makeCombatant, makeDragonCombatant } from '../engine/entities.js';
@@ -274,6 +274,7 @@ export function chooseAdvance(charId, type, arg = null) {
     if (pend.talent <= 0) return; // learning a spell spends a talent slot
     const spell = SPELLS.find((sp) => sp.id === arg && sp.tome !== false);
     if (!spell || (heroWithGrowth(charId)?.spells ?? []).includes(arg)) return;
+    if (!canLearnSpell(g.level, spell)) return; // a tier this caster hasn't reached
     g.choices.push({ type: 'spell', spellId: arg });
   } else if (type === 'familiar') {
     if (pend.talent <= 0) return; // taking a familiar spends a talent slot
@@ -695,14 +696,21 @@ export function move(dx, dy) {
     const [loot] = d.loot.splice(lootIdx, 1);
     if (loot.tome) {
       // A caster among the party studies the tome — dragons are beasts, not
-      // bookworms. Pick a caster hero who has an unknown tome spell to learn.
+      // bookworms. Pick a caster hero who has an unknown tome spell to learn,
+      // and only one within reach of their tier (a 1st-level arcanist can't
+      // read Fireball off the page). Nobody eligible → the tome is sold.
       const casters = (run.party ?? [])
         .map((s) => heroWithGrowth(s.id))
         .filter((h) => h?.castStat)
         .map((h) => ({
           id: h.id,
           name: h.name,
-          unknown: SPELLS.filter((sp) => sp.tome !== false && !h.spells.includes(sp.id)),
+          unknown: SPELLS.filter(
+            (sp) =>
+              sp.tome !== false &&
+              !h.spells.includes(sp.id) &&
+              canLearnSpell(state.meta.heroGrowth?.[h.id]?.level ?? 1, sp)
+          ),
         }))
         .filter((h) => h.unknown.length);
       if (casters.length) {

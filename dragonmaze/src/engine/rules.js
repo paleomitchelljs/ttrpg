@@ -166,8 +166,11 @@ export function resolveSpellCast(caster, spell, rng = Math.random, opts = {}) {
   // Advantage on the cast comes from Spell Focus (talent, matched school), a
   // spell cast with advantage (Shadowdark's Magic Missile), or a familiar knack
   // the caller passes in (opts.advantage, e.g. the Dusk Bat on Drain Life).
+  // advSource names which one, so the dice cinematic can say why the second die
+  // is on the table; both dice ride out on dieRolls/mode the way an attack's do.
   const focused = !!(spell.school && caster.talents?.includes(`focus-${spell.school}`));
-  const advantage = focused || !!spell.castAdvantage || !!opts.advantage;
+  const advSource = spell.castAdvantage ? 'spell' : focused ? 'focus' : opts.advantage ? 'familiar' : null;
+  const advantage = !!advSource;
   const die = d20({ rng, advantage });
   // Casting keys off the caster's spellcasting ability (Shadowdark: wizards
   // INT, priests WIS; our dragon and vampire cast on CHA). Defaults to CHA.
@@ -182,7 +185,22 @@ export function resolveSpellCast(caster, spell, rng = Math.random, opts = {}) {
   const dc = (spell.castDC ?? 10 + (spell.tier ?? 1)) + (opts.dcMod ?? 0);
   const success = die.total !== 1 && (die.total === 20 || total >= dc);
   const crit = die.total === 20; // a natural 20 doubles the spell's numerical effect
-  return { natural: die.total, bonus, stat, total, dc, success, crit, focused };
+  return { natural: die.total, dieRolls: die.rolls, mode: die.mode, advantage, advSource, bonus, stat, total, dc, success, crit, focused };
+}
+
+// Shadowdark gates spells by tier: a caster unlocks a new tier every other
+// level — tier 1 at 1st, tier 2 at 3rd, tier 3 at 5th, tier 4 at 7th, tier 5 at
+// 9th. This gates what a caster may LEARN (a level-up pick or a found tome). A
+// character's starting spells are authored data and may include a signature
+// power above their tier (Spawnee's vampiric drain, Gowra's serpent prayers).
+export const MAX_SPELL_TIER = 5;
+
+export function maxSpellTier(level) {
+  return Math.max(1, Math.min(MAX_SPELL_TIER, Math.ceil((level ?? 1) / 2)));
+}
+
+export function canLearnSpell(level, spell) {
+  return (spell?.tier ?? 1) <= maxSpellTier(level);
 }
 
 // ---------------------------------------------------------------- parley & renown
