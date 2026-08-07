@@ -72,7 +72,7 @@ export const COMPANIONS = [
     // A level-1 arcanist knows tier-1 spells only (see maxSpellTier). Fireball
     // and Lightning Bolt are tier 3 — hers to learn at 5th, from a level-up
     // pick or a found tome. Burning Hands is the tier-1 way to burn a whole room.
-    spells: ['ember-bolt', 'magic-missile', 'burning-hands', 'healing-word'],
+    spells: ['ember-bolt', 'magic-missile', 'burning-hands', 'healing-word', 'acid-arrow', 'sleep'],
   },
   {
     id: 'beren',
@@ -129,9 +129,9 @@ export const COMPANIONS = [
     walk: 'gowra-walk',
     darkvision: true, // Yuan-Ti serpent-sight — widens the party's view underground
     castStat: 'wis', // divine prayers — a priest of the serpent gods
-    // Two tier-1 prayers, the Shadowdark level-1 priest's allotment. Life-drain
-    // is Spawnee's alone (see drain-life in data/spells.js).
-    spells: ['healing-word', 'smite'],
+    // Tier-1 prayers only. Life-drain is Spawnee's alone (see drain-life in
+    // data/spells.js); Holy Weapon is the priest's own blessing.
+    spells: ['healing-word', 'smite', 'holy-weapon'],
     blurb: 'A Yuan-Ti priest of the serpent gods; her prayers mend the faithful, and her venom-blessed khopesh answers the unworthy.',
     role: 'Serpent Priest',
   },

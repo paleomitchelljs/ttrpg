@@ -34,19 +34,40 @@ const isHero = (c) => c.side === 'hero';
 const onHeroSide = (c) => !isFoe(c);
 const aiRun = (c) => isFoe(c) || isAlly(c);
 
-// ---- conditions: timed buffs/debuffs from Phase-2 consumables ---------------
-// A condition is { id, rounds, ac?, disadv?, dot?:{amount,dtype} }.
+// ---- conditions: timed buffs/debuffs from consumables and spells ------------
+// A condition is { id, rounds, ac?, disadv?, dot?:{amount,dtype}, toHit?,
+// damage?, disable?, wakeOnDamage?, focusOf? }.
+//   toHit/damage  — sharpen the owner's swings (Holy Weapon).
+//   disable       — the owner loses their turns, and anyone striking them has
+//                   advantage (Sleep, Hold Person).
+//   wakeOnDamage  — drops the moment the owner takes a hit (Sleep).
+//   focusOf       — a caster's id: the condition lives only while that caster
+//                   holds focus, so it carries no `rounds` of its own.
 function addCondition(c, cond) {
   c.conditions = (c.conditions ?? []).filter((k) => k.id !== cond.id); // refresh, don't stack
   c.conditions.push({ ...cond });
 }
+function dropCondition(c, id) {
+  const had = (c.conditions ?? []).some((k) => k.id === id);
+  c.conditions = (c.conditions ?? []).filter((k) => k.id !== id);
+  return had;
+}
 const condAc = (c) => (c.conditions ?? []).reduce((n, k) => n + (k.ac ?? 0), 0);
 const condDisadv = (c) => (c.conditions ?? []).some((k) => k.disadv);
-// resolveAttack options folding in the attacker's greased footing and the
-// target's ward.
+const condToHit = (c) => (c.conditions ?? []).reduce((n, k) => n + (k.toHit ?? 0), 0);
+const condDamage = (c) => (c.conditions ?? []).reduce((n, k) => n + (k.damage ?? 0), 0);
+/** Asleep, held — out of the fight until it wears off. */
+function disabledBy(c) {
+  return (c.conditions ?? []).find((k) => k.disable);
+}
+// resolveAttack options folding in the attacker's greased footing and blessed
+// weapon, and the target's ward and helplessness.
 const atkOpts = (attacker, target, extra = {}) => ({
   ...extra,
+  advantage: !!extra.advantage || !!disabledBy(target),
   disadvantage: !!extra.disadvantage || condDisadv(attacker),
+  toHitBonus: condToHit(attacker),
+  damageBonus: condDamage(attacker),
   acBonus: condAc(target),
 });
 // Age the just-finished combatant's conditions: apply DoT, then expire timed
@@ -59,7 +80,10 @@ function tickConditions(combat, c, events) {
       c.hp.current = Math.max(0, c.hp.current - k.dot.amount);
       events.push({ type: 'condition-dot', id: c.id, who: c.name, cond: k.id, amount: k.dot.amount, hpAfter: c.hp.current, dtype: k.dot.dtype ?? 'fire' });
     }
-    if (--k.rounds > 0) remain.push(k);
+    // A focus-held condition has no clock of its own — it lasts exactly as long
+    // as its caster keeps concentrating (see tickFocus / breakFocus).
+    if (k.focusOf) remain.push(k);
+    else if (--k.rounds > 0) remain.push(k);
     else events.push({ type: 'condition-end', id: c.id, who: c.name, cond: k.id });
   }
   c.conditions = remain;
@@ -68,6 +92,113 @@ function tickConditions(combat, c, events) {
     else if (c.kind === 'dragon') checkDefeat(combat, events);
     else { events.push({ type: 'hero-down', id: c.id, who: c.name }); checkDefeat(combat, events); }
   }
+}
+
+// ---- focus: spells that last while the caster concentrates ------------------
+// Shadowdark's Focus, as the system guide states it: one focus spell at a time;
+// a spellcasting check at the start of each of your turns keeps it up; taking a
+// hit forces an immediate check; an ordinary failure just ends it, but a
+// natural 1 is a full critical failure (burned until rest, plus a mishap).
+//
+// The caster carries `focus = { spellId, name, targetId, condId, dice, dtype }`
+// and the target carries the matching condition tagged `focusOf: caster.id`.
+
+/**
+ * Lay a spell's lingering effect on a target: a fixed-duration condition, a
+ * focus-held one, or both. `rounds` may be a dice string ('1d4' for Sleep), and
+ * a nat-20 cast doubles the duration the way it doubles any other number.
+ */
+function applySpellCond(combat, caster, target, spell, cast, rng, events) {
+  const focused = !!spell.focus;
+  const src = spell.focus?.cond ?? spell.cond;
+  if (!src) return;
+  const cond = { ...src };
+  if (focused) {
+    // One focus at a time (Shadowdark): starting this one drops the last.
+    breakFocus(combat, caster, 'recast', events);
+    delete cond.rounds;
+    cond.focusOf = caster.id;
+    caster.focus = {
+      spellId: spell.id, name: spell.name, targetId: target.id, condId: cond.id,
+      dice: spell.focus.dice ?? null, dtype: spell.dtype ?? spell.focus.dtype ?? 'fire',
+    };
+  } else {
+    const n = typeof cond.rounds === 'string' ? roll(cond.rounds, rng).total : (cond.rounds ?? 1);
+    cond.rounds = cast?.crit ? n * 2 : n;
+  }
+  addCondition(target, cond);
+  events.push({
+    type: 'condition-start', targetId: target.id, who: target.name,
+    cond: cond.id, rounds: cond.rounds ?? null, focus: focused,
+    casterId: caster.id, caster: caster.name, spellId: spell.id, name: spell.name,
+    disable: !!cond.disable, toHit: cond.toHit ?? 0, damage: cond.damage ?? 0,
+  });
+}
+
+/** Lift a caster's focus and the condition it was holding on its target. */
+function breakFocus(combat, caster, reason, events) {
+  const f = caster?.focus;
+  if (!f) return;
+  caster.focus = null;
+  const target = combat.combatants.find((c) => c.id === f.targetId);
+  if (target && f.condId) dropCondition(target, f.condId);
+  events.push({
+    type: 'focus-end', casterId: caster.id, caster: caster.name,
+    spellId: f.spellId, name: f.name, who: target?.name ?? null, reason,
+  });
+}
+
+/**
+ * One upkeep check. Called at the start of the caster's turn, and again
+ * whenever they take a hit. Holding it deals the spell's ongoing dice.
+ */
+function checkFocus(combat, caster, rng, events, trigger) {
+  const f = caster?.focus;
+  if (!f) return;
+  // A focus tick damages its target, which runs afterDamage, which checks that
+  // target's own focus. Two casters focused on each other would ping-pong, so a
+  // check never re-enters itself.
+  if (caster.focusChecking) return;
+  if (!alive(caster)) return breakFocus(combat, caster, 'down', events);
+  const target = combat.combatants.find((c) => c.id === f.targetId);
+  if (!target || !alive(target)) return breakFocus(combat, caster, 'target-gone', events);
+
+  const spell = spellById(f.spellId);
+  const check = resolveSpellCast(caster, spell, rng, {});
+  events.push({
+    type: 'focus-check', casterId: caster.id, caster: caster.name,
+    spellId: f.spellId, name: f.name, trigger, ...check,
+  });
+  if (!check.success) {
+    // A natural 1 is a critical failure like any other: the spell is lost until
+    // the party rests, and the backlash lands.
+    if (check.natural === 1) {
+      if (!caster.burned.includes(f.spellId)) caster.burned.push(f.spellId);
+      breakFocus(combat, caster, 'mishap', events);
+      applyCastMishap(combat, caster, rng, events);
+    } else {
+      breakFocus(combat, caster, 'lost', events);
+    }
+    return;
+  }
+  // Held. An ongoing-damage focus (Acid Arrow) bites again; a nat-20 doubles it.
+  if (!f.dice) return;
+  const rolled = roll(f.dice, rng).total;
+  const amount = check.crit ? rolled * 2 : rolled;
+  caster.focusChecking = true;
+  const dealt = applyDamage(target, amount, f.dtype ?? 'fire', events);
+  events.push({
+    type: 'focus-tick', casterId: caster.id, caster: caster.name, name: f.name,
+    targetId: target.id, target: target.name, damage: dealt,
+    hpAfter: target.hp.current, dtype: f.dtype ?? 'fire', crit: check.crit,
+  });
+  afterDamage(combat, target, rng, events);
+  caster.focusChecking = false;
+}
+
+/** Start of a combatant's turn: keep any focus they're holding alive. */
+function beginTurn(combat, c, rng, events) {
+  if (c?.focus) checkFocus(combat, c, rng, events, 'turn');
 }
 
 export function currentCombatant(combat) {
@@ -173,11 +304,11 @@ export function createCombat(heroes, monsters, rng = Math.random, label = null) 
   ];
   // A downed companion (carried into the fight at 0 HP) never gets a turn
   // unless revived; make sure the opening turn belongs to someone standing.
-  if (!alive(currentCombatant(combat))) advanceTurn(combat, events);
+  if (!alive(currentCombatant(combat))) advanceTurn(combat, events, rng);
   return { combat, events };
 }
 
-function advanceTurn(combat, events) {
+function advanceTurn(combat, events, rng = Math.random) {
   tickConditions(combat, currentCombatant(combat), events); // end-of-turn: DoT + expiry
   if (combat.over) return; // a DoT could have ended the fight
   do {
@@ -188,6 +319,9 @@ function advanceTurn(combat, events) {
       events.push({ type: 'round', round: combat.round });
     }
   } while (!alive(currentCombatant(combat)));
+  // Start of the new turn: whoever is up keeps any focus they're holding, which
+  // is where an Acid Arrow bites again and where a slipped concentration ends.
+  beginTurn(combat, currentCombatant(combat), rng, events);
 }
 
 /** All monsters dead or fled? Only the defeated give up their gold. */
@@ -248,6 +382,15 @@ function applyDamage(target, amount, type, events) {
     return dealt;
   }
   target.hp.current = Math.max(0, target.hp.current - dealt);
+  // A hit shakes a sleeper awake (Sleep). Held is a rigid magic, not a doze —
+  // it only lifts when its caster's concentration does.
+  if (dealt > 0) {
+    for (const k of target.conditions ?? []) {
+      if (k.wakeOnDamage && dropCondition(target, k.id)) {
+        events.push({ type: 'condition-end', id: target.id, who: target.name, cond: k.id, woken: true });
+      }
+    }
+  }
   return dealt;
 }
 
@@ -316,6 +459,9 @@ function triggerMorale(combat, monster, rng, events) {
 
 /** Consequences of damage: deaths rattle allies, wounds rattle the victim. */
 function afterDamage(combat, target, rng, events) {
+  // Being struck rattles concentration: an immediate focus check, per the
+  // Shadowdark rule that damage or distraction forces one.
+  if (target.focus) checkFocus(combat, target, rng, events, 'damage');
   if (target.hp.current <= 0) {
     if (isFoe(target)) {
       events.push({ type: 'death', id: target.id, who: target.name, goldValue: target.goldValue });
@@ -342,10 +488,18 @@ export function runAiTurns(combat, rng = Math.random) {
     if (isAlly(actor)) {
       takeMinionTurn(combat, actor, rng, events);
       if (combat.over) return events;
-      advanceTurn(combat, events);
+      advanceTurn(combat, events, rng);
       continue;
     }
     const monster = actor;
+    // Asleep or held: it loses the turn outright. The condition still ages in
+    // advanceTurn, so a 1d4-round Sleep runs its clock down while it lies there.
+    const out = disabledBy(monster);
+    if (out) {
+      events.push({ type: 'condition-skip', id: monster.id, who: monster.name, cond: out.id });
+      advanceTurn(combat, events, rng);
+      continue;
+    }
     if (monster.ability === 'regenerate' && monster.hp.current > 0 && monster.hp.current < monster.hp.max) {
       monster.hp.current = Math.min(monster.hp.max, monster.hp.current + 2);
       events.push({ type: 'regenerate', id: monster.id, who: monster.name, hpAfter: monster.hp.current });
@@ -354,14 +508,14 @@ export function runAiTurns(combat, rng = Math.random) {
       monster.fled = true;
       events.push({ type: 'flee', id: monster.id, who: monster.name });
       if (checkVictory(combat, events)) return events;
-      advanceTurn(combat, events);
+      advanceTurn(combat, events, rng);
       continue;
     }
     // A caster monster may work a spell instead of swinging. If it has nothing
     // worth casting at (e.g. a healer with no wounded ally), it falls through.
     if (monster.cast && rng() < (monster.cast.chance ?? 0.5) && takeMonsterCast(combat, monster, rng, events)) {
       if (combat.over) return events;
-      advanceTurn(combat, events);
+      advanceTurn(combat, events, rng);
       continue;
     }
     const targets = foeTargets(combat);
@@ -391,7 +545,7 @@ export function runAiTurns(combat, rng = Math.random) {
     if (target.kind === 'dragon' && checkDefeat(combat, events)) return events;
     afterDamage(combat, target, rng, events);
     if (checkDefeat(combat, events)) return events;
-    advanceTurn(combat, events);
+    advanceTurn(combat, events, rng);
   }
   // The dragon's turn is coming up: try to rekindle spent breath.
   if (!combat.over && !combat.breathReady && currentCombatant(combat).kind === 'dragon') {
@@ -537,7 +691,7 @@ export function playerAttack(combat, targetId, rng = Math.random, opts = {}) {
     events.push({ type: 'luck-offer', actorId: actor.id, actor: actor.name, kind: 'attack' });
     return events;
   }
-  if (!checkVictory(combat, events)) advanceTurn(combat, events);
+  if (!checkVictory(combat, events)) advanceTurn(combat, events, rng);
   return events;
 }
 
@@ -563,7 +717,7 @@ export function playerBreath(combat, rng = Math.random) {
   }
   events.push({ type: 'breath', total, rolls: dmg.rolls, dc: spec.dc, results });
   for (const m of targets) afterDamage(combat, m, rng, events);
-  if (!checkVictory(combat, events)) advanceTurn(combat, events);
+  if (!checkVictory(combat, events)) advanceTurn(combat, events, rng);
   return events;
 }
 
@@ -587,7 +741,7 @@ export function playerSweep(combat, rng = Math.random) {
   }
   events.push({ type: 'sweep', actor: actor.name, actorId: actor.id, results });
   for (const m of targets) afterDamage(combat, m, rng, events);
-  if (!checkVictory(combat, events)) advanceTurn(combat, events);
+  if (!checkVictory(combat, events)) advanceTurn(combat, events, rng);
   return events;
 }
 
@@ -615,7 +769,7 @@ export function playerParley(combat, mode, dc, rng = Math.random) {
         m.moraleChecked = true;
       }
       events.push({ type: 'parley-rout' });
-      advanceTurn(combat, events);
+      advanceTurn(combat, events, rng);
       return events;
     }
     for (const m of livingMonsters(combat)) m.fled = true;
@@ -623,7 +777,7 @@ export function playerParley(combat, mode, dc, rng = Math.random) {
     checkVictory(combat, events);
     return events;
   }
-  advanceTurn(combat, events);
+  advanceTurn(combat, events, rng);
   return events;
 }
 
@@ -638,7 +792,7 @@ export function playerIntimidate(combat, targetId, rng = Math.random) {
   if (!target) return events;
   if (target.morale == null) {
     events.push({ type: 'intimidate', actor: actor.name, target: target.name, targetId: target.id, fearless: true, success: false });
-    advanceTurn(combat, events);
+    advanceTurn(combat, events, rng);
     return events;
   }
   const dc = 12 + target.morale;
@@ -648,7 +802,7 @@ export function playerIntimidate(combat, targetId, rng = Math.random) {
     target.panicked = true;
     target.moraleChecked = true;
   }
-  advanceTurn(combat, events);
+  advanceTurn(combat, events, rng);
   return events;
 }
 
@@ -721,7 +875,7 @@ function finalizeFizzle(combat, caster, spellId, cast, rng, events) {
     caster.burned.push(spellId);
   }
   if (cast.natural === 1) applyCastMishap(combat, caster, rng, events);
-  advanceTurn(combat, events);
+  advanceTurn(combat, events, rng);
 }
 
 // Apply a successful cast's effect (summon / damage / heal / wave / dominate),
@@ -743,7 +897,7 @@ function applyCastSuccess(combat, caster, spell, targetId, cast, rng, events) {
         events.push({ type: 'summoned', casterId: caster.id, caster: caster.name, id: minion.id, name: minion.name });
       }
     }
-    advanceTurn(combat, events);
+    advanceTurn(combat, events, rng);
     return;
   }
 
@@ -751,13 +905,32 @@ function applyCastSuccess(combat, caster, spell, targetId, cast, rng, events) {
     const target =
       combat.order.find((c) => c.id === targetId && isFoe(c) && alive(c)) ??
       livingMonsters(combat)[0];
+    // Pure control (Sleep, Hold Person): no damage, just a condition the foe may
+    // shrug off. Bosses are too big to sleep or freeze, same as they can't be
+    // dominated. A `save` spell gives one ability check to resist outright.
+    if (spell.cond && !spell.dice) {
+      const fail = (reason) => {
+        events.push({ type: 'control-resisted', spellId: spell.id, name: spell.name, who: target.name, reason });
+        if (!checkVictory(combat, events)) advanceTurn(combat, events, rng);
+      };
+      if (spell.bossImmune && target.isBoss) return fail('boss');
+      if (spell.save) {
+        const saveDC = 10 + (spell.tier ?? 1) + (caster.abilities?.[caster.castStat ?? 'cha'] ?? 0);
+        const die = d20({ rng });
+        const total = die.total + (target.abilities?.[spell.save] ?? 0);
+        if (die.total !== 1 && (die.total === 20 || total >= saveDC)) return fail('save');
+      }
+      applySpellCond(combat, caster, target, spell, cast, rng, events);
+      advanceTurn(combat, events, rng);
+      return;
+    }
     if (spell.dominate) {
       // Turn the foe into an allied minion for the rest of the battle. Bosses are
       // immune; the caster commands only one minion at a time; undead (mindless)
       // can't resist, others get one WIS save. A dominated foe still yields loot.
       const fail = (reason) => {
         events.push({ type: 'dominate-resisted', who: target.name, reason });
-        if (!checkVictory(combat, events)) advanceTurn(combat, events);
+        if (!checkVictory(combat, events)) advanceTurn(combat, events, rng);
       };
       if (target.isBoss) return fail('boss');
       if (combat.order.some((c) => isAlly(c) && c.ownerId === caster.id && alive(c))) return fail('full');
@@ -775,7 +948,7 @@ function applyCastSuccess(combat, caster, spell, targetId, cast, rng, events) {
       target.fled = false;
       combat.bonusGold = (combat.bonusGold ?? 0) + (target.goldValue ?? 0);
       events.push({ type: 'dominated', targetId: target.id, who: target.name, goldValue: target.goldValue ?? 0 });
-      if (!checkVictory(combat, events)) advanceTurn(combat, events);
+      if (!checkVictory(combat, events)) advanceTurn(combat, events, rng);
       return events;
     }
     // Shadowdark: damage is the spell's dice only. A natural-20 cast doubles it.
@@ -786,7 +959,7 @@ function applyCastSuccess(combat, caster, spell, targetId, cast, rng, events) {
     // a skeleton's resistance to blades — and an iron golem's — halved a spell
     // that isn't a blow at all. Nothing resists 'drain' today; a monster that
     // should (something with no life to take) can just list it in `resist`.
-    const dealt = applyDamage(target, dmg, spell.drain ? 'drain' : 'fire', events);
+    const dealt = applyDamage(target, dmg, spell.dtype ?? (spell.drain ? 'drain' : 'fire'), events);
     let drained = 0;
     if (spell.drain && dealt > 0 && caster.hp.current < caster.hp.max) {
       // A vampire keeps everything she takes: the caster heals the full damage
@@ -806,10 +979,21 @@ function applyCastSuccess(combat, caster, spell, targetId, cast, rng, events) {
       casterHpAfter: caster.hp.current,
       famAid: boost ? familiarCredit(combat, caster, 'fire-boost') : null,
     });
+    // Acid Arrow: the hit leaves something behind that keeps eating while the
+    // caster focuses. Only if the foe survived the impact.
+    if (spell.cond || spell.focus) {
+      if (alive(target)) applySpellCond(combat, caster, target, spell, cast, rng, events);
+    }
     afterDamage(combat, target, rng, events);
   } else if (spell.target === 'ally') {
     const target =
       combat.order.find((c) => c.id === targetId && onHeroSide(c)) ?? caster;
+    // A buff, not a mending (Holy Weapon): lay the condition on and pass the turn.
+    if (spell.cond && !spell.dice) {
+      applySpellCond(combat, caster, target, spell, cast, rng, events);
+      advanceTurn(combat, events, rng);
+      return;
+    }
     const healed = roll(spell.dice, rng).total;
     const amount = cast.crit ? healed * 2 : healed; // nat-20 doubles the mending
     const revived = target.hp.current <= 0;
@@ -843,7 +1027,7 @@ function applyCastSuccess(combat, caster, spell, targetId, cast, rng, events) {
     for (const m of targets) afterDamage(combat, m, rng, events);
   }
 
-  if (!checkVictory(combat, events)) advanceTurn(combat, events);
+  if (!checkVictory(combat, events)) advanceTurn(combat, events, rng);
 }
 
 /**
@@ -883,7 +1067,7 @@ export function spendLuck(combat, rng = Math.random) {
       });
       afterDamage(combat, target, rng, events);
     }
-    if (!checkVictory(combat, events)) advanceTurn(combat, events);
+    if (!checkVictory(combat, events)) advanceTurn(combat, events, rng);
   }
   return events;
 }
@@ -897,7 +1081,7 @@ export function declineLuck(combat, rng = Math.random) {
   if (p.kind === 'cast' && actor) {
     finalizeFizzle(combat, actor, p.spellId, p.cast, rng, events); // the fizzle stands
   } else if (!checkVictory(combat, events)) {
-    advanceTurn(combat, events); // the miss stands; pass the turn
+    advanceTurn(combat, events, rng); // the miss stands; pass the turn
   }
   return events;
 }
@@ -967,6 +1151,6 @@ export function playerUseItem(combat, item, targetId, rng = Math.random) {
     for (const m of targets) afterDamage(combat, m, rng, events);
   }
 
-  if (!checkVictory(combat, events)) advanceTurn(combat, events);
+  if (!checkVictory(combat, events)) advanceTurn(combat, events, rng);
   return events;
 }

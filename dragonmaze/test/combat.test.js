@@ -543,4 +543,128 @@ const domCaster = (over = {}) =>
   }
 }
 
+// A harmless foe, so a focus test measures the upkeep check and nothing else.
+const dummy = (over = {}) =>
+  foe({ id: 'goblin', hp: 100, ac: 12, attacks: [{ name: 'bite', toHit: -100, damage: '1d4' }], ...over });
+
+// --- 25. Acid Arrow: it bites on impact, then again every turn you hold focus ---
+{
+  const c = hero({ id: 'hero', abilities: { int: 5 }, castStat: 'int', spells: ['acid-arrow'] });
+  const g = dummy();
+  const { combat } = createCombat([c], [g], () => 0.5);
+  const ev = playerSpell(heroTurn(combat, 'hero'), 'acid-arrow', g.id, () => 0.5);
+  const hit = ev.find((e) => e.type === 'spell-hit');
+  assert.ok(hit.damage > 0, 'the arrow lands');
+  assert.equal(c.focus?.spellId, 'acid-arrow', 'and the caster is now focusing on it');
+  assert.equal(c.focus.targetId, g.id, 'on the foe it struck');
+  const burn = g.conditions.find((k) => k.id === 'acid-burn');
+  assert.ok(burn, 'the foe is burning');
+  assert.equal(burn.focusOf, c.id, 'held by its caster, not by a clock');
+  assert.equal(burn.rounds, undefined, 'so it has no rounds of its own');
+
+  // Let the round come back around: the upkeep check fires as the caster's turn
+  // begins. 0.5 -> d20 11, +5 INT = 16 vs DC 11, so it holds.
+  const hpBefore = g.hp.current;
+  const back = runAiTurns(combat, () => 0.5);
+  assert.ok(back.some((e) => e.type === 'focus-check' && e.success), 'the upkeep check holds');
+  const tick = back.find((e) => e.type === 'focus-tick');
+  assert.ok(tick && tick.damage > 0, 'and the acid bites again');
+  assert.equal(tick.dtype, 'acid', 'as acid, not fire');
+  assert.ok(g.hp.current < hpBefore, 'the foe keeps losing HP');
+}
+
+// --- 26. a failed upkeep check ends the focus and lifts what it was holding ---
+{
+  const c = hero({ id: 'hero', abilities: { int: 0 }, castStat: 'int', spells: ['acid-arrow'] });
+  const g = dummy();
+  const { combat } = createCombat([c], [g], () => 0.5);
+  playerSpell(heroTurn(combat, 'hero'), 'acid-arrow', g.id, () => 0.9); // 0.9 -> 19, lands
+  assert.ok(c.focus, 'focusing');
+  // 0.1 -> d20 3, +0 = 3 vs DC 11: the concentration slips (but it isn't a nat 1).
+  const ev = runAiTurns(combat, () => 0.1);
+  assert.ok(ev.some((e) => e.type === 'focus-check' && !e.success), 'the check fails');
+  assert.equal(ev.find((e) => e.type === 'focus-end')?.reason, 'lost', 'the focus ends');
+  assert.equal(c.focus, null, 'the caster is no longer concentrating');
+  assert.ok(!g.conditions.some((k) => k.id === 'acid-burn'), 'and the acid stops eating');
+  assert.ok(!c.burned.includes('acid-arrow'), 'an ordinary slip does not burn the spell');
+}
+
+// --- 27. Sleep takes a foe out: it loses turns, is struck at advantage, wakes on a hit ---
+{
+  const c = hero({ id: 'hero', abilities: { int: 5 }, castStat: 'int', spells: ['sleep'],
+    attacks: [{ name: 'poke', toHit: 100, damage: '1d4' }] });
+  const g = foe({ id: 'goblin', hp: 100, ac: 12, attacks: [{ name: 'bite', toHit: 100, damage: '1d4' }] });
+  const { combat } = createCombat([c, g], [], () => 0.5);
+  const ev = playerSpell(heroTurn(combat, 'hero'), 'sleep', g.id, () => 0.5);
+  const start = ev.find((e) => e.type === 'condition-start');
+  assert.equal(start?.cond, 'asleep', 'the goblin is asleep');
+  assert.ok(start.rounds >= 1 && start.rounds <= 4, '1d4 rounds');
+  assert.ok(g.conditions.some((k) => k.disable), 'and disabled');
+
+  // Its turn comes and goes without it acting.
+  const ai = runAiTurns(combat, () => 0.5);
+  assert.ok(ai.some((e) => e.type === 'condition-skip' && e.id === g.id), 'it sleeps through its turn');
+  assert.ok(!ai.some((e) => e.type === 'attack' && e.attackerId === g.id), 'and never swings');
+
+  // The next hit is rolled at advantage, and wakes it.
+  const hpMax = g.hp.max;
+  const swing = playerAttack(heroTurn(combat, 'hero'), g.id, () => 0.5);
+  const atk = swing.find((e) => e.type === 'attack');
+  assert.equal(atk.mode, 'advantage', 'a sleeper is struck at advantage');
+  assert.ok(swing.some((e) => e.type === 'condition-end' && e.woken), 'and the blow wakes it');
+  assert.ok(!g.conditions.some((k) => k.id === 'asleep'), 'no longer asleep');
+  assert.ok(hpMax, 'sanity');
+}
+
+// --- 28. Hold Person: a save resists it, and it lasts only while focus holds ---
+{
+  const held = () => {
+    const c = hero({ id: 'hero', abilities: { int: 5 }, castStat: 'int', spells: ['hold-person'] });
+    const g = foe({ id: 'goblin', hp: 100, ac: 12, abilities: { wis: -5 } }); // will fail the save
+    const { combat } = createCombat([c, g], [], () => 0.5);
+    const ev = playerSpell(heroTurn(combat, 'hero'), 'hold-person', g.id, () => 0.5);
+    return { c, g, combat, ev };
+  };
+  const { c, g, ev } = held();
+  assert.ok(ev.some((e) => e.type === 'condition-start' && e.cond === 'held'), 'the goblin is held');
+  assert.equal(c.focus?.spellId, 'hold-person', 'and the caster is concentrating on it');
+  assert.ok(g.conditions.some((k) => k.disable && k.focusOf === c.id), 'held by the focus');
+
+  // A tough-willed foe shrugs it off instead.
+  const c2 = hero({ id: 'hero', abilities: { int: 0 }, castStat: 'int', spells: ['hold-person'] });
+  const g2 = foe({ id: 'goblin', hp: 100, ac: 12, abilities: { wis: 10 } });
+  const { combat: cb2 } = createCombat([c2, g2], [], () => 0.5);
+  const ev2 = playerSpell(heroTurn(cb2, 'hero'), 'hold-person', g2.id, () => 0.9);
+  assert.equal(ev2.find((e) => e.type === 'control-resisted')?.reason, 'save', 'a strong will resists');
+  assert.equal(c2.focus, null, 'and no focus is started');
+  assert.ok(!g2.conditions.some((k) => k.id === 'held'), 'the foe is free');
+}
+
+// --- 29. Holy Weapon buffs an ally's swing for a fixed count of rounds ---
+{
+  const setup = (bless) => {
+    const priest = hero({ id: 'hero', abilities: { wis: 5 }, castStat: 'wis', spells: ['holy-weapon'] });
+    const knight = hero({ id: 'ally', name: 'Knight', abilities: {},
+      attacks: [{ name: 'sword', toHit: 0, damage: '1d6' }] });
+    const g = foe({ id: 'goblin', hp: 500, ac: 5 });
+    const { combat } = createCombat([priest, knight, g], [], () => 0.5);
+    if (bless) playerSpell(heroTurn(combat, 'hero'), 'holy-weapon', knight.id, () => 0.5);
+    return { priest, knight, g, combat };
+  };
+  const { knight, g, combat } = setup(true);
+  const cond = knight.conditions.find((k) => k.id === 'holy-weapon');
+  assert.ok(cond, 'the knight is blessed');
+  assert.equal(cond.rounds, 5, 'for 5 rounds');
+  assert.equal(cond.toHit, 1, '+1 to hit');
+  assert.equal(cond.damage, 1, '+1 damage');
+
+  const blessed = playerAttack(heroTurn(combat, 'ally'), g.id, () => 0.5).find((e) => e.type === 'attack');
+  const plain = setup(false);
+  const bare = playerAttack(heroTurn(plain.combat, 'ally'), plain.g.id, () => 0.5).find((e) => e.type === 'attack');
+  assert.equal(blessed.toHit - bare.toHit, 1, 'the blessed swing is +1 to hit');
+  assert.equal(blessed.damage - bare.damage, 1, 'and deals 1 more');
+  // A buff is not concentration — the priest holds no focus for it.
+  assert.equal(setup(true).priest.focus, null, 'Holy Weapon needs no focus');
+}
+
 console.log('combat.test.js: all assertions passed ✓');

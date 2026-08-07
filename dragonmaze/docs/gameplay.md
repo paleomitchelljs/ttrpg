@@ -184,7 +184,9 @@ The single home for every game number — nothing elsewhere hard-codes a rule.
 - **`resolveAttack(attacker, attack, target, rng, opts)`** — `d20 + attack.toHit`
   vs `target.ac (+ opts.acBonus)`. Natural 20 auto-hits **and doubles damage**;
   natural 1 auto-misses. Damage = `roll(attack.damage)` (die only, min 1);
-  `opts.advantage`/`disadvantage` fold in. Returns everything a view narrates.
+  `opts.advantage`/`disadvantage` fold in, as do `opts.toHitBonus` and
+  `opts.damageBonus` (a blessed weapon — the damage bonus goes through
+  `bumpDamage` so a crit doubles it). Returns everything a view narrates.
 - **`rollInitiative`** — `d20 + DEX + initBonus`, once per combat.
 - **Breath**: `resolveBreathOn(target, dc, dmgTotal, rng)` — DEX save vs `dc`,
   half on save (min 1). `rollBreathRecharge` — d6, ready again on 5+.
@@ -296,10 +298,26 @@ disadvantage. Fail → `panicked` → flees on its turn.
 
 ### Conditions (timed buffs/debuffs)
 
-`{id, rounds, ac?, disadv?, dot?:{amount,dtype}}`, refreshed not stacked
-(`addCondition`). Aged in `tickConditions` at end of the owner's turn (DoT applies,
-then expiry). `condAc`/`condDisadv` fold into `atkOpts`. Sources: consumables
-(warded/greased/burning) and monster `daze`.
+`{id, rounds, ac?, disadv?, dot?:{amount,dtype}, toHit?, damage?, disable?,
+wakeOnDamage?, focusOf?}`, refreshed not stacked (`addCondition`; `dropCondition`
+lifts one). Aged in `tickConditions` at end of the owner's turn (DoT applies, then
+expiry) — except a `focusOf` condition, which has no clock and lasts exactly as
+long as its caster's concentration. `condAc`/`condDisadv`/`condToHit`/`condDamage`
+fold into `atkOpts`, as does `disabledBy(target)` (striking the helpless is at
+advantage).
+
+- **`disable`** — the owner loses their turns. `runAiTurns` skips a disabled
+  monster with a `condition-skip` event; the condition still ages, so a
+  1d4-round Sleep runs down while it lies there. *No spell disables a hero
+  today; if one is ever added, the player's turn would need the same skip.*
+- **`wakeOnDamage`** — dropped by the first damage that lands (`applyDamage`),
+  which is how a hit shakes a sleeper awake.
+- **`toHit`/`damage`** — sharpen the owner's swings (Holy Weapon). The damage
+  bonus folds into the dice expression via `bumpDamage`, so a crit doubles it,
+  exactly like an enchanted weapon's.
+
+Sources: consumables (warded/greased/burning), monster `daze`, and spells
+(`applySpellCond`). The view chips them onto the unit card (`condBadges`).
 
 ### Resolution & spoils
 
@@ -327,8 +345,28 @@ works on the fallen), `'all-enemies'` (each DEX-saves vs `saveDC` for half),
 `'self'` (conjuration). Effect flags: `drain` (deal `'drain'`-typed damage — its own type, so physical
 resistance no longer halves it — then heal the caster the full damage dealt,
 bounded by their missing HP, never an overheal),
-`dominate` (convert a foe to a minion), `summon: '<monsterId>'` (conjure a minion).
-`tome: false` = innate/class-only, never learnable from a found tome.
+`dominate` (convert a foe to a minion), `summon: '<monsterId>'` (conjure a minion),
+`dtype` (damage type, default `'fire'`), `bossImmune` (a boss shrugs the effect off),
+`save: '<ability>'` (the target rolls to resist outright, vs `10 + tier + caster's
+cast mod`). `tome: false` = innate/class-only, never learnable from a found tome.
+
+**Durations beyond instant** (`applySpellCond` in combat.js):
+- **`cond: {...}`** — a fixed-duration condition on the target, `rounds` long
+  (may be a dice string like `'1d4'`; a nat-20 cast doubles it). No
+  concentration, so nothing can shake it loose early.
+- **`focus: {dice?, cond}`** — Shadowdark's **Focus**. The caster carries
+  `focus = {spellId, name, targetId, condId, dice, dtype}` and the target carries
+  the condition tagged `focusOf: <casterId>`. Rules, per the system guide: one
+  focus at a time (casting another calls `breakFocus` on the old one); a
+  spellcasting check at the **start of each of the caster's turns** keeps it up
+  (`beginTurn` → `checkFocus`, wired into `advanceTurn`, which now takes `rng`);
+  **taking a hit forces an immediate check** (`afterDamage` → `checkFocus`); an
+  ordinary failure just ends it, but a **natural 1 is a full critical failure**
+  (burned until rest, plus `applyCastMishap`). Focus also ends if the caster
+  falls or the target dies. A `focus.dice` spell deals that die to the target on
+  every held check (`focus-tick`; a nat-20 on the check doubles it).
+  `checkFocus` is re-entrancy guarded (`focusChecking`) so two casters focused on
+  each other can't ping-pong.
 
 **Casting** (`playerSpell` → `resolveSpellCast` → `applyCastSuccess`): a caster
 knows a spell if it's in their resolved `spells` and not in `burned`. On success,
@@ -345,16 +383,24 @@ offer with its tier.
 Current spellbook, by tier —
 **tier 1:** `ember-bolt` (fire 1d6), `magic-missile` (force 1d4, always cast with
 advantage, `tome`), `burning-hands` (fire 1d6 all, `saveDC` 11, `tome`), `smite`
-(radiant 1d6, `tome`), `healing-word`/Cure Wounds (holy 1d6 heal, revives).
+(radiant 1d6, `tome`), `healing-word`/Cure Wounds (holy 1d6 heal, revives),
+`acid-arrow` (acid 1d4 on impact **+ 1d4 per focused turn**), `sleep`
+(`disable` 1d4 rounds, wakes on damage, `bossImmune`), `holy-weapon` (ally buff,
++1 hit/+1 damage, 5 rounds).
 **tier 2:** `drain-life` (1d8 + full lifesteal, `tome:false`), `dominate-undead`
-(`dominate`, `tome:false`), `summon-ember` (`summon: 'ember-spirit'`, `tome`).
+(`dominate`, `tome:false`), `summon-ember` (`summon: 'ember-spirit'`, `tome`),
+`hold-person` (`disable` while focused, WIS `save`, `bossImmune`).
 **tier 3:** `flame-wave`/Fireball (fire 3d6 all, `saveDC` 13), `lightning-bolt`
 (storm 3d6 all, `tome`).
 
+Acid Arrow sits at tier 1 (Shadowdark books it at tier 2) so a 1st-level caster
+has a focus spell to learn; its dice are tier-1 sized to match.
+
 Starting books stay inside tier 1 except for innate powers: the spellblade opens
-with ember-bolt / magic-missile / burning-hands / cure wounds (Fireball and
-Lightning Bolt are hers to learn at 5th), Spawnee with her tier-2 vampire powers,
-Gowra with her two tier-1 prayers (cure wounds, smite). Imported portal casters map
+with ember-bolt / magic-missile / burning-hands / cure wounds / acid-arrow / sleep
+(Fireball and Lightning Bolt are hers to learn at 5th), Spawnee with her tier-2
+vampire powers, Gowra with her tier-1 prayers (cure wounds, smite, holy weapon).
+Hold Person is tier 2, so nobody starts with it — it's a 3rd-level pick. Imported portal casters map
 by keyword (`mapSpell` in importHero.js) and land on tier-1 spells only.
 
 **Minions** (`applyCastSuccess`, one per caster): `summon` inserts a temporary

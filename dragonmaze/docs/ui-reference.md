@@ -267,8 +267,17 @@ Combat logic resolves instantly in the engine; this module **replays** it.
   `.unit` card: classes `unit / enemy|hero / dragon / inert familiar /
   dead|down / fled / active`; contents = `.hp-num`, optional luck badge,
   `faceHtml` (sprite or emoji `.enemy-face`), `.hp-bar>.hp-fill`, panic/flee
-  badges. Enemy art mirrors via CSS (`.unit.enemy .combat-sprite`) unless
-  `facesLeft` (`.no-mirror`); hero art is `.flip`ped to face right.
+  badges, then `condBadges`. Enemy art mirrors via CSS (`.unit.enemy
+  .combat-sprite`) unless `facesLeft` (`.no-mirror`); hero art is `.flip`ped to
+  face right.
+- **Condition chips** (`condBadges` → `.badge-conds > .badge-cond`): one chip per
+  active condition, labelled and coloured by `COND_BADGE`
+  (`.bad` red / `.good` green / `.held` violet / `.focus` gold), with the rounds
+  left appended unless the condition is focus-held (those have no clock). A
+  caster concentrating also gets a gold `focus` chip titled with the spell. Chips
+  wrap under the HP bar rather than widening the card, and shrink in
+  `html.compact`. Without these, a sleeping foe or a blessed weapon is invisible
+  between log lines.
 - **Targeting:** module-level `targetId` (enemy, `.targeted` ◆) and
   `heroTargetId` (ally heals, `.ally-targeted` ✚). Tap a unit to retarget →
   re-render. `#combat-target-info` shows a knowledge-gated one-liner

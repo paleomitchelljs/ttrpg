@@ -731,6 +731,26 @@ button { font: inherit; }
 
 .badge-trait { font-size: 0.72rem; color: var(--ink-dim); font-style: italic; }
 
+/* Lingering spell effects on a unit card: asleep/held, a blessed weapon, acid
+   still eating, or a caster spending their turns concentrating. Small chips
+   under the HP bar; they wrap rather than widen the card. */
+.badge-conds { display: flex; flex-wrap: wrap; gap: 2px; justify-content: center; margin-top: 2px; }
+.badge-cond {
+  font-size: 0.58rem;
+  line-height: 1.5;
+  padding: 0 4px;
+  border-radius: 6px;
+  letter-spacing: 0.02em;
+  background: #ffffff14;
+  color: var(--ink-dim);
+  white-space: nowrap;
+}
+.badge-cond.bad { background: #b9422e33; color: #f0a08c; }
+.badge-cond.good { background: #3f8f5a33; color: #9fdcb4; }
+.badge-cond.held { background: #5b4bb733; color: #c0b4f0; }
+.badge-cond.focus { background: #b9932e33; color: #eed08a; }
+html.compact .badge-cond { font-size: 0.5rem; }
+
 /* ------------------------------------------------------------- sheets */
 
 .sheet-box { text-align: left; max-width: min(460px, 94vw); }

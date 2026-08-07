@@ -23,7 +23,7 @@ import { ZONES } from '../data/zones.js';
 import { buildZoneDungeon } from '../src/world/zones.js';
 import { FAMILIARS } from '../data/familiars.js';
 import { ITEMS } from '../data/items.js';
-import { bumpDamage, victoryDropChance, levelForXp, LEVEL_XP, hpPerLevel } from '../src/engine/rules.js';
+import { bumpDamage, victoryDropChance, levelForXp, LEVEL_XP, hpPerLevel, canLearnSpell } from '../src/engine/rules.js';
 import * as gameState from '../src/state/gameState.js';
 import { migrate, SAVE_VERSION } from '../src/state/save.js';
 import { portalToCompanion } from '../src/state/importHero.js';
@@ -419,7 +419,10 @@ check('drain life is Spawnee\'s alone — unlearnable, and hers only', () => {
   assert.deepEqual(starters.map((c) => c.id), ['spawnee'], 'only Spawnee opens with it');
   const gowra = companionById('gowra');
   assert.ok(!gowra.spells.includes('drain-life'), 'Gowra no longer drains');
-  assert.deepEqual(gowra.spells.sort(), ['healing-word', 'smite'], 'she keeps her two prayers');
+  assert.deepEqual(gowra.spells.sort(), ['healing-word', 'holy-weapon', 'smite'], 'she keeps her prayers');
+  for (const id of gowra.spells) {
+    assert.ok(canLearnSpell(1, spellById(id)), `${id} is inside a 1st-level priest's tier`);
+  }
 });
 
 check('resistances, abilities, familiars, and tomes hold together', () => {

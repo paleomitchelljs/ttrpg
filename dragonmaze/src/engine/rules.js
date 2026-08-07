@@ -61,7 +61,10 @@ export function tierAfterBanking(currentTierName, hoardGold) {
 export function resolveAttack(attacker, attack, target, rng = Math.random, opts = {}) {
   const die = d20({ rng, advantage: !!opts.advantage, disadvantage: !!opts.disadvantage });
   const natural = die.total;
-  const total = natural + attack.toHit;
+  // A blessed weapon (Holy Weapon) sharpens the swing and bites harder. The
+  // damage bonus folds into the dice expression the way an enchanted weapon's
+  // does, so a critical doubles it too.
+  const total = natural + attack.toHit + (opts.toHitBonus ?? 0);
   const crit = natural === 20;
   const fumble = natural === 1;
   const ac = target.ac + (opts.acBonus ?? 0); // a 'warded' target is harder to hit
@@ -69,7 +72,7 @@ export function resolveAttack(attacker, attack, target, rng = Math.random, opts 
   let damage = 0;
   let damageRolls = [];
   if (hit) {
-    const dmg = roll(attack.damage, rng);
+    const dmg = roll(bumpDamage(attack.damage, opts.damageBonus ?? 0), rng);
     damage = crit ? dmg.total * 2 : dmg.total;
     if (damage < 1) damage = 1;
     damageRolls = dmg.rolls;
@@ -78,7 +81,7 @@ export function resolveAttack(attacker, attack, target, rng = Math.random, opts 
     natural,
     dieRolls: die.rolls,
     mode: die.mode,
-    toHit: attack.toHit,
+    toHit: attack.toHit + (opts.toHitBonus ?? 0),
     total,
     targetAc: ac,
     crit,

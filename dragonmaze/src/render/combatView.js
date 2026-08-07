@@ -32,7 +32,29 @@ const ITEM_MENU = Symbol('item-menu');
 
 // What a damage type is *called* when a resistance halves it. 'physical' is a
 // blow; a drain is a pull at the life rather than a hit. Falls back to 'blow'.
-const DTYPE_NOUN = { fire: 'flame', drain: 'hunger', physical: 'blow' };
+const DTYPE_NOUN = { fire: 'flame', drain: 'hunger', physical: 'blow', acid: 'acid' };
+
+// A lingering spell effect landing. Conditions are numbers on a card otherwise —
+// the log is where the player learns what the spell actually did.
+const COND_START = {
+  asleep: (ev) => `The ${ev.who} drops into a dead sleep! (${ev.rounds} rounds, or until something hits it)`,
+  held: (ev) => `The ${ev.who} freezes where it stands — ${ev.caster} holds it fast.`,
+  'acid-burn': (ev) => `Acid clings to the ${ev.who}, eating while ${ev.caster} concentrates.`,
+  'holy-weapon': (ev) => `${ev.who}'s weapon blazes with holy light! (+1 to hit and damage, ${ev.rounds} rounds)`,
+};
+function condStartLine(ev) {
+  return (COND_START[ev.cond] ?? ((e) => `${e.name} takes hold of ${e.who}.`))(ev);
+}
+
+// Why a concentration ended. 'recast' is bookkeeping (you started another one),
+// so it's dimmed; the rest are things the player wants to notice.
+const FOCUS_END = {
+  lost: (ev) => `${ev.caster}'s concentration slips — ${ev.name} ends.`,
+  mishap: (ev) => `${ev.caster}'s focus shatters! ${ev.name} is lost until you rest.`,
+  down: (ev) => `${ev.caster} falls, and ${ev.name} unravels.`,
+  'target-gone': (ev) => `${ev.name} has nothing left to hold.`,
+  recast: (ev) => `${ev.caster} lets ${ev.name} go to work another spell.`,
+};
 
 // ---------------------------------------------------------------- queue
 const batches = [];
@@ -346,7 +368,43 @@ async function presentEvent(els, ev) {
       return;
     }
     case 'condition-end':
-      return; // expiry is silent
+      // Plain expiry is silent; a sleeper shaken awake is worth a line, because
+      // the player's next swing loses its advantage because of it.
+      if (ev.woken) {
+        appendLog(els.log, `The blow shakes the ${ev.who} awake!`, 'log-miss');
+        return delay(250);
+      }
+      return;
+    case 'condition-start': {
+      const card = cardOf(els, ev.targetId);
+      card?.classList.add('hit-flash');
+      appendLog(els.log, condStartLine(ev), ev.disable || ev.toHit || ev.damage ? 'log-start' : 'log-hit');
+      await delay(320); card?.classList.remove('hit-flash');
+      return;
+    }
+    case 'condition-skip':
+      appendLog(els.log, `The ${ev.who} ${ev.cond === 'asleep' ? 'sleeps on' : 'strains against the magic'}, and loses its turn!`, 'log-start');
+      return delay(300);
+    case 'control-resisted':
+      appendLog(els.log, ev.reason === 'boss'
+        ? `The ${ev.who} is far too mighty for ${ev.name}!`
+        : `The ${ev.who} shrugs off ${ev.name}!`, 'log-miss');
+      return delay(280);
+    case 'focus-check':
+      // Only the losses are narrated here — a held focus speaks through its
+      // effect (the acid tick below), and a line every single turn is noise.
+      return;
+    case 'focus-tick': {
+      const card = cardOf(els, ev.targetId);
+      if (card) { card.classList.add('hit-flash'); updateCardHp(card, ev.hpAfter); }
+      appendLog(els.log, `${ev.name} keeps eating at the ${ev.target} for ${ev.damage}${ev.crit ? ' — it flares!' : ''}`, 'log-hit');
+      await delay(340); card?.classList.remove('hit-flash');
+      return;
+    }
+    case 'focus-end':
+      appendLog(els.log, FOCUS_END[ev.reason]?.(ev) ?? `${ev.caster} lets ${ev.name} go.`,
+        ev.reason === 'recast' ? 'log-dim' : 'log-miss');
+      return delay(ev.reason === 'recast' ? 0 : 280);
     case 'sweep': {
       appendLog(els.log, `${ev.actor} sweeps through the enemies!`, 'log-start');
       for (const r of ev.results) {
@@ -936,8 +994,31 @@ function unitEl(c, side, activeId, hpAt) {
     ${c.fled
       ? '<div class="badge-flee">fled!</div>'
       : `<div class="hp-bar"><div class="hp-fill${pct <= 35 ? ' low' : ''}" style="width:${pct}%"></div></div>`}
-    ${!dead && !c.fled && c.panicked ? '<div class="badge-panic">panicked!</div>' : ''}`;
+    ${!dead && !c.fled && c.panicked ? '<div class="badge-panic">panicked!</div>' : ''}
+    ${!dead && !c.fled ? condBadges(c) : ''}`;
   return unit;
+}
+
+// What a lingering spell has done to this unit, on the card where it matters:
+// who can't act, whose weapon is blessed, and who is spending their turns
+// concentrating. Without these the conditions are invisible between log lines.
+const COND_BADGE = {
+  asleep: { text: 'asleep', cls: 'held' },
+  held: { text: 'held', cls: 'held' },
+  'acid-burn': { text: 'acid', cls: 'bad' },
+  'holy-weapon': { text: 'blessed', cls: 'good' },
+  dazed: { text: 'dazed', cls: 'bad' },
+  warded: { text: 'warded', cls: 'good' },
+  burning: { text: 'burning', cls: 'bad' },
+};
+function condBadges(c) {
+  const out = (c.conditions ?? []).map((k) => {
+    const b = COND_BADGE[k.id] ?? { text: k.id, cls: '' };
+    const left = k.focusOf ? '' : k.rounds > 0 ? ` ${k.rounds}` : '';
+    return `<span class="badge-cond ${b.cls}">${b.text}${left}</span>`;
+  });
+  if (c.focus) out.push(`<span class="badge-cond focus" title="concentrating on ${c.focus.name}">focus</span>`);
+  return out.length ? `<div class="badge-conds">${out.join('')}</div>` : '';
 }
 
 const ABILITY_LABELS = {

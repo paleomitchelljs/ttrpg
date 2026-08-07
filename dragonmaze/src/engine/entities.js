@@ -52,6 +52,7 @@ export function makeCombatant(data) {
     spellPower: data.spellPower ?? 0, // bonus damage added to this caster's spells
     talents: [...(data.talents ?? [])], // chosen level-up talents (Cleave, Flurry, …)
     recoveredThisCombat: false, // Arcane Recovery: one saved fizzle per fight
+    focus: null, // the one focus spell this caster is concentrating on, if any
     burned: [],
     goldValue: data.goldValue ?? 0,
     morale: data.morale ?? null,

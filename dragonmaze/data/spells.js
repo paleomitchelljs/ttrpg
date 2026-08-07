@@ -101,6 +101,79 @@ export const SPELLS = [
   },
 ];
 
+// ---------------------------------------------------------------- ongoing spells
+// Three durations now exist beyond "it happens and it's over":
+//
+//   focus: {...}   — lasts while the caster concentrates (Shadowdark's Focus).
+//                    One at a time; a spellcasting check at the start of each of
+//                    your turns keeps it up; an ordinary failure just ends it, a
+//                    natural 1 is a critical failure (burned until rest, mishap);
+//                    taking a hit forces an immediate check. `dice` is dealt to
+//                    the target each turn the focus holds.
+//   cond: {...}    — a fixed-duration condition on the target: `rounds` long,
+//                    carrying any of {toHit, damage, ac, disadv, disable,
+//                    wakeOnDamage}. No concentration, so it survives anything.
+//   save: 'wis'    — the target rolls to shrug the condition off entirely.
+//
+// A condition with `disable` costs its owner their turns, and anyone striking a
+// disabled target rolls with advantage. `wakeOnDamage` drops it on the first hit.
+SPELLS.push(
+  {
+    id: 'acid-arrow',
+    name: 'Acid Arrow',
+    // Shadowdark books this at tier 2; it sits at tier 1 here so a 1st-level
+    // caster has a focus spell to learn, with tier-1 dice (1d4) to match.
+    tier: 1,
+    castDC: 11,
+    target: 'enemy',
+    dice: '1d4',
+    dtype: 'acid',
+    focus: { dice: '1d4', cond: { id: 'acid-burn', dtype: 'acid' } },
+    school: 'acid',
+    tome: true,
+    blurb: 'a dart of acid that keeps eating: 1d4 now, and 1d4 more each round you focus',
+  },
+  {
+    id: 'holy-weapon',
+    name: 'Holy Weapon',
+    tier: 1,
+    castDC: 11,
+    target: 'ally',
+    cond: { id: 'holy-weapon', rounds: 5, toHit: 1, damage: 1 },
+    school: 'holy',
+    tome: true,
+    blurb: 'you bless a companion’s weapon: +1 to hit and +1 damage for 5 rounds',
+  },
+  {
+    id: 'sleep',
+    name: 'Sleep',
+    tier: 1,
+    castDC: 11,
+    target: 'enemy',
+    // Shadowdark's Sleep has no save — it's gated by how big the thing is, so
+    // here a boss simply shrugs it off. Wakes the moment anything hits it.
+    cond: { id: 'asleep', rounds: '1d4', disable: true, wakeOnDamage: true },
+    bossImmune: true,
+    school: 'charm',
+    tome: true,
+    blurb: 'one foe drops into a magical slumber (1d4 rounds, and any hit wakes it)',
+  },
+  {
+    id: 'hold-person',
+    name: 'Hold Person',
+    tier: 2,
+    castDC: 12,
+    target: 'enemy',
+    cond: { id: 'held', disable: true },
+    focus: { cond: { id: 'held', disable: true } },
+    save: 'wis',
+    bossImmune: true,
+    school: 'charm',
+    tome: true,
+    blurb: 'one foe is frozen where it stands for as long as you focus (WIS save resists)',
+  }
+);
+
 SPELLS.push(
   {
     // Spawnee's signature. `tome: false` keeps it off both learning paths (found
@@ -154,4 +227,5 @@ export const SCHOOL_LABEL = {
   storm: 'Storm',
   drain: 'Drain',
   charm: 'Charm',
+  acid: 'Acid',
 };
