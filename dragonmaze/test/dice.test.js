@@ -23,7 +23,8 @@ import { ZONES } from '../data/zones.js';
 import { buildZoneDungeon } from '../src/world/zones.js';
 import { FAMILIARS } from '../data/familiars.js';
 import { ITEMS, SLOTS, itemById } from '../data/items.js';
-import { bumpDamage, victoryDropChance, levelForXp, LEVEL_XP, hpPerLevel, canLearnSpell, XP_FOR, rollHpGain } from '../src/engine/rules.js';
+import { bumpDamage, victoryDropChance, levelForXp, LEVEL_XP, hpPerLevel, canLearnSpell, XP_FOR, rollHpGain, HARVEST_CHANCE } from '../src/engine/rules.js';
+import { consumableById } from '../data/consumables.js';
 import * as gameState from '../src/state/gameState.js';
 import { migrate, SAVE_VERSION } from '../src/state/save.js';
 import { portalToCompanion } from '../src/state/importHero.js';
@@ -730,9 +731,32 @@ check('zone doors and boss drops reference real places and items', () => {
       assert.ok(sub.theme, `${zone.id}/${sub.id} theme`);
     }
   }
+  // 'wild' is not a dungeon — it marks a trophy cut off a beast rather than
+  // pulled from a hoard, so it belongs to no zone's boss list.
   for (const item of ITEMS) {
-    assert.ok(['upper-guk', 'lower-guk', 'lost-temple'].includes(item.zone), `${item.id} zone`);
+    assert.ok(['upper-guk', 'lower-guk', 'lost-temple', 'wild'].includes(item.zone), `${item.id} zone`);
+    if (item.xp) assert.ok(['fabulous', 'legendary', 'none'].includes(item.xp), `${item.id} xp tier`);
   }
+});
+
+check('beasts pay in harvests instead of gold', () => {
+  const beasts = MONSTERS.filter((m) => m.faction === 'wild');
+  assert.ok(beasts.length >= 8, 'there are beasts');
+  assert.ok(beasts.every((m) => m.goldValue === 0), 'and none of them carry coin');
+  const harvesters = beasts.filter((m) => m.harvest);
+  assert.ok(harvesters.length >= 5, 'several leave something behind');
+  for (const m of harvesters) {
+    const h = m.harvest;
+    assert.ok(h.consumable || h.item, `${m.id} harvest names something`);
+    if (h.consumable) assert.ok(consumableById(h.consumable), `${m.id} harvest consumable exists`);
+    if (h.item) {
+      const it = itemById(h.item);
+      assert.ok(it, `${m.id} harvest item exists`);
+      assert.equal(it.zone, 'wild', `${m.id}'s trophy is not a dungeon item`);
+      assert.equal(it.xp, 'none', `${m.id}'s trophy is not a hoard`);
+    }
+  }
+  assert.ok(HARVEST_CHANCE > 0 && HARVEST_CHANCE < 1, 'a chance, not a certainty');
 });
 
 check('edge-linked sub-areas connect back reciprocally', () => {

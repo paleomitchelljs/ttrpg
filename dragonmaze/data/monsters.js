@@ -21,6 +21,9 @@
 //   'relentless' — the first killing blow leaves it at 1 HP instead
 //   'lifedrain'  — heals half the damage its attacks deal
 // facesLeft = art already faces left; skip the enemy-side mirror.
+// harvest = what a beast may leave behind when it falls: { consumable } into the
+//   pouch or { item } into the inventory, at HARVEST_CHANCE. Beasts carry no
+//   gold, so this is what killing one is actually worth.
 
 export const MONSTERS = [
   // ------------------------------------------------ depth 1
@@ -164,6 +167,7 @@ export const MONSTERS = [
     faction: 'wild',
     parley: 'never',
     goldValue: 0, // a beast carries no purse — treasure is XP, and vermin have none
+    harvest: { consumable: 'vial-spider-venom' }, // a moderate chance to leave this behind (HARVEST_CHANCE)
     minDepth: 2,
     packMax: 4,
     weight: 2,
@@ -186,6 +190,7 @@ export const MONSTERS = [
     faction: 'wild',
     parley: 'never',
     goldValue: 0, // a beast carries no purse — treasure is XP, and vermin have none
+    harvest: { item: 'raptor-feather' }, // a moderate chance to leave this behind (HARVEST_CHANCE)
     minDepth: 2,
     maxDepth: 4,
     packMax: 3,
@@ -205,6 +210,7 @@ export const MONSTERS = [
     faction: 'wild',
     parley: 'never',
     goldValue: 0, // a beast carries no purse — treasure is XP, and vermin have none
+    harvest: { item: 'raptor-feather' }, // a moderate chance to leave this behind (HARVEST_CHANCE)
     minDepth: 3,
     packMax: 2,
     weight: 2,
@@ -223,6 +229,7 @@ export const MONSTERS = [
     faction: 'wild',
     parley: 'never',
     goldValue: 0, // a beast carries no purse — treasure is XP, and vermin have none
+    harvest: { consumable: 'vial-snake-venom' }, // a moderate chance to leave this behind (HARVEST_CHANCE)
     minDepth: 3,
     packMax: 2,
     weight: 2,
@@ -322,6 +329,7 @@ export const MONSTERS = [
     faction: 'wild',
     parley: 'never',
     goldValue: 0, // a beast carries no purse — treasure is XP, and vermin have none
+    harvest: { item: 'gator-tooth-earrings' }, // a moderate chance to leave this behind (HARVEST_CHANCE)
     minDepth: 3,
     packMax: 2,
     weight: 1,
@@ -407,6 +415,7 @@ export const MONSTERS = [
     faction: 'wild',
     parley: 'never',
     goldValue: 0, // a beast carries no purse — treasure is XP, and vermin have none
+    harvest: { item: 'gator-tooth-earrings' }, // a moderate chance to leave this behind (HARVEST_CHANCE)
     minDepth: 4,
     maxDepth: 6,
     packMax: 1,
@@ -555,6 +564,7 @@ export const MONSTERS = [
     faction: 'wild',
     parley: 'never',
     goldValue: 0, // a beast carries no purse — treasure is XP, and vermin have none
+    harvest: { consumable: 'vial-snake-venom' }, // a moderate chance to leave this behind (HARVEST_CHANCE)
     minDepth: 2,
     packMax: 2,
     weight: 2,

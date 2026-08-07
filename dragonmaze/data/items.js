@@ -225,6 +225,29 @@ export const ITEMS = [
     mods: { ac: 1, con: 2 },
     blurb: 'crusader plate beaten in a lightless forge (+1 AC, +2 CON)',
   },
+  // ---------------------------------------------- Harvested from beasts
+  // Not treasure and not a boss's hoard — trophies cut from something you
+  // killed (see `harvest` in data/monsters.js). `zone: 'wild'` keeps them out
+  // of every dungeon's boss list, and `xp: 'none'` pays nothing: a feather is
+  // not a hoard.
+  {
+    id: 'raptor-feather',
+    name: 'Raptor Feather',
+    slot: 'trinket',
+    zone: 'wild',
+    xp: 'none',
+    mods: { hpMax: 1 },
+    blurb: 'a stiff plume from a pack-hunter; wear it and stand a little taller (+1 max HP)',
+  },
+  {
+    id: 'gator-tooth-earrings',
+    name: 'Alligator Tooth Earrings',
+    slot: 'trinket',
+    zone: 'wild',
+    xp: 'none',
+    mods: { hpMax: 1 },
+    blurb: 'two yellowed fangs on a wire; the pools remember (+1 max HP)',
+  },
   // ---------------------------------------------- Common gear (treasure.png art)
   // Plainer finds spread across the zones' boss pools. `tile` links the sliced
   // icon in assets/tiles for when the UI shows item art.

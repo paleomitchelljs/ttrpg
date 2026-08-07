@@ -46,8 +46,8 @@ function condStartLine(ev) {
   return (COND_START[ev.cond] ?? ((e) => `${e.name} takes hold of ${e.who}.`))(ev);
 }
 
-// Why a concentration ended. 'recast' is bookkeeping (you started another one),
-// so it's dimmed; the rest are things the player wants to notice.
+// Why a concentration ended. All of these are worth noticing — 'recast' most of
+// all, since it's the price of the spell the player just chose to cast.
 const FOCUS_END = {
   lost: (ev) => `${ev.caster}'s concentration slips — ${ev.name} ends.`,
   mishap: (ev) => `${ev.caster}'s focus shatters! ${ev.name} is lost until you rest.`,
@@ -382,6 +382,14 @@ async function presentEvent(els, ev) {
       await delay(320); card?.classList.remove('hit-flash');
       return;
     }
+    case 'harvest':
+      appendLog(els.log, ev.kind === 'consumable'
+        ? `You harvest ${ev.name} from the ${ev.who} — into the pouch.`
+        : `You cut ${ev.name} from the ${ev.who}!`, 'log-start');
+      return delay(300);
+    case 'xp':
+      appendLog(els.log, `+${ev.amount} XP${ev.tier === 'normal' ? '' : ` (${ev.tier}!)`}`, 'log-dim');
+      return delay(150);
     case 'condition-skip':
       appendLog(els.log, `The ${ev.who} ${ev.cond === 'asleep' ? 'sleeps on' : 'strains against the magic'}, and loses its turn!`, 'log-start');
       return delay(300);
@@ -402,9 +410,8 @@ async function presentEvent(els, ev) {
       return;
     }
     case 'focus-end':
-      appendLog(els.log, FOCUS_END[ev.reason]?.(ev) ?? `${ev.caster} lets ${ev.name} go.`,
-        ev.reason === 'recast' ? 'log-dim' : 'log-miss');
-      return delay(ev.reason === 'recast' ? 0 : 280);
+      appendLog(els.log, FOCUS_END[ev.reason]?.(ev) ?? `${ev.caster} lets ${ev.name} go.`, 'log-miss');
+      return delay(280);
     case 'sweep': {
       appendLog(els.log, `${ev.actor} sweeps through the enemies!`, 'log-start');
       for (const r of ev.results) {
@@ -1008,6 +1015,7 @@ const COND_BADGE = {
   'acid-burn': { text: 'acid', cls: 'bad' },
   'holy-weapon': { text: 'blessed', cls: 'good' },
   dazed: { text: 'dazed', cls: 'bad' },
+  poisoned: { text: 'poisoned', cls: 'bad' },
   warded: { text: 'warded', cls: 'good' },
   burning: { text: 'burning', cls: 'bad' },
 };

@@ -31,7 +31,7 @@ const COMBAT_EVENTS = new Set([
   'flee', 'recharge', 'death', 'hero-down', 'victory', 'defeat', 'retreat',
   'spell-cast', 'spell-hit', 'spell-heal', 'spell-wave', 'sweep', 'item-drop',
   'item-use', 'item-heal', 'item-ward', 'item-restore', 'item-hit', 'item-wave', 'ward',
-  'condition-applied', 'condition-dot', 'condition-end', 'condition-start', 'condition-skip',
+  'condition-applied', 'condition-dot', 'condition-end', 'condition-start', 'condition-skip', 'harvest', 'xp',
   'control-resisted', 'focus-check', 'focus-tick', 'focus-end',
   'dominated', 'dominate-resisted', 'summoned', 'summon-full', 'bane', 'minion-down',
   'parley', 'parley-rout', 'parley-peace', 'parley-paid', 'quest-received', 'quest-complete',
@@ -379,7 +379,7 @@ function growthInfo(id, c, g) {
   return {
     level: g.level,
     xp: g.xp,
-    next: nextLevelXp(g.level),
+    ...xpInLevel(g),
     pendingAsi: pend.asi,
     pendingTalent: pend.talent,
     caster: !!c.castStat,
@@ -395,9 +395,16 @@ function growthInfo(id, c, g) {
   };
 }
 
-function nextLevelXp(level) {
+/**
+ * XP as the table reads it: progress *within* the current level, so it looks
+ * like it resets on every level-up. Costs run 10/20/30… per level; the stored
+ * `g.xp` is the running total, and this is the slice of it that's still owed.
+ */
+function xpInLevel(g) {
   const { LEVEL_XP } = rulesRef;
-  return level < LEVEL_XP.length ? LEVEL_XP[level] : null;
+  const floor = LEVEL_XP[g.level - 1] ?? 0;
+  const ceil = g.level < LEVEL_XP.length ? LEVEL_XP[g.level] : null;
+  return { xp: g.xp - floor, next: ceil == null ? null : ceil - floor };
 }
 
 // What a caster may learn now: an unknown tome spell of a tier they've reached

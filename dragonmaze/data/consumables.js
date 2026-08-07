@@ -39,6 +39,18 @@ export const CONSUMABLES = [
     use: { target: 'all-enemies', damage: '2d4', dtype: 'acid', saveDC: 12 },
     blurb: 'shatters in a spray of acid over the whole pack; save for half',
   },
+  // Harvested from the things that made them (see `harvest` in data/monsters.js).
+  // Weaker than the crafted flasks above — you cut these out of a corpse.
+  {
+    id: 'vial-spider-venom', name: 'Spider Venom', tile: 'vial-poison',
+    use: { target: 'enemy', damage: '1d6', dtype: 'poison' },
+    blurb: 'milked from the fangs of a giant spider; one sharp dose',
+  },
+  {
+    id: 'vial-snake-venom', name: 'Snake Venom', tile: 'vial-poison',
+    use: { target: 'enemy', damage: '1d4', dtype: 'poison', condition: { id: 'poisoned', rounds: 2, dot: { amount: 2, dtype: 'poison' } } },
+    blurb: 'slow and cruel: it bites once, then keeps working',
+  },
   {
     id: 'grease', name: 'Flask of Grease', tile: 'grease',
     use: { target: 'all-enemies', condition: { id: 'greased', rounds: 2, disadv: true } },

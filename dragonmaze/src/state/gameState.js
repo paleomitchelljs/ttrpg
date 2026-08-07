@@ -35,6 +35,7 @@ import {
   endOfRunBonus,
   tierAfterBanking,
   victoryDropChance,
+  HARVEST_CHANCE,
   levelForXp,
   hpPerLevel,
   rollHpGain,
@@ -967,7 +968,9 @@ export function moveTo(x, y) {
  * Returns the level-up events to fold into the caller's batch.
  */
 function grantTreasureXp(tier, events = []) {
-  const amount = XP_FOR[tier] ?? XP_FOR.normal;
+  // An unlisted tier (a harvested trophy's 'none') is worth nothing — a feather
+  // is not a hoard.
+  const amount = XP_FOR[tier] ?? 0;
   if (!amount || !state.run?.party?.length) return events;
   events.push({ type: 'xp', amount, tier });
   for (const slot of state.run.party) {
@@ -1394,6 +1397,24 @@ function finishCombat(events) {
       events.push({ type: 'quest-complete', target: run.quest.name, reward: run.quest.reward, from: run.quest.from });
       bumpRep(run.quest.from, 2);
       run.quest = null;
+    }
+
+    // A beast has no purse, but it has fangs and feathers. Each slain beast that
+    // carries a `harvest` has a moderate chance of leaving it behind — the venom
+    // into the shared pouch, the trophy into the inventory (once only).
+    for (const m of slain) {
+      const h = monsterById(m.templateId)?.harvest;
+      if (!h || liveRNG() >= HARVEST_CHANCE) continue;
+      if (h.consumable && consumableById(h.consumable)) {
+        state.meta.consumables.push(h.consumable);
+        events.push({ type: 'harvest', who: m.name, name: consumableById(h.consumable).name, kind: 'consumable' });
+      } else if (h.item) {
+        const it = itemById(h.item);
+        if (it && !state.meta.inventory.includes(it.id)) {
+          state.meta.inventory.push(it.id);
+          events.push({ type: 'harvest', who: m.name, name: it.name, blurb: it.blurb, kind: 'item' });
+        }
+      }
     }
 
     // Magic items come ONLY from the named boss that carries them. There is no

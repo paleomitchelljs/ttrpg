@@ -29,6 +29,9 @@ export function lootScale(depth) {
   return 1 + 0.3 * (depth - 1);
 }
 
+/** Chance a slain beast leaves its venom or a trophy behind (see monster `harvest`). */
+export const HARVEST_CHANCE = 0.25;
+
 /** Chance the slain leave equipment among the spoils. Bosses carry the good stuff. */
 export function victoryDropChance(isBoss) {
   return isBoss ? 0.5 : 0.08;

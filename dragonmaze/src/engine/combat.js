@@ -847,6 +847,14 @@ export function playerSpell(combat, spellId, targetId, rng = Math.random, opts =
   const spell = spellById(spellId);
   if (!spell || !caster.spells.includes(spellId) || caster.burned.includes(spellId)) return events;
 
+  // Working any new magic drops the thread you were holding. Shadowdark's text
+  // only forbids running two *focus* spells at once, but a caster who can keep
+  // an Acid Arrow eating while throwing Magic Missiles isn't concentrating on
+  // anything — so here a focus costs you your casting, not just your focus slot.
+  // Breaking on the attempt (not on success) keeps it simple: choosing to cast
+  // is the moment you let go.
+  breakFocus(combat, caster, 'recast', events);
+
   const castOpts = {
     // The Metal Wand's castDC rides the same lever the Fae Drake pulls; they
     // stack. castCredit only names the familiar when the familiar is the reason.

@@ -403,7 +403,11 @@ cast mod`). `tome: false` = innate/class-only, never learnable from a found tome
 - **`focus: {dice?, cond}`** — Shadowdark's **Focus**. The caster carries
   `focus = {spellId, name, targetId, condId, dice, dtype}` and the target carries
   the condition tagged `focusOf: <casterId>`. Rules, per the system guide: one
-  focus at a time (casting another calls `breakFocus` on the old one); a
+  focus at a time — in fact **casting anything at all** drops it, on the
+  attempt, not on success (`breakFocus(..., 'recast')` at the top of
+  `playerSpell`). *This is stricter than the book*, which only forbids two focus
+  spells running together; a caster who can keep an Acid Arrow eating while
+  throwing Magic Missiles isn't concentrating on anything. A
   spellcasting check at the **start of each of the caster's turns** keeps it up
   (`beginTurn` → `checkFocus`, wired into `advanceTurn`, which now takes `rng`);
   **taking a hit forces an immediate check** (`afterDamage` → `checkFocus`); an
@@ -554,6 +558,14 @@ reveal. Never announced.
   (`bankAndWin`, `stashHoard`) adds carried gold to `meta.hoardGold`, which gates
   the dragon's tiers. **Beasts (`faction: 'wild'`) carry no gold at all** — a rat
   has no purse — so coin comes from humanoids, undead, constructs, and piles.
+- **Beasts pay in parts instead.** A monster may carry
+  `harvest: { consumable }` or `harvest: { item }`; each one slain rolls
+  `HARVEST_CHANCE` (0.25) to leave it behind — venom into the shared pouch, a
+  trophy into the inventory (once only). Trophies live in `data/items.js` with
+  `zone: 'wild'` (no dungeon's boss list) and `xp: 'none'` (a feather is not a
+  hoard, so it pays no XP). The sheet shows XP as progress **within** the level
+  (`xpInLevel` in main.js), so it reads as resetting at every level-up even
+  though `g.xp` is stored as a running total.
 - **Talents** (`data/talents.js`): `armor` (+1 AC, repeatable),
   `arcane-recovery` (caster), `silver-tongue`, the gated `cleave` and `flurry`,
   plus two **generated** families — `focus-<school>` (Spell Focus, one per school

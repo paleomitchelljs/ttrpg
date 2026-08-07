@@ -179,7 +179,9 @@ const ABILITY_ORDER = [['str', 'STR'], ['dex', 'DEX'], ['con', 'CON'], ['int', '
 function growthHtml(subject) {
   if (!subject.growth) return '';
   const g = subject.growth;
-  let html = `<h3>Level ${g.level}</h3><p class="sheet-blurb">${g.xp} XP${g.next ? `, next level at ${g.next}` : ', at the summit'} · +${g.hpPerLevel} HP each level (automatic)</p>`;
+  // XP shows progress within the level (it resets on every level-up), and HP is
+  // now rolled, so the per-level figure is an average rather than a promise.
+  let html = `<h3>Level ${g.level}</h3><p class="sheet-blurb">${g.xp} / ${g.next ?? '—'} XP${g.next ? ' to the next level' : ' — at the summit'} · ~${g.hpPerLevel} HP a level (rolled)</p>`;
   if (g.talents.length) html += `<p class="sheet-blurb">Talents: ${g.talents.join(', ')}</p>`;
 
   if (g.pendingAsi > 0) {
