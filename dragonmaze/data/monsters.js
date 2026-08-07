@@ -38,7 +38,7 @@ export const MONSTERS = [
     emoji: '🐀',
     faction: 'wild',
     parley: 'never',
-    goldValue: 1,
+    goldValue: 0, // a beast carries no purse — treasure is XP, and vermin have none
     minDepth: 1,
     maxDepth: 3,
     packMax: 5,
@@ -163,7 +163,7 @@ export const MONSTERS = [
     anim: { idle: 'spider-idle', attack: 'spider-attack' },
     faction: 'wild',
     parley: 'never',
-    goldValue: 3,
+    goldValue: 0, // a beast carries no purse — treasure is XP, and vermin have none
     minDepth: 2,
     packMax: 4,
     weight: 2,
@@ -185,7 +185,7 @@ export const MONSTERS = [
     anim: { idle: 'raptor-idle', attack: 'raptor-attack' },
     faction: 'wild',
     parley: 'never',
-    goldValue: 3,
+    goldValue: 0, // a beast carries no purse — treasure is XP, and vermin have none
     minDepth: 2,
     maxDepth: 4,
     packMax: 3,
@@ -204,7 +204,7 @@ export const MONSTERS = [
     anim: { idle: 'coatl-idle', attack: 'coatl-attack' },
     faction: 'wild',
     parley: 'never',
-    goldValue: 6,
+    goldValue: 0, // a beast carries no purse — treasure is XP, and vermin have none
     minDepth: 3,
     packMax: 2,
     weight: 2,
@@ -222,7 +222,7 @@ export const MONSTERS = [
     anim: { idle: 'cerenasp-idle', attack: 'cerenasp-attack' },
     faction: 'wild',
     parley: 'never',
-    goldValue: 5,
+    goldValue: 0, // a beast carries no purse — treasure is XP, and vermin have none
     minDepth: 3,
     packMax: 2,
     weight: 2,
@@ -321,7 +321,7 @@ export const MONSTERS = [
     facesLeft: true,
     faction: 'wild',
     parley: 'never',
-    goldValue: 4,
+    goldValue: 0, // a beast carries no purse — treasure is XP, and vermin have none
     minDepth: 3,
     packMax: 2,
     weight: 1,
@@ -341,7 +341,7 @@ export const MONSTERS = [
     emoji: '🦍',
     faction: 'wild',
     parley: 'never',
-    goldValue: 6,
+    goldValue: 0, // a beast carries no purse — treasure is XP, and vermin have none
     minDepth: 3,
     packMax: 1,
     weight: 1,
@@ -362,7 +362,7 @@ export const MONSTERS = [
     vulnerable: ['fire'],
     faction: 'wild',
     parley: 'never',
-    goldValue: 5,
+    goldValue: 0, // a beast carries no purse — treasure is XP, and vermin have none
     minDepth: 3,
     packMax: 2,
     weight: 1,
@@ -406,7 +406,7 @@ export const MONSTERS = [
     anim: { idle: 'basilisk-idle', attack: 'basilisk-attack' },
     faction: 'wild',
     parley: 'never',
-    goldValue: 9,
+    goldValue: 0, // a beast carries no purse — treasure is XP, and vermin have none
     minDepth: 4,
     maxDepth: 6,
     packMax: 1,
@@ -554,7 +554,7 @@ export const MONSTERS = [
     anim: { idle: 'snake-idle', attack: 'snake-attack' },
     faction: 'wild',
     parley: 'never',
-    goldValue: 3,
+    goldValue: 0, // a beast carries no purse — treasure is XP, and vermin have none
     minDepth: 2,
     packMax: 2,
     weight: 2,
@@ -594,7 +594,7 @@ export const MONSTERS = [
     vulnerable: ['fire'],
     faction: 'wild',
     parley: 'wary',
-    goldValue: 3,
+    goldValue: 0, // a beast carries no purse — treasure is XP, and vermin have none
     minDepth: 1,
     packMax: 4,
     weight: 2,

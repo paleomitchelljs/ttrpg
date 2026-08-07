@@ -251,8 +251,12 @@ The single home for every game number — nothing elsewhere hard-codes a rule.
   `clampRep` (band −10..+10).
 - **Morale**: `moraleCheck(monster, rng, disadvantage)` — `d20 + monster.morale`
   vs `MORALE_DC` (12). `morale: null` = fearless (undead/constructs never check).
-- **Leveling**: `LEVEL_XP` (cumulative, L1–L10), `levelForXp`, `hpPerLevel`
-  (die-average + CON, min 1), `asiEarned` (ASI at 2/4/6/8/10), `talentEarned`
+- **Leveling**: `LEVEL_XP` (cumulative, L1–L10 — advancing costs `10 x current
+  level`, so 10, 30, 60, 100 …), `levelForXp`, `XP_FOR`
+  (`{normal: 1, fabulous: 3, legendary: 10}`), `rollHpGain` (**rolls** the class
+  hit die + CON, min 1 — the real gain past 1st level), `hpPerLevel`
+  (die-average + CON: the sheet's estimate, and the backfill for saves that
+  levelled before HP was rolled), `asiEarned` (ASI at 2/4/6/8/10), `talentEarned`
   (talent at 3/5/7/9), `ABILITY_CAP` (+5). Dragon: `endOfRunBonus`, `lootScale`,
   `victoryDropChance`, `HOARD_PILE_TIERS`, `tierAfterBanking`.
 - `bumpDamage(expr, n)` — folds a flat bonus into a dice string's modifier
@@ -528,13 +532,28 @@ reveal. Never announced.
 
 ## 10. Progression & the hoard
 
-- **Gold is XP** (Shadowdark). Banking (`bankAndWin`, `stashHoard`) adds carried
-  gold to `meta.hoardGold` and grants that amount as XP to **every hero on the
-  delve** (`grantBankingXp`). Crossing a `LEVEL_XP` threshold levels them:
-  automatic HP (`hpPerLevel`) is added immediately; ability increases (2/4/6/8/10)
-  and talents (3/5/7/9) become **pending advances** (`pendingAdvances`), spent on
-  the character sheet via `chooseAdvance(charId, type, arg)` (`asi` | `talent` |
-  `spell` | `familiar` — the last three share the talent slot).
+- **Treasure is XP** (Shadowdark), *not gold value*. `grantTreasureXp(tier)`
+  pays **every hero on the delve the whole award, the moment it is found** —
+  nothing is divided and nothing waits for the exit, so a party wiped on the way
+  out keeps what it learned. A bag of 30gp and a chest of 200gp are both one
+  hoard, worth the same 1 XP. Three call sites: stepping onto any loot cell
+  (`normal`), a pinned cache's magic item, and a boss's drop (both
+  `itemXpTier(item)` — `fabulous` unless the item says `xp: 'legendary'`).
+- **Levels come instantly.** Crossing a `LEVEL_XP` threshold levels a hero on
+  the spot. HP past 1st level is **rolled** (`rollHpGain`: class hit die + CON,
+  min 1) and the result is stored in `heroGrowth[id].hpRolls`, one per level, so
+  it never re-rolls and a hero's HP can't wobble between renders. First level is
+  not rolled — a hero starts at the die's max (see `data/party.js`).
+  `levelHpTotal` sums the rolls, falling back to `hpPerLevel` for levels a save
+  gained before HP was rolled, so old saves keep the HP they had. Ability
+  increases (2/4/6/8/10) and talents (3/5/7/9) become **pending advances**
+  (`pendingAdvances`), spent on the character sheet via
+  `chooseAdvance(charId, type, arg)` (`asi` | `talent` | `spell` | `familiar` —
+  the last three share the talent slot).
+- **Gold no longer levels anyone.** It is the dragon's food only: banking
+  (`bankAndWin`, `stashHoard`) adds carried gold to `meta.hoardGold`, which gates
+  the dragon's tiers. **Beasts (`faction: 'wild'`) carry no gold at all** — a rat
+  has no purse — so coin comes from humanoids, undead, constructs, and piles.
 - **Talents** (`data/talents.js`): `armor` (+1 AC, repeatable),
   `arcane-recovery` (caster), `silver-tongue`, the gated `cleave` and `flurry`,
   plus two **generated** families — `focus-<school>` (Spell Focus, one per school

@@ -275,7 +275,7 @@ export const ZONES = [
           { id: 'giant-spider', weight: 2, packMax: 2 },
           { id: 'giant-rat', weight: 1, packMax: 3 },
         ],
-        boss: { name: 'The golem of the courtyard', monsterIds: ['stone-golem'], drops: ['shard-of-golem-stone'] },
+        boss: { name: 'The Stone Golem', monsterIds: ['stone-golem'], drops: ['shard-of-golem-stone'] },
         map: [
           '#######3#######',
           '......#.#.....#',
@@ -393,7 +393,6 @@ export const ZONES = [
           { id: 'bone-wraith', weight: 2, packMax: 1 },
           { id: 'sarnak-vampire', weight: 1, packMax: 1 },
         ],
-        boss: { name: 'Fright and Terror, the Rift-Guardians', monsterIds: ['gargoyle', 'gargoyle'], drops: ['aegis-of-the-serpent'] },
         map: [
           '######5########',
           '#.............#',
@@ -488,7 +487,6 @@ export const ZONES = [
           { id: 'giant-rat', weight: 2, packMax: 3 },
           { id: 'giant-snake', weight: 1, packMax: 2 },
         ],
-        boss: { name: 'The Sluicewarden Gators', monsterIds: ['alligator', 'alligator', 'green-slime'], drops: ['lizardscale-cloak'] },
         map: [
           '######E########',
           '#.....S##.....#',
@@ -516,7 +514,6 @@ export const ZONES = [
           { id: 'fungus-man', weight: 2, packMax: 2 },
           { id: 'giant-spider', weight: 1, packMax: 2 },
         ],
-        boss: { name: 'The Rat King', monsterIds: ['giant-rat', 'giant-rat', 'green-slime'], drops: ['shield-round'] },
         map: [
           '###############',
           '#...##.S.##...#',
@@ -572,7 +569,6 @@ export const ZONES = [
           { id: 'gargoyle', weight: 2, packMax: 1 },
           { id: 'green-slime', weight: 1, packMax: 2 },
         ],
-        boss: { name: 'The Fear-Touched Gargoyles', monsterIds: ['gargoyle', 'gargoyle', 'bone-wraith'], drops: ['rubicite-greaves'] },
         map: [
           '###############',
           '#......S......#',

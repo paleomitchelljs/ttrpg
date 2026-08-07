@@ -23,7 +23,7 @@ import { ZONES } from '../data/zones.js';
 import { buildZoneDungeon } from '../src/world/zones.js';
 import { FAMILIARS } from '../data/familiars.js';
 import { ITEMS, SLOTS, itemById } from '../data/items.js';
-import { bumpDamage, victoryDropChance, levelForXp, LEVEL_XP, hpPerLevel, canLearnSpell } from '../src/engine/rules.js';
+import { bumpDamage, victoryDropChance, levelForXp, LEVEL_XP, hpPerLevel, canLearnSpell, XP_FOR, rollHpGain } from '../src/engine/rules.js';
 import * as gameState from '../src/state/gameState.js';
 import { migrate, SAVE_VERSION } from '../src/state/save.js';
 import { portalToCompanion } from '../src/state/importHero.js';
@@ -275,8 +275,11 @@ check('roster has sane stats', () => {
     assert.ok(m.ac >= 8 && m.ac <= 20, `${m.id} ac`);
     assert.ok(m.hpMax >= 1, `${m.id} hp`);
     assert.ok(m.attacks.length >= 1, `${m.id} attacks`);
-    // Conjured/summon-only templates (weight 0) aren't looted, so no gold required.
-    if (m.weight !== 0) assert.ok(m.goldValue > 0, `${m.id} gold`);
+    // Gold is carried, not grown: beasts have no purse, and conjured templates
+    // (weight 0) are never looted. Everyone else pays out.
+    assert.ok(m.goldValue >= 0, `${m.id} gold`);
+    if (m.weight !== 0 && m.faction !== 'wild') assert.ok(m.goldValue > 0, `${m.id} gold`);
+    if (m.faction === 'wild') assert.equal(m.goldValue, 0, `${m.id} is a beast and carries nothing`);
     roll(m.attacks[0].damage); // throws if the dice expression is malformed
   }
 });
@@ -604,10 +607,15 @@ check('the Lost Temple is one item per boss, and nothing is stranded', () => {
   for (const b of bosses) {
     assert.equal((b.drops ?? []).length, 1, `${b.name} carries exactly one item`);
   }
-  // Every Lost Temple item has a boss (bar the one still awaiting a home).
+  // Removing the four filler bosses left more items than bosses. These are
+  // findable by no one until they get a home or get cut — pinned here so the
+  // list is a decision on the record rather than a silent hole.
   const named = new Set(bosses.flatMap((b) => b.drops));
   const stranded = ITEMS.filter((i) => i.zone === 'lost-temple' && !named.has(i.id)).map((i) => i.id);
-  assert.deepEqual(stranded, ['amulet-sun'], 'only the Sun Amulet is still unplaced');
+  assert.deepEqual(stranded, [
+    'aegis-of-the-serpent', 'rubicite-greaves', 'lizardscale-cloak', 'shield-round', 'amulet-sun',
+  ], 'the known-unplaced set, awaiting a call');
+  assert.equal(bosses.length, 7, 'seven bosses left in the Lost Temple');
 });
 
 check('item mods reach the engine: wand, idol, and an ability item', () => {
@@ -833,12 +841,44 @@ check('party combat: monsters fight heroes, heals can revive', () => {
 });
 
 // ---- leveling & party-only mode
-check('gold-as-XP levels follow the thresholds', () => {
+check('treasure-as-XP levels follow the Shadowdark curve', () => {
+  // Advancing costs 10 x current level, so cumulative: 10, 30, 60, 100, ...
+  assert.deepEqual(LEVEL_XP.slice(0, 5), [0, 10, 30, 60, 100]);
   assert.equal(levelForXp(0), 1);
-  assert.equal(levelForXp(49), 1);
-  assert.equal(levelForXp(50), 2);
-  assert.equal(levelForXp(120), 3);
+  assert.equal(levelForXp(9), 1);
+  assert.equal(levelForXp(10), 2, 'ten XP reaches 2nd');
+  assert.equal(levelForXp(29), 2);
+  assert.equal(levelForXp(30), 3, 'twenty more reaches 3rd');
   assert.equal(levelForXp(999999), LEVEL_XP.length);
+  // The tiers the blog and the book agree on.
+  assert.deepEqual(XP_FOR, { normal: 1, fabulous: 3, legendary: 10 });
+  // Ten ordinary hoards is a level, exactly as the source describes.
+  assert.equal(levelForXp(10 * XP_FOR.normal), 2);
+});
+
+check('HP past 1st level is rolled, kept, and never re-rolled', () => {
+  const gowra = companionById('gowra'); // d8 hit die, CON +2
+  // The roll is the die + CON, minimum 1.
+  assert.equal(rollHpGain(gowra, () => 0), 3, 'a 1 on the d8, +2 CON');
+  assert.equal(rollHpGain(gowra, () => 0.99), 10, 'an 8 on the d8, +2 CON');
+  const frail = { hitDie: 4, abilities: { con: -5 } };
+  assert.equal(rollHpGain(frail, () => 0), 1, 'never below 1');
+
+  // Stored rolls are what heroWithGrowth adds — the same hero twice running
+  // must not wobble.
+  const game = gameState;
+  game.state.meta.heroGrowth = { gowra: { xp: 30, level: 3, choices: [], hpRolls: [7, 4] } };
+  const a = game.heroWithGrowth('gowra');
+  const b = game.heroWithGrowth('gowra');
+  assert.equal(a.hpMax, gowra.hpMax + 11, 'the two stored rolls, and only those');
+  assert.equal(a.hpMax, b.hpMax, 'reading it twice gives the same hero');
+
+  // A save that levelled before HP was rolled keeps the HP it had: missing
+  // rolls fall back to the old smooth average.
+  game.state.meta.heroGrowth = { gowra: { xp: 30, level: 3, choices: [] } };
+  const legacy = game.heroWithGrowth('gowra');
+  assert.equal(legacy.hpMax, gowra.hpMax + hpPerLevel(gowra) * 2, 'legacy levels use the average');
+  game.state.meta.heroGrowth = {};
 });
 
 check('ASI and talent advances fold into the hero template', () => {

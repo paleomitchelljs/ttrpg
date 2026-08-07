@@ -24,6 +24,11 @@
 //   intimidate        bonus on Intimidate checks
 // bane: 'undead' adds +2 damage against undead targets.
 //
+// `xp` is the treasure tier the finder is paid in (see XP_FOR in rules.js):
+// every magic item is 'fabulous' (3 XP) unless it says otherwise; the
+// end-of-dungeon uniques are 'legendary' (10 XP). A ground treasure pile is
+// 'normal' (1 XP) and needs no entry here.
+//
 // A 'shield' item only pays out to someone with a hand free — a two-handed
 // weapon cancels it, the same rule as the shield a hero already carries
 // (shieldAcFor in data/weapons.js).
@@ -153,6 +158,7 @@ export const ITEMS = [
     slot: 'armor',
     zone: 'lost-temple',
     mods: { ac: 2, regen: 1 },
+    xp: 'legendary', // the Avatar of Fear's, and the end of the Lost Temple
     blurb: 'the red ore of legend, warm to the touch — it knits what it can (+2 AC, +1 HP each combat turn and each step you walk)',
   },
   {

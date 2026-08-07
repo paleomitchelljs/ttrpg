@@ -37,6 +37,8 @@ import {
   victoryDropChance,
   levelForXp,
   hpPerLevel,
+  rollHpGain,
+  XP_FOR,
   asiEarned,
   talentEarned,
   ABILITY_CAP,
@@ -178,6 +180,20 @@ function growthFor(id) {
   return state.meta.heroGrowth[id];
 }
 
+/**
+ * HP a hero has gained from levelling. Every level past the first is a stored
+ * roll (see grantTreasureXp); saves that levelled before HP was rolled have no
+ * rolls, so those levels fall back to the smooth average and their HP is
+ * unchanged by the switch.
+ */
+function levelHpTotal(g, hero) {
+  const rolls = g?.hpRolls ?? [];
+  const levels = Math.max(0, (g?.level ?? 1) - 1);
+  let total = 0;
+  for (let i = 0; i < levels; i++) total += rolls[i] ?? hpPerLevel(hero);
+  return total;
+}
+
 /** A hero template with every chosen advance folded in. */
 export function heroWithGrowth(id) {
   const base = heroById(id);
@@ -223,7 +239,7 @@ export function heroWithGrowth(id) {
   hero.ac += dexGain;
 
   // Automatic toughness: every level past 1st adds class + (grown) CON HP.
-  hero.hpMax += hpPerLevel(hero) * (level - 1);
+  hero.hpMax += levelHpTotal(g, hero);
 
   // Talents (odd levels) and learned spells.
   for (const c of choices) {
@@ -733,6 +749,9 @@ export function move(dx, dy) {
   const lootIdx = d.loot.findIndex((l) => l.x === x && l.y === y);
   if (lootIdx >= 0) {
     const [loot] = d.loot.splice(lootIdx, 1);
+    // Finding the hoard is the XP, not what it turned out to be worth — a bag
+    // of 30 gold and a chest of 200 both pay the same 1 XP, right now.
+    grantTreasureXp('normal', events);
     if (loot.tome) {
       // A caster among the party studies the tome — dragons are beasts, not
       // bookworms. Pick a caster hero who has an unknown tome spell to learn,
@@ -767,6 +786,7 @@ export function move(dx, dy) {
       if (it && !state.meta.inventory.includes(it.id)) {
         state.meta.inventory.push(it.id);
         events.push({ type: 'item-drop', name: it.name, blurb: it.blurb });
+        grantTreasureXp(itemXpTier(it), events);
       } else {
         run.unbankedGold += 20;
         events.push({ type: 'loot', label: 'a picked-clean cache', gold: 20 });
@@ -939,26 +959,43 @@ export function moveTo(x, y) {
   if (Math.abs(dx) + Math.abs(dy) === 1) move(dx, dy);
 }
 
-// Gold is XP: everyone on the delve grows by what was just secured. Returns any
-// level-up events to fold into the batch.
-function grantBankingXp(amount) {
-  const events = [];
+/**
+ * Treasure is XP (Shadowdark). Everyone on the delve is paid the **whole**
+ * award the moment it's found — nothing is divided, and nothing waits for the
+ * exit, so a party wiped on the way out still keeps what it learned. `tier` is
+ * 'normal' (a ground pile), 'fabulous' (a magic item), or 'legendary'.
+ * Returns the level-up events to fold into the caller's batch.
+ */
+function grantTreasureXp(tier, events = []) {
+  const amount = XP_FOR[tier] ?? XP_FOR.normal;
+  if (!amount || !state.run?.party?.length) return events;
+  events.push({ type: 'xp', amount, tier });
   for (const slot of state.run.party) {
     const g = growthFor(slot.id);
     g.xp += amount;
-    const newLevel = levelForXp(g.xp);
-    if (newLevel > g.level) {
-      const gained = newLevel - g.level;
-      g.level = newLevel; // pending advances are derived from level (see pendingAdvances)
-      // Automatic HP: each new level raises this hero's live pool right away,
-      // scaled by class + the hero's (possibly ASI-raised) CON.
-      const hp = hpPerLevel(heroWithGrowth(slot.id)) * gained;
+    let newLevel = levelForXp(g.xp);
+    while (newLevel > g.level) {
+      g.level += 1;
+      // Shadowdark: every level past the first ROLLS the hit die + CON. The
+      // roll is kept per level in the growth record so it never re-rolls and
+      // a hero's HP can't wobble between renders.
+      g.hpRolls ??= [];
+      const hp = rollHpGain(heroWithGrowth(slot.id), liveRNG);
+      g.hpRolls.push(hp);
       slot.hp.max += hp;
       slot.hp.current += hp;
-      events.push({ type: 'level-up', charId: slot.id, who: heroById(slot.id)?.name ?? slot.id, level: newLevel });
+      events.push({
+        type: 'level-up', charId: slot.id, who: heroById(slot.id)?.name ?? slot.id,
+        level: g.level, hp,
+      });
     }
   }
   return events;
+}
+
+/** The XP tier a found item pays out at. Magic items are 'fabulous' by default. */
+function itemXpTier(item) {
+  return item?.xp ?? 'fabulous';
 }
 
 function bankAndWin(events) {
@@ -969,7 +1006,8 @@ function bankAndWin(events) {
   const banked = run.unbankedGold + bonus;
   state.meta.hoardGold += banked;
   state.meta.runsCompleted += 1;
-  events.push(...grantBankingXp(banked));
+  // Banked gold feeds the dragon's hoard only — heroes were paid in XP when
+  // they picked the treasure up (grantTreasureXp).
   run.phase = 'won';
   run.lastResult = { banked, bonus, hoard: state.meta.hoardGold, depth: run.dungeon.depth };
   events.push({ type: 'banked', ...run.lastResult });
@@ -1368,6 +1406,7 @@ function finishCombat(events) {
         const found = pool[Math.floor(liveRNG() * pool.length)];
         state.meta.inventory.push(found.id);
         events.push({ type: 'item-drop', name: found.name, blurb: found.blurb });
+        grantTreasureXp(itemXpTier(found), events);
       }
     }
     run.encountersCleared = (run.encountersCleared ?? 0) + 1;

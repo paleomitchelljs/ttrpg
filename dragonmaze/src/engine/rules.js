@@ -125,9 +125,19 @@ export function bumpDamage(expr, n) {
 }
 
 // ---------------------------------------------------------------- leveling
-// Gold is XP (Shadowdark): banked gold advances every party member on the
-// delve. Cumulative thresholds for levels 1..10.
-export const LEVEL_XP = [0, 50, 120, 250, 450, 700, 1000, 1400, 1900, 2500];
+// **Treasure is XP** (Shadowdark). Not gold *value* — a hoard is worth what it
+// is worth whether it holds 30gp or 200gp. Every hero on the delve gets the
+// full award the moment the treasure is found; nothing is tallied at the exit
+// and nothing is divided. Gold still exists, but only to grow the dragon.
+//
+//   normal     a ground treasure pile               1 XP
+//   fabulous   a named boss's permanent magic item  3 XP
+//   legendary  an end-of-dungeon, one-of-a-kind     10 XP
+export const XP_FOR = { normal: 1, fabulous: 3, legendary: 10 };
+
+// Advancing costs 10 XP x your current level, so a 1st-level hero reaches 2nd
+// on 10 XP, 3rd on 20 more, and so on. These are the cumulative totals.
+export const LEVEL_XP = [0, 10, 30, 60, 100, 150, 210, 280, 360, 450];
 
 export function levelForXp(xp) {
   let level = 1;
@@ -140,14 +150,30 @@ export function levelForXp(xp) {
 // HP gained automatically per level, by class and CON: martials get a bigger
 // hit die than casters, plus their Constitution modifier (min 1). Applied on
 // every level-up so toughness scales without spending a pick on it.
+function hitDieOf(hero) {
+  // Fall back to a caster's d4 / a martial's d6 for a hero predating `hitDie`.
+  return hero?.hitDie ?? (hero?.castStat ? 4 : 6);
+}
+
+/**
+ * What a level is *expected* to add — the hit die's average plus CON. Used for
+ * the sheet's "+N HP each level" estimate and to backfill saves that levelled
+ * before HP was rolled. The real gain is rolled (see rollHpGain).
+ */
 export function hpPerLevel(hero) {
   const con = hero?.abilities?.con ?? 0;
-  // Shadowdark: each level adds a class hit-die roll + CON (min 1). We use the
-  // die's rounded average so growth is smooth — d4->3, d6->4, d8->5. Fall back to
-  // a caster's d4 / a martial's d6 if a hero predates the hitDie field.
-  const hitDie = hero?.hitDie ?? (hero?.castStat ? 4 : 6);
-  const dieAvg = Math.round((hitDie + 1) / 2);
-  return Math.max(1, dieAvg + con);
+  return Math.max(1, Math.round((hitDieOf(hero) + 1) / 2) + con);
+}
+
+/**
+ * Shadowdark: every level past the first **rolls** the class hit die and adds
+ * CON, minimum 1. First level is not rolled — a hero starts at the die's max
+ * (see data/party.js), so only 2nd level onward comes to this.
+ * The result is stored per level in the growth record, never re-rolled.
+ */
+export function rollHpGain(hero, rng = Math.random) {
+  const con = hero?.abilities?.con ?? 0;
+  return Math.max(1, roll(`1d${hitDieOf(hero)}`, rng).total + con);
 }
 
 // Level cadence: an ability score increase at 2/4/6/8/10, a talent at 3/5/7/9.
