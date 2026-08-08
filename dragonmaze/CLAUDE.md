@@ -18,6 +18,9 @@ committing UI changes or Pages ships stale**). `npm test` = dice/combat/data-edi
   `src/render/*` modules, HUD/menu, explore/combat/overlays, the `html.compact`
   responsive system + `?mobile` preview, sprites, and the element ids `main.js`
   binds to). **Read this before changing anything UI-facing.**
+- **Monsters:** [`docs/monster-making.md`](docs/monster-making.md) — the design
+  philosophy behind a Shadowdark monster and the procedure for adding one to
+  `data/monsters.js`. **Read this before writing a new stat block.**
 - Art pipeline: [`docs/art-pipeline.md`](docs/art-pipeline.md).
 - Zone editor: [`docs/editor-guide.md`](docs/editor-guide.md).
 
