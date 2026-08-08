@@ -161,6 +161,28 @@ three level-4 monsters both cost 12, but the twelve get twelve attacks a round
 against a party that gets four. The sum is a starting point for the encounter, not
 a promise about it. Lean the budget down when you spend it on bodies.
 
+### The lone boss
+
+A party against one big monster is where the sum rule breaks, and there is no clean
+replacement for it. The working guess: **double the party's total levels, give or
+take a level.** Four 1st-level PCs are 4 points, so a lone boss around level 7 or 8
+is the match. The Citadel of the Scarlet Minotaur is the worked example, and its
+level-7 minotaur is a good fight for exactly that party.
+
+The rule is fragile in both directions, and it breaks on the party, not the boss:
+
+- Put six PCs in front of that same minotaur and he stops looking tough. Two extra
+  bodies buy two extra actions a round, and the boss still only gets his.
+- Let those four PCs reach 3rd level first and they are 12 points, wanting a
+  24-point boss. The minotaur is now a speed bump.
+
+The fix in both cases is minions, not a bigger boss. Throw two or three beastmen in
+to take some of the heat off. A boss dies fast because every PC attacks it every
+round, so raising its level only buys HP and to-hit, which makes the same fight
+longer. Minions change what the fight is: they soak attacks, they split the party's
+damage across targets, and they cost the party actions that would otherwise land on
+the boss.
+
 ### What that means here
 
 Nothing in the engine computes this. `rollEncounter` picks one monster type by
@@ -184,7 +206,37 @@ level. By HP, the tiers price out at roughly:
 | ancient | 90 | ~19 | +13 (wants +15) |
 
 So a wyrmling plus two 1st-level heroes is about a 6-point party, and the dragon is
-most of it. Worth knowing before hand-tuning any depth-1 encounter.
+most of it. That prices a standard fight at 6 points and a lone boss at 12. Nothing
+in the roster is a 12-point single monster (the avatar of fear tops out at LV 10),
+which is most of why the zones use boss *packs*.
+
+Those packs are already priced, and they hold up. Ten of the fourteen boss entries
+in `data/zones.js` are packs; only four are lone, and three of those are golems.
+Summed by the same level derivation:
+
+| Difficulty | Boss pack | Sum |
+|---|---|---|
+| 1 | two froglok skirmishers | 4 |
+| 2 | cave troll (lone) | 5 |
+| 2 | stone golem (lone) | 8 |
+| 2 | bone wraith + zombie | 8 |
+| 3 | clay golem (lone) | 7 |
+| 3 | minotaur + froglok skirmisher | 9 |
+| 3 | cave troll + alligator | 9 |
+| 3 | tae-ew templar + lizardfolk warrior | 9 |
+| 4 | bone wraith + 2 zombies | 11 |
+| 4 | lizardman archon + lizardman crusader | 11 |
+| 4 | lizardman crusader + lizardfolk warrior (miniboss) | 7 |
+| 5 | iron golem (lone) | 9 |
+| 5 | bone wraith + skeleton | 7 |
+| 5 | avatar of fear + 2 bone wraiths | 20 |
+
+The curve is sane from difficulty 1 through 4: the top of each band climbs 4, 8, 9,
+11. Difficulty 5 is not. Two of its three bosses cost 7 and 9 points, cheaper than
+the difficulty-4 bosses the party just beat, and the third jumps to 20. Whether that
+reads as broken at the table depends on where party level actually lands by then,
+which the data cannot tell us. It is the first place to look if difficulty 5 ever
+feels flat.
 
 That table also sharpens the roster finding above. The dragon's own to-hit tracks
 the equation within +1 and drifts *low* at ancient, while the monsters average +1.5
@@ -279,6 +331,8 @@ the live type list above before inventing a tag.
 - `morale: null` if it is undead, a construct, or an ooze.
 - `packMax` matches how the thing actually shows up, and `packMax × LV` is an
   encounter budget you are comfortable handing to a party at that depth.
+- If it is a boss, price the whole pack, not the monster. Target twice the party's
+  level sum, and reach that with minions before you reach it with boss levels.
 - `weight: 0` if the art or the placement isn't ready. It will sit quietly.
 - `faction` and `parley` set, so Talk knows what to do with it.
 - A one-line flavor comment saying what it *is*. That line is the monster's type,
