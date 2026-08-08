@@ -3,7 +3,7 @@ import { weaponById, attackFor, shieldAcFor } from './weapons.js';
 // Recruitable companions — pure data, same combatant schema as monsters.
 // Spawnee is a friendly vampire spawn warrior with a few limited vampire
 // powers; the swashbuckler knows the whole spellbook; the spellblade
-// splits the difference with a flaming sword.
+// splits the difference, carrying a dagger and letting the fire do the work.
 //
 // Scaled to Shadowdark's level-1 PCs (see references/shadowdark), with a house
 // "softening": each class uses one hit-die tier UP (d4->d6, d6->d8, d8->d10),
@@ -63,7 +63,7 @@ const ROSTER = [
     hpMax: 9, // d8 + CON 1
     hitDie: 8,
     abilities: { str: 2, dex: 1, con: 1, int: 3, wis: 1, cha: 1 },
-    weapon: 'longsword',
+    weapon: 'dagger', // an arcanist's blade: she fights with spells, not steel
     sprite: 'hero_spellblade',
     emoji: '🔥',
     anim: { idle: 'spellblade-idle', attack: 'spellblade-attack' },
@@ -84,8 +84,13 @@ const ROSTER = [
     hpMax: 12, // d10 + CON 2
     hitDie: 10,
     abilities: { str: 3, dex: 1, con: 2, int: 0, wis: 1, cha: 1 },
-    weapon: 'warhammer',
-    shield: true, // one-handed hammer, so the shield's +2 AC counts
+    weapon: 'longsword',
+    shield: true, // one-handed blade, so the shield's +2 AC counts
+    // A soldier who has only ever trained with the one weapon: the sword line
+    // is his from the start rather than a level-3 pick. Folded by
+    // heroWithGrowth like any chosen talent, so the +1 hit and +1 damage are
+    // already in his attack line, and Sword Focus/Master aren't offered again.
+    talents: ['wf-sword', 'wm-sword'],
     sprite: 'hero_beren',
     emoji: '🗡️',
     anim: { idle: 'beren-idle', attack: 'beren-attack' },

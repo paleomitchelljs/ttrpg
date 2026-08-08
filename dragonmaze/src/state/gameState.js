@@ -204,8 +204,10 @@ export function heroWithGrowth(id) {
   const tomes = state.meta.heroTomes?.[id] ?? [];
   const choices = g?.choices ?? [];
   // Nothing to fold — a fresh level-1 hero with no learned tomes: hand back the
-  // shared base object untouched.
-  if ((!g || (level <= 1 && !choices.length)) && !tomes.length) return base;
+  // shared base object untouched. A hero who *starts* with talents (Beren's
+  // sword line) still has to go through the fold, or their Focus/Master would
+  // sit in the list doing nothing until their first level-up.
+  if ((!g || (level <= 1 && !choices.length)) && !tomes.length && !base.talents?.length) return base;
   const hero = {
     ...base,
     abilities: { ...base.abilities },
@@ -300,9 +302,15 @@ export function chooseAdvance(charId, type, arg = null) {
     const t = talentById(arg);
     if (!t) return;
     if (t.caster && !heroById(charId)?.castStat) return;
-    if (!t.repeatable && g.choices.some((c) => c.type === 'talent' && c.talentId === arg)) return;
+    // Talents a hero started with count as taken, both ways: they can't be
+    // picked a second time, and they satisfy the prerequisites of what sits
+    // above them in the tree.
+    const taken = [
+      ...(heroById(charId)?.talents ?? []),
+      ...g.choices.filter((c) => c.type === 'talent').map((c) => c.talentId),
+    ];
+    if (!t.repeatable && taken.includes(arg)) return;
     // The showy talents sit behind a short tree (see data/talents.js).
-    const taken = g.choices.filter((c) => c.type === 'talent').map((c) => c.talentId);
     if (!meetsRequires(t, taken)) return;
     g.choices.push({ type: 'talent', talentId: arg });
   } else if (type === 'spell') {
