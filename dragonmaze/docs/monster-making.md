@@ -138,6 +138,61 @@ or re-baseline the whole roster in one commit. Do not split the difference quiet
 
 ---
 
+## Level as the budget
+
+Level does two separate jobs, and it is the only balance number in the system.
+
+It sets the monster's own numbers. HP is about 4.5 per level (a d8 per level, plus
+CON). To-hit comes off the 0.75 equation above. The six stat mods scale with level
+too, rather than being rolled independently. Set the level and most of the block
+follows.
+
+It also prices the monster in a fight. Two rules:
+
+- **1:1.** A monster of level N is a fair fight for one PC of level N. A level-1 orc
+  against a 1st-level PC is a real fight that either side can lose.
+- **Group.** Sum the levels on both sides and match them. Four 3rd-level PCs are 12
+  points, so 12 points of monsters is a standard challenge: three level-4 monsters,
+  or a level-8 boss with two level-2 minions, or a pile of level-1 and level-2
+  chaff. The shape is yours. The sum is the budget.
+
+The known weakness of the sum rule is action economy. Twelve level-1 monsters and
+three level-4 monsters both cost 12, but the twelve get twelve attacks a round
+against a party that gets four. The sum is a starting point for the encounter, not
+a promise about it. Lean the budget down when you spend it on bodies.
+
+### What that means here
+
+Nothing in the engine computes this. `rollEncounter` picks one monster type by
+weight from the depth band, rolls a count up to `packMax`, and adds a little for
+party size (`encounters.js:24`). Zone tables do the same (`zones.js:161`). No level
+arithmetic exists anywhere in that path. The budget is therefore enforced entirely
+by two numbers you choose when you add a monster: its depth band, and its
+`packMax`. If a level-2 monster ships with `packMax: 5`, you have authorized a
+10-point encounter at depth 2, and nothing downstream will argue.
+
+Pricing the PC side needs one conversion first. Heroes carry a real level
+(`heroGrowth.level`, starting at 1) and the party is usually two or three of them,
+but in dragon mode the dragon fights alongside them with a *tier* instead of a
+level. By HP, the tiers price out at roughly:
+
+| Tier | HP | Level-equivalent | To-hit vs equation |
+|---|---|---|---|
+| wyrmling | 18 | ~4 | +4 (equation wants +3) |
+| young | 30 | ~6 | +6 (wants +5) |
+| adult | 52 | ~11 | +9 (wants +9) |
+| ancient | 90 | ~19 | +13 (wants +15) |
+
+So a wyrmling plus two 1st-level heroes is about a 6-point party, and the dragon is
+most of it. Worth knowing before hand-tuning any depth-1 encounter.
+
+That table also sharpens the roster finding above. The dragon's own to-hit tracks
+the equation within +1 and drifts *low* at ancient, while the monsters average +1.5
+high. The hot to-hit is not a global scale shift applied to everything. It is on
+the monster side only.
+
+---
+
 ## The talent bank
 
 The zine's back half is a bank of talent names with one-line effects, sorted by type
@@ -222,7 +277,8 @@ the live type list above before inventing a tag.
 - Every talent either maps to an implemented keyword, reduces to a field, or is cut.
 - `resist` / `vulnerable` use only live damage types.
 - `morale: null` if it is undead, a construct, or an ooze.
-- `packMax` matches how the thing actually shows up.
+- `packMax` matches how the thing actually shows up, and `packMax × LV` is an
+  encounter budget you are comfortable handing to a party at that depth.
 - `weight: 0` if the art or the placement isn't ready. It will sit quietly.
 - `faction` and `parley` set, so Talk knows what to do with it.
 - A one-line flavor comment saying what it *is*. That line is the monster's type,
