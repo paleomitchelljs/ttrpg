@@ -9,6 +9,12 @@ monsters touch.
 Read this before writing a stat block. For the underlying system math, read
 `shadowdark-system-guide.md` §§14, 19, 20 (local only, gitignored).
 
+**Scope.** This is the anchor every new monster gets built against, and the
+yardstick to re-evaluate existing ones with when that day comes. It stays general
+on purpose. No audits of the current roster, no per-monster corrections, nothing
+that goes stale the next time someone edits `data/monsters.js`. Findings about
+specific monsters belong in the commit that fixes them.
+
 **On the source.** Method and design intent are summarized here in our own words.
 No stat blocks, no talent text, and no tables from the zine are reproduced. If you
 need a specific talent's exact wording, the zine is the authority, not this file.
@@ -122,19 +128,18 @@ to do this, then:
 - **Less easy, more accurate.** `ceil(0.75 × HD)`, then shift −2 to +2 against the
   trained-human benchmark.
 
-### Where this roster actually sits
+### Recovering a level to check against
 
-There is no `level` field, so recover it as `(hpMax − CON) / 4.5`, rounded. Audited
-against the equation on 2026-08-08, 34 of 36 monsters land inside the ±2 band. The
-distribution is one-sided, though: mean deviation is **+1.5**, and not one monster
-sits *below* the baseline. Two break the band on the high side, the cerenasp and
-the lizardman-crusader, both at +6 where the equation wants +3. So the roster hits
-harder than a trained human at every level.
+There is no `level` field on a monster, so a stat block cannot be checked against
+the equation directly. Recover the level from the HP it was built with:
 
-Whether that is a deliberate thumb on the scale or drift across 36 additions is not
-recoverable from the data. Either way, a new monster built straight off the
-equation will be noticeably less accurate than its neighbors. Match the neighbors,
-or re-baseline the whole roster in one commit. Do not split the difference quietly.
+```
+LV = round((hpMax − CON) / 4.5)
+```
+
+It inverts the HP rule, so it returns the level the block was written at. That is
+the number the equation wants, and the number to use before comparing any two
+monsters to each other.
 
 ---
 
@@ -198,50 +203,21 @@ Pricing the PC side needs one conversion first. Heroes carry a real level
 but in dragon mode the dragon fights alongside them with a *tier* instead of a
 level. By HP, the tiers price out at roughly:
 
-| Tier | HP | Level-equivalent | To-hit vs equation |
-|---|---|---|---|
-| wyrmling | 18 | ~4 | +4 (equation wants +3) |
-| young | 30 | ~6 | +6 (wants +5) |
-| adult | 52 | ~11 | +9 (wants +9) |
-| ancient | 90 | ~19 | +13 (wants +15) |
-
-So a wyrmling plus two 1st-level heroes is about a 6-point party, and the dragon is
-most of it. That prices a standard fight at 6 points and a lone boss at 12. Nothing
-in the roster is a 12-point single monster (the avatar of fear tops out at LV 10),
-which is most of why the zones use boss *packs*.
-
-Those packs are already priced, and they hold up. Ten of the fourteen boss entries
-in `data/zones.js` are packs; only four are lone, and three of those are golems.
-Summed by the same level derivation:
-
-| Difficulty | Boss pack | Sum |
+| Tier | HP | Level-equivalent |
 |---|---|---|
-| 1 | two froglok skirmishers | 4 |
-| 2 | cave troll (lone) | 5 |
-| 2 | stone golem (lone) | 8 |
-| 2 | bone wraith + zombie | 8 |
-| 3 | clay golem (lone) | 7 |
-| 3 | minotaur + froglok skirmisher | 9 |
-| 3 | cave troll + alligator | 9 |
-| 3 | tae-ew templar + lizardfolk warrior | 9 |
-| 4 | bone wraith + 2 zombies | 11 |
-| 4 | lizardman archon + lizardman crusader | 11 |
-| 4 | lizardman crusader + lizardfolk warrior (miniboss) | 7 |
-| 5 | iron golem (lone) | 9 |
-| 5 | bone wraith + skeleton | 7 |
-| 5 | avatar of fear + 2 bone wraiths | 20 |
+| wyrmling | 18 | ~4 |
+| young | 30 | ~6 |
+| adult | 52 | ~11 |
+| ancient | 90 | ~19 |
 
-The curve is sane from difficulty 1 through 4: the top of each band climbs 4, 8, 9,
-11. Difficulty 5 is not. Two of its three bosses cost 7 and 9 points, cheaper than
-the difficulty-4 bosses the party just beat, and the third jumps to 20. Whether that
-reads as broken at the table depends on where party level actually lands by then,
-which the data cannot tell us. It is the first place to look if difficulty 5 ever
-feels flat.
+Same derivation as any monster, `(hpMax − CON) / 4.5`. So a wyrmling plus two
+1st-level heroes is about a 6-point party, and the dragon is most of it. That prices
+a standard fight at 6 points and a lone boss at 12. Re-derive this whenever the
+dragon's tiers change, because every encounter budget in the game hangs off it.
 
-That table also sharpens the roster finding above. The dragon's own to-hit tracks
-the equation within +1 and drifts *low* at ancient, while the monsters average +1.5
-high. The hot to-hit is not a global scale shift applied to everything. It is on
-the monster side only.
+Boss encounters here are packs (`monsterIds` is a list, so `data/zones.js` prices
+the whole pack, not one monster). Budget the pack. A lone entry is the exception,
+and it needs to carry twice the party sum by itself.
 
 ---
 
@@ -268,8 +244,8 @@ one, because a new mechanic means engine work.
 
 ## What this means in `data/monsters.js`
 
-The roster is 36 entries of pure data, banded by depth, with no logic in the file.
-Adding one entry is enough to put a monster into the encounter pool.
+The roster is one flat array of pure data, banded by depth, with no logic in the
+file. Adding one entry is enough to put a monster into the encounter pool.
 
 Engine-backed fields, and what actually reads them:
 
@@ -323,8 +299,6 @@ the live type list above before inventing a tag.
 - Intended level chosen first, and written into a comment.
 - `hpMax` = LV × 4.5 + CON mod.
 - `toHit` = `ceil(0.75 × LV)`, shifted −2 to +2 against a trained human of that LV.
-  Check it against the depth-band neighbors before committing (this roster runs
-  about +1.5 hot).
 - 1–3 attacks, small dice, no flat ability bonus on damage.
 - Every talent either maps to an implemented keyword, reduces to a field, or is cut.
 - `resist` / `vulnerable` use only live damage types.
