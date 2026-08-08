@@ -83,8 +83,9 @@ one involves arithmetic.
    −4..+4 shape, so you can port them straight across. Tune them down a touch at
    high level, because PC mods cap at +4 and monster mods do not have to.
 4. **Attacks, talents, spells.** Usually straight off the source block: number of
-   attacks, a to-hit bonus, one small die each. Match weapons to their Shadowdark
-   equivalents rather than converting damage by hand.
+   attacks, one small die each. Match weapons to their Shadowdark equivalents
+   rather than converting damage by hand. For the to-hit bonus, see the next
+   section.
 5. **Movement and alignment.** 30 ft is "near." Neutral is neutral. Round freely.
 6. **HP.** `LV × 4.5 + CON mod`. Shadowdark does not print hit dice for monsters,
    but the hidden die is a d8, and 4.5 is its average roll.
@@ -92,6 +93,48 @@ one involves arithmetic.
 A calibration check before you commit: a level-appropriate monster should hit AC
 13–16 about half the time, and should threaten to drop a low-HP PC in 1–3 hits. If
 neither is true, the level is wrong.
+
+---
+
+## Attack bonus
+
+Shadowdark never prints the equation, but its own stat blocks fit one. Under 10 HD:
+
+```
+toHit = ceil(0.75 × HD)
+```
+
+Round every decimal up, always. HD is the monster's level, so LV 1 is +1, LV 2 is
++2, LV 4 is +3, LV 6 is +5, LV 9 is +7.
+
+Real blocks then run about −2 to +2 off that number, and there is no clean rule for
+which gets what. The usable anchor is the human. A combat-trained human enemy
+(knight, assassin, soldier) sits *exactly* on the equation, at +0 deviation. So the
+question to ask about any new monster is whether it is better at clobbering things
+than a trained human of the same HD. Better, push up. An untrained beast or a
+shambling corpse, push down.
+
+The equation also stays within 1 of the OSE attack tables anywhere under 10 HD, so
+a flat +1 per HD works too. Players will not notice a 5% swing on a d20. Two ways
+to do this, then:
+
+- **Easy.** OSE tables, or +1 per HD. It does not matter.
+- **Less easy, more accurate.** `ceil(0.75 × HD)`, then shift −2 to +2 against the
+  trained-human benchmark.
+
+### Where this roster actually sits
+
+There is no `level` field, so recover it as `(hpMax − CON) / 4.5`, rounded. Audited
+against the equation on 2026-08-08, 34 of 36 monsters land inside the ±2 band. The
+distribution is one-sided, though: mean deviation is **+1.5**, and not one monster
+sits *below* the baseline. Two break the band on the high side, the cerenasp and
+the lizardman-crusader, both at +6 where the equation wants +3. So the roster hits
+harder than a trained human at every level.
+
+Whether that is a deliberate thumb on the scale or drift across 36 additions is not
+recoverable from the data. Either way, a new monster built straight off the
+equation will be noticeably less accurate than its neighbors. Match the neighbors,
+or re-baseline the whole roster in one commit. Do not split the difference quietly.
 
 ---
 
@@ -172,6 +215,9 @@ the live type list above before inventing a tag.
 - Which of the three build options is this? Use the cheapest one that fits.
 - Intended level chosen first, and written into a comment.
 - `hpMax` = LV × 4.5 + CON mod.
+- `toHit` = `ceil(0.75 × LV)`, shifted −2 to +2 against a trained human of that LV.
+  Check it against the depth-band neighbors before committing (this roster runs
+  about +1.5 hot).
 - 1–3 attacks, small dice, no flat ability bonus on damage.
 - Every talent either maps to an implemented keyword, reduces to a field, or is cut.
 - `resist` / `vulnerable` use only live damage types.
