@@ -184,8 +184,8 @@ A theme can draw its perimeter differently from the partitions inside a room.
 **outer**; a free-standing wall island is **internal**. No map is re-authored.
 A subregion can overrule it with `wallStyle: 'inner' | 'outer'`.
 
-The palace has the keys reserved and commented out in `AUTOTILE.palace` — the
-pickers already route to them, so each one goes live the moment its tile exists:
+The palace declares the whole internal set in `AUTOTILE.palace` (`floorEdge` is
+the one it does not use — its wall tiles carry their own shadow):
 
 | key | what it draws |
 |-----|---------------|
@@ -197,40 +197,65 @@ pickers already route to them, so each one goes live the moment its tile exists:
 
 ### Slicing a whole theme off one sheet
 
-**The palace, current cut:** `tools/slice_palace_hall.py` cuts the whole theme
-out of `art/palace-hall-sheet.png` — ring, both doors, floor, thin runs, elbows,
-termini. The whole thing hangs off one number: a **224px source cell** (7 of the
-floor pattern's 32px periods) holds the sheet's 90px brick run in the middle
-with ~67px of floor either side, so an internal wall lands at **40% of the
-finished 160px tile**. That is what makes palace corridors read as narrow halls
-you walk beside rather than slabs. `--contact` writes
-`docs/palace-hall-tiles.png` to review every piece at once.
+**The palace, current cut:** `tools/slice_palace2.py` cuts the whole theme out of
+`art/palace2.png` — outer ring, floor, thin runs, elbows, termini, fill. The
+sheet is a finished room with a **free-standing square ring standing inside it**,
+and that ring is why this sheet won: its four corners and two straight arms are
+every thin-wall piece the autotiler asks for, drawn rather than inferred.
+`--contact` writes `docs/palace2-tiles.png` (every piece at once) and `--boxes`
+writes `docs/palace2-boxes.png` (every box drawn on the sheet) to review a
+re-cut. Six things are worth knowing before touching the numbers:
 
-Two things to know when re-cutting it. **Every box must dodge the sheet's own
-furniture**: the north wall has a door at x≈545-690 and an internal run hanging
-off it at x≈318-403, so `palace-o-top` is taken from x 850 where the wall is
-clear; floor variants come only from x<400, y>527, west of the lower structures
-and south of the upper ones. Getting this wrong is quiet — a floor tile with a
-brick corner baked in tiles into a grid of stamps across the whole map. **Pieces
-the sheet doesn't draw are mirrored**, which is exact because the room is drawn
-symmetrically.
+- **One cell = 177px = 3 periods of the floor pattern** (measured, 59px: a
+  29.5px flagstone with a boss on every second joint). That puts the ring's wall
+  band at ~40% of the finished 160px tile — thin, centred, floor either side,
+  which is what makes palace corridors read as narrow halls you walk beside.
+- **Nothing is mirrored.** The sheet is lit from the north and drawn in that
+  shallow box perspective where you see the *inner* face of the north wall and
+  the *outer* face of the south one, so a flip puts the light and the visible
+  face on the wrong side. All four outer sides and all four ring corners are cut
+  where they are drawn. (The hall sheet before it was flat-lit and truncated, so
+  mirroring was both safe and necessary there.)
+- **The floor is cut on its own period, not the theme's.** The ground inside the
+  ring is drawn ~3% smaller than the ground outside it — 28.7px flagstones
+  against 29.5 — so the floor alone is cut at 172px (six of its stones) and
+  resampled up to the tile. Cut at 177 it would end a fifth of a stone short and
+  the joints would visibly step sideways at every tile edge.
+- **Floor variants are flat-fielded.** Nine crops each keep the patch of room
+  light they came from; tiled, that reads as a quilt of slightly different
+  squares — far more obvious than the flagstones repeating. `flatten()` fits a
+  quadratic to each crop's luminance and divides it out, then levels all nine to
+  one mean. Fit, not blur: a blur has only the border to average near the
+  border, so it leaves a bright rim exactly where two tiles meet.
+- **Trim the sheet's own edge rule.** Every side ends in a dark line (the wall's
+  outer edge plus a little letterboxing). `palace-o-top` is not only the map's
+  border — the autotiler hands it to any wall with floor below it — so that line
+  would draw a hairline across the top of every wall mass in the room.
+- **What the sheet doesn't draw is patched, not mirrored.** The ring never ends,
+  so each terminus is a ring corner with the arm it doesn't need painted out in
+  floor taken from elsewhere on the sheet, displaced by a whole number of floor
+  periods so the flagstones land back on their own joints. The mask is stamped
+  hard over the arm and feathered only outside it, or the arm's dark face shows
+  through at half strength along the joint and reads as a smear. `palace-r-fill`
+  (solid wall interior) is stacked from one brick course, offset half a brick per
+  row, since the ring is too thin to yield a solid tile.
 
-`slice_palace_room.py` and `art/palace-room-sheet.png` are the previous cut,
-kept for reference. Its walls filled 84% of a tile and had to be warped onto a
-common band because they were hand-drawn at inconsistent widths.
+`slice_palace_hall.py` / `art/palace-hall-sheet.png` is the previous cut, kept
+for reference — and still the source of the two **door** tiles, which palace2
+doesn't draw. `slice_palace_room.py` / `art/palace-room-sheet.png` is the one
+before that: its walls filled 84% of a tile and had to be warped onto a common
+band because they were hand-drawn at inconsistent widths.
 
+Taking every piece from one sheet is the point — a wall tile bakes the floor
+into its floor-facing edge, so a floor cut from anywhere else seams against it
+at every wall. The theme used to be stitched from three sheets and did exactly
+that.
 
-`tools/slice_palace_room.py` cuts the entire palace out of
-`art/palace-room-sheet.png`, a finished 8×8 room: outer ring, two doors, cobble
-floor, and internal wall runs. Taking every piece from one sheet is the point —
-a wall tile bakes the floor into its floor-facing edge, so a floor cut from
-anywhere else seams against it at every wall. The theme used to be stitched from
-three sheets and did exactly that.
+Two problems the older cuts hit are worth knowing, because they recur on any
+hand-drawn sheet.
 
-Two problems are worth knowing because they recur on any hand-drawn sheet.
-
-**Arms that don't agree.** Hand-drawn wall runs vary: on this sheet anywhere
-from 39% to 67% of a cell wide, with the centre wandering ±20px. Cut as drawn,
+**Arms that don't agree.** Hand-drawn wall runs vary: on `palace-room-sheet.png`
+anywhere from 39% to 67% of a cell wide, with the centre wandering ±20px. Cut as drawn,
 every corner-to-run join steps sideways and changes width. `normalise()` warps
 each piece so its arms land on one shared band — a piecewise-linear resample
 pinning `[0, lo, hi, N-1]` to `[0, TLO, THI, N-1]`, which moves the arm without
@@ -238,7 +263,7 @@ distorting the tile's border. The band is measured from the edges the wall
 actually leaves through, so a corner gets corrected on both axes at once. Any
 set where the pieces are drawn independently needs this.
 
-**A truncated sheet.** This one's last column is 83px and last row 119px against
+**A truncated sheet.** That sheet's last column is 83px and last row 119px against
 ~145 elsewhere, so the ring's east and south are cut off. They come from
 mirroring the west and north — exact for a symmetric ring, and better than
 stretching a partial cell.

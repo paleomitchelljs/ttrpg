@@ -49,15 +49,18 @@ export const AUTOTILE = {
     },
     fallback: 'sewer2-fill',
   },
-  // The Lost Temple palace — one sheet, one look. art/palace-hall-sheet.png is a
-  // finished room, so the ring, the floor and the internal runs all come out of
-  // it together (tools/slice_palace_hall.py); a wall tile's baked floor-facing
-  // edge therefore matches the floor beside it.
+  // The Lost Temple palace — one sheet, one look. art/palace2.png is a finished
+  // room, so the ring, the floor and the internal walls all come out of it
+  // together (tools/slice_palace2.py); a wall tile's baked floor-facing edge
+  // therefore matches the floor beside it. The sheet stands a free-standing
+  // square ring in the middle of the room, which is where the elbows and the
+  // one-cell runs come from as drawn art rather than as mirrored guesswork.
   //
-  // Cut on a 224px source cell, which puts an internal run at **40% of the
-  // tile** — thin and centred, with floor either side, so partitions read as
-  // something you walk beside rather than a slab. The previous cut
-  // (slice_palace_room.py, art/palace-room-sheet.png) made them 84%.
+  // Cut on a 177px source cell — three periods of the floor's own pattern —
+  // which puts an internal run at **40% of the tile**: thin and centred, with
+  // floor either side, so partitions read as something you walk beside rather
+  // than a slab. The cut before this one (slice_palace_hall.py) used the same
+  // proportion; the one before that (slice_palace_room.py) made them 84%.
   //
   // `palace-o-*` is the outer ring, `palace-r-*` the interior pieces. The two
   // share a brick, so the outer/inner split here buys the thin-wall vocabulary
