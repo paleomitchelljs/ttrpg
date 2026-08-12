@@ -49,22 +49,23 @@ export const AUTOTILE = {
     },
     fallback: 'sewer2-fill',
   },
-  // The Lost Temple palace — one sheet, one look. art/palace2.png is a finished
-  // room, so the ring, the floor and the internal walls all come out of it
-  // together (tools/slice_palace2.py); a wall tile's baked floor-facing edge
-  // therefore matches the floor beside it. The sheet stands a free-standing
-  // square ring in the middle of the room, which is where the elbows and the
-  // one-cell runs come from as drawn art rather than as mirrored guesswork.
+  // The Lost Temple palace, cut from art/palace-grid.png by
+  // tools/slice_palace_grid.py. That sheet is a **tile sheet** rather than a
+  // room: one cell of its magenta grid is one tile — one carved cap, or one
+  // brick block, or one flagstone — so every key below is a cell someone drew
+  // deliberately, not a box measured out of a finished room (which is what the
+  // three previous palace cuts were, most recently slice_palace2.py).
   //
-  // Cut on a 177px source cell — three periods of the floor's own pattern —
-  // which puts an internal run at **40% of the tile**: thin and centred, with
-  // floor either side, so partitions read as something you walk beside rather
-  // than a slab. The cut before this one (slice_palace_hall.py) used the same
-  // proportion; the one before that (slice_palace_room.py) made them 84%.
+  // The theme is one tile thick everywhere: a wall is a block sitting on the
+  // floor, and every corner, junction and terminus is the same carved cap. That
+  // is why so many keys here point at the same art — the cap is symmetrical, so
+  // one drawing serves all four elbows, all four thick corners and all four
+  // outer corners, and the only transform the whole theme needs is a horizontal
+  // flip for the east terminus.
   //
-  // `palace-o-*` is the outer ring, `palace-r-*` the interior pieces. The two
-  // share a brick, so the outer/inner split here buys the thin-wall vocabulary
-  // (runs, elbows, ends) rather than a different material.
+  // `palace-o-*` is the outer ring, `palace-r-*` the interior pieces. Both are
+  // the same masonry — the split buys the thin-wall vocabulary (runs, elbows,
+  // ends), not a different material.
   palace: {
     floor: [
       'palace-r-floor-a', 'palace-r-floor-b', 'palace-r-floor-c', 'palace-r-floor-d', 'palace-r-floor-e',

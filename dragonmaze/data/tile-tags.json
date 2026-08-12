@@ -729,14 +729,12 @@
     ]
   },
   "palace-o-bottom": {
-    "box": [
-      412,
-      841,
-      176,
-      177
+    "cell": [
+      5,
+      11
     ],
     "role": "wall",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "wall"
     ]
@@ -763,92 +761,78 @@
     ]
   },
   "palace-o-left": {
-    "box": [
-      7,
-      424,
-      177,
-      176
+    "cell": [
+      0,
+      5
     ],
     "role": "wall",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "wall"
     ]
   },
   "palace-o-ne": {
-    "box": [
-      842,
-      8,
-      177,
-      177
+    "cell": [
+      16,
+      0
     ],
     "role": "wall",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "wall"
     ]
   },
   "palace-o-nw": {
-    "box": [
-      7,
-      8,
-      177,
-      177
+    "cell": [
+      0,
+      0
     ],
     "role": "wall",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "wall"
     ]
   },
   "palace-o-right": {
-    "box": [
-      842,
-      424,
-      177,
-      176
+    "cell": [
+      16,
+      5
     ],
     "role": "wall",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "wall"
     ]
   },
   "palace-o-se": {
-    "box": [
-      842,
-      841,
-      177,
-      177
+    "cell": [
+      16,
+      11
     ],
     "role": "wall",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "wall"
     ]
   },
   "palace-o-sw": {
-    "box": [
-      7,
-      841,
-      177,
-      177
+    "cell": [
+      0,
+      11
     ],
     "role": "wall",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "wall"
     ]
   },
   "palace-o-top": {
-    "box": [
-      412,
-      8,
-      176,
-      177
+    "cell": [
+      5,
+      0
     ],
     "role": "wall",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "wall"
     ]
@@ -856,7 +840,7 @@
   "palace-r-ci-ne": {
     "from": "palace-r-el-ne",
     "role": "wall",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "wall"
     ]
@@ -864,7 +848,7 @@
   "palace-r-ci-nw": {
     "from": "palace-r-el-nw",
     "role": "wall",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "wall"
     ]
@@ -872,7 +856,7 @@
   "palace-r-ci-se": {
     "from": "palace-r-el-se",
     "role": "wall",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "wall"
     ]
@@ -880,332 +864,265 @@
   "palace-r-ci-sw": {
     "from": "palace-r-el-sw",
     "role": "wall",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "wall"
     ]
   },
   "palace-r-el-ne": {
-    "box": [
-      220,
-      642,
-      177,
-      177
+    "cell": [
+      4,
+      8
     ],
     "role": "wall",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "wall"
     ]
   },
   "palace-r-el-nw": {
-    "box": [
-      629,
-      642,
-      177,
-      177
+    "cell": [
+      8,
+      8
     ],
     "role": "wall",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "wall"
     ]
   },
   "palace-r-el-se": {
-    "box": [
-      220,
-      229,
-      177,
-      177
+    "cell": [
+      4,
+      3
     ],
     "role": "wall",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "wall"
     ]
   },
   "palace-r-el-sw": {
-    "box": [
-      629,
-      229,
-      177,
-      177
+    "cell": [
+      8,
+      3
     ],
     "role": "wall",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "wall"
     ]
   },
   "palace-r-end-e": {
-    "box": [
-      220,
-      229,
-      177,
-      177
+    "cell": [
+      15,
+      7
     ],
-    "painted": [
-      [
-        210,
-        330,
-        320,
-        415
-      ],
-      [
-        210,
-        352,
-        341,
-        415
-      ]
+    "flip": "h",
+    "nudge": [
+      18,
+      0
     ],
     "role": "wall",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "wall"
     ]
   },
   "palace-r-end-n": {
-    "box": [
-      220,
-      642,
-      177,
-      177
-    ],
-    "painted": [
-      [
-        338,
-        630,
-        410,
-        692
-      ],
-      [
-        336,
-        692,
-        410,
-        830
-      ]
+    "cell": [
+      10,
+      10
     ],
     "role": "wall",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "wall"
     ]
   },
   "palace-r-end-s": {
-    "box": [
-      220,
-      229,
-      177,
-      177
-    ],
-    "painted": [
-      [
-        320,
-        220,
-        410,
-        330
-      ],
-      [
-        341,
-        220,
-        410,
-        415
-      ]
+    "cell": [
+      10,
+      1
     ],
     "role": "wall",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "wall"
     ]
   },
   "palace-r-end-w": {
-    "box": [
-      629,
-      229,
-      177,
-      177
+    "cell": [
+      15,
+      7
     ],
-    "painted": [
-      [
-        700,
-        330,
-        815,
-        415
-      ],
-      [
-        680,
-        352,
-        815,
-        415
-      ]
+    "nudge": [
+      18,
+      0
     ],
     "role": "wall",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "wall"
     ]
   },
   "palace-r-fill": {
-    "built_from": [
-      150,
-      10,
-      327,
-      55
-    ],
+    "built_from": "palace-o-left",
     "role": "wall",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "wall"
     ]
   },
   "palace-r-floor-a": {
-    "box": [
-      382,
-      404,
-      172,
-      172
+    "cell": [
+      2,
+      5
     ],
-    "flattened": true,
+    "levelled": true,
     "role": "floor",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "floor"
     ]
   },
   "palace-r-floor-b": {
-    "box": [
-      439,
-      404,
-      172,
-      172
+    "cell": [
+      2,
+      4
     ],
-    "flattened": true,
+    "levelled": true,
     "role": "floor",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "floor"
     ]
   },
   "palace-r-floor-c": {
-    "box": [
-      496,
-      404,
-      172,
-      172
+    "cell": [
+      3,
+      5
     ],
-    "flattened": true,
+    "levelled": true,
     "role": "floor",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "floor"
     ]
   },
   "palace-r-floor-d": {
-    "box": [
-      382,
-      461,
-      172,
-      172
+    "cell": [
+      2,
+      7
     ],
-    "flattened": true,
+    "levelled": true,
     "role": "floor",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "floor"
     ]
   },
   "palace-r-floor-e": {
-    "box": [
-      439,
-      461,
-      172,
-      172
+    "cell": [
+      2,
+      6
     ],
-    "flattened": true,
+    "levelled": true,
     "role": "floor",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "floor"
     ]
   },
   "palace-r-floor-f": {
-    "box": [
-      496,
-      461,
-      172,
-      172
+    "cell": [
+      12,
+      5
     ],
-    "flattened": true,
+    "levelled": true,
     "role": "floor",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "floor"
     ]
   },
   "palace-r-floor-g": {
-    "box": [
-      382,
-      518,
-      172,
-      172
+    "cell": [
+      3,
+      6
     ],
-    "flattened": true,
+    "levelled": true,
     "role": "floor",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "floor"
     ]
   },
   "palace-r-floor-h": {
-    "box": [
-      439,
-      518,
-      172,
-      172
+    "cell": [
+      3,
+      4
     ],
-    "flattened": true,
+    "levelled": true,
     "role": "floor",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "floor"
     ]
   },
   "palace-r-floor-i": {
-    "box": [
-      496,
-      518,
-      172,
-      172
+    "cell": [
+      7,
+      6
     ],
-    "flattened": true,
+    "levelled": true,
     "role": "floor",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "floor"
     ]
   },
   "palace-r-run-h": {
-    "box": [
-      412,
-      229,
-      177,
-      177
+    "cell": [
+      12,
+      7
     ],
     "role": "wall",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
     "tags": [
       "wall"
     ]
   },
   "palace-r-run-v": {
-    "box": [
-      220,
-      424,
-      177,
-      177
+    "cell": [
+      10,
+      3
     ],
     "role": "wall",
-    "sheet": "palace2.png",
+    "sheet": "palace-grid.png",
+    "tags": [
+      "wall"
+    ]
+  },
+  "palace-r-tee-e": {
+    "cell": [
+      10,
+      7
+    ],
+    "flip": "h",
+    "role": "wall",
+    "sheet": "palace-grid.png",
+    "tags": [
+      "wall"
+    ]
+  },
+  "palace-r-tee-w": {
+    "cell": [
+      10,
+      7
+    ],
+    "role": "wall",
+    "sheet": "palace-grid.png",
     "tags": [
       "wall"
     ]

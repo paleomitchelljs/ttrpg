@@ -198,6 +198,8 @@ export const TILES = {
   'palace-r-floor-i': './assets/tiles/palace-r-floor-i.png',
   'palace-r-run-h': './assets/tiles/palace-r-run-h.png',
   'palace-r-run-v': './assets/tiles/palace-r-run-v.png',
+  'palace-r-tee-e': './assets/tiles/palace-r-tee-e.png',
+  'palace-r-tee-w': './assets/tiles/palace-r-tee-w.png',
   'palace-snake': './assets/tiles/palace-snake.png',
   'palace-snake-b': './assets/tiles/palace-snake-b.png',
   'panel-croc': './assets/tiles/panel-croc.png',

@@ -195,16 +195,51 @@ the one it does not use — its wall tiles carry their own shadow):
 | `fallbackInner` | enclosed partition interior |
 | `floorEdge.n/e/s/w` | floor that abuts an **outer** wall, named for the side the wall is on. Never used beside an internal wall — the outer sheet bakes the shell's shadow into this stone |
 
+### A theme drawn AS a tile sheet
+
+**The palace, current cut:** `tools/slice_palace_grid.py` cuts the whole theme
+out of `art/palace-grid.png`. That sheet is not a room to be measured — it is a
+tile sheet, drawn on a magenta grid where **one cell is exactly one tile**: one
+carved cap, one brick block, one flagstone-and-boss. So there is no cell size to
+derive and no wall-band fraction to choose; the map from key to art is a table of
+`(col, row)`, and the only transform the theme needs is one horizontal flip.
+`--contact` writes `docs/palace-grid-tiles.png`, `--boxes` writes the sheet with
+every cut drawn on it. What the sheet still needs done to it:
+
+- **The rules are drawn over the art, not between it,** so they are inpainted
+  before anything is cut: a pass along x closes the vertical rules from the
+  pixels either side, then a pass along y does the horizontal ones (a horizontal
+  rule masks its whole row, so along x there is nothing left to interpolate
+  from — the two passes cannot be collapsed into one). Insetting past the rules
+  instead would crop ~5% off each side of every tile, and two floor tiles laid
+  side by side would lose a tenth of the pattern at the joint. The mask is
+  deliberately loose — anything tinted toward magenta, grown a couple of px —
+  because the rules carry a dark border and JPEG smears both into the art.
+  Nothing else in the sheet can match it: sandstone puts blue *below* green.
+- **The rows are not all the same height.** The bottom wall sits in an 80px row
+  against ~104 elsewhere, and its blocks are whole — drawn short, not cropped.
+  So each cell is cut at the bounds its own rules give it. Forcing a uniform
+  pitch leaves short rows wanting padding, and that padding shows as a black band
+  wherever the autotiler reuses `palace-o-bottom` for a wall *inside* the room.
+- **A one-tile-thick theme has no solid interior.** `palace-r-fill` (the inside
+  of a wall mass) borrows the side-wall block: one stone filling its cell edge to
+  edge, no cast shadow to stack into stripes.
+- **The carved cap is the whole corner vocabulary.** It is symmetrical, so one
+  drawing serves all four elbows, all four thick corners and all four outer
+  corners; `palace-r-tee-*` (three-armed junction) is cut too, though the
+  autotiler has no key for it — it asks for an edge piece there — so it lives in
+  the editor palette for hand placement.
+
 ### Slicing a whole theme off one sheet
 
-**The palace, current cut:** `tools/slice_palace2.py` cuts the whole theme out of
-`art/palace2.png` — outer ring, floor, thin runs, elbows, termini, fill. The
+**The cut before it:** `tools/slice_palace2.py` cuts the theme out of
+`art/palace2.png` — outer ring, floor, thin runs, elbows, termini, fill. That
 sheet is a finished room with a **free-standing square ring standing inside it**,
-and that ring is why this sheet won: its four corners and two straight arms are
-every thin-wall piece the autotiler asks for, drawn rather than inferred.
-`--contact` writes `docs/palace2-tiles.png` (every piece at once) and `--boxes`
-writes `docs/palace2-boxes.png` (every box drawn on the sheet) to review a
-re-cut. Six things are worth knowing before touching the numbers:
+and the ring is why it beat the sheets before it: its four corners and two
+straight arms are every thin-wall piece the autotiler asks for, drawn rather than
+inferred. `--contact` writes `docs/palace2-tiles.png`, `--boxes` writes
+`docs/palace2-boxes.png`. Six things are worth knowing before touching its
+numbers — and they generalise to any sheet that is a room rather than a grid:
 
 - **One cell = 177px = 3 periods of the floor pattern** (measured, 59px: a
   29.5px flagstone with a boss on every second joint). That puts the ring's wall
@@ -240,11 +275,11 @@ re-cut. Six things are worth knowing before touching the numbers:
   (solid wall interior) is stacked from one brick course, offset half a brick per
   row, since the ring is too thin to yield a solid tile.
 
-`slice_palace_hall.py` / `art/palace-hall-sheet.png` is the previous cut, kept
-for reference — and still the source of the two **door** tiles, which palace2
-doesn't draw. `slice_palace_room.py` / `art/palace-room-sheet.png` is the one
-before that: its walls filled 84% of a tile and had to be warped onto a common
-band because they were hand-drawn at inconsistent widths.
+`slice_palace_hall.py` / `art/palace-hall-sheet.png` is the cut before that, and
+still the source of the two **door** tiles, which neither later sheet draws.
+`slice_palace_room.py` / `art/palace-room-sheet.png` is the oldest: its walls
+filled 84% of a tile and had to be warped onto a common band because they were
+hand-drawn at inconsistent widths.
 
 Taking every piece from one sheet is the point — a wall tile bakes the floor
 into its floor-facing edge, so a floor cut from anywhere else seams against it
